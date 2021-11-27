@@ -19,7 +19,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^7.0.2",
     "mrm": "^2.6.2",
-    "semantic-release": "^18.0.0"
+    "semantic-release": "^18.0.1"
   },
   "config": {
     "commitizen": {
