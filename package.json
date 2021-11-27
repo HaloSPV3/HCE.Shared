@@ -1,5 +1,5 @@
 {
-  "name": "@halospv3/shared",
+  "name": "@halospv3/hce.shared",
   "description": "Automate commit messages quality, automate changelog and release generation",
   "version": "1.0.0",
   "publishConfig": {
