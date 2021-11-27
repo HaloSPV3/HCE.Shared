@@ -1,0 +1,88 @@
+name: dotnet-release
+
+# TODO
+# - Get AssemblyName, TargetFramework (TFM), RuntimeIdentifier (RID) from Directory.Build.props, *.csproj
+# - Overwrite `$env:RID and `$env:TFM with build props, allowing workflows to be driven by the project(s)
+# - support multiple ASSEMBLYNAME parameters for matrices
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths-ignore:
+      - ".github/**/*.*"
+      - "**/*.md"
+      - "**/*.txt"
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    strategy: # TODO: Get variables from config file(s). May require a parent workflow to allow matrix runs.
+      fail-fast: false
+      matrix:
+        RID: [ "win-x86", "win-x64" ]
+        TFM: [ "net5.0-windows", "net5.0", "net6.0-windows", "net6.0" ]
+        ASSEMBLYNAME: [ "SPV3.Loader", "SPV3.Installer", "HXE" ]
+        PROJPATH: [ "./src/${{ matrix.ASSEMBLYNAME }}.csproj" ]
+
+    steps:
+      ################
+      # SETUP
+      ################
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Required by GitVersion
+          submodules: "recursive"
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+      - run: npm install # Required by Semantic Release
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+          include-prerelease: true
+      - name: Add GitHub NuGet Package Repository
+        run: dotnet nuget add source https://nuget.pkg.github.com/HaloSPV3/index.json -n "github" -u USERNAME -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
+      - name: Set NuGet.org Credentials
+        run: dotnet nuget update source "nuget.org" -u USERNAME -p ${{ secrets.NUGET_TOKEN }} --store-password-in-clear-text
+
+      ################
+      # BUILD
+      ################
+      - name: dotnet-publish
+        run: |
+          dotnet publish ${{ matrix.PROJPATH }} -c Release --no-self-contained -p:ContinuousIntegrationBuild=true
+          src/.msb.noConfig.ps1
+
+      # required variables: TargetFramework, RuntimeIdentifier, GitVersion_FullSemVer
+      - name: Compress-PublishArtifacts
+        shell: pwsh
+        run: |
+          $publishPath = Resolve-Path ".\bin\Release\$env:TFM\$env:RID\publish";
+          $archiveName = "$env:ASSEMBLYNAME.$env:TFM-$env:RID.$env:GitVersion_FullSemVer.zip";
+          Compress-Archive -Path $publishPath -DestinationPath $archiveName -CompressionLevel Optimal;
+
+      ################
+      # RELEASE
+      ################
+      # https://github.com/semantic-release/semantic-release
+      - name: Setup Semantic Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.SEMANTIC_RELEASE_BOT_NPM_TOKEN }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: publish-artifacts
+          path: bin/Release/${{ env.TFM }}/${{ env.RID }}/publish
+
+      - name: Publish to GitHub Packages
+        working-directory: bin/Release
+        run: dotnet nuget push *.nupkg -s "github" -k ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to nuget.org
+        working-directory: bin/Release
+        run: dotnet nuget push *.nupkg -s "nuget.org" -k ${{ secrets.NUGET_TOKEN }}
