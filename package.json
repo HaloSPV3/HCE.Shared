@@ -36,11 +36,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/halospv3/hce.git"
+    "url": "git+https://github.com/halospv3/hce.shared.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "BinToss",
+  "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/halospv3/hce/issues"
-  }
+    "url": "https://github.com/halospv3/hce.shared/issues"
+  },
+  "homepage": "https://github.com/halospv3/hce.shared#readme",
+  "main": "index.js",
+  "keywords": [
+    "halo",
+    "hce",
+    "spv3"
+  ]
 }
