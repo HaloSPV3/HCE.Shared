@@ -3,7 +3,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   # docs: https://semantic-release.gitbook.io/semantic-release/usage/workflow-configuration#branch-types
-  "branches": ["halospv3/shared"],
+  "branches": ['+([0-9])?(.{+([0-9]),x}).x', 'main', {name: 'prerelease', prerelease: true}],
   "tagFormat": "sharedConfig/v{version}",
   "plugins": [
     ["@semantic-release/commit-analyzer",{
