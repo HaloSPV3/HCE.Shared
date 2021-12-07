@@ -23,7 +23,10 @@ jobs:
         RID: [ "win-x86", "win-x64" ]
         TFM: [ "net5.0-windows", "net5.0", "net6.0-windows", "net6.0" ]
         ASSEMBLYNAME: [ "SPV3.Loader", "SPV3.Installer", "HXE" ]
-        PROJPATH: [ "./src/${{ matrix.ASSEMBLYNAME }}.csproj" ]
+    env:
+        PROJPATH: "./src/${{ matrix.ASSEMBLYNAME }}.csproj"
+
+
 
     steps:
     ################
