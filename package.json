@@ -1,6 +1,6 @@
 {
   "name": "@halospv3/hce.shared",
-  "description": "Automate commit messages quality, automate changelog and release generation",
+  "description": "Automate commit messages quality, changelog generation, and CI release creation",
   "version": "1.0.0",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
@@ -48,7 +48,6 @@
   "main": "index.js",
   "keywords": [
     "halo",
-    "hce",
-    "spv3"
+    "halo-ce"
   ]
 }
