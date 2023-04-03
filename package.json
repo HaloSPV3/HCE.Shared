@@ -18,7 +18,7 @@
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "husky": "^8.0.3",
     "mrm": "^4.1.13",
-    "semantic-release": "^20.1.0"
+    "semantic-release": "^21.0.1"
   },
   "config": {
     "commitizen": {
