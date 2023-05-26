@@ -30,7 +30,6 @@
     }
   },
   "scripts": {
-    "cm": "cz",
     "prepare": "husky install"
   },
   "repository": {
