@@ -6,7 +6,7 @@
     "registry": "https://npm.pkg.github.com",
     "tag": "latest"
   },
-  "devDependencies": {
+  "dependencies": {
     "@commitlint/cli": "^17.6.3",
     "@commitlint/config-conventional": "^17.6.3",
     "@semantic-release/changelog": "^6.0.2",
