@@ -19,6 +19,9 @@
     "husky": "^8.0.3",
     "semantic-release": "^21.0.0"
   },
+  "devDependencies": {
+    "commit-and-tag-version": "^11.2.1"
+  },
   "config": {
     "husky": {
       "hooks": {
@@ -27,7 +30,8 @@
     }
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "commit-and-tag-version"
   },
   "repository": {
     "type": "git",
