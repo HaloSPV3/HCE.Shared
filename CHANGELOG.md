@@ -1,3 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [1.0.4](https://github.com/halospv3/hce.shared/compare/v1.0.3...v1.0.4) (2023-05-26)
+
+
+### Bug Fixes
+
+* **deps:** change all devDependencies to dependencies ([79a4a30](https://github.com/halospv3/hce.shared/commit/79a4a3049d8c6f5f9c91a945bb06e0b2daea3cc7))
+
 ### 1.0.3 (2023-05-26)
 
 
