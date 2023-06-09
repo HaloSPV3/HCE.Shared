@@ -17,7 +17,7 @@
     "@semantic-release/release-notes-generator": "^11.0.2",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "husky": "^8.0.3",
-    "semantic-release": "^21.0.0"
+    "semantic-release": "^21.0.4"
   },
   "devDependencies": {
     "commit-and-tag-version": "^11.2.1"
