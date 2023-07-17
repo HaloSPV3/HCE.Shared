@@ -7,20 +7,20 @@
     "tag": "latest"
   },
   "dependencies": {
-    "@commitlint/cli": "^17.6.3",
-    "@commitlint/config-conventional": "^17.6.3",
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^9.0.1",
+    "@semantic-release/commit-analyzer": "^10.0.0",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^8.0.7",
-    "@semantic-release/npm": "^10.0.0",
-    "@semantic-release/release-notes-generator": "^11.0.0",
-    "conventional-changelog-conventionalcommits": "^5.0.0",
+    "@semantic-release/github": "^9.0.0",
+    "@semantic-release/npm": "^10.0.4",
+    "@semantic-release/release-notes-generator": "^11.0.4",
+    "conventional-changelog-conventionalcommits": "^6.1.0",
     "husky": "^8.0.3",
-    "semantic-release": "^21.0.0"
+    "semantic-release": "^21.0.7"
   },
   "devDependencies": {
-    "commit-and-tag-version": "^11.2.1"
+    "commit-and-tag-version": "^11.2.2"
   },
   "config": {
     "husky": {
