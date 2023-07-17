@@ -55,7 +55,7 @@
           "releaseRules": [
             {
               "//": "This rule is specifically HCE.Shared is released every time a dependency is upgraded. If these rules are inherited by consumers (e.g. HXE), how do we ignore them?",
-              "type": "chore",
+              "type": "(build|chore|fix)",
               "scope": "deps",
               "release": "patch"
             }
