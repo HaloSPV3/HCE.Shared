@@ -29,6 +29,11 @@
       }
     }
   },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
   "scripts": {
     "prepare": "husky install",
     "release": "commit-and-tag-version"
