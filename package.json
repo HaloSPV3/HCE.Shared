@@ -34,6 +34,41 @@
       "@commitlint/config-conventional"
     ]
   },
+  "release": {
+    "publishConfig": {
+      "registry": "https://npm.pkg.github.com"
+    },
+    "preset": "conventionalcommits",
+    "branches": [
+      "+([0-9])?(.{+([0-9]),x}).x",
+      "main",
+      {
+        "name": "prerelease",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "//": "https://github.com/semantic-release/commit-analyzer/blob/master/lib/default-release-rules.js",
+          "releaseRules": [
+            {
+              "//": "This rule is specifically HCE.Shared is released every time a dependency is upgraded. If these rules are inherited by consumers (e.g. HXE), how do we ignore them?",
+              "type": "chore",
+              "scope": "deps",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      "@semantic-release/github"
+    ]
+  },
   "scripts": {
     "prepare": "husky install",
     "release": "commit-and-tag-version"
