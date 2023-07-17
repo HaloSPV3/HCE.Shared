@@ -1,7 +1,7 @@
 {
   "name": "@halospv3/hce.shared",
   "description": "Automate commit messages quality, changelog generation, and CI release creation",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
     "tag": "latest"

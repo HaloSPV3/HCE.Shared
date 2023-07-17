@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.0.5](https://github.com/halospv3/hce.shared/compare/v1.0.4...v1.0.5) (2023-07-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency conventional-changelog-conventionalcommits to v6 ([8f283e6](https://github.com/halospv3/hce.shared/commit/8f283e63fdc03d2fe04e04c25e4283dfa757d4ff))
+* **deps:** update semantic-release monorepo ([8d14404](https://github.com/halospv3/hce.shared/commit/8d1440455fe38d74f6e2a585a22dea9707659a69))
+* remove leftover mrm reference ([a60a1d2](https://github.com/halospv3/hce.shared/commit/a60a1d26f68149b364fb3c155fd605b48ea1cfc8))
+
 ## [1.0.4](https://github.com/halospv3/hce.shared/compare/v1.0.3...v1.0.4) (2023-05-26)
 
 
