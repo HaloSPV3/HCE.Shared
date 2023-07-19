@@ -4,13 +4,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: 'recursive'
-        fetch-depth: 0
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x, 20.x]
 
-    - name: Setup Node
-      uses: actions/setup-node@v3
-    - run: npm ci --save-dev
-    - run: npm pack --dry-run --pack-destination ./bin/ # file creation skipped by --dry-run
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm pack --dry-run --pack-destination ./bin/ # file creation skipped by --dry-run
