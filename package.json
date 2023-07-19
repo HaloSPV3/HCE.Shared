@@ -71,7 +71,8 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "release": "commit-and-tag-version"
+    "release": "commit-and-tag-version",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
