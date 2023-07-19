@@ -22,13 +22,6 @@
   "devDependencies": {
     "commit-and-tag-version": "^11.2.2"
   },
-  "config": {
-    "husky": {
-      "hooks": {
-        "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
-      }
-    }
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -74,10 +67,7 @@
     "release": "commit-and-tag-version",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/halospv3/hce.shared.git"
-  },
+  "repository": "github:halospv3/hce.shared",
   "author": "BinToss",
   "license": "GPL-3.0-or-later",
   "bugs": {
