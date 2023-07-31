@@ -25,12 +25,9 @@ jobs:
     strategy: # TODO: Get variables from config file(s). May require a parent workflow to allow matrix runs.
       matrix:
         RID: [ "win-x86", "win-x64" ]
-        TFM: [ "net5.0-windows", "net5.0", "net6.0-windows", "net6.0" ]
-        ASSEMBLYNAME: [ "SPV3.Loader", "SPV3.Installer", "HXE" ]
+        ASSEMBLYNAME: [ "SPV3.Loader", "SPV3.Installer", "HXE" ] #TODO: update
     env:
         PROJPATH: "./src/${{ matrix.ASSEMBLYNAME }}.csproj"
-
-
 
     steps:
     ################
@@ -55,18 +52,18 @@ jobs:
     ################
     # BUILD
     ################
-    - name: dotnet-publish
+    - name: dotnet publish
       run: |
         dotnet publish ${{ matrix.PROJPATH }} -c Release --no-self-contained -p:ContinuousIntegrationBuild=true
         src/.msb.noConfig.ps1
 
     # required variables: TargetFramework, RuntimeIdentifier, GitVersion_FullSemVer
-    - name: Compress-PublishArtifacts
+    # TODO: replace with ZipPublishDir (see Bintoss/GroupBox.Avalonia)
+    - name: Compress Publish Artifacts
       shell: pwsh
       run: |
-        $publishPath = Resolve-Path ".\bin\Release\$env:TFM\$env:RID\publish";
-        $archiveName = "$env:ASSEMBLYNAME.$env:TFM-$env:RID.$env:GitVersion_FullSemVer.zip";
-        Compress-Archive -Path $publishPath -DestinationPath $archiveName -CompressionLevel Optimal;
+        $archiveName = "$env:ASSEMBLYNAME.$env:RID.$env:GitVersion_FullSemVer.zip";
+        Compress-Archive -Path publish -DestinationPath $archiveName -CompressionLevel Optimal;
 
     ################
     # RELEASE
@@ -81,7 +78,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: publish-artifacts
-        path: bin/Release/${{ env.TFM }}/${{ env.RID }}/publish
+        path: publish
 
     - name: Publish to GitHub Packages
       working-directory: bin/Release
