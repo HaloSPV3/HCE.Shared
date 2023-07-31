@@ -16,7 +16,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy: # TODO: Get variables from config file(s). May require a parent workflow to allow matrix runs.
       fail-fast: false
       matrix:
