@@ -1,0 +1,20 @@
+{
+    "extends": "@tsconfig/node-lts/tsconfig.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "sourceMap": true,
+        "declaration": true,
+        "outDir": "node/dist",
+        "rootDir": "node"
+    },
+    "compileOnSave": true,
+    "exclude": [
+        "node/dist",
+        "node/__tests__"
+    ],
+    "ts-node": {
+        "esm": true,
+        "emit": true
+    }
+}

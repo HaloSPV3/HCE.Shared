@@ -14,5 +14,5 @@ jobs:
           node-version: 18
           cache: 'npm'
       - run: npm ci
-      - run: npm test #uncomment when tests implemented
+      - run: npm test
       - run: npx semantic-release

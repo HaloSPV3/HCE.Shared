@@ -18,3 +18,4 @@ jobs:
 
     - run: dotnet build src/SPV3.csproj -c Release -p:ContinuousIntegrationBuild=true
       # ContinuousIntegrationBuild comes from dotnet/sourcelink. Make sure Deterministic is also true!
+      # Alternatively, add a PropertyGroup with the condition " '$(CI)' != '' "
