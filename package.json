@@ -1,11 +1,24 @@
 {
   "name": "@halospv3/hce.shared",
-  "description": "Automate commit messages quality, changelog generation, and CI/CD releases. Exports a semantic-release deserialized from this package's '.releaserc.yml'. Shared resources for .NET projects are also distributed with this package.",
   "version": "1.0.5",
+  "description": "Automate commit messages quality, changelog generation, and CI/CD releases. Exports a semantic-release deserialized from this package's '.releaserc.yml'. Shared resources for .NET projects are also distributed with this package.",
+  "keywords": [
+    "halo",
+    "halo-ce"
+  ],
   "type": "module",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "tag": "latest"
+  "homepage": "https://github.com/halospv3/hce.shared#readme",
+  "bugs": {
+    "url": "https://github.com/halospv3/hce.shared/issues"
+  },
+  "license": "MIT",
+  "author": "BinToss",
+  "main": "index.js",
+  "repository": "github:halospv3/hce.shared",
+  "scripts": {
+    "prepare": "husky install",
+    "release": "commit-and-tag-version",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@commitlint/cli": "^17.7.1",
@@ -62,22 +75,5 @@
       "@semantic-release/git",
       "@semantic-release/github"
     ]
-  },
-  "scripts": {
-    "prepare": "husky install",
-    "release": "commit-and-tag-version",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": "github:halospv3/hce.shared",
-  "author": "BinToss",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/halospv3/hce.shared/issues"
-  },
-  "homepage": "https://github.com/halospv3/hce.shared#readme",
-  "main": "index.js",
-  "keywords": [
-    "halo",
-    "halo-ce"
-  ]
+  }
 }
