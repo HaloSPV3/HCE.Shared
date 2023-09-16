@@ -1,0 +1,90 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"conventionalcommits",
+			"execa",
+			"halospv",
+			"Signale"
+		],
+		"files.readonlyInclude": {
+			"node_modules/**": true,
+			"node/dist/**": true
+		},
+		"jest.nodeEnv": {
+			"NODE_OPTIONS": "--experimental-vm-modules"
+		},
+		"typescript.implementationsCodeLens.enabled": true,
+		"yaml.schemas": {
+			"https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
+		}
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "node",
+				"name": "vscode-jest-tests.v2",
+				"request": "launch",
+				"args": [
+					"--debug",
+					"--runInBand",
+					"--watchAll=false",
+					"--testNamePattern",
+					"${jest.testNamePattern}",
+					"--runTestsByPath",
+					"${jest.testFile}"
+				],
+				"cwd": "${workspaceFolder}",
+				"console": "integratedTerminal",
+				"internalConsoleOptions": "neverOpen",
+				"program": "${workspaceFolder}/node_modules/.bin/jest",
+				"windows": {
+					"program": "${workspaceFolder}/node_modules/jest/bin/jest"
+				}
+			}
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"aaron-bond.better-comments",
+			"ms-vscode.vscode-typescript-next",
+			"kricsleo.vscode-package-json-inspector",
+			"salbert.comment-ts",
+			"mxsdev.typescript-explorer",
+			"mattpocock.ts-error-translator",
+			"yoavbls.pretty-ts-errors",
+			"cancerberosgx.vscode-typescript-refactors",
+			"orta.vscode-jest",
+			"jeff-hykin.code-eol",
+			"joshbolduc.commitlint",
+			"selcukermaya.se-csproj-extensions",
+			"github.vscode-github-actions",
+			"bierner.github-markdown-preview",
+			"github.vscode-pull-request-github",
+			"codezombiech.gitignore",
+			"eamodio.gitlens",
+			"byi8220.indented-block-highlighting",
+			"emilast.logfilehighlighter",
+			"tintoy.msbuild-project-tools",
+			"christian-kohler.npm-intellisense",
+			"sandcastle.vscode-open",
+			"drmerfy.overtype",
+			"christian-kohler.path-intellisense",
+			"natqe.reload",
+			"uyiosa-enabulele.reopenclosedtab",
+			"mpontus.tab-cycle",
+			"wayou.vscode-todo-highlight",
+			"trass3r.vscode-debug-utils",
+			"iulian-radu-at.vscode-tasks-sidebar",
+			"yeluoqiuzhi.vscode-detect-charset",
+			"redhat.vscode-xml",
+			"rogalmic.vscode-xml-complete",
+			"dotjoshjohnson.xml"
+		]
+	}
+}
