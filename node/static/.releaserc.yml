@@ -1,0 +1,31 @@
+# footer contains links e.g. 3rd-party plugins, little-known features
+
+### global vars
+# https://semantic-release.gitbook.io/semantic-release/v/beta/usage/plugins#plugin-options-configuration
+preset: conventionalcommits
+
+###
+
+branches: # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/configuration#branches
+  - main
+  - name: develop
+    channel: develop
+    prerelease: true
+
+plugins: # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/configuration#plugins
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - "@semantic-release/changelog"
+  - - "@semantic-release/git"
+    - assets:
+        - README.md
+        - CHANGELOG.md
+  - - "@semantic-release/github"
+    - assets:
+        - path: ./publish/*.zip
+## (OPTIONAL) export data
+# https://github.com/felipecrs/semantic-release-export-data#readme
+
+## (OPTIONAL) update Version strings
+# https://github.com/jpoehnelt/semantic-release-replace-plugin
+# https://github.com/droidsolutions/semantic-release-update-file
