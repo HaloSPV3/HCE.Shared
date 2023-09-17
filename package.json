@@ -45,7 +45,7 @@
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "husky": "^8.0.3",
     "node-fetch": "^3.3.2",
-    "semantic-release": "^21.0.7"
+    "semantic-release": "^22.0.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.6.4",
