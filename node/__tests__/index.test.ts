@@ -1,3 +1,4 @@
+import { Options } from 'semantic-release';
 import HceShared, { deserializeAndValidate, faithfulLoadAndFulfill } from '../index.mjs';
 
 const timeout = 30000;
@@ -14,17 +15,10 @@ test('faithfulLoadAndFulfill', async () => {
     commonChecks(await faithfulLoadAndFulfill())
 }, timeout);
 
-function commonChecks(options) {
+function commonChecks(options: Options) {
     expect(options).toBeDefined();
     expect(options.preset).toBeDefined();
     expect(options.preset).toBe("conventionalcommits");
     expect(options.branches).toBeDefined();
-    expect(options.branches).toStrictEqual([
-        "main",
-        {
-            name: "develop",
-            channel: "develop",
-            prerelease: true
-        }
-    ]);
+    expect(options.branches).toStrictEqual(["main", { name: "develop", channel: "develop", prerelease: true }]);
 }
