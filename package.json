@@ -26,9 +26,10 @@
   "repository": "github:halospv3/hce.shared",
   "scripts": {
     "build": "npx tsc",
+    "prestart": "npx tsc",
     "prepare": "husky install",
-    "release": "commit-and-tag-version",
     "semantic-release": "npx semantic-release",
+    "start": "node node/dist/index.mjs",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
