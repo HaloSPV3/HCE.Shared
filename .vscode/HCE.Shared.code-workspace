@@ -7,9 +7,7 @@
 	"settings": {
 		"cSpell.words": [
 			"conventionalcommits",
-			"execa",
-			"halospv",
-			"Signale"
+			"halospv"
 		],
 		"files.readonlyInclude": {
 			"node_modules/**": true,

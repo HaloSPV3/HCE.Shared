@@ -1,5 +1,5 @@
 import { Options } from 'semantic-release';
-import HceShared, { deserializeAndValidate, faithfulLoadAndFulfill } from '../index.mjs';
+import HceShared, { deserializeAndValidate } from '../index.mjs';
 
 const timeout = 30000;
 
@@ -9,10 +9,6 @@ test('default', async () => {
 
 test('deserializeAndValidate', async () => {
     commonChecks(await deserializeAndValidate());
-}, timeout);
-
-test('faithfulLoadAndFulfill', async () => {
-    commonChecks(await faithfulLoadAndFulfill())
 }, timeout);
 
 function commonChecks(options: Options) {

@@ -1,13 +1,10 @@
 import { existsSync } from 'fs'
 import { Options } from 'semantic-release';
 import { readFile } from 'fs/promises';
-import getConfig, { Context, config } from 'semantic-release/lib/get-config.js';
-import getLogger from 'semantic-release/lib/get-logger.js'
 import jsYaml from 'js-yaml'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import debug, { Debugger, } from 'debug';
-import envCi from 'env-ci';
 
 const DEBUG: Debugger = debug("HCE.Shared")
 
@@ -18,13 +15,7 @@ const DEBUG: Debugger = debug("HCE.Shared")
  * @async
  */
 export default async function (): Promise<Options> {
-    try {
-        return await deserializeAndValidate(); // faster, but results may differ from expectations if semantic-release or its deps change.
-    }
-    catch (e) {
-        console.warn(e);
-        return await faithfulLoadAndFulfill();
-    }
+    return await deserializeAndValidate(); // faster, but results may differ from expectations if semantic-release or its deps change.
 }
 
 /** OPTION A: deserialize via 'require-yml' and export.
@@ -46,22 +37,6 @@ export async function deserializeAndValidate() {
 
     DEBUG("## OptionA ##\n" + jsYaml.dump(cfg));
     return cfg as Options;
-}
-
-/** OPTION B:
- * Call semantic-release's get-config,
- * deserialize via 'cosmiconfig',
- * merge shareable configs specified by `extends`,
- * fill remaining config properties with default values,
- * and export the returned shareable config as this module's default export.
- *
- * Many more steps, but utilizes semantic-release's implementation
- * to ensure compatibility.
- */
-export async function faithfulLoadAndFulfill() {
-    const cfg: config = (await getConfig(context, ""));
-    DEBUG("## OptionB ##\n" + jsYaml.dump(cfg.options));
-    return cfg.options;
 }
 
 function findStaticConfig(): string {
@@ -90,27 +65,4 @@ function findStaticConfig(): string {
     }
 
     return combinedPath;
-}
-
-const context: Context = {
-    /** Current working directory of the child process.
-     * -OR-
-     * The path to a semantic-release configuration file.
-     *
-     * @default process.cwd()
-     */
-    cwd: findStaticConfig() ?? process.cwd(),
-    /** Environment key-value pairs. Extends automatically from `process.env`.
-     *
-     * @default process.env
-     */
-    env: process.env as { [key: string]: string },
-    envCi: envCi({ env: process.env, cwd: process.cwd() }),
-    logger: getLogger({
-        stdout: process.stdout,
-        stderr: process.stderr
-    }),
-    stderr: process.stderr,
-    stdout: process.stdout,
-
 }
