@@ -38,14 +38,14 @@
     "@semantic-release/commit-analyzer": "^10.0.4",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^9.0.4",
-    "@semantic-release/npm": "^10.0.4",
+    "@semantic-release/npm": "^11.0.0",
     "@semantic-release/release-notes-generator": "^11.0.4",
     "ajv": "^8.12.0",
     "ajv-draft-04": "^1.0.0",
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "husky": "^8.0.3",
     "node-fetch": "^3.3.2",
-    "semantic-release": "^21.0.7"
+    "semantic-release": "^22.0.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.6.4",
