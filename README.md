@@ -7,7 +7,7 @@ It is recommended to "install" this repo via [Node Package Manager](#npm)
 
 `npm install HaloSPV3/HCE.Shared --save-dev`
 
-See [package.json](package.json) and [node/](node/)`
+See [package.json](package.json) and [node/](node/)
 
 ## .NET
 
