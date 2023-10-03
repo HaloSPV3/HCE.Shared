@@ -1,20 +1,16 @@
 {
-    "extends": "@tsconfig/node-lts/tsconfig.json",
-    "compilerOptions": {
-        "allowJs": true,
-        "checkJs": true,
-        "sourceMap": true,
-        "declaration": true,
-        "outDir": "node/dist",
-        "rootDir": "node"
-    },
+    "extends": "tsconfig-moon/tsconfig.json",
     "compileOnSave": true,
-    "exclude": [
-        "node/dist",
-        "node/__tests__"
-    ],
-    "ts-node": {
-        "esm": true,
-        "emit": true
-    }
+    "compilerOptions": {
+        "declaration": true,
+        "declarationDir": "dts",
+        "emitDeclarationOnly": true,
+        "isolatedModules": true,
+        "outDir": "lib",
+        "resolveJsonModule": false,
+        "rootDir": "src"
+    },
+    "include": [
+        "src/**/*"
+    ]
 }
