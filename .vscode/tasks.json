@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"runOptions": {
+				"runOn": "folderOpen"
+			},
+			"script": "install",
+			"problemMatcher": [],
+			"label": "npm: install (on open)",
+			"detail": "install dependencies from package"
+		}
+	]
+}
