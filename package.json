@@ -4,7 +4,9 @@
   "description": "Automate commit messages quality, changelog generation, and CI/CD releases. Exports a semantic-release deserialized from this package's '.releaserc.yml'. Shared resources for .NET projects are also distributed with this package.",
   "keywords": [
     "halo",
-    "halo-ce"
+    "halo-ce",
+    "semantic-release",
+    "semantic-release-config"
   ],
   "type": "module",
   "homepage": "https://github.com/halospv3/hce.shared#readme",
