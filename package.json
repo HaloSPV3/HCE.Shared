@@ -8,9 +8,7 @@
   ],
   "type": "module",
   "homepage": "https://github.com/halospv3/hce.shared#readme",
-  "bugs": {
-    "url": "https://github.com/halospv3/hce.shared/issues"
-  },
+  "bugs": "https://github.com/halospv3/hce.shared/issues",
   "license": "MIT",
   "author": "BinToss",
   "files": [
