@@ -12,7 +12,7 @@
   "homepage": "https://github.com/halospv3/hce.shared#readme",
   "bugs": "https://github.com/halospv3/hce.shared/issues",
   "license": "MIT",
-  "author": "BinToss",
+  "author": "Noah Sherwin",
   "files": [
     "CHANGELOG.md",
     "node/",
