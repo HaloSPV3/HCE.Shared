@@ -4,8 +4,7 @@
         "halospv3"
     ],
     "files.readonlyInclude": {
-        "node_modules/**": true,
-        "node/dist/**": true
+        "node_modules/**": true
     },
     "typescript.implementationsCodeLens.enabled": true,
     "nodejs-testing.extensions": [
