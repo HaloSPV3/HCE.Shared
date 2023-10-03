@@ -1,0 +1,14 @@
+{
+    "cSpell.words": [
+        "conventionalcommits",
+        "halospv3"
+    ],
+    "files.readonlyInclude": {
+        "node_modules/**": true,
+        "node/dist/**": true
+    },
+    "typescript.implementationsCodeLens.enabled": true,
+    "yaml.schemas": {
+        "https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
+    }
+}
