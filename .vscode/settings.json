@@ -8,6 +8,27 @@
         "node/dist/**": true
     },
     "typescript.implementationsCodeLens.enabled": true,
+    "nodejs-testing.extensions": [
+        {
+            "extensions": [
+                "mjs",
+                "cjs",
+                "js"
+            ],
+            "parameters": []
+        },
+        {
+            "extensions": [
+                "mts",
+                "cts",
+                "ts"
+            ],
+            "parameters": [
+                "--loader",
+                "tsx"
+            ]
+        }
+    ],
     "yaml.schemas": {
         "https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
     }
