@@ -554,10 +554,3 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,node
-
-# Our code-workspace is portable and cross-platform...or should be. 
-## Who thought git-ignoring it was a good idea? 
-## - https://github.com/github/gitignore/pull/4333/commits/becdf9daeb78ee903ec897ad92db66a15f2602a9
-## - https://github.com/github/gitignore/commit/5db7eeab30efe30ed407b849ea526cf3e7a1e03f
-!.vscode/*.code-workspace
-!.vscode/*.code-snippets
