@@ -1,5 +1,5 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'node:assert/strict';
-import { describe, it } from "node:test";
+import { describe, it, test } from "node:test";
 import HceShared from '../src/index';
 
 describe('HCE.Shared module returns semantic-release shareable configuration (Options object)',
@@ -18,9 +18,9 @@ async function commonChecks(options: Options) {
             new Ajv().validate(schema, options)
         , "Object deserialized from HCE.Shared's \".releaserc.yml\" config file is invalid according to schema fetched from https://json.schemastore.org/semantic-release.json. Did the schema change or was the config modified?");
     console.log(jsYaml.dump(options));
-    it("options is defined", () => notStrictEqual(options, undefined));
-    it("options.preset is conventionalcommits", () => strictEqual(options.preset, "conventionalcommits"));
-    it("options.branches is defined",
+    test("options is defined", () => notStrictEqual(options, undefined));
+    test("options.preset is conventionalcommits", () => strictEqual(options.preset, "conventionalcommits"));
+    test("options.branches is defined",
         () => deepStrictEqual(
             options.branches,
             [
