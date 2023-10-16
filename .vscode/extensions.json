@@ -32,6 +32,8 @@
         "yeluoqiuzhi.vscode-detect-charset",
         "redhat.vscode-xml",
         "rogalmic.vscode-xml-complete",
-        "dotjoshjohnson.xml"
+        "dotjoshjohnson.xml",
+        "anish.easy-npm",
+        "connor4312.nodejs-testing"
     ]
 }
