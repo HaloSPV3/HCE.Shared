@@ -10,6 +10,17 @@
 			"problemMatcher": [],
 			"label": "npm: install (on open)",
 			"detail": "install dependencies from package"
+		},
+		{
+			"type": "npm",
+			"script": "watch",
+			"group": "build",
+			"problemMatcher": [
+				"$node-sass",
+				"$nvcc"
+			],
+			"label": "npm: watch",
+			"detail": "packemon watch"
 		}
 	]
 }
