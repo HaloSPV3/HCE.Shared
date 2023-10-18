@@ -83,17 +83,17 @@
     "node": ">=16.12.0"
   },
   "publishConfig": {
-    "exports": {
-      "node": {
-        ".": {
-          "import": "./index-wrapper.mjs",
-          "types": "./index.d.cts",
-          "require": "./index.cjs"
-        }
-      }
-    },
     "registry": "https://npm.pkg.github.com",
     "tag": "latest"
+  },
+  "exports": {
+    ".": {
+      "node": {
+        "import": "./index-wrapper.mjs",
+        "types": "./index.d.ts",
+        "require": "./index.cjs"
+      }
+    }
   },
   "types": "./cjs/index.d.ts",
   "commitlint": {
