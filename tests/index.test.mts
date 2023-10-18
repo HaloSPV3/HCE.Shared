@@ -7,8 +7,7 @@ import AjvDraft04 from 'ajv-draft-04';
 import jsYaml from 'js-yaml';
 import fetch from 'node-fetch';
 import type { Options } from 'semantic-release';
-// eslint-disable-next-line import/no-useless-path-segments, import/no-unresolved
-import HceShared from "../src/index.js";
+import HceShared from "../cjs/index-wrapper.mjs";
 
 async function loadRemoteSchemaFile(url: string): Promise<SchemaObject> {
     const res = await fetch(new URL(url));

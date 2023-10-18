@@ -5,6 +5,7 @@
         "declarationDir": "cjs",
         "declarationMap": true,
         "emitDeclarationOnly": true,
+        "noEmit": false,
         "outDir": "cjs"
     }
 }
