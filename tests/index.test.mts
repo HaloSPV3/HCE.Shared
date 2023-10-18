@@ -4,7 +4,7 @@ import {
   ok,
   strictEqual,
 } from "node:assert/strict";
-import { describe, test } from "node:test";
+import { test } from "node:test";
 import { URL } from "node:url";
 import Ajv from "ajv";
 import { type SchemaObject } from "ajv";
@@ -22,36 +22,38 @@ async function loadRemoteSchemaFile(url: string): Promise<SchemaObject> {
   return (await res.json()) as SchemaObject;
 }
 
-async function commonChecks(options: Options) {
+await test("HCE.Shared module returns semantic-release shareable configuration (Options object)", async (t) => {
+  const options: Options = await HceShared();
   const schema = await loadRemoteSchemaFile(
     "https://json.schemastore.org/semantic-release.json",
   );
-  ok(
-    schema.$schema === "http://json-schema.org/draft-04/schema#"
-      ? new AjvDraft04().validate(schema, options)
-      : new Ajv().validate(schema, options),
-    'Object deserialized from HCE.Shared\'s ".releaserc.yml" config file is invalid according to schema fetched from https://json.schemastore.org/semantic-release.json. Did the schema change or was the config modified?',
+  await t.test("options validated by schema?", () => {
+    ok(
+      schema.$schema === "http://json-schema.org/draft-04/schema#"
+        ? new AjvDraft04().validate(schema, options)
+        : new Ajv().validate(schema, options),
+      'Object deserialized from HCE.Shared\'s ".releaserc.yml" config file is invalid according to schema fetched from https://json.schemastore.org/semantic-release.json. Did the schema change or was the config modified?',
+    );
+    console.log(jsYaml.dump(options));
+  });
+  await t.test(
+    "options is defined",
+    () => void notStrictEqual(options, undefined),
   );
-  console.log(jsYaml.dump(options));
-  await test("options is defined", () =>
-    void notStrictEqual(options, undefined));
-  await test("options.preset is conventionalcommits", () =>
-    void strictEqual(options.preset, "conventionalcommits"));
-  await test("options.branches is defined", () =>
-    void deepStrictEqual(options.branches, [
-      "main",
-      {
-        name: "develop",
-        channel: "develop",
-        prerelease: true,
-      },
-    ]));
-}
-
-// import * as fs from 'fs';
-// function loadLocalSchemaFile(fileFullPath: fs.PathLike) {
-//    return fs.readFileSync(fileFullPath, 'utf8')
-// }
-
-await describe("HCE.Shared module returns semantic-release shareable configuration (Options object)", async () =>
-  void (await commonChecks(HceShared())));
+  await t.test(
+    "options.preset is conventionalcommits",
+    () => void strictEqual(options.preset, "conventionalcommits"),
+  );
+  await t.test(
+    "options.branches is mainline-main, prerelease-develop",
+    () =>
+      void deepStrictEqual(options.branches, [
+        "main",
+        {
+          name: "develop",
+          channel: "develop",
+          prerelease: true,
+        },
+      ]),
+  );
+});
