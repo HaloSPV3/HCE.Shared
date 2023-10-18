@@ -35,5 +35,8 @@
         "dotnet",
         "node",
         "vscode"
-    ]
+    ],
+    "nodeTdd.glob": "{src,test}/**/*.{js,ts,jsx,tsx,mts}",
+    "nodeTdd.reporter": "tap",
+    "nodeTdd.showCoverage": true
 }
