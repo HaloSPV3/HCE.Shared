@@ -3,6 +3,7 @@
     "compilerOptions": {
         "declaration": true,
         "declarationDir": "cjs",
+        "declarationMap": true,
         "emitDeclarationOnly": true,
         "outDir": "cjs"
     }
