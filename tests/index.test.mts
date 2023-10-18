@@ -19,7 +19,7 @@ async function loadRemoteSchemaFile(url: string): Promise<SchemaObject> {
   if (!res.ok) {
     throw new Error(`'${res.status}': '${res.statusText}'`);
   }
-  return (await res.json()) as SchemaObject;
+  return res.json() as SchemaObject;
 }
 
 await test("HCE.Shared module returns semantic-release shareable configuration (Options object)", async (t) => {
