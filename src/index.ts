@@ -32,8 +32,7 @@ function findStaticConfig(): string {
 }
 
 /**
- * Runs HCE.Shared and returns a Promise that resolves to
- * a semantic-release "shareable configuration" object.
+ * Runs HCE.Shared and returns a semantic-release "shareable configuration" object.
  * @type {Options}.
  */
 export default (): Options =>
