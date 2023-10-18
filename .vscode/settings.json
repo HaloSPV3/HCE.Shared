@@ -30,5 +30,10 @@
     ],
     "yaml.schemas": {
         "https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
-    }
+    },
+    "conventionalCommits.scopes": [
+        "dotnet",
+        "node",
+        "vscode"
+    ]
 }
