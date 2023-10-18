@@ -1,7 +1,9 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
+        "declaration": true,
         "declarationDir": "cjs",
+        "emitDeclarationOnly": true,
         "outDir": "cjs"
     }
 }

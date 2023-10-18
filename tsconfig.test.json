@@ -1,7 +1,7 @@
 {
-    "extends": "tsconfig-moon/tsconfig.json",
+    "extends": "./tsconfig.json",
     "include": [
         "src/**/*",
-        "test/**/*"
+        "tests/**/*"
     ]
 }
