@@ -2,8 +2,6 @@
     "extends": "tsconfig-moon/tsconfig.json",
     "compileOnSave": true,
     "compilerOptions": {
-        "declaration": true,
-        "emitDeclarationOnly": true,
         "isolatedModules": true,
         "sourceMap": true
     },
