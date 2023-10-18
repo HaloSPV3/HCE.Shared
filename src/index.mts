@@ -1,8 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import _ajv from 'ajv'
-import _ajv04 from 'ajv'
 import jsYaml from 'js-yaml'
 import type { Options } from 'semantic-release';
 
