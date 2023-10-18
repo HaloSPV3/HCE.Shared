@@ -31,11 +31,10 @@ function findStaticConfig(): string {
   return combinedPath;
 }
 
+const options = jsYaml.load(readFileSync(findStaticConfig(), { encoding: "utf8" })) as Options;
+
 /**
  * Runs HCE.Shared and returns a semantic-release "shareable configuration" object.
  * @type {Options}.
  */
-export default (): Options =>
-  jsYaml.load(
-    readFileSync(findStaticConfig(), { encoding: "utf8" }),
-  ) as Options;
+export default options;
