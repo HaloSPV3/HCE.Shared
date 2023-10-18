@@ -23,7 +23,7 @@ async function loadRemoteSchemaFile(url: string): Promise<SchemaObject> {
 }
 
 await test("HCE.Shared module returns semantic-release shareable configuration (Options object)", async (t) => {
-  const options: Options = await HceShared();
+  const options = HceShared as Options;
   const schema = await loadRemoteSchemaFile(
     "https://json.schemastore.org/semantic-release.json",
   );
