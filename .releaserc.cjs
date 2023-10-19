@@ -46,7 +46,7 @@ module.exports = {
             "@semantic-release/github",
             {
                 assets: [
-                    "./halospv3-hce.shared-*.*.*.tgz"
+                    "halospv3-hce.shared-*.tgz"
                 ]
             }
         ]
