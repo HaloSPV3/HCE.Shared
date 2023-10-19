@@ -83,7 +83,6 @@
     "node": ">=16.12.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
     "tag": "latest"
   },
   "exports": {
