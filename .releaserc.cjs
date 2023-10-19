@@ -15,12 +15,11 @@
  * When 'plugins' is set, only commit-analyzer is added if missing.
  */
 
-const hceSharedConfig = require('./cjs/index.cjs')
 /**
  * @type {import('semantic-release').Options}
  */
 module.exports = {
-    extends: hceSharedConfig, // static/.releaserc.yml
+    extends: './cjs/index.cjs', // static/.releaserc.yml
     plugins: [
         // https://github.com/semantic-release/commit-analyzer#options
         [
