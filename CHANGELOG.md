@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/halospv3/hce.shared/compare/v1.1.0...v1.1.1) (2023-10-19)
+
+
+### Bug Fixes
+
+* **node:** rerelease v1.1.0 ([f01f34a](https://github.com/halospv3/hce.shared/commit/f01f34a2b39ed6d95ba670dccc864dc147d2452e))
+
 ## [1.1.0](https://github.com/halospv3/hce.shared/compare/v1.0.5...v1.1.0) (2023-10-19)
 
 
