@@ -1,3 +1,29 @@
+## [1.1.0](https://github.com/halospv3/hce.shared/compare/v1.0.5...v1.1.0) (2023-10-19)
+
+
+### Features
+
+* add ZipPublishDir Target ([36755ac](https://github.com/halospv3/hce.shared/commit/36755ac51586a636ee91057adda94dbff1359c73))
+* **node:** adopt Packemon for project management ([daafc7f](https://github.com/halospv3/hce.shared/commit/daafc7f74939f2793b1e3b8312fe95aa832614d3))
+* **node:** load, validate, and export semantic-release shareable configuration ([74c11af](https://github.com/halospv3/hce.shared/commit/74c11af149f36be5e84a9ee064caaf50522017d1))
+
+
+### Bug Fixes
+
+* **deps:** update semantic-release monorepo ([b8dd3c2](https://github.com/halospv3/hce.shared/commit/b8dd3c2386d9f9717a7f916dcdbc1a1cc5a5f5c5))
+* **deps:** update semantic-release monorepo ([f507178](https://github.com/halospv3/hce.shared/commit/f507178302719193bf323a2f9decb113c078e163))
+* **dotnet:** always overwrite ZipPublishDir DestinationFile ([38ef324](https://github.com/halospv3/hce.shared/commit/38ef32430858ed1060077e7453f5f2825c7c6ab8))
+* **node:** bump minimum Node version to 18.17.1 ([92f5b47](https://github.com/halospv3/hce.shared/commit/92f5b47d40d1f9832b2e9f00b49579976b465166))
+* **node:** lift main function body to top-level; assign to const and export it ([c0cc133](https://github.com/halospv3/hce.shared/commit/c0cc133d9d57949339d223f8aa12c123500c4d9c))
+* **node:** remove use of semantic-release's private get-config, get-logger ([658b37c](https://github.com/halospv3/hce.shared/commit/658b37c6aee922a123b3c2128f5f588372bcbd7b))
+* **node:** resolve "parameter 'options' implicitly 'any'" (TS7006) ([5fd278b](https://github.com/halospv3/hce.shared/commit/5fd278bf0983f63bf41db1484fd62df133993870))
+* update destination path in ZipPublishDir ([b7bfc24](https://github.com/halospv3/hce.shared/commit/b7bfc24f4917628ef9837f94d6e3f87be4b54b1b))
+
+
+### Reverts
+
+* **node:** rename index.mts to index.ts ([f0cd2ee](https://github.com/halospv3/hce.shared/commit/f0cd2ee2bc1e1a4af7dde349d6df65c85944b035))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
