@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 import jsYaml from "js-yaml";
 import type { Options } from "semantic-release";
 
+/// ../static/.releaserc.yml
+
 function findStaticConfig(): string {
   const glob = "static/.releaserc.yml";
   let dirPath = fileURLToPath(path.dirname(import.meta.url));
