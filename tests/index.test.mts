@@ -12,7 +12,7 @@ import AjvDraft04 from "ajv-draft-04";
 import jsYaml from "js-yaml";
 import fetch from "node-fetch";
 import type { Options } from "semantic-release";
-import HceShared from "../cjs/index-wrapper.mjs";
+import HceSharedConfig from "@halospv3/hce.shared-config";
 
 async function loadRemoteSchemaFile(url: string): Promise<SchemaObject> {
   const res = await fetch(new URL(url));
@@ -23,7 +23,7 @@ async function loadRemoteSchemaFile(url: string): Promise<SchemaObject> {
 }
 
 await test("HCE.Shared module returns semantic-release shareable configuration (Options object)", async (t) => {
-  const options = HceShared as Options;
+  const options = HceSharedConfig as Options;
   const schema = await loadRemoteSchemaFile(
     "https://json.schemastore.org/semantic-release.json",
   );
