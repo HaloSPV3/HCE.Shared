@@ -4,14 +4,13 @@
 # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/plugins#plugin-options-configuration
 preset: conventionalcommits
 
-###
+### main options
 
 branches: # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/configuration#branches
   - main
   - name: develop
     channel: develop
     prerelease: true
-
 plugins: # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/configuration#plugins
   - "@semantic-release/commit-analyzer"
   - "semantic-release-export-data"
@@ -24,9 +23,10 @@ plugins: # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/con
   - - "@semantic-release/github"
     - assets:
         - path: ./publish/*
-## (OPTIONAL) export data
-# https://github.com/felipecrs/semantic-release-export-data#readme
-
 ## (OPTIONAL) update Version strings
 # https://github.com/jpoehnelt/semantic-release-replace-plugin
 # https://github.com/droidsolutions/semantic-release-update-file
+
+## Arbitrary shell commands
+# (useful for `dotnet publish publish/`, but should be run after version tag is pushed so InformationalVersionInfo isn't a subversion)
+# https://github.com/semantic-release/exec
