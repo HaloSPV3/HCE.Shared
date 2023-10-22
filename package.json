@@ -88,9 +88,9 @@
   "exports": {
     ".": {
       "node": {
-        "import": "./index-wrapper.mjs",
-        "types": "./index.d.ts",
-        "require": "./index.cjs"
+        "import": "./cjs/index-wrapper.mjs",
+        "types": "./cjs/index.d.ts",
+        "require": "./cjs/index.cjs"
       }
     }
   },
