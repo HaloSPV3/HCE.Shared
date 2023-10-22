@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/halospv3/hce.shared/compare/v1.1.1...v1.1.2) (2023-10-22)
+
+
+### Bug Fixes
+
+* **node:** prefix 'cjs' dir to exports' module entry points ([bf71890](https://github.com/halospv3/hce.shared/commit/bf7189037a5006ed589f55cd3c53d9c6f8f9d536))
+
 ## [1.1.1](https://github.com/halospv3/hce.shared/compare/v1.1.0...v1.1.1) (2023-10-19)
 
 
