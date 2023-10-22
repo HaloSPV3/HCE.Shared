@@ -22,7 +22,7 @@ plugins: # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/con
         - CHANGELOG.md
   - - "@semantic-release/github"
     - assets:
-        - path: ./publish/*.zip
+        - path: ./publish/*
 ## (OPTIONAL) export data
 # https://github.com/felipecrs/semantic-release-export-data#readme
 
