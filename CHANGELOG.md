@@ -1,3 +1,11 @@
+## [1.2.0](https://github.com/halospv3/hce.shared/compare/v1.1.2...v1.2.0) (2023-10-24)
+
+
+### Features
+
+* **node:** include semantic-release-export-data by default ([d7bd6bf](https://github.com/halospv3/hce.shared/commit/d7bd6bf298fa26405366af2eba809c0c426de76d))
+* **node:** publish *all* files in ./publish/ directories ([82051be](https://github.com/halospv3/hce.shared/commit/82051bec96f1f37f12eb995fc4bd14afea9f5b31))
+
 ## [1.1.2](https://github.com/halospv3/hce.shared/compare/v1.1.1...v1.1.2) (2023-10-22)
 
 
