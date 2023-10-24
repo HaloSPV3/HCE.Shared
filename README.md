@@ -5,9 +5,28 @@ It is recommended to "install" this repo via [Node Package Manager](#npm)
 
 ## NPM
 
-`npm install HaloSPV3/HCE.Shared --save-dev`
+### Usage
 
-See [package.json](package.json) and [node/](node/)
+`npm install --save-dev HaloSPV3/HCE.Shared`
+
+See [package.json](package.json), [src/index.ts](src/index.ts), and [static/.releaserc.yml](static/.releaserc.yml)
+
+### Help
+
+#### Need your VersionInfo before the actual release?
+
+Make sure you are synced up before doing a dry-run! Semantic-release will fail before printing the version if you aren't synced with the remote!
+Yes, I know that's ridiculous.
+Run `npx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"`
+
+#### Don't want to publish a Node package? 
+
+Add the following to your `package.json`:
+```json
+{
+    "private": true,
+}
+```
 
 ## .NET
 
