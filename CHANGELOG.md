@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/halospv3/hce.shared/compare/v1.2.3...v1.2.4) (2023-11-09)
+
+
+### Bug Fixes
+
+* **deps:** update commitlint monorepo to v18 ([bc04ff0](https://github.com/halospv3/hce.shared/commit/bc04ff041084d91ab0c33edc73caf32ab9af765c))
+
 ## [1.2.3](https://github.com/halospv3/hce.shared/compare/v1.2.2...v1.2.3) (2023-11-09)
 
 
