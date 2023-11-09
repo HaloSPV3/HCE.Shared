@@ -11,6 +11,24 @@ It is recommended to "install" this repo via [Node Package Manager](#npm)
 
 See [package.json](package.json), [src/index.ts](src/index.ts), and [static/.releaserc.yml](static/.releaserc.yml)
 
+#### Set Up CommitLint
+
+```json
+// package.json
+{
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  }
+}
+```
+
+```bash
+npx husky install
+npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
+```
+
 ### Help
 
 #### Need your VersionInfo before the actual release?
