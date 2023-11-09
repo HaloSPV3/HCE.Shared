@@ -35,7 +35,7 @@
     "prepare": "husky install",
     "presemantic-release": "npm run pack && npm run check",
     "semantic-release": "npx semantic-release",
-    "test": "node --loader tsx --no-warnings --test ./tests/index.test.mts",
+    "test": "tsx --test ./tests/index.test.mts",
     "type": "tsc",
     "validate": "packemon validate",
     "watch": "packemon watch"
