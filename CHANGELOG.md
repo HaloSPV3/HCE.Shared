@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/halospv3/hce.shared/compare/v1.2.2...v1.2.3) (2023-11-09)
+
+
+### Bug Fixes
+
+* **dotnet:** change "MainLine" to "Mainline" ([430d588](https://github.com/halospv3/hce.shared/commit/430d5886d4e142d7a2d5c776457d5044346ce598))
+
 ## [1.2.2](https://github.com/halospv3/hce.shared/compare/v1.2.1...v1.2.2) (2023-11-09)
 
 ## [1.2.1](https://github.com/halospv3/hce.shared/compare/v1.2.0...v1.2.1) (2023-11-09)
