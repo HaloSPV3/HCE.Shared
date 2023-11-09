@@ -36,6 +36,8 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 Make sure you are synced up before doing a dry-run! Semantic-release will fail before printing the version if you aren't synced with the remote!
 Yes, I know that's ridiculous.
 Run `npx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"`
+If the first plugin doesn't run into any issues and infers a version bump from unreleased commits, it will print the next version to the console.
+The [second plugin](https://github.com/felipecrs/semantic-release-export-data#readme) will export the next version and other information as GitHub Action Step exports.
 
 #### Don't want to publish a Node package? 
 
