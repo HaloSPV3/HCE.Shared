@@ -6,4 +6,4 @@ parserOptions:
 settings:
   jest:
     version: 1
-ignorePatterns: cjs
+ignorePatterns: ["cjs", "tests/*.mjs", "tests/*.mjs.*"]
