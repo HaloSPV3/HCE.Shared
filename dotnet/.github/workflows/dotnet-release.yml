@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: Wait for build to succeed
-      uses: lewagon/wait-on-check-action@v1.3.1
+      uses: lewagon/wait-on-check-action@v1.3.3
       with:
         ref: ${{ github.ref }}
         check-name: 'Build (${{matrix.RID}}, ${{matrix.ASSEMBLYNAME}})'
