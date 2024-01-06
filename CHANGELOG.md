@@ -1,3 +1,11 @@
+## [1.2.7](https://github.com/halospv3/hce.shared/compare/v1.2.6...v1.2.7) (2024-01-06)
+
+
+### Bug Fixes
+
+* **deps:** bump @commitlint/cli from 18.4.3 to 18.4.4 ([c732a4b](https://github.com/halospv3/hce.shared/commit/c732a4b9a7154954000b97ba0a2f79765dc6c1a8))
+* **deps:** bump @commitlint/config-conventional from 18.4.3 to 18.4.4 ([cd95f08](https://github.com/halospv3/hce.shared/commit/cd95f082805d3766384a13f5353cc61d7882a0d5))
+
 ## [1.2.6](https://github.com/halospv3/hce.shared/compare/v1.2.5...v1.2.6) (2024-01-05)
 
 
