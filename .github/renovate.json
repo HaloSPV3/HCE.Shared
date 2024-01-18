@@ -2,5 +2,11 @@
   "extends": [
     "config:recommended",
     ":preserveSemverRanges"
+  ],
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    }
   ]
 }
