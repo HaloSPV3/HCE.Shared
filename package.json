@@ -68,7 +68,7 @@
     "@typescript-eslint/parser": "^7.0.0",
     "ajv": "^8.12.0",
     "ajv-draft-04": "^1.0.0",
-    "babel-plugin-cjs-esm-interop": "^3.0.2",
+    "babel-plugin-cjs-esm-interop": "^4.0.0",
     "eslint": "^8.51.0",
     "eslint-config-moon": "^2.0.10",
     "eslint-plugin-disable": "^2.0.3",
