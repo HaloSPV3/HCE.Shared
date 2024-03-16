@@ -10,14 +10,6 @@
     "nodejs-testing.extensions": [
         {
             "extensions": [
-                "mjs",
-                "cjs",
-                "js"
-            ],
-            "parameters": []
-        },
-        {
-            "extensions": [
                 "mts",
                 "cts",
                 "ts"
@@ -38,5 +30,11 @@
     ],
     "nodeTdd.glob": "{src,test}/**/*.{js,ts,jsx,tsx,mts}",
     "nodeTdd.reporter": "tap",
-    "nodeTdd.showCoverage": true
+    "nodeTdd.showCoverage": true,
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "prettier.configPath": ".prettierrc.mjs",
+    "[json]": {
+        "files.trimFinalNewlines": false,
+        "files.insertFinalNewline": true
+    },
 }
