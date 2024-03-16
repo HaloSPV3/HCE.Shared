@@ -46,14 +46,14 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^11.1.0",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^9.2.6",
-    "@semantic-release/npm": "^11.0.0",
+    "@semantic-release/github": "^10.0.2",
+    "@semantic-release/npm": "^12.0.0",
     "@semantic-release/release-notes-generator": "^12.1.0",
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "husky": "^8.0.3",
     "js-yaml": "^4.1.0",
     "node-fetch": "^3.3.2",
-    "semantic-release": "^23.0.0",
+    "semantic-release": "^23.0.4",
     "semantic-release-export-data": "^1.0.1"
   },
   "devDependencies": {
