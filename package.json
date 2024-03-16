@@ -73,7 +73,7 @@
     "eslint-config-moon": "^2.0.10",
     "eslint-plugin-disable": "^2.0.3",
     "node-fetch": "^3.3.2",
-    "packemon": "^4.0.0",
+    "packemon": "^4.0.1",
     "prettier": "^3.0.3",
     "prettier-config-moon": "^1.1.2",
     "tsconfig-moon": "^1.3.0",
