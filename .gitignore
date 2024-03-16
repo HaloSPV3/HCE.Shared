@@ -559,3 +559,4 @@ FodyWeavers.xsd
 cjs/
 lib/
 mjs/
+_tsout/
