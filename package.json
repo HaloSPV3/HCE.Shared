@@ -59,7 +59,7 @@
   "devDependencies": {
     "@babel/cli": "^7.23.4",
     "@halospv3/hce.shared-config": "./",
-    "@tsconfig/node-lts": "^20.0.0",
+    "@tsconfig/node-lts": "^20.1.1",
     "@types/debug": "^4.1.8",
     "@types/js-yaml": "^4.0.8",
     "@types/node": "^20.5.1",
