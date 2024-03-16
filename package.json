@@ -57,13 +57,13 @@
     "semantic-release-export-data": "^1.0.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.4",
+    "@babel/cli": "^7.23.9",
     "@halospv3/hce.shared-config": "./",
     "@tsconfig/node-lts": "^20.1.1",
-    "@types/debug": "^4.1.8",
-    "@types/js-yaml": "^4.0.8",
+    "@types/debug": "^4.1.12",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.11.28",
-    "@types/semantic-release": "^20.0.1",
+    "@types/semantic-release": "^20.0.6",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "ajv": "^8.12.0",
