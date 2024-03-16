@@ -82,7 +82,7 @@
     "typescript": "^5.2.2"
   },
   "engines": {
-    "node": ">=16.12.0"
+    "node": ">=20.8.1"
   },
   "publishConfig": {
     "tag": "latest"
