@@ -7,3 +7,7 @@ settings:
   jest:
     version: 1
 ignorePatterns: ["cjs", "tests/*.mjs", "tests/*.mjs.*"]
+overrides:
+  - files: "*.json"
+    rules:
+      comma-dangle: 2
