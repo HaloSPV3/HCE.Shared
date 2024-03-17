@@ -1,6 +1,6 @@
 {
   "name": "@halospv3/hce.shared-config",
-  "version": "1.2.7",
+  "version": "2.0.0",
   "description": "Automate commit message quality, changelogs, and CI/CD releases. Exports a semantic-release shareable configuration deserialized from this package's '.releaserc.yml'. Shared resources for .NET projects are also distributed with this package.",
   "keywords": [
     "halo",
@@ -82,7 +82,7 @@
     "typescript": "^5.4.2"
   },
   "engines": {
-    "node": ">=20.8.1",
+    "node": ">=18.12.0",
     "npm": ">=10.5.0"
   },
   "engineStrict": true,

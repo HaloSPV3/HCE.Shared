@@ -1,3 +1,28 @@
+## [2.0.0](https://github.com/halospv3/hce.shared/compare/v1.2.7...v2.0.0) (2024-03-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **node:** increase minimum version of NodeJS to 20.8.1 as required by semantic-release
+
+### Bug Fixes
+
+* add minimum npm version; error if required node, npm versions unavailable ([3969ad5](https://github.com/halospv3/hce.shared/commit/3969ad5a012f8e8330a14267a44d2c65f25b0690))
+* **deps:** bump undici from 5.28.2 to 5.28.3 ([7a6f822](https://github.com/halospv3/hce.shared/commit/7a6f8222c5fb83c7764765e956f7587971341da6))
+* **deps:** update commitlint monorepo to v19 ([9237ddb](https://github.com/halospv3/hce.shared/commit/9237ddbecd0b7d9dfbf50b96b9cc926da71ea165))
+* **deps:** update dependency semantic-release to v23 ([7e1a020](https://github.com/halospv3/hce.shared/commit/7e1a020ebf5bc87861c705789055540485713b4c))
+* **deps:** update semantic-release monorepo ([ecd2ad3](https://github.com/halospv3/hce.shared/commit/ecd2ad33907e663cdf351481725a5f8a8ee439fb))
+
+
+### Reverts
+
+* use './' instead of 'file:' ([21fc83f](https://github.com/halospv3/hce.shared/commit/21fc83fef5d4bd1815ff4c2a4324559e40ae5519))
+
+
+### Build System
+
+* **node:** :arrow_up: raise minimum NodeJS version to 20.8.1 ([cb92a3d](https://github.com/halospv3/hce.shared/commit/cb92a3d8917189464f36887b1e43bb099ecc175f))
+
 ## [1.2.7](https://github.com/halospv3/hce.shared/compare/v1.2.6...v1.2.7) (2024-01-06)
 
 
