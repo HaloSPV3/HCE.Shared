@@ -32,7 +32,7 @@
     "format": "prettier --write \"./src/**/*\" \"./tests/**/*\"",
     "lint": "eslint --cache --fix \"./src/**/*\" \"./tests/**/*\"",
     "pack": "packemon pack --addEngines --addFiles --declaration",
-    "prepare": "husky install",
+    "prepare": "husky",
     "presemantic-release": "npm run pack && npm run check",
     "semantic-release": "npx semantic-release",
     "test": "tsx --test ./tests/index.test.mts",
