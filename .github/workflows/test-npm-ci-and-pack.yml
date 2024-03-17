@@ -15,6 +15,8 @@ jobs:
         with:
           cache: "npm"
           node-version-file: package.json
+          check-latest: true
+      - run: npm i -g npm@latest
       - run: npm ci
       - run: npm run pack
       - run: npm run check
