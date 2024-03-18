@@ -1,17 +1,23 @@
 <Project>
-  <!-- https://learn.microsoft.com/en-us/visualstudio/msbuild/zipdirectory-task?view=vs-2022 -->
+  <!-- todo: refactor to Task so users can configure input variables e.g. ZipPublishDir_AppendVariantArgs -->
   <Target Name="ZipPublishDir" AfterTargets="Publish">
     <PropertyGroup>
+      <!-- <ZipPublishDir_AppendVariantArgs>true</ZipPublishDir_AppendVariantArgs> -->
+      <!-- "C:/Repos/HaloSPV3/HXE" -->
       <RepoRoot>$([System.IO.Path]::GetDirectoryName($([MSBuild]::GetPathOfFileAbove('.gitignore', '$(MSBuildProjectDirectory)'))))</RepoRoot>
-      <Destination>$(RepoRoot)/publish/$(AssemblyName).$(Version)$(PART_RuntimeIdentifier)</Destination>
-      <Destination Condition="'$(RuntimeIdentifier)' != '' ">$(Destination).$(RuntimeIdentifier)</Destination>
+      <!-- " (net6.0 win7-x86)" -->
+      <!-- <PART_VariantArgs Condition="$(ZipPublishDir_AppendVariantArgs)"> ($([System.String]::Join(' ', $(TargetFramework), $(RuntimeIdentifier))))</PART_VariantArgs> -->
+      <PART_VariantArgs> ($([System.String]::Join(' ', $(TargetFramework), $(RuntimeIdentifier))))</PART_VariantArgs>
+      
+      <!-- e.g. "C:/Repos/HaloSPV3/HXE/publish/HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
+      <Destination>$(RepoRoot)/publish/$(AssemblyName) $(Version)$(PART_VariantArgs).zip</Destination>
     </PropertyGroup>
 
     <MakeDir Directories="$(RepoRoot)/publish/"/>
 
     <ZipDirectory
       SourceDirectory="$(PublishDir)"
-      DestinationFile="$(Destination).zip"
+      DestinationFile="$(Destination)"
       Overwrite="true" />
   </Target>
 </Project>
