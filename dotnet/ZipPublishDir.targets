@@ -7,7 +7,7 @@
       <Destination Condition="'$(RuntimeIdentifier)' != '' ">$(Destination).$(RuntimeIdentifier)</Destination>
     </PropertyGroup>
 
-    <!-- https://www.nuget.org/packages/GitInfo -->
+    <MakeDir Directories="$(RepoRoot)/publish/"/>
 
     <ZipDirectory
       SourceDirectory="$(PublishDir)"
