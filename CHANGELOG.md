@@ -1,3 +1,11 @@
+## [2.0.1](https://github.com/halospv3/hce.shared/compare/v2.0.0...v2.0.1) (2024-03-18)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @semantic-release/commit-analyzer to v12 ([87c6d12](https://github.com/halospv3/hce.shared/commit/87c6d12c3ab5243e50a0c1b0cf3dafd6c4c20ffa))
+* **dotnet:** try making the '$(RepoRoot)/publish' directory before zipping ([0241146](https://github.com/halospv3/hce.shared/commit/024114698c89f557513a61400729a609d7637bf0))
+
 ## [2.0.0](https://github.com/halospv3/hce.shared/compare/v1.2.7...v2.0.0) (2024-03-17)
 
 
