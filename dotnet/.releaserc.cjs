@@ -25,8 +25,8 @@ if (process.argv.includes("--debug") || process.argv.includes("--verbose")) {
 const newPlugins = hceSharedConfig.plugins;
 
 //#region Insert-Edit Plugins
-/* Insert and/or configure plugins. Can be used to load plugin A before plugin B
-or edit a plugin's existing configuration */
+/* Insert and/or configure plugins. Can be used to load plugin A's Prepare step
+before plugin B's Prepare step. or edit a plugin's existing configuration */
 for (var i = 0; i < newPlugins.length; i++) {
   /** e.g.
   //#region Git Options | https://github.com/semantic-release/git#options
