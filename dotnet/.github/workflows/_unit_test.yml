@@ -1,0 +1,34 @@
+# inspired by https://github.com/GitTools/GitVersion/blob/main/.github/workflows/_unit_tests.yml
+on:
+  workflow_call:
+env:
+  DOTNET_ROLL_FORWARD: "Major"
+
+jobs:
+  unit_test:
+    name: Unit Tests (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          check-latest: true
+          node-version-file: package.json
+      - run: npm i -g npm@latest
+
+      - run: npm ci
+
+      - uses: actions/setup-dotnet@v4.0.0
+        with:
+          dotnet-version: "8.x"
+
+      - run: dotnet test

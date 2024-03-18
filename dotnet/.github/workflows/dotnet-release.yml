@@ -1,9 +1,8 @@
+# Test changes locally with https://github.com/nektos/act
 name: dotnet-release
 
 # TODO
-# - Get AssemblyName, RuntimeIdentifier (RID) from Directory.Build.props, *.csproj
 # - Allow workflows to be driven by the project(s)
-# - support multiple ASSEMBLYNAME parameters for matrices
 
 on:
   push:
@@ -13,72 +12,48 @@ on:
     - "**/*.md"
     - "**/*.txt"
 
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
-
 jobs:
+  ci:
+    name: CI # run test.yml. If it fails, this job fails.
+    uses: ./.github/workflows/ci.yml
   release:
+    needs: [ci] # start 'release' if 'ci' completes successfully
     runs-on: ubuntu-latest
-    strategy: # TODO: Get variables from config file(s). May require a parent workflow to allow matrix runs.
-      matrix:
-        RID: [ "win-x86", "win-x64" ]
-        ASSEMBLYNAME: [ "SPV3.Loader", "SPV3.Installer", "HXE" ] #TODO: update
-    env:
-        PROJPATH: "./src/${{ matrix.ASSEMBLYNAME }}.csproj"
-
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
-    - name: Wait for build to succeed
-      uses: lewagon/wait-on-check-action@v1.3.3
-      with:
-        ref: ${{ github.ref }}
-        check-name: 'Build (${{matrix.RID}}, ${{matrix.ASSEMBLYNAME}})'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        wait-interval: 10
-
     ################
     # SETUP
     ################
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0 # Required by GitVersion
+        fetch-depth: 0 # Required by GitVersion, Semantic Release
         submodules: "recursive" # submodule fetch depth unknown
-    - uses: actions/setup-dotnet@v4
+    
+    - name: Setup Dotnet
+      uses: actions/setup-dotnet@v4
+    
     - name: Setup Node
       uses: actions/setup-node@v4
-    - run: npm ci # Required by Semantic Release
 
-    ################
-    # BUILD
-    ################
-    - name: dotnet publish
-      run: |
-        dotnet publish ${{ matrix.PROJPATH }} -c Release --no-self-contained -p:ContinuousIntegrationBuild=true
-        src/.msb.noConfig.ps1
+    - name: NPM - Update NPM to Latest
+      run: npm install -g npm@latest
 
-    # required variables: TargetFramework, RuntimeIdentifier, GitVersion_FullSemVer
-    # TODO: replace with ZipPublishDir (see Bintoss/GroupBox.Avalonia)
-    - name: Compress Publish Artifacts
-      shell: pwsh
-      run: |
-        $archiveName = "$env:ASSEMBLYNAME.$env:RID.$env:GitVersion_FullSemVer.zip";
-        Compress-Archive -Path publish -DestinationPath $archiveName -CompressionLevel Optimal;
+    - name: NPM - Clean Install
+      run: npm ci # Required by Semantic Release
 
     ################
     # RELEASE
+    # `dotnet publish` must be executed by @semantic-release/exec
+    # see 'dotnet/.releaserc.cjs'
     ################
     # https://github.com/semantic-release/semantic-release
     - name: Semantic Release
       run: npx semantic-release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: publish-artifacts
-        path: publish
 
     - name: Publish to GitHub Packages
       working-directory: publish
