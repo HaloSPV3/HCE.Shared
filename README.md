@@ -15,13 +15,32 @@ npm install --save-dev @halospv3/hce.shared-config
 
 ### 2. Customize Semantic Release
 
-   WARNING! Defining a property will *overwrite* the previous value. Arrays and objects are *not* merged. You can...
-    - Assign to top-level variables to avoid modifying the plugins array.
-    - Write your config in CJS to manually merge objects and arrays.
+WARNING! Defining a property will *overwrite* the previous value. Arrays and objects are *not* merged. You can...
+- Assign to top-level variables to avoid modifying the plugins array.
+- Write your config in CJS and manually merge objects and arrays.
 
-   Configs:
-    - `hce.shared-config`: [static/.releaserc.yml](static/.releaserc.yml)
-    - [dotnet/.releaserc.cjs](dotnet/.releaserc.cjs) based on [BinToss/GroupBox.Avalonia's Semantic Release config](https://github.com/BinToss/GroupBox.Avalonia).
+**Configs**
+- `hce.shared-config`: [static/.releaserc.yml](static/.releaserc.yml)
+- [dotnet/.releaserc.cjs](dotnet/.releaserc.cjs) based on [BinToss/GroupBox.Avalonia's Semantic Release config](https://github.com/BinToss/GroupBox.Avalonia).
+
+**Notable Plugin Properties**
+- [`@semantic-release/commit-analyzer`](https://github.com/semantic-release/commit-analyzer#options)
+  - preset (set to conventionalcommits)
+  - parserOpts
+  - releaseRules
+- [`@semantic-release/release-notes-generator`](https://github.com/semantic-release/release-notes-generator#options)
+  - preset (set to conventionalcommits)
+  - parserOpts
+  - writerOpts
+- [`@semantic-release/changelog`](https://github.com/semantic-release/changelog#options)
+  - changelogFile (default: CHANGELOG.md)
+- [`@semantic-release/git`](https://github.com/semantic-release/git#options)
+  - assets (default: ['CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json'])
+- `@semantic-release/exec`
+  - prepareCmd
+- [`@semantic-release/github`](https://github.com/semantic-release/github#options)
+  - assets
+  - draftRelease (default: false)
 
 ### 3. Set Up CommitLint
 
