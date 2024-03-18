@@ -21,7 +21,7 @@ plugins: # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/con
         - README.md
         - CHANGELOG.md
   # Arbitrary shell commands - https://github.com/semantic-release/exec
-  # hint: set 'prepareCmd' to `dotnet publish`. This can be a top-level property!
+  # hint: set 'prepareCmd' to `dotnet publish`.
   #   Because this is sorted after @semantic-release/git, the new Git tag will 
   #   be visible to dotnet (and GitVersion). Dotnet artifacts will be
   #   versioned accordingly.
