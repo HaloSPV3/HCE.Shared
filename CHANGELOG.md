@@ -1,3 +1,10 @@
+## [2.1.0](https://github.com/halospv3/hce.shared/compare/v2.0.1...v2.1.0) (2024-03-18)
+
+
+### Features
+
+* add plugin '@semantic-release/exec' ([61447fc](https://github.com/halospv3/hce.shared/commit/61447fcdef19db8cd7f103edd54354fa5c4cb202))
+
 ## [2.0.1](https://github.com/halospv3/hce.shared/compare/v2.0.0...v2.0.1) (2024-03-18)
 
 
