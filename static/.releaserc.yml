@@ -20,13 +20,17 @@ plugins: # https://semantic-release.gitbook.io/semantic-release/v/beta/usage/con
     - assets:
         - README.md
         - CHANGELOG.md
+  # Arbitrary shell commands - https://github.com/semantic-release/exec
+  # hint: set 'prepareCmd' to `dotnet publish`. This can be a top-level property!
+  #   Because this is sorted after @semantic-release/git, the new Git tag will 
+  #   be visible to dotnet (and GitVersion). Dotnet artifacts will be
+  #   versioned accordingly.
+  # Plugins' Steps: https://github.com/semantic-release/semantic-release/blob/master/docs/extending/plugins-list.md
+  - "@semantic-release/exec"
   - - "@semantic-release/github"
     - assets:
         - path: ./publish/*
-## (OPTIONAL) update Version strings
+
+## (OPTIONAL) update static Version strings.
 # https://github.com/jpoehnelt/semantic-release-replace-plugin
 # https://github.com/droidsolutions/semantic-release-update-file
-
-## Arbitrary shell commands
-# (useful for `dotnet publish publish/`, but should be run after version tag is pushed so InformationalVersionInfo isn't a subversion)
-# https://github.com/semantic-release/exec
