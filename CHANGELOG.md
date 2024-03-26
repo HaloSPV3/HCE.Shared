@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/halospv3/hce.shared/compare/v2.1.1...v2.1.2) (2024-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @semantic-release/release-notes-generator to v13 ([0758bc9](https://github.com/halospv3/hce.shared/commit/0758bc9c9bb8338855880218e4c1086e25384baa))
+
 ## [2.1.1](https://github.com/halospv3/hce.shared/compare/v2.1.0...v2.1.1) (2024-03-26)
 
 ## [2.1.0](https://github.com/halospv3/hce.shared/compare/v2.0.1...v2.1.0) (2024-03-18)
