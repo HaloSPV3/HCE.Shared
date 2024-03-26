@@ -73,7 +73,8 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 Add the file `Directory.Build.props` to your repository's root directory or solution directory if you haven't already.
 Then, add the following properties:
 ```xml
-<Project>
+<Project> <!-- Minimal requirements for dotnet/msbuild integration -->
+    <Import Project="./node_modules/@halospv3/hce.shared-config/dotnet/ZipPublishDir.targets" />
     <PropertyGroup>
         <ProjectRootDir>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</ProjectRootDir>
         <HCESharedDir>$(ProjectRootDir)/node_modules/@halospv3/hce.shared-config/</HCESharedDir>
