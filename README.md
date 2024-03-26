@@ -70,6 +70,29 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 
 ### 4. (dotnet) Add/Edit Directory.Build.props
 
+
+> Example Directory.Build.props from [BinToss/GroupBox.Avalonia](https://github.com/BinToss/GroupBox.Avalonia)
+
+```xml
+<Project>
+   <Import Project="./node_modules/@halospv3/hce.shared-config/dotnet/ZipPublishDir.targets" />
+   <PropertyGroup>
+      <ProjectRootDir>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</ProjectRootDir>
+      <HCESharedDir>$(ProjectRootDir)node_modules/@halospv3/hce.shared-config/</HCESharedDir>
+      <GitVersion_Path>$(HCESharedDir)GitVersion.yml</GitVersion_Path>
+      <AvaloniaVersion>11.0.10</AvaloniaVersion>
+   </PropertyGroup>
+
+   <PropertyGroup Condition="'$(CI)' == 'true'">
+      <Configuration>Release</Configuration>
+      <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+      <Deterministic>true</Deterministic>
+   </PropertyGroup>
+</Project>
+```
+
+----
+
 Add the file `Directory.Build.props` to your repository's root directory or solution directory if you haven't already.
 Then, add the following properties:
 ```xml
