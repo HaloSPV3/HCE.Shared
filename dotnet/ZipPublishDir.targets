@@ -14,12 +14,20 @@
     <PropertyGroup>
       <!-- todo: refactor to Task so users can configure input variables e.g. ZipPublishDir_AppendVariantArgs -->
       <!-- <ZipPublishDir_AppendVariantArgs>true</ZipPublishDir_AppendVariantArgs> -->
-      <!-- " (net6.0 win7-x86)" -->
-      <!-- <PART_VariantArgs Condition="$(ZipPublishDir_AppendVariantArgs)"> ($([System.String]::Join(' ', $(TargetFramework), $(RuntimeIdentifier))))</PART_VariantArgs> -->
-      <PART_VariantArgs> ($([System.String]::Join(' ', $(TargetFramework), $(RuntimeIdentifier))))</PART_VariantArgs>
       
-      <!-- e.g. "C:/Repos/HaloSPV3/HXE/publish/HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
-      <Destination>$(RepoRoot)/publish/$(AssemblyName) $(Version)$(PART_VariantArgs).zip</Destination>
+      <!-- Only add Configuration when Debug -->
+      <dbgCfg Condition="$(Configuration) == Debug">$(Configuration)</dbgCfg>
+      <!-- e.g. "net6.0 win7-x86"
+                "Debug net6.0 win7-x86" -->
+      <spaceArgs>$([System.String]::Copy("$(dbgCfg) $(TargetFramework) $(RuntimeIdentifier)").Trim())</spaceArgs>
+      <!-- e.g " (Debug net6.0 win7-x86)"
+               " (net6.0 win7-x86)"
+               "" -->
+      <!-- <variantArgs Condition="($(spaceArgs.Length) &gt; 0) And $(ZipPublishDir_AppendVariantArgs)"> ($(spaceArgs))</variantArgs> -->
+      <variantArgs Condition="$(spaceArgs.Length) &gt; 0"> ($(spaceArgs))</variantArgs>
+      <version Condition="'$(Version)' != ''"> $(Version)</version>
+      <!-- e.g. "C:\Repos\HaloSPV3\HXE\publish\HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
+      <Destination>$([System.IO.Path]::Join($(RepoRootPublishDir), "$(AssemblyName)$(version)$(variantArgs).zip"))</Destination>
       <!-- todo: look into .NET 8 SDK's Artifacts feature -->
     </PropertyGroup>
 
