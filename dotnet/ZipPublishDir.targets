@@ -1,19 +1,29 @@
 <Project>
-  <!-- todo: refactor to Task so users can configure input variables e.g. ZipPublishDir_AppendVariantArgs -->
+  <PropertyGroup>
+    <!-- e.g. "C:\Repos\HaloSPV3\HXE" -->
+    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
+    <RepoRootPublishDir>$([System.IO.Path]::Join("$(RepoRoot)","publish"))</RepoRootPublishDir>
+
+    <!-- placeholder values for HCE.Shared ONLY -->
+    <_isRepoRootHceShared>$(RepoRoot.ToLowerInvariant().Contains("hce.shared"))</_isRepoRootHceShared>
+    <Configuration Condition="$(_isRepoRootHceShared) And '$(Configuration)' == ''">Release</Configuration>
+    <TargetFramework Condition="$(_isRepoRootHceShared) And ('$(TargetFramework)' == '')">net6.0</TargetFramework>
+    <RuntimeIdentifier Condition="$(_isRepoRootHceShared) And ('$(RuntimeIdentifier)' == '')">win7-x86</RuntimeIdentifier>
+  </PropertyGroup>
   <Target Name="ZipPublishDir" AfterTargets="Publish">
     <PropertyGroup>
+      <!-- todo: refactor to Task so users can configure input variables e.g. ZipPublishDir_AppendVariantArgs -->
       <!-- <ZipPublishDir_AppendVariantArgs>true</ZipPublishDir_AppendVariantArgs> -->
-      <!-- "C:/Repos/HaloSPV3/HXE" -->
-      <RepoRoot>$([System.IO.Path]::GetDirectoryName($([MSBuild]::GetPathOfFileAbove('.gitignore', '$(MSBuildProjectDirectory)'))))</RepoRoot>
       <!-- " (net6.0 win7-x86)" -->
       <!-- <PART_VariantArgs Condition="$(ZipPublishDir_AppendVariantArgs)"> ($([System.String]::Join(' ', $(TargetFramework), $(RuntimeIdentifier))))</PART_VariantArgs> -->
       <PART_VariantArgs> ($([System.String]::Join(' ', $(TargetFramework), $(RuntimeIdentifier))))</PART_VariantArgs>
       
       <!-- e.g. "C:/Repos/HaloSPV3/HXE/publish/HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
       <Destination>$(RepoRoot)/publish/$(AssemblyName) $(Version)$(PART_VariantArgs).zip</Destination>
+      <!-- todo: look into .NET 8 SDK's Artifacts feature -->
     </PropertyGroup>
 
-    <MakeDir Directories="$(RepoRoot)/publish/"/>
+    <MakeDir Directories="$(RepoRootPublishDir)"/>
 
     <ZipDirectory
       SourceDirectory="$(PublishDir)"
