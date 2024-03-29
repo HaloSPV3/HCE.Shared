@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/halospv3/hce.shared/compare/v2.2.2...v2.2.3) (2024-03-29)
+
+
+### Bug Fixes
+
+* add commitlint config to package exports ([db87cc8](https://github.com/halospv3/hce.shared/commit/db87cc81f0e1718a6747f0ba6746f078685b6142))
+
 ## [2.2.2](https://github.com/halospv3/hce.shared/compare/v2.2.1...v2.2.2) (2024-03-29)
 
 
