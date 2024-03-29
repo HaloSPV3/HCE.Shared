@@ -46,19 +46,11 @@ WARNING! Defining a property will *overwrite* the previous value. Arrays and obj
 
 ```json
 // package.json
-// body-max-line-length is now a Warning instead of an Error.
 {
   "commitlint": {
     "extends": [
-        "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "body-max-line-length": [
-        1,
-        "always",
-        100
-      ]
-    }
+        "./node_modules/@halospv3/hce.shared-config/commitlint.config.ts"
+    ]
   }
 }
 ```
