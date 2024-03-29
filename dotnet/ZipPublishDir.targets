@@ -1,41 +1,75 @@
 <Project>
-  <PropertyGroup>
-    <!-- e.g. "C:\Repos\HaloSPV3\HXE" -->
-    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
-    <RepoRootPublishDir>$([System.IO.Path]::Join("$(RepoRoot)","publish"))</RepoRootPublishDir>
-
-    <!-- placeholder values for HCE.Shared ONLY -->
-    <_isRepoRootHceShared>$(RepoRoot.ToLowerInvariant().Contains("hce.shared"))</_isRepoRootHceShared>
-    <Configuration Condition="$(_isRepoRootHceShared) And '$(Configuration)' == ''">Release</Configuration>
-    <TargetFramework Condition="$(_isRepoRootHceShared) And ('$(TargetFramework)' == '')">net6.0</TargetFramework>
-    <RuntimeIdentifier Condition="$(_isRepoRootHceShared) And ('$(RuntimeIdentifier)' == '')">win7-x86</RuntimeIdentifier>
-  </PropertyGroup>
-  <Target Name="ZipPublishDir" AfterTargets="Publish">
+  <Target Name="ZipPublishDir" AfterTargets="Publish"
+          Outputs="$(DestinationFile)">
     <PropertyGroup>
-      <!-- todo: refactor to Task so users can configure input variables e.g. ZipPublishDir_AppendVariantArgs -->
-      <!-- <ZipPublishDir_AppendVariantArgs>true</ZipPublishDir_AppendVariantArgs> -->
+      <!-- Required Parameters -->
+      <RepoRoot Condition="'$(RepoRoot)' == '' And '$(ProjectRootDir)' != ''">$(ProjectRootDir)</RepoRoot>
+      <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
+
+      <!-- Optional Parameters
+          - AssemblyName
+          - Version
+          - VariantArgs (default: Configuration;TargetFramework;RuntimeIdentifier)
+          - Configuration
+          - TargetFramework
+          - RuntimeIdentifier
+          -->
+      <AppendVariantArgs Condition="'$(AppendVariantArgs)' == ''">true</AppendVariantArgs>
+
+      <appendVarArgs>$(AppendVariantArgs)</appendVarArgs>
+      <repoRootPublishDir>$(RepoRoot)/publish</repoRootPublishDir>
       
       <!-- Only add Configuration when Debug -->
-      <dbgCfg Condition="$(Configuration) == Debug">$(Configuration)</dbgCfg>
-      <!-- e.g. "net6.0 win7-x86"
-                "Debug net6.0 win7-x86" -->
-      <spaceArgs>$([System.String]::Copy("$(dbgCfg) $(TargetFramework) $(RuntimeIdentifier)").Trim())</spaceArgs>
-      <!-- e.g " (Debug net6.0 win7-x86)"
-               " (net6.0 win7-x86)"
-               "" -->
-      <!-- <variantArgs Condition="($(spaceArgs.Length) &gt; 0) And $(ZipPublishDir_AppendVariantArgs)"> ($(spaceArgs))</variantArgs> -->
-      <variantArgs Condition="$(spaceArgs.Length) &gt; 0"> ($(spaceArgs))</variantArgs>
+      <dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</dbgCfg>
+      <!-- "net6.0 win7-x86"
+           "Debug net6.0 win7-x86" -->
+      <spaceArgs Condition="'$(VariantArgs)' != ''">$(VariantArgs.Replace(";"," ").Trim())</spaceArgs>
+      <spaceArgs Condition="'$(spaceArgs)' == ''">$([System.String]::Join(' ',$(dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</spaceArgs>
+      <!-- " (Debug net6.0 win7-x86)"
+           " (net6.0 win7-x86)"
+           "" -->
+      <enclosedVArgs Condition="$(appendVarArgs) And '$(spaceArgs)' != ''"> ($(spaceArgs))</enclosedVArgs>
+      <!-- " 1.2.3-preview.4"
+           "" -->
       <version Condition="'$(Version)' != ''"> $(Version)</version>
-      <!-- e.g. "C:\Repos\HaloSPV3\HXE\publish\HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
-      <Destination>$([System.IO.Path]::Join($(RepoRootPublishDir), "$(AssemblyName)$(version)$(variantArgs).zip"))</Destination>
+      <!-- "C:\Repos\HaloSPV3\HXE\publish\HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
+      <DestinationFile>$(repoRootPublishDir)/$(AssemblyName)$(version)$(enclosedVArgs).zip</DestinationFile>
       <!-- todo: look into .NET 8 SDK's Artifacts feature -->
     </PropertyGroup>
 
-    <MakeDir Directories="$(RepoRootPublishDir)"/>
-
+    <MakeDir Condition="!Exists('$(repoRootPublishDir)')" Directories="$(repoRootPublishDir)"/>
     <ZipDirectory
       SourceDirectory="$(PublishDir)"
-      DestinationFile="$(Destination)"
+      DestinationFile="$(DestinationFile)"
       Overwrite="true" />
+
+      <Message Text="Publish assets zipped to '$(DestinationFile)'." Importance="high"/>
   </Target>
+
+  <!-- placeholder values for HCE.Shared ONLY -->
+  <PropertyGroup Condition="$([System.String]::Copy($(MSBuildProjectDirectory)).ToLowerInvariant().Contains('hce.shared'))">
+    <Configuration>Release</Configuration>
+    <TargetFramework>net6.0</TargetFramework>
+    <RuntimeIdentifier>win7-x86</RuntimeIdentifier>
+    <RuntimeIdentifiers>;;;win7-x86;win7-x64;;;</RuntimeIdentifiers>
+    <ZipPublishDir_AppendVariantArgs>true</ZipPublishDir_AppendVariantArgs>
+    <!-- <VariantArgs>$(MSBuildProjectName);$(Configuration)</VariantArgs> -->
+
+    <!--  -->
+
+    <appendVarArgs>$(ZipPublishDir_AppendVariantArgs)</appendVarArgs>
+    <dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</dbgCfg>
+    <!-- "net6.0 win7-x86" -->
+    <spaceArgs Condition="'$(VariantArgs)' != ''">$(VariantArgs.Replace(";"," ").Trim())</spaceArgs>
+    <spaceArgs Condition="'$(spaceArgs)' == ''">$([System.String]::Join(' ',$(dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</spaceArgs>
+    <!-- " (net6.0 win7-x86)" -->
+    <enclosedVArgs Condition="$(appendVarArgs) And '$(spaceArgs)' != ''"> ($(spaceArgs))</enclosedVArgs>
+    <!-- "win7-x86 win7-x64" -->
+    <spaceSeparatedRIDs Condition="$(RuntimeIdentifiers) != ''">$(RuntimeIdentifiers.ToString().Replace(";"," ").Trim())</spaceSeparatedRIDs>
+    <!-- " (win7-x86 win7-x64)" -->
+    <enclosedRIDs Condition="$(appendVarArgs) And '$(spaceSeparatedRIDs)' != ''"> ($(spaceSeparatedRIDs))</enclosedRIDs>
+    <Version>1.0.0</Version>
+    <version Condition="'$(Version)' != ''"> $(Version)</version>
+
+  </PropertyGroup>
 </Project>
