@@ -67,19 +67,20 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 
 ```xml
 <Project>
-   <Import Project="./node_modules/@halospv3/hce.shared-config/dotnet/ZipPublishDir.targets" />
-   <PropertyGroup>
-      <ProjectRootDir>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</ProjectRootDir>
-      <HCESharedDir>$(ProjectRootDir)node_modules/@halospv3/hce.shared-config/</HCESharedDir>
-      <GitVersion_Path>$(HCESharedDir)GitVersion.yml</GitVersion_Path>
-      <AvaloniaVersion>11.0.10</AvaloniaVersion>
-   </PropertyGroup>
+  <PropertyGroup>
+    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
+    <HCESharedDir Condition="'$(HCESharedDir)' == ''">$(RepoRoot)node_modules/@halospv3/hce.shared-config/</HCESharedDir>
+    <GitVersion_Path Condition="'$(GitVersion_Path)' == ''">$(HCESharedDir)GitVersion.yml</GitVersion_Path>
+    <AvaloniaVersion>11.0.10</AvaloniaVersion>
+  </PropertyGroup>
 
-   <PropertyGroup Condition="'$(CI)' == 'true'">
-      <Configuration>Release</Configuration>
-      <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-      <Deterministic>true</Deterministic>
-   </PropertyGroup>
+  <PropertyGroup Condition="'$(CI)' == 'true'">
+    <Configuration>Release</Configuration>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <Import Project="$(HCESharedDir)/dotnet/ZipPublishDir.targets" />
 </Project>
 ```
 
