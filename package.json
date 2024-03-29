@@ -1,6 +1,6 @@
 {
   "name": "@halospv3/hce.shared-config",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Automate commit message quality, changelogs, and CI/CD releases. Exports a semantic-release shareable configuration deserialized from this package's '.releaserc.yml'. Shared resources for .NET projects are also distributed with this package.",
   "keywords": [
     "halo",
@@ -17,10 +17,10 @@
     "!tests/",
     "CHANGELOG.md",
     "cjs/**/*",
+    "commitlint.config.js",
     "dotnet/",
     "src/**/*",
-    "static/**/*",
-    "commitlint.config.js"
+    "static/**/*"
   ],
   "main": "./cjs/index.cjs",
   "infra": "polyrepo",
