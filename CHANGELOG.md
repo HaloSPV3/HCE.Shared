@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/halospv3/hce.shared/compare/v2.2.1...v2.2.2) (2024-03-29)
+
+
+### Bug Fixes
+
+* use the correct file extension for commitlint config in files array ([9f5bd5f](https://github.com/halospv3/hce.shared/commit/9f5bd5fd52b37ac4a86617bc921053a05a92c239))
+
 ## [2.2.1](https://github.com/halospv3/hce.shared/compare/v2.2.0...v2.2.1) (2024-03-29)
 
 
