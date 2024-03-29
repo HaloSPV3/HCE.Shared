@@ -19,7 +19,8 @@
     "cjs/**/*",
     "dotnet/",
     "src/**/*",
-    "static/**/*"
+    "static/**/*",
+    "commitlint.config.js"
   ],
   "main": "./cjs/index.cjs",
   "infra": "polyrepo",
