@@ -1,3 +1,18 @@
+## [2.2.0](https://github.com/halospv3/hce.shared/compare/v2.1.2...v2.2.0) (2024-03-29)
+
+
+### Features
+
+* **dotnet:** add GitVersion 6.0 config ([3784c72](https://github.com/halospv3/hce.shared/commit/3784c72ea2e37dcced13ccc322476f0d93d2bd9b))
+* **dotnet:** add global "RepoRoot", "RepoRootPublishDir", and placeholder properties ([23d330a](https://github.com/halospv3/hce.shared/commit/23d330a2ca4769fcd14fe8f1a409f6801a7a1ea3))
+* **dotnet:** rework ZipPublishDir ([618ba95](https://github.com/halospv3/hce.shared/commit/618ba95b3d731dc1b560e91757aa02e947b09e03))
+* move commitlint config to shared file ([66efb30](https://github.com/halospv3/hce.shared/commit/66efb30a9e4351d02a761edf3a49722bc8a0f111))
+
+
+### Bug Fixes
+
+* **dotnet:** trim variant args; undefine if parentheses would be empty ([10414ff](https://github.com/halospv3/hce.shared/commit/10414ffc58950bae4d582d2263cbf9d7a51235eb)), closes [#356](https://github.com/halospv3/hce.shared/issues/356)
+
 ## [2.1.2](https://github.com/halospv3/hce.shared/compare/v2.1.1...v2.1.2) (2024-03-26)
 
 
