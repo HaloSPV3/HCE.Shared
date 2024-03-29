@@ -15,6 +15,17 @@ npm install --save-dev @halospv3/hce.shared-config
 
 ### 2. Customize Semantic Release
 
+```json
+// package.json
+{
+  "release": {
+    "extends": [
+        "@halospv3/hce.shared-config"
+    ]
+  }
+}
+```
+
 WARNING! Defining a property will *overwrite* the previous value. Arrays and objects are *not* merged. You can...
 - Assign to top-level variables to avoid modifying the plugins array.
 - Write your config in CJS and manually merge objects and arrays.
