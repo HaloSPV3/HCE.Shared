@@ -1,4 +1,6 @@
+/* eslint-disable import/no-default-export */
 import { RuleConfigSeverity, type UserConfig } from "@commitlint/types";
+
 const commitlint: UserConfig = {
     extends: ["@commitlint/config-conventional"],
     rules: {
