@@ -5,6 +5,7 @@
     ":preserveSemverRanges"
   ],
   "baseBranches": [ "develop" ],
+  "semanticCommitType": "build",
   "packageRules": [
     {
       "matchDepTypes": [ "devDependencies" ],
