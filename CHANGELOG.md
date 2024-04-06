@@ -1,3 +1,5 @@
+## [2.2.4](https://github.com/halospv3/hce.shared/compare/v2.2.3...v2.2.4) (2024-04-06)
+
 ## [2.2.3](https://github.com/halospv3/hce.shared/compare/v2.2.2...v2.2.3) (2024-03-29)
 
 
