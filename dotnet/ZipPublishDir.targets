@@ -6,6 +6,12 @@
     <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(RepoRootPublishDir)</PackageOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(CI)' != ''">
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Configuration>Release</Configuration>
+  </PropertyGroup>
+
   <Target Name="ZipPublishDir" AfterTargets="Publish"
           Outputs="$(DestinationFile)">
     <PropertyGroup>
