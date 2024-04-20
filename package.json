@@ -18,7 +18,7 @@
     "CHANGELOG.md",
     "cjs/**/*",
     "commitlint.config.ts",
-    "dotnet/",
+    "dotnet/**/*",
     "src/**/*",
     "static/**/*"
   ],
