@@ -17,7 +17,6 @@
     "!tests/",
     "CHANGELOG.md",
     "cjs/**/*",
-    "commitlint.config.js",
     "commitlint.config.ts",
     "dotnet/",
     "src/**/*",
