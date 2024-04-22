@@ -11,7 +11,7 @@
  ** Plugins Configuration
  * Plugins are configured via tuple-like arrays e.g. ['plugin name', {config object}].
  *
- * WARNING! Arrays and child objects are overwritten entirely.
+ * ! WARNING! Arrays and child objects are overwritten entirely.
  * When 'plugins' is set, only commit-analyzer is added if missing.
  */
 
