@@ -1,10 +1,10 @@
 # input: SLN_OR_PROJ_FILES
 # Comma-separated. May be relative or absolute.
 
-[System.IO.FileInfo[]]$solutions += ($env:SLN_OR_PROJ_FILES -split ';' | ForEach-Object { Get-Item $_ });
+[System.IO.FileInfo[]]$solutions += ($env:SLN_OR_PROJ_FILES -split ';' | ForEach-Object { if ($_.Length -gt 0) { Get-Item $_ } });
 if ($args.Count -gt 0) {
     $args | ForEach-Object {
-        $solutions += ($args[0] -split ';' | ForEach-Object { Get-Item $_ })
+        $solutions += ($_ -split ';' | ForEach-Object { Get-Item $_ })
     }
 }
 
@@ -57,10 +57,11 @@ if ($solutions.Count -eq 0) {
     throw [System.IO.FileNotFoundException]::new('No Solution files (.sln, .slnf, .slnx) or Project files (.csproj, .fsproj, .proj) could be found!')
 }
 
-# solutions/projects are build sequentially, but Debug/Release variants are built in parallel
+# solutions/projects are build sequentially. Debug is built, then Release is build.
 $solutions | ForEach-Object {
-    $sln = $_;
-    'Debug', 'Release' | ForEach-Object -Parallel {
-        dotnet build $sln --configuration $_
+    ($_, 'Debug'), ($_, 'Release') |
+    ForEach-Object {
+        Set-Location $_[0].Directory
+        dotnet build ($_[0].FullName) --configuration $_[1]
     }
 }
