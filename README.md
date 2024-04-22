@@ -66,6 +66,14 @@ merged. You can...
 	}
 }
 ```
+or
+
+```ts
+/* eslint-disable import/no-default-export */
+import commitlintConfig from '@halospv3/hce.shared-config/commitLintConfig';
+
+export default commitlintConfig;
+```
 
 ```sh
 npx husky
