@@ -1,8 +1,11 @@
-# https://www.npmjs.com/package/eslint-config-moon-node
+# https://www.npmjs.com/package/eslint-config-moon
 root: true
-extends: ['moon', 'moon/node']
+extends: ['moon', 'moon/node', 'plugin:json/recommended']
 parserOptions:
   project: tsconfig.test.json
+plugins:
+  - '@stylistic/eslint-plugin-ts'
+  - 'json'
 settings:
   jest:
     version: 1
