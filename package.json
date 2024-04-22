@@ -22,12 +22,11 @@
     "!_tsout/",
     "!tests/",
     "CHANGELOG.md",
-    "cjs/**/*",
     "dotnet/**/*",
     "mjs/**/*",
     "src/**/*"
   ],
-  "main": "./cjs/index.cjs",
+  "main": "./mjs/index.mjs",
   "infra": "polyrepo",
   "repository": "github:halospv3/hce.shared",
   "scripts": {
@@ -101,26 +100,18 @@
     "tag": "latest"
   },
   "exports": {
+    ".": {
+      "types": "./mjs/index.d.ts",
+      "import": "./mjs/index.mjs"
+    },
     "./package.json": "./package.json",
     "./*": {
-      "types": "./cjs/*.d.ts",
-      "default": "./cjs/*.cjs"
-    },
-    "./dotnet/*": {
-      "types": "./cjs/dotnet/*.d.ts",
-      "default": "./cjs/dotnet/*.cjs"
-    },
-    ".": {
-      "types": "./cjs/index.d.ts",
-      "import": "./cjs/index-wrapper.mjs",
-      "default": "./cjs/index.cjs"
+      "types": "./mjs/*.d.ts",
+      "import": "./mjs/*.mjs"
     }
   },
-  "types": "./cjs/index.d.ts",
+  "types": "./mjs/index.d.ts",
   "packemon": {
-    "format": [
-      "cjs"
-    ],
     "platform": "node",
     "inputs": {
       "commitlintConfig": "src/commitlintConfig.ts",
