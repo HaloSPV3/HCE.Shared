@@ -1,0 +1,9 @@
+<!--
+    Import all other .props and .targets in this directory
+    If you import this, you don't need to import anything else. -->
+<Project Label="All HCE.Shared Properties and Targets">
+  <Import Project="./HCE.Shared.CI.props" />
+  <Import Project="./ZipPublishDir.targets" />
+  <!-- Must be explicitly targeted via 'dotnet project.csproj -t:PublishAll'. May lead to incompatibility errors -->
+  <Import Project="./PublishAll.targets" />
+</Project>
