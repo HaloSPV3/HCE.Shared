@@ -1,7 +1,12 @@
 {
     "cSpell.words": [
         "conventionalcommits",
-        "halospv3"
+        "GHPR",
+        "globbed",
+        "GLPR",
+        "halospv3",
+        "nameof",
+        "packemon"
     ],
     "files.readonlyInclude": {
         "node_modules/**": true
