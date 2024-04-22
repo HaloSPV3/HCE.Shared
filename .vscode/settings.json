@@ -25,6 +25,7 @@
 			]
 		}
 	],
+	"yaml.format.singleQuote": true,
 	"yaml.schemas": {
 		"https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
 	},
@@ -39,7 +40,9 @@
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"prettier.configPath": ".prettierrc.mjs",
 	"[json]": {
-		"files.trimFinalNewlines": false,
+		"files.insertFinalNewline": true
+	},
+	"[jsonc]": {
 		"files.insertFinalNewline": true
 	},
 }
