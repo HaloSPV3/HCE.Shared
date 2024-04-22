@@ -1,45 +1,45 @@
 {
-    "cSpell.words": [
-        "conventionalcommits",
-        "GHPR",
-        "globbed",
-        "GLPR",
-        "halospv3",
-        "nameof",
-        "packemon"
-    ],
-    "files.readonlyInclude": {
-        "node_modules/**": true
-    },
-    "typescript.implementationsCodeLens.enabled": true,
-    "nodejs-testing.extensions": [
-        {
-            "extensions": [
-                "mts",
-                "cts",
-                "ts"
-            ],
-            "parameters": [
-                "--import",
-                "tsx"
-            ]
-        }
-    ],
-    "yaml.schemas": {
-        "https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
-    },
-    "conventionalCommits.scopes": [
-        "dotnet",
-        "node",
-        "vscode"
-    ],
-    "nodeTdd.glob": "{src,test}/**/*.{js,ts,jsx,tsx,mts}",
-    "nodeTdd.reporter": "tap",
-    "nodeTdd.showCoverage": true,
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "prettier.configPath": ".prettierrc.mjs",
-    "[json]": {
-        "files.trimFinalNewlines": false,
-        "files.insertFinalNewline": true
-    },
+	"cSpell.words": [
+		"conventionalcommits",
+		"GHPR",
+		"globbed",
+		"GLPR",
+		"halospv3",
+		"nameof",
+		"packemon"
+	],
+	"files.readonlyInclude": {
+		"node_modules/**": true
+	},
+	"typescript.implementationsCodeLens.enabled": true,
+	"nodejs-testing.extensions": [
+		{
+			"extensions": [
+				"mts",
+				"cts",
+				"ts"
+			],
+			"parameters": [
+				"--import",
+				"tsx"
+			]
+		}
+	],
+	"yaml.schemas": {
+		"https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
+	},
+	"conventionalCommits.scopes": [
+		"dotnet",
+		"node",
+		"vscode"
+	],
+	"nodeTdd.glob": "{src,test}/**/*.{js,ts,jsx,tsx,mts}",
+	"nodeTdd.reporter": "tap",
+	"nodeTdd.showCoverage": true,
+	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"prettier.configPath": ".prettierrc.mjs",
+	"[json]": {
+		"files.trimFinalNewlines": false,
+		"files.insertFinalNewline": true
+	},
 }

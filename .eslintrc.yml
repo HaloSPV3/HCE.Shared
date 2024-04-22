@@ -1,13 +1,13 @@
 # https://www.npmjs.com/package/eslint-config-moon-node
 root: true
-extends: ["moon", "moon/node"]
+extends: ['moon', 'moon/node']
 parserOptions:
   project: tsconfig.test.json
 settings:
   jest:
     version: 1
-ignorePatterns: ["cjs", "tests/*.mjs", "tests/*.mjs.*"]
+ignorePatterns: ['cjs', 'tests/*.mjs', 'tests/*.mjs.*']
 overrides:
-  - files: "*.json"
+  - files: '*.json'
     rules:
       comma-dangle: 2
