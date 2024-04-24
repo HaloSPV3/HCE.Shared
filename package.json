@@ -103,7 +103,6 @@
         "require": "./cjs/index.cjs"
       }
     },
-    "./static/.releaserc.yml": "./static/.releaserc.yml",
     "./commitlint.config.ts": "./commitlint.config.ts"
   },
   "types": "./cjs/index.d.ts",
