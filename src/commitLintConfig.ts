@@ -1,6 +1,6 @@
 import { RuleConfigSeverity, type UserConfig } from '@commitlint/types';
 
-export const commitlintConfig: UserConfig = {
+const commitlintConfig: UserConfig = {
 	extends: ['@commitlint/config-conventional'],
 	rules: {
 		'body-max-line-length': [RuleConfigSeverity.Disabled],
