@@ -34,6 +34,15 @@
         "rogalmic.vscode-xml-complete",
         "dotjoshjohnson.xml",
         "anish.easy-npm",
-        "connor4312.nodejs-testing"
+        "connor4312.nodejs-testing",
+        "nicoespeon.abracadabra",
+        "aliariff.auto-add-brackets",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "markis.code-coverage",
+        "streetsidesoftware.code-spell-checker",
+        "rioj7.command-variable",
+        "adam-bender.commit-message-editor",
+        "pflannery.vscode-versionlens"
     ]
 }
