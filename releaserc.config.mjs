@@ -18,8 +18,8 @@
 /**
  * @type {import('semantic-release').Options}
  */
-module.exports = {
-	extends: './cjs/index.cjs', // static/.releaserc.yml
+export default {
+	extends: './mjs/index.mjs', // static/.releaserc.yml
 	plugins: [
 		// https://github.com/semantic-release/commit-analyzer#options
 		[
