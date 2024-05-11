@@ -14,6 +14,10 @@
   "license": "MIT",
   "author": "Noah Sherwin",
   "files": [
+    "!_tsout/",
+    "!.github/",
+    "!.husky/",
+    "!.vscode/",
     "!tests/",
     "CHANGELOG.md",
     "cjs/**/*",
