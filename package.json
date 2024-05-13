@@ -6,7 +6,9 @@
     "halo",
     "halo-ce",
     "semantic-release",
-    "semantic-release-config"
+    "semantic-release-config",
+    "commitlint",
+    "commitlint-config"
   ],
   "type": "module",
   "homepage": "https://github.com/halospv3/hce.shared#readme",
