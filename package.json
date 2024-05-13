@@ -39,7 +39,7 @@
     "prepare": "husky",
     "presemantic-release": "npm run pack && npm run check",
     "semantic-release": "npx semantic-release",
-    "test": "tsx --test ./tests/**/*.test.ts",
+    "test": "node --test --import tsx ./tests/**/*.test.ts",
     "type": "tsc",
     "validate": "packemon validate",
     "watch": "packemon watch"
