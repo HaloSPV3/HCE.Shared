@@ -67,7 +67,7 @@
     "@types/node": "^20.11.28",
     "@types/semantic-release": "^20.0.6",
     "@typescript-eslint/eslint-plugin": "^7.9.0",
-    "@typescript-eslint/parser": "^7.9.0",
+    "@typescript-eslint/parser": "^7.10.0",
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "eslint-plugin-jsonc": "^2.15.1",
     "globals": "^15.1.0",
