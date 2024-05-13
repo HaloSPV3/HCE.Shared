@@ -60,5 +60,12 @@
 		"https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
 	},
 	"eslint.experimental.useFlatConfig": true,
-	"eslint.useESLintClass": true
+	"eslint.useESLintClass": true,
+	"git.allowNoVerifyCommit": true,
+	"nodeTdd.showCoverage": true,
+	"markiscodecoverage.enableDecorations": true,
+	"nodeTdd.buildOnActivation": true,
+	"nodeTdd.buildOnCreate": true,
+	"nodeTdd.buildOnDelete": true,
+	"nodeTdd.reporter": "tap"
 }
