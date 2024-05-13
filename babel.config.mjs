@@ -1,4 +1,1 @@
-export default {
-	// presets: ["moon"],
-	plugins: ["@babel/plugin-syntax-import-attributes"]
-};
+export default { plugins: ["@babel/plugin-syntax-import-attributes"] };
