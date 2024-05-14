@@ -8,11 +8,11 @@ import type { PackemonPackageConfig } from "../packemon.config.js"
  */
 const desiredMjsExports = [
     "commitlintConfig",
-    "dotnet/dotnetGHPR",
-    "dotnet/dotnetGLPR",
-    "dotnet/dotnetHelpers",
-    "dotnet/dotnetMSBuildProject",
-    "dotnet/dotnetMSBuildProjectProperties",
+    "dotnetGHPR",
+    "dotnetGLPR",
+    "dotnetHelpers",
+    "dotnetMSBuildProject",
+    "dotnetMSBuildProjectProperties",
     "findStaticConfig",
     "index",
     "semanticReleaseConfig",
