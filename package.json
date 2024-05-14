@@ -123,6 +123,7 @@
       "dotnetHelpers": "src/dotnet/dotnetHelpers.ts",
       "dotnetMSBuildProject": "src/dotnet/MSBuildProject.ts",
       "dotnetMSBuildProjectProperties": "src/dotnet/MSBuildProjectProperties.ts",
+      "eslintConfig": "src/eslintConfig.ts",
       "findStaticConfig": "src/findStaticConfig.ts",
       "index": "src/index.ts",
       "semanticReleaseConfig": "src/semanticReleaseConfig.ts",
