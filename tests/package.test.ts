@@ -1,6 +1,6 @@
 import { ok } from "node:assert/strict"
 import { describe, test } from "node:test"
-import { packemon } from "../package.json" with {type: "json"}
+import { packemon } from "@halospv3/hce.shared-config/package.json" with {type: "json"}
 import type { PackemonPackageConfig } from "../packemon.config.js"
 
 /** 
@@ -13,6 +13,7 @@ const desiredMjsExports = [
     "dotnetHelpers",
     "dotnetMSBuildProject",
     "dotnetMSBuildProjectProperties",
+    "eslintConfig",
     "findStaticConfig",
     "index",
     "semanticReleaseConfig",
