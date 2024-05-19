@@ -1,24 +1,9 @@
 import type { TransformOptions as BabelOptions } from "@babel/core";
 import type { Options as SwcOptions } from '@swc/core';
+import { writeFileSync } from "fs";
 import type { RollupOptions, OutputOptions as RollupOutputOptions } from 'rollup';
 
 // #region Types copied from packemon because it doesn't export declarations
-type ApiType = 'private' | 'public';
-interface PackemonPackageFeatures {
-    cjsTypesCompat?: boolean;
-    helpers?: 'bundled' | 'external' | 'inline' | 'runtime';
-    swc?: boolean;
-}
-type InputMap = Record<string, string>;
-type Support =
-    // Latest version
-    | 'current'
-    // Next/future version
-    | 'experimental'
-    // Unsupported version
-    | 'legacy'
-    // Oldest version still supported
-    | 'stable';
 interface FeatureFlags {
     decorators?: boolean;
     flow?: boolean;
@@ -38,42 +23,22 @@ type BrowserFormat =
     | 'umd';
 type NodeFormat =
     | CommonFormat
-    // CommonJS modules with ".cjs" file extension
+    /* CommonJS modules with ".cjs" file extension */
     | 'cjs'
     // ECMAScript modules with ".mjs" file extension
     | 'mjs';
-type Format = BrowserFormat | NodeFormat;
-type Platform = 'browser' | 'electron' | 'native' | 'node';
-type Support =
-    // Latest version
-    | 'current'
+interface BuildParams {
+    features: FeatureFlags;
+    format: BrowserFormat | NodeFormat;
+    platform: 'browser' | 'electron' | 'native' | 'node';
+    support: | 'current'
     // Next/future version
     | 'experimental'
     // Unsupported version
     | 'legacy'
     // Oldest version still supported
     | 'stable';
-
-// tests\package.test.ts
-interface PackemonPackageConfig {
-    api?: ApiType;
-    bundle?: boolean;
-    externals?: string[] | string;
-    features?: PackemonPackageFeatures;
-    format?: Format | Format[];
-    inputs?: InputMap;
-    namespace?: string;
-    platform?: Platform | Platform[];
-    support?: Support;
 }
-
-interface BuildParams {
-    features: FeatureFlags;
-    format: Format;
-    platform: Platform;
-    support: Support;
-}
-
 type ConfigMutator<T> = (config: T) => void;
 type ConfigMutatorWithBuild<T> = (config: T, build: BuildParams) => void;
 
@@ -86,3 +51,21 @@ export interface ConfigFile {
     swcInput?: ConfigMutator<SwcOptions>;
     swcOutput?: ConfigMutatorWithBuild<SwcOptions>;
 }
+
+// #endregion Types
+
+/**
+ * @type {ConfigFile}
+ */
+export default {
+    babelInput(config: BabelOptions) {
+        // plugins
+        if (config.plugins) {
+            config.plugins.push(["@babel/plugin-syntax-import-attributes"]);
+        }
+        else config.plugins = ["@babel/plugin-syntax-import-attributes"];
+
+        const tmp = { ...config, caller: undefined, configFile: undefined };
+        writeFileSync("./babel.config.json", `${JSON.stringify(tmp, undefined, 2)}`, { encoding: "utf8" });
+    }
+};
