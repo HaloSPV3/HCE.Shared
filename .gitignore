@@ -560,3 +560,4 @@ cjs/
 lib/
 mjs/
 _tsout/
+babel.config.json
