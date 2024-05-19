@@ -24,6 +24,7 @@
     "CHANGELOG.md",
     "cjs/**/*",
     "dotnet/**/*",
+    "mjs/**/*",
     "src/**/*",
     "static/**/*"
   ],
