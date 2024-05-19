@@ -1,11 +1,13 @@
-import { RuleConfigSeverity, type UserConfig } from '@commitlint/types';
+import { type RuleConfigSeverity, type UserConfig } from '@commitlint/types';
 
+// CJS compatibility; This enum cannot be required.
+const disabled = 0 as RuleConfigSeverity.Disabled;
 const commitlintConfig: UserConfig = {
 	extends: ['@commitlint/config-conventional'],
 	rules: {
-		'body-max-line-length': [RuleConfigSeverity.Disabled],
-		'footer-max-line-length': [RuleConfigSeverity.Disabled],
-		'header-max-length': [RuleConfigSeverity.Disabled],
+		'body-max-line-length': [disabled],
+		'footer-max-line-length': [disabled],
+		'header-max-length': [disabled],
 	},
 };
 
