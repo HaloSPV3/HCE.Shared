@@ -35,8 +35,7 @@
 		"./",
 		"./tests/",
 		"./tests/dotnet/",
-		"./tests/package.test.ts",
-		"./src/"
+		"./tests/package.test.ts"
 	],
 	"nodejs-testing.extensions": [
 		{
@@ -59,8 +58,31 @@
 	"yaml.schemas": {
 		"https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
 	},
+	"eslint.probe": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"html",
+		"vue",
+		"markdown",
+		"json",
+		"jsonc",
+		"json5"
+	],
 	"eslint.experimental.useFlatConfig": true,
 	"eslint.useESLintClass": true,
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"json",
+		"jsonc",
+		"json5",
+		"typescript",
+		"typescriptreact"
+	],
+	"typescript.tsserver.experimental.enableProjectDiagnostics": true,
+	"typescript.tsserver.web.projectWideIntellisense.enabled": true,
 	"git.allowNoVerifyCommit": true,
 	"nodeTdd.showCoverage": true,
 	"markiscodecoverage.enableDecorations": true,
