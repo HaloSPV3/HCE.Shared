@@ -110,16 +110,23 @@
     "./package.json": "./package.json",
     "./*": {
       "types": "./cjs/*.d.ts",
-      "require": "./cjs/*.cjs"
+      "default": "./cjs/*.cjs"
+    },
+    "./dotnet/*": {
+      "types": "./cjs/dotnet/*.d.ts",
+      "default": "./cjs/dotnet/*.cjs"
     },
     ".": {
       "types": "./cjs/index.d.ts",
-      "require": "./cjs/index.cjs"
+      "import": "./cjs/index-wrapper.mjs",
+      "default": "./cjs/index.cjs"
     }
   },
   "types": "./cjs/index.d.ts",
   "packemon": {
-    "format":"cjs",
+    "format": [
+      "cjs"
+    ],
     "platform": "node",
     "inputs": {
       "commitlintConfig": "src/commitlintConfig.ts",
