@@ -1,14 +1,10 @@
 {
-    "extends": "./tsconfig.json",
+    "extends": "./src/tsconfig.json",
     "compilerOptions": {
-        "declaration": true,
-        "declarationDir": "cjs",
-        "declarationMap": true,
+        "declarationDir": "./cjs/",
         "emitDeclarationOnly": true,
-        "noEmit": false,
-        "outDir": "cjs"
-    },
-    "include": [
-        "src/**/*"
-    ]
+        "outDir": "./cjs/",
+        "rootDir": "./src/",
+        "target": "ES5"
+    }
 }

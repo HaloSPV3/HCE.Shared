@@ -1,0 +1,10 @@
+{
+    "extends": "../baseTsconfig.json",
+    "compilerOptions": {
+        "outDir": "../_tsout/src",
+        "target": "ES5"
+    },
+    "include": [
+        "./**/*"
+    ]
+}
