@@ -32,14 +32,14 @@
   "infra": "polyrepo",
   "repository": "github:halospv3/hce.shared",
   "scripts": {
-    "build": "packemon build --addEngines --addExports --addFiles --declaration --loadConfigs",
+    "build": "packemon build --addExports --addFiles --declaration --loadConfigs",
     "check": "npm run type && npm run test && npm run lint",
     "clean": "packemon clean",
     "coverage": "npm run test --coverage",
     "format": "prettier --write",
     "lint": "eslint --cache --fix .",
     "eslint-inspector": "eslint --inspect-config",
-    "pack": "packemon pack --addEngines --addExports --addFiles --declaration --loadConfigs && npm run validate",
+    "pack": "packemon pack --addExports --addFiles --declaration --loadConfigs && npm run validate",
     "prepare": "husky",
     "presemantic-release": "npm run pack && npm run check",
     "semantic-release": "npx semantic-release",
@@ -100,7 +100,7 @@
     "typescript": "^5.4.5"
   },
   "engines": {
-    "node": ">=18.12.0",
+    "node": ">=20.8.1",
     "npm": ">=10.5.0"
   },
   "engineStrict": true,
