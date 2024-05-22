@@ -74,7 +74,7 @@
     "husky": "^9.0.11",
     "js-yaml": "^4.1.0",
     "node-fetch": "^3.3.2",
-    "semantic-release": "^23.0.4",
+    "semantic-release": "^23.1.1",
     "semantic-release-export-data": "^1.0.1",
     "typescript-eslint": "^7.10.0"
   },
