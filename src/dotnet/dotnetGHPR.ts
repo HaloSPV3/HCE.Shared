@@ -1,12 +1,13 @@
-import { request } from '@octokit/request';
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
-import { ok } from 'node:assert/strict';
 
 // todo: support custom base URL for private GitHub instances
 async function tokenCanWritePackages(tokenEnvVar: string) {
 	const tokenValue = process.env[tokenEnvVar];
-	ok(tokenValue, `The environment variable ${tokenEnvVar} is undefined!`);
+	if (tokenValue === undefined)
+		throw new TypeError(`The environment variable ${tokenEnvVar} is undefined!`)
 	const reqH = { authorization: `token ${tokenValue}` };
+	// CJS compatibility - import { request } from '@octokit/request
+	const request = (await import('@octokit/request')).request;
 	const response = await request('GET /', { headers: reqH });
 	const scopes = response.headers['x-oauth-scopes'];
 	if (scopes) {
@@ -68,9 +69,8 @@ export async function getGithubNugetRegistryPair(
 	}
 
 	// conditions checked so `url` is certainly defined
-	if (isTokenDefined && isUrlDefined && canTokenWritePackages) return { tokenEnvVar, url };
-	throw new AggregateError(
-		errors,
-		'One more more errors occurred when getting GHPR url-token pair.',
-	);
+	if (isTokenDefined && isUrlDefined && canTokenWritePackages)
+		return { tokenEnvVar, url };
+
+	throw new Error(`One more more errors occurred when getting GHPR url-token pair. Errors:\n${errors.map(v => v.message).join('\n')}`);
 }
