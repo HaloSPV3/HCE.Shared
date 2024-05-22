@@ -76,7 +76,7 @@
     "node-fetch": "^3.3.2",
     "semantic-release": "^23.0.4",
     "semantic-release-export-data": "^1.0.1",
-    "typescript-eslint": "^7.9.0"
+    "typescript-eslint": "^7.10.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.9",
