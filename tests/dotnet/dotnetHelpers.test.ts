@@ -1,5 +1,5 @@
-import { ok } from 'node:assert';
-import { describe, test, todo } from 'node:test';
+import { deepStrictEqual, ok, strictEqual } from 'node:assert';
+import { describe, it, todo } from 'node:test';
 import {
 	configureDotnetNugetPush,
 	configurePrepareCmd,
@@ -7,17 +7,30 @@ import {
 } from '@halospv3/hce.shared-config/dotnet/dotnetHelpers';
 
 await describe('dotnetHelpers', async () => {
-	await todo(configurePrepareCmd.name);
+	await todo("configurePrepareCmd", () => {
+		ok(typeof configureDotnetNugetPush === "function");
+		strictEqual(typeof configureDotnetNugetPush, "function");
+		strictEqual(configurePrepareCmd.name, "configurePrepareCmd");
+	});
 
-	ok(typeof nugetDefault === 'object');
-	await todo('nugetDefault');
+	await it('nugetDefault is as expected', () => {
+		const expected = {
+			tokenEnvVar: 'NUGET_TOKEN',
+			url: 'https://api.nuget.org/v3/index.json',
+		};
+		deepStrictEqual(nugetDefault, expected);
+	});
 
-	await test(configureDotnetNugetPush.name, (t) => {
-		t.todo(`${configureDotnetNugetPush.name}: nupkgDir - default`);
-		t.todo(`${configureDotnetNugetPush.name}: nupkgDir - custom`);
-		t.todo(`${configureDotnetNugetPush.name}: registries - default`);
-		t.todo(`${configureDotnetNugetPush.name}: registries - custom`);
-		t.todo(`${configureDotnetNugetPush.name}: pushToGitHub adds github defaults`);
+
+	await it("configureDotnetNugetPush works", (t) => {
+		strictEqual(typeof configureDotnetNugetPush, 'function');
+		strictEqual(configureDotnetNugetPush.name, "configureDotnetNugetPush");
+
+		t.todo(`nupkgDir - default`);
+		t.todo(`nupkgDir - custom`);
+		t.todo(`registries - default`);
+		t.todo(`registries - custom`);
+		t.todo(`pushToGitHub adds github defaults`);
 	});
 
 });

@@ -10,6 +10,7 @@ import {
 ok(GitLabTokenEnvVar);
 ok(nugetGitLabUrlBase === undefined || typeof nugetGitLabUrlBase === 'string');
 ok(nugetGitLabUrl === undefined || typeof nugetGitLabUrl === 'string');
+ok(typeof getGitlabNugetRegistryPair === "function")
 
 await todo(getGitlabNugetRegistryPair.name, async () => {
 	await todo('sufficient token permissions');

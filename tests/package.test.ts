@@ -1,90 +1,239 @@
-import { ok } from "node:assert/strict"
-import { describe, test } from "node:test"
-import { packemon } from "@halospv3/hce.shared-config/package.json" with {type: "json"}
-import type { PackemonPackageConfig } from "../packemon.config.js"
+import { describe, it } from "node:test";
 
-/** 
- * todo: move to publicAPI text file similar to dotnet's publicAPI file 
- */
-const desiredMjsExports = [
-    "commitlintConfig",
-    "dotnetGHPR",
-    "dotnetGLPR",
-    "dotnetHelpers",
-    "dotnetMSBuildProject",
-    "dotnetMSBuildProjectProperties",
-    "eslintConfig",
-    "findStaticConfig",
-    "index",
-    "semanticReleaseConfig",
-    "semanticReleaseConfigDotnet",
-    "setupGitPluginSpec"
-];
+import { deepStrictEqual, notStrictEqual } from "node:assert";
+import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
+import { inspect } from "node:util";
+import { packemon } from "../package.json" with { type: "json" };
+// import { isMainThread, Worker } from "node:worker_threads";
 
-const importedMjsExports: string[] = [];
-const newMjsExports: string[] = []
+// #region PackemonTypes
+type InputMap = Record<string, string>;
+interface PackemonPackageFeatures {
+    cjsTypesCompat?: boolean;
+    helpers?: 'bundled' | 'external' | 'inline' | 'runtime';
+    swc?: boolean;
+}
+type CommonFormat = 'lib';
+type BrowserFormat =
+    | CommonFormat
+    // ECMAScript modules with ".js" file extension
+    | 'esm'
+    // Universal Module Definition with ".js" file extension
+    | 'umd';
+type NodeFormat =
+    | CommonFormat
+    /* CommonJS modules with ".cjs" file extension */
+    | 'cjs'
+    /* ECMAScript modules with ".mjs" file extension*/
+    | 'mjs';
+type Format = BrowserFormat | NodeFormat;
+type Platform = 'browser' | 'electron' | 'native' | 'node';
 
-interface Result {
-    action: string,
-    entry: [string, string],
-    validity: Error | Promise<Error | boolean> | boolean
+interface PackemonPackageConfig {
+    api?: 'private' | 'public';
+    bundle?: boolean;
+    externals?: string[] | string;
+    features?: PackemonPackageFeatures;
+    format?: Format | Format[];
+    inputs?: InputMap;
+    namespace?: string;
+    platform?: Platform | Platform[];
+    support?:
+    // Latest version
+    | 'current'
+    // Next/future version
+    | 'experimental'
+    // Unsupported version
+    | 'legacy'
+    // Oldest version still supported
+    | 'stable';
 }
 
-async function tryCanImport(entry: Result["entry"]) {
-    try {
-        await import(`../${entry[1]}`) as unknown;
-        importedMjsExports.push(entry[0]);
-        return true;
-    } catch (error) {
-        return error instanceof Error
-            ? error
-            : new Error(JSON.stringify(error));
-    }
-}
+// #endregion PackemonTypes
 
 await describe("package.json", async () => {
-    // const { packemon } = pkg;
-    const arr = (Array.isArray(packemon) ? packemon : [packemon]) as PackemonPackageConfig[];
-    const packemonMjs = arr.find(v => v.format === "mjs" || (v.format === undefined && v.platform === "node"));
+    // #region Types
+    interface Entry {
+        name: string;
+        source: string;
+    };
+    interface Result {
+        action: 'require' | 'import',
+        entry: Entry,
+        validity: Error | boolean
+    };
 
-    const inputs = packemonMjs?.inputs;
+    // #endregion Types
 
-    const awaitableResults: Result[] = [];
+    const require = createRequire(import.meta.url);
+    function tryCanAction(action: Result["action"], entry: Result["entry"]) {
+        const result = { action, entry, validity: false } as Result;
+        try {
+            const id = `@halospv3/hce.shared-config/${result.entry.name}`;
+            let verb;
+            if (result.action === "import") {
+                /* const resolvedId = */import.meta.resolve(id);
+                verb = "await import";
+            }
+            else /** preResult.action === "require" */ {
+                /* const resolvedId = */require.resolve(id);
+                verb = "require"
+            }
 
-    if (inputs) {
-        for await (const entry of Object.entries(inputs)) {
-            awaitableResults.push(
-                {
-                    action: 'import',
-                    entry: entry,
-                    validity: await tryCanImport(entry)
-                } as Result
-            );
+            // const worker = new Worker(`const def = ${action}('${id})`);
+            const cp = spawnSync('node', ['-', `${verb}('${id}');.exit`], { encoding: "utf8" });
+            if (cp.error ?? cp.stderr.length > 0)
+                throw cp.error ?? new Error(cp.stderr);
+
+            result.validity = true;
+            return result;
+        } catch (error) {
+            if (error instanceof Error)
+                result.validity = error;
+            else if (typeof error === "string")
+                result.validity = new Error(error);
+            else
+                result.validity = new Error(inspect(error))
+            return result;
         }
     }
 
-    const results = await Promise.all(awaitableResults);
+    const nameof_expectedEsm = "expectedEsm";
+    const expectedEsm: string[] = [
+        // "commitlintConfig",
+        // "eslintConfig",
+        // "findStaticConfig",
+        // "index",
+        // "semanticReleaseConfig",
+        // "semanticReleaseConfigDotnet",
+        // "setupGitPluginSpec"
+    ];
+    const nameof_expectedCjs = "expectedCjs";
+    const expectedCjs = [
+        "commitlintConfig",
+        "dotnet",
+        "eslintConfig",
+        "findStaticConfig",
+        "index",
+        "semanticReleaseConfig",
+        "semanticReleaseConfigDotnet",
+        "setupGitPluginSpec"
+    ];
 
-    for await (const result of results) {
-        await test(`Can ${result.action} ${result.entry[1]}?`, async () => {
-            const valid = await result.validity;
-            const error = valid instanceof Error ? valid : new Error()
-
-            ok(valid === true, `Unable to ${result.action} ${result.entry[1]}. Reason:\n${error.message}`);
-        })
+    // #region Arrays
+    const packemonArray = (Array.isArray(packemon) ? packemon : [packemon]) as PackemonPackageConfig[];
+    const packemonCjs = packemonArray.find(v => v.format === "cjs" || true === v.format?.includes("cjs"));
+    const packemonMjs = packemonArray.find(v => v.format === "mjs" || true === v.format?.includes("mjs") || (v.format === undefined && v.platform === "node"));
+    const results: Result[] = [];
+    if (packemonCjs?.inputs) {
+        results.push(
+            ...
+            Object.entries(packemonCjs.inputs)
+                .map(entry =>
+                    tryCanAction('require', { name: entry[0], source: entry[1] })
+                )
+        );
+    }
+    if (packemonMjs?.inputs) {
+        results.push(
+            ...
+            Object.entries(packemonMjs.inputs)
+                .map(entry =>
+                    tryCanAction('import', { name: entry[0], source: entry[1] })
+                )
+        );
     }
 
-    const missingExports = desiredMjsExports.toSorted();
-    importedMjsExports.sort();
-    for (const m of importedMjsExports) {
-        if (missingExports[0] === m)
-            missingExports.shift();
-        else
-            newMjsExports.push(m);
+    const importedEsm: string[] = [];
+    const requiredCjs: string[] = [];
+    for (const result of results) {
+        // result.validity = await result.validity;
+        if (!(result.validity instanceof Error)) {
+            switch (result.action) {
+                case "import":
+                    importedEsm.push(result.entry.name);
+                    break;
+                case "require":
+                    requiredCjs.push(result.entry.name);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
-    ok(missingExports.length === 0, `One or more input modules (${missingExports.map(v => `"${v}"`).join(", ")}) were not imported! Is this a breaking change?`)
+    // #endregion Arrays
 
-    ok(newMjsExports.length !== 1, `A module was added to the package's packemon inputs. Add the module's name ("${newMjsExports[0]}") to './tests/package.test.ts#desiredMjsExports' to ensure they are not accidentally removed later!`)
-    ok(newMjsExports.length < 2, `Multiple modules were added to the package's packemon inputs. Add the modules' names (${newMjsExports.map(v => `"${v}"`).join(", ")}) to in './tests/package.test.ts#desiredMjsExports' to ensure they are not accidentally removed later!`)
+    await it('...exposes no modules which fail to load', () => {
+        interface ErrorResult extends Omit<Result, 'validity'> { validity: Error }
+        const errored = results.filter((v) => v.validity instanceof Error) as ErrorResult[];
+        errored.forEach(v => { console.debug(v) })
+        deepStrictEqual(
+            errored,
+            [],
+            errored.map(
+                result =>
+                    `Unable to ${result.action} ${result.entry.source}. Reason:\n${result.validity.message}`
+            ).join('\n')
+        );
+    });
+
+    const missingCjs = expectedCjs.filter(v => !requiredCjs.includes(v));
+    const unexpectedCjs = requiredCjs.filter(v => !expectedCjs.includes(v));
+    await it('...is expected to expose CJS modules and is configured to do so', () => {
+        if (expectedCjs.length > 0) {
+            packemonCjs
+            notStrictEqual(
+                packemonCjs?.inputs,
+                undefined,
+                `packemon was not configured for CJS, but CJS modules were expected! Comment out entries in ${nameof_expectedCjs}.`)
+        }
+    })
+    await it('...exposes all expected CJS modules', () => {
+        deepStrictEqual(
+            missingCjs,
+            [],
+            `One or more input modules (${missingCjs.map(v => `"${v}"`).join(", ")}) were not required! Is this a breaking change?`)
+    });
+    await it('...exposes no unexpected CJS modules', () => {
+        deepStrictEqual(
+            unexpectedCjs,
+            [],
+            `One or more exposed modules were imported, but were not found in ${nameof_expectedCjs}. ` +
+            `Add the modules' names (${unexpectedCjs.map(v => `"${v}"`).join(", ")}) to './tests/package.test.ts#${nameof_expectedCjs}' to ensure they are not accidentally removed later!`
+        );
+    });
+
+    // #region FinalEsmTests
+
+    await it('...is expected to expose ESM, but was not configured to do so', () => {
+        if (expectedEsm.length > 0) {
+            notStrictEqual(
+                packemonMjs?.inputs,
+                undefined,
+                `packemon was not configured for ESM, but ESM modules were expected! Comment out entries in ${nameof_expectedEsm}.`
+            );
+        }
+    });
+
+    const missingEsm = expectedEsm.filter(expected => importedEsm.includes(expected));
+    const unexpectedEsm = importedEsm.filter(imported => !expectedEsm.includes(imported));
+
+    await it('...exposes all expected ESM modules', () => {
+        deepStrictEqual(
+            missingEsm,
+            [],
+            `One or more input modules (${missingEsm.map(v => `"${v}"`).join(", ")}) were not imported! Is this a breaking change?`)
+    });
+    await it('...exposes no unexpected ESM modules', () => {
+        deepStrictEqual(
+            unexpectedEsm,
+            [],
+            `One or more exposed modules were imported, but were not found in ${nameof_expectedEsm}. ` +
+            `Add the modules' names (${unexpectedEsm.map(v => `"${v}"`).join(", ")}) to './tests/package.test.ts#${nameof_expectedEsm}' to ensure they are not accidentally removed later!`
+        );
+    });
+
+    // #endregion FinalEsmTests
 });
