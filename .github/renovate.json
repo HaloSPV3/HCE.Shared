@@ -1,11 +1,14 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
     ":preserveSemverRanges"
   ],
+  "baseBranches": [ "develop" ],
+  "semanticCommitType": "build",
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
+      "matchDepTypes": [ "devDependencies" ],
       "automerge": true
     }
   ]

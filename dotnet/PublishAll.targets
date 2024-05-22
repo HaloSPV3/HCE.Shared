@@ -1,0 +1,43 @@
+<!-- `dotnet -t:PublishAll` will publish all permutations derived from TargetFrameworks and RuntimeIdentifiers
+     !Beware: No compatibility checks are performed! 
+     netstandard2.0 + PublishSingleFile may cause errors! Weirdly, net480 + linux-x64 builds AND runs on both WSL and Windows...
+
+      Based on https://stackoverflow.com/a/43951971/14894786
+      Licensed under CC BY-SA 3.0
+ 
+      ?Ask yourself "Do I *really* need multi-targeting?"
+      If you want to target netstandard2.0, then just do that. It's forward-compatible.
+      If you want that AND you want conditional access to .NET 5+ stuff, then multi-target.
+      If you want to target net462 and net6.0, then multi-target. But also ask yourself why you need to target net462.
+
+      Multi-runtimes?
+      Only useful if you need Self-Contained i.e. include the runtime with your project.
+      If you want to publish Single-File, you don't *need* Self-Contained. Just inform users they must install a particular runtime/framework beforehand.
+  -->
+<Project>
+
+  <Target Name="_PublishProjectIfFrameworkSetAndNotMultiRuntime"
+          DependsOnTargets="Publish"
+          Condition="'$(RuntimeIdentifiers)' == '' And '$(TargetFramework)' != '' " />
+
+  <Target Name="_PublishProjectForAllFrameworksAndRuntimes"
+          Condition=" '$(TargetFramework)' == '' And '$(RuntimeIdentifiers)' != '' ">
+    <ItemGroup>
+      <_PublishFramework Include="$(TargetFrameworks)" />
+      <_PublishRuntime Include="$(RuntimeIdentifiers)" />
+    </ItemGroup>
+
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=%(_PublishFramework.Identity);RuntimeIdentifier=%(_PublishRuntime.Identity)" />
+  </Target>
+
+  <Target Name="_PublishProjectForAllFrameworksIfFrameworkUnset" 
+          Condition=" '$(TargetFramework)' == '' And '$(RuntimeIdentifiers)' == '' ">
+    <ItemGroup>
+      <_PublishFramework Include="$(TargetFrameworks)" />
+    </ItemGroup>
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=%(_PublishFramework.Identity)" />
+  </Target>
+
+  <Target Name="PublishAll"
+          DependsOnTargets="_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectForAllFrameworksIfFrameworkUnset" />
+</Project>

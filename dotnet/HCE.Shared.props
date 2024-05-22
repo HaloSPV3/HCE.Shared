@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <HCESharedDir>$([System.IO.Path]::GetDirectoryName($(MSBuildThisFileDirectory)))</HCESharedDir>
+    <GitVersion_Path Condition="'$(GitVersion_Path)' == ''">$(MSBuildThisFileDirectory)GitVersion.yml</GitVersion_Path>
+  </PropertyGroup>
+</Project>

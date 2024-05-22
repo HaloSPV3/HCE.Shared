@@ -1,14 +1,26 @@
 {
-	"extends": "tsconfig-moon/tsconfig.json",
-	"compileOnSave": true,
-	"compilerOptions": {
-		"isolatedModules": true,
-		"sourceMap": true,
-		"outDir": "_tsout"
-	},
-	"include": [
-		"src/**/*",
-		"tests/**/*",
-		"commitlint.config.ts"
-	]
+    "extends": "./baseTsconfig.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "outDir": "_tsout"
+    },
+    "include": [
+        "./*.cjs",
+        "./*.js",
+        "./*.mjs",
+        "./*.cts",
+        "./*.mts",
+        "./*.ts",
+        "src/**/*.ts",
+        "tests/**/*.ts"
+    ],
+    "references": [
+        {
+            "path": "./tests/tsconfig.json"
+        },
+        {
+            "path": "./src/tsconfig.json"
+        }
+    ]
 }

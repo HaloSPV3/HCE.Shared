@@ -1,0 +1,54 @@
+﻿on:
+  workflow_call:
+    inputs:
+      solutions_or_projects:
+        type: string
+      directory:
+        type: string
+env:
+  DOTNET_ROLL_FORWARD: "Major"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+        fetch-depth: 0
+
+    - uses: actions/setup-node@v4
+      with:
+        cache: "npm"
+        check-latest: true
+        node-version-file: package.json
+        node-version: lts/*
+    - run: npm i -g npm@latest
+    - run: npm i -g husky
+    - run: npm ci
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8'
+
+    # should be .sln, .slnf, .slnx (slnx introduced as experimental in VS2022 17.10 Preview 3 on Preview as of 2024-04-21)
+    - name: For each Solution/Project, `dotnet build` Release, Debug
+      shell: pwsh
+      run: |
+        if (Test-Path "node_modules") {
+          . ./node_modules/@halospv3/hce.shared-config/dotnet/dotnet-build.ps1
+        }
+        elseif ($env:SLN_OR_PROJ_FILES -ne $null) {
+          $env:SLN_OR_PROJ_FILE -split ';' | ForEach-Object { dotnet build  (Get-Item $_).FullName }
+        }
+        elseif ("${{inputs.directory}}" -ne ""){
+          cd "${{inputs.directory}}"
+          dotnet build
+        }
+        else {
+          dotnet build
+        }
+      env: 
+        SLN_OR_PROJ_FILES: ${{inputs.solutions_or_projects}}
+      # The following demonstrates passing solutions/projects via args
+      #run: . ./node_modules/@halospv3/hce.shared-config/dotnet/dotnet-build.ps1 "A.slnf" "B.csproj"
+      #run: . ./node_modules/@halospv3/hce.shared-config/dotnet/dotnet-build.ps1 ("A.csproj;B.csproj" -split ';')

@@ -1,40 +1,93 @@
 {
-    "cSpell.words": [
-        "conventionalcommits",
-        "halospv3"
-    ],
-    "files.readonlyInclude": {
-        "node_modules/**": true
-    },
-    "typescript.implementationsCodeLens.enabled": true,
-    "nodejs-testing.extensions": [
-        {
-            "extensions": [
-                "mts",
-                "cts",
-                "ts"
-            ],
-            "parameters": [
-                "--import",
-                "tsx"
-            ]
-        }
-    ],
-    "yaml.schemas": {
-        "https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
-    },
-    "conventionalCommits.scopes": [
-        "dotnet",
-        "node",
-        "vscode"
-    ],
-    "nodeTdd.glob": "{src,test}/**/*.{js,ts,jsx,tsx,mts}",
-    "nodeTdd.reporter": "tap",
-    "nodeTdd.showCoverage": true,
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "prettier.configPath": ".prettierrc.mjs",
-    "[json]": {
-        "files.trimFinalNewlines": false,
-        "files.insertFinalNewline": true
-    },
+	"[json]": {
+		"files.insertFinalNewline": true
+	},
+	"[jsonc]": {
+		"files.insertFinalNewline": true
+	},
+	"auto-close-tag.disableOnLanguage": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	],
+	"conventionalCommits.scopes": [
+		"dotnet",
+		"node",
+		"vscode"
+	],
+	"cSpell.words": [
+		"conventionalcommits",
+		"GHPR",
+		"globbed",
+		"GLPR",
+		"halospv3",
+		"nameof",
+		"packemon",
+		"polyrepo",
+		"tseslint",
+		"tsout"
+	],
+	"files.readonlyInclude": {
+		"node_modules/**": true
+	},
+	"nodejs-testing.include": [
+		"./",
+		"./tests/",
+		"./tests/dotnet/",
+		"./tests/package.test.ts"
+	],
+	"nodejs-testing.extensions": [
+		{
+			"extensions": [
+				"mts",
+				"cts",
+				"ts"
+			],
+			"parameters": [
+				"--import",
+				"tsx"
+			]
+		}
+	],
+	"nodeTdd.glob": "{src,test}/**/*.{js,ts,jsx,tsx,mts}",
+	"prettier.configPath": "prettier.config.js",
+	"typescript.implementationsCodeLens.enabled": true,
+	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"yaml.format.singleQuote": true,
+	"yaml.schemas": {
+		"https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
+	},
+	"eslint.probe": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"html",
+		"vue",
+		"markdown",
+		"json",
+		"jsonc",
+		"json5"
+	],
+	"eslint.experimental.useFlatConfig": true,
+	"eslint.useESLintClass": true,
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"json",
+		"jsonc",
+		"json5",
+		"typescript",
+		"typescriptreact"
+	],
+	"typescript.tsserver.experimental.enableProjectDiagnostics": true,
+	"typescript.tsserver.web.projectWideIntellisense.enabled": true,
+	"git.allowNoVerifyCommit": true,
+	"nodeTdd.showCoverage": true,
+	"markiscodecoverage.enableDecorations": true,
+	"nodeTdd.buildOnActivation": true,
+	"nodeTdd.buildOnCreate": true,
+	"nodeTdd.buildOnDelete": true,
+	"nodeTdd.reporter": "tap"
 }

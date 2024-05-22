@@ -1,12 +1,23 @@
 <Project>
+  <PropertyGroup>
+    <RepoRoot Condition="'$(RepoRoot)' == '' And '$(ProjectRootDir)' != ''">$(ProjectRootDir)</RepoRoot>
+    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
+    <RepoRootPublishDir>$(RepoRoot)/publish</RepoRootPublishDir>
+    <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(RepoRootPublishDir)</PackageOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(CI)' != ''">
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Configuration>Release</Configuration>
+  </PropertyGroup>
+
   <Target Name="ZipPublishDir" AfterTargets="Publish"
           Outputs="$(DestinationFile)">
     <PropertyGroup>
-      <!-- Required Parameters -->
-      <RepoRoot Condition="'$(RepoRoot)' == '' And '$(ProjectRootDir)' != ''">$(ProjectRootDir)</RepoRoot>
-      <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
-
-      <!-- Optional Parameters
+      <!-- inputs
+          - RepoRoot
+          - RepoRootPublishDir
           - AssemblyName
           - Version
           - VariantArgs (default: Configuration;TargetFramework;RuntimeIdentifier)
@@ -17,8 +28,8 @@
       <AppendVariantArgs Condition="'$(AppendVariantArgs)' == ''">true</AppendVariantArgs>
 
       <appendVarArgs>$(AppendVariantArgs)</appendVarArgs>
-      <repoRootPublishDir>$(RepoRoot)/publish</repoRootPublishDir>
-      
+      <RepoRootPublishDir>$(RepoRoot)/publish</RepoRootPublishDir>
+
       <!-- Only add Configuration when Debug -->
       <dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</dbgCfg>
       <!-- "net6.0 win7-x86"
@@ -33,11 +44,11 @@
            "" -->
       <version Condition="'$(Version)' != ''"> $(Version)</version>
       <!-- "C:\Repos\HaloSPV3\HXE\publish\HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
-      <DestinationFile>$(repoRootPublishDir)/$(AssemblyName)$(version)$(enclosedVArgs).zip</DestinationFile>
+      <DestinationFile>$(RepoRootPublishDir)/$(AssemblyName)$(version)$(enclosedVArgs).zip</DestinationFile>
       <!-- todo: look into .NET 8 SDK's Artifacts feature -->
     </PropertyGroup>
 
-    <MakeDir Condition="!Exists('$(repoRootPublishDir)')" Directories="$(repoRootPublishDir)"/>
+    <MakeDir Condition="!Exists('$(RepoRootPublishDir)')" Directories="$(RepoRootPublishDir)"/>
     <ZipDirectory
       SourceDirectory="$(PublishDir)"
       DestinationFile="$(DestinationFile)"
