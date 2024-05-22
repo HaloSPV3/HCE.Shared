@@ -123,11 +123,7 @@
     "platform": "node",
     "inputs": {
       "commitlintConfig": "src/commitlintConfig.ts",
-      "dotnetGHPR": "src/dotnet/dotnetGHPR.ts",
-      "dotnetGLPR": "src/dotnet/dotnetGLPR.ts",
-      "dotnetHelpers": "src/dotnet/dotnetHelpers.ts",
-      "dotnetMSBuildProject": "src/dotnet/MSBuildProject.ts",
-      "dotnetMSBuildProjectProperties": "src/dotnet/MSBuildProjectProperties.ts",
+      "dotnet": "src/dotnet.ts",
       "eslintConfig": "src/eslintConfig.ts",
       "findStaticConfig": "src/findStaticConfig.ts",
       "index": "src/index.ts",
