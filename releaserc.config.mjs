@@ -15,11 +15,14 @@
  * When 'plugins' is set, only commit-analyzer is added if missing.
  */
 
+// import config from '@halospv3/hce.shared-config'
+// then deep merge somehow
+
 /**
  * @type {import('semantic-release').Options}
  */
 export default {
-	extends: './mjs/index.mjs', // static/.releaserc.yml
+	extends: ['@halospv3/hce.shared-config'], // static/.releaserc.yml
 	plugins: [
 		// https://github.com/semantic-release/commit-analyzer#options
 		[
