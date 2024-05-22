@@ -5,12 +5,13 @@ name: dotnet-release
 # - Allow workflows to be driven by the project(s)
 
 on:
-  push:
-    branches: [ main, develop ]
-    paths-ignore:
-    - ".github/**/*.*"
-    - "**/*.md"
-    - "**/*.txt"
+  workflow_call:
+  # push:
+  #   branches: [ main, develop ]
+  #   paths-ignore:
+  #   - ".github/**/*.*"
+  #   - "**/*.md"
+  #   - "**/*.txt"
 
 jobs:
   ci:
