@@ -8,11 +8,11 @@
 name: CI
 
 on:
-  push:
-    branches-ignore: # if CI must run on these branches, Release will call CI
-      - main
-      - develop
-  pull_request:
+  # push:
+  #   branches-ignore: # if CI must run on these branches, Release will call CI
+  #     - main
+  #     - develop
+  # pull_request:
   workflow_call:
 
 env:
