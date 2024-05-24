@@ -59,12 +59,6 @@ export interface ConfigFile {
  */
 export default {
     babelInput(config: BabelOptions) {
-        // plugins
-        if (config.plugins) {
-            config.plugins.push(["@babel/plugin-syntax-import-attributes"]);
-        }
-        else config.plugins = ["@babel/plugin-syntax-import-attributes"];
-
         const tmp = { ...config, caller: undefined, configFile: undefined };
         writeFileSync("./babel.config.json", `${JSON.stringify(tmp, undefined, 2)}`, { encoding: "utf8" });
     }
