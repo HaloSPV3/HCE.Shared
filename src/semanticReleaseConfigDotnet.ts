@@ -60,10 +60,7 @@ export function appendPlugins(
 	return newConfig;
 }
 
-/**
- * @type {import("semantic-release").Options}
- */
-export function getConfig(projectsToPublish: string[], projectsToPackAndPush: string[]) {
+export function getConfig(projectsToPublish: string[], projectsToPackAndPush: string[]): Options {
 	if (process.argv.includes('--debug') || process.argv.includes('--verbose')) {
 		log(`hce.shared-config:\n${JSON.stringify(baseConfig, null, 2)}`);
 	}
