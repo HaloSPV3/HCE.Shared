@@ -29,70 +29,67 @@ export function configurePrepareCmd(
 		```
 			enclosing with """ is required in pwsh to prevent the semicolon from breaking the string.
 		*/
-		let dotnetPublishArgs: string[][];
-		if (Array.isArray(projectsToPublish) && projectsToPublish.length > 0) {
-			// each may have TargetFramework OR TargetFrameworks (plural)
-			const evaluatedProjects: MSBuildProject[] = projectsToPublish.map(
-				(proj) => new MSBuildProject(proj, publishProperties),
-			);
-			// args appended to "dotnet publish", joined by space
-			dotnetPublishArgs = evaluatedProjects.flatMap((proj) => {
-				const args: string[] = [proj.Properties.FullPath];
+		if (!(Array.isArray(projectsToPublish) && projectsToPublish.length > 0))
+			throw new Error(`Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] where length > 0.`);
 
-				function appendCustomProperties() {
-					// convert to dictionary and filter for user-defined properties.
-					const dictionary = Object.entries(proj.Properties).filter(
-						(p) => !publishProperties.includes(p[0]),
+		// each may have TargetFramework OR TargetFrameworks (plural)
+		const evaluatedProjects: MSBuildProject[] = projectsToPublish.map(
+			(proj) => new MSBuildProject(proj, publishProperties),
+		);
+		// args appended to "dotnet publish", joined by space
+		const dotnetPublishArgs = evaluatedProjects.flatMap((proj) => {
+			const args: string[] = [proj.Properties.FullPath];
+
+			function appendCustomProperties() {
+				// convert to dictionary and filter for user-defined properties.
+				const dictionary = Object.entries(proj.Properties).filter(
+					(p) => !publishProperties.includes(p[0]),
+				);
+				if (dictionary.length > 0) {
+					/* format remaining properties as "-p:Property=Value" and append to args */
+					args.push(
+						...dictionary.map((keyValuePair) => `-p:${keyValuePair[0]}=${keyValuePair[1]}`),
 					);
-					if (dictionary.length > 0) {
-						/* format remaining properties as "-p:Property=Value" and append to args */
-						args.push(
-							...dictionary.map((keyValuePair) => `-p:${keyValuePair[0]}=${keyValuePair[1]}`),
-						);
-					}
 				}
-				appendCustomProperties();
+			}
+			appendCustomProperties();
 
-				const cmdPermutations: string[][] = []; // forEach, run dotnet [...args,...v]
+			const cmdPermutations: string[][] = []; // forEach, run dotnet [...args,...v]
 
-				function formatFrameworksAndRuntimes() {
-					const RIDs: string[] =
-						proj.Properties.RuntimeIdentifiers.length > 0
-							? proj.Properties.RuntimeIdentifiers.split(';')
-							: [];
-					const TFMs: string[] =
-						proj.Properties.TargetFrameworks.length > 0
-							? proj.Properties.TargetFrameworks.split(';')
-							: [];
-					if (RIDs.length > 0) {
-						if (TFMs.length > 0) {
-							for (const RID of RIDs) {
-								for (const TFM of TFMs) {
-									cmdPermutations.push(['--runtime', RID, '--framework', TFM]);
-								}
-							}
-						} else {
-							// assume singular TFM. No need to specify it.
-							for (const RID of RIDs) {
-								cmdPermutations.push(['--runtime', RID]);
+			function formatFrameworksAndRuntimes() {
+				const RIDs: string[] =
+					proj.Properties.RuntimeIdentifiers.length > 0
+						? proj.Properties.RuntimeIdentifiers.split(';')
+						: [];
+				const TFMs: string[] =
+					proj.Properties.TargetFrameworks.length > 0
+						? proj.Properties.TargetFrameworks.split(';')
+						: [];
+				if (RIDs.length > 0) {
+					if (TFMs.length > 0) {
+						for (const RID of RIDs) {
+							for (const TFM of TFMs) {
+								cmdPermutations.push(['--runtime', RID, '--framework', TFM]);
 							}
 						}
-					} else if (TFMs.length > 0) {
-						for (const TFM of TFMs) {
-							cmdPermutations.push(['--framework', TFM]);
+					} else {
+						// assume singular TFM. No need to specify it.
+						for (const RID of RIDs) {
+							cmdPermutations.push(['--runtime', RID]);
 						}
 					}
+				} else if (TFMs.length > 0) {
+					for (const TFM of TFMs) {
+						cmdPermutations.push(['--framework', TFM]);
+					}
 				}
-				formatFrameworksAndRuntimes();
+			}
+			formatFrameworksAndRuntimes();
 
-				return cmdPermutations.length > 0
-					? cmdPermutations.map((permArgs) => [...args, ...permArgs]) // string[][]
-					: [args]; // string[][]
-			}); // string[][][] -> string[][]
-		} else
-			throw new Error(
-				`Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] where length > 0.`,
-			);
+			return cmdPermutations.length > 0
+				? cmdPermutations.map((permArgs) => [...args, ...permArgs]) // string[][]
+				: [args]; // string[][]
+		}); // string[][][] -> string[][]
 
 		return dotnetPublishArgs.map((args) => `dotnet publish ${args.join(' ')}`).join(' && ');
 	}
