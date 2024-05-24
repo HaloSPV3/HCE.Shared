@@ -60,6 +60,12 @@ export function appendPlugins(
 	return newConfig;
 }
 
+/**
+ * Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet` publish, pack, and push.
+ * @param projectsToPublish 
+ * @param projectsToPackAndPush 
+ * @returns a semantic-release Options object, based on @halospv3/hce.shared-config (our base config), with the `@semantic-release/exec` plugin configured to `dotnet` publish, pack, and push the provided projects.
+ */
 export function getConfig(projectsToPublish: string[], projectsToPackAndPush: string[]): Options {
 	if (process.argv.includes('--debug') || process.argv.includes('--verbose')) {
 		log(`hce.shared-config:\n${JSON.stringify(baseConfig, null, 2)}`);
@@ -72,4 +78,6 @@ export function getConfig(projectsToPublish: string[], projectsToPackAndPush: st
 	if (process.argv.includes('--debug') || process.argv.includes('--verbose')) {
 		log(`modified plugins array:\n${JSON.stringify(newConfig.plugins, null, 2)}`);
 	}
+
+	return newConfig;
 }
