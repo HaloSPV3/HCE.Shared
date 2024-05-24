@@ -15,8 +15,17 @@
  * When 'plugins' is set, only commit-analyzer is added if missing.
  */
 
-// import config from '@halospv3/hce.shared-config'
-// then deep merge somehow
+/**
+ * @type {import('@semantic-release/git').Options}
+ */
+const gitOptions = {
+	assets: [
+		'README.md',
+		'CHANGELOG.md',
+		'package.json',
+		'package-lock.json'
+	]
+};
 
 /**
  * @type {import('semantic-release').Options}
@@ -44,7 +53,10 @@ export default {
 		// https://github.com/semantic-release/npm#options
 		'@semantic-release/npm',
 		// https://github.com/semantic-release/git#options
-		'@semantic-release/git',
+		[
+			'@semantic-release/git',
+			gitOptions
+		],
 		[
 			'@semantic-release/github',
 			{
