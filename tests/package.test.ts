@@ -103,7 +103,6 @@ await describe("package.json", async () => {
     const expectedEsm: string[] = [
         // "commitlintConfig",
         // "eslintConfig",
-        // "findStaticConfig",
         // "index",
         // "semanticReleaseConfig",
         // "semanticReleaseConfigDotnet",
@@ -114,7 +113,6 @@ await describe("package.json", async () => {
         "commitlintConfig",
         "dotnet",
         "eslintConfig",
-        "findStaticConfig",
         "index",
         "semanticReleaseConfig",
         "semanticReleaseConfigDotnet",
