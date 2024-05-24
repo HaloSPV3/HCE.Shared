@@ -2,8 +2,12 @@ import jsonc from "eslint-plugin-jsonc";
 import tseslint from "typescript-eslint";
 import { type TSESLint } from "@typescript-eslint/utils";
 import eslint from "@eslint/js";
-import globals from "globals" with {type: "json"};
+import { createRequire } from "module";
 
+// CJS compatibility; it started transpiling to a top-level await after upgrading from packemon 4.0.1 to 4.1.0
+const require = createRequire(import.meta.url);
+const globals = require("globals") as typeof import("globals", {with: {type: "json"}});
+console.log(globals)
 // https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config
 // https://www.google.com/search?q=javascript+recurse+through+object+and+remove+undefined+properties
 
