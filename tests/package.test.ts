@@ -101,15 +101,6 @@ await describe("package.json", async () => {
 
     const nameof_expectedEsm = "expectedEsm";
     const expectedEsm: string[] = [
-        // "commitlintConfig",
-        // "eslintConfig",
-        // "index",
-        // "semanticReleaseConfig",
-        // "semanticReleaseConfigDotnet",
-        // "setupGitPluginSpec"
-    ];
-    const nameof_expectedCjs = "expectedCjs";
-    const expectedCjs = [
         "commitlintConfig",
         "dotnet",
         "eslintConfig",
@@ -121,18 +112,8 @@ await describe("package.json", async () => {
 
     // #region Arrays
     const packemonArray = (Array.isArray(packemon) ? packemon : [packemon]) as PackemonPackageConfig[];
-    const packemonCjs = packemonArray.find(v => v.format === "cjs" || true === v.format?.includes("cjs"));
     const packemonMjs = packemonArray.find(v => v.format === "mjs" || true === v.format?.includes("mjs") || (v.format === undefined && v.platform === "node"));
     const results: Result[] = [];
-    if (packemonCjs?.inputs) {
-        results.push(
-            ...
-            Object.entries(packemonCjs.inputs)
-                .map(entry =>
-                    tryCanAction('require', { name: entry[0], source: entry[1] })
-                )
-        );
-    }
     if (packemonMjs?.inputs) {
         results.push(
             ...
@@ -144,7 +125,6 @@ await describe("package.json", async () => {
     }
 
     const importedEsm: string[] = [];
-    const requiredCjs: string[] = [];
     for (const result of results) {
         // result.validity = await result.validity;
         if (!(result.validity instanceof Error)) {
@@ -152,11 +132,8 @@ await describe("package.json", async () => {
                 case "import":
                     importedEsm.push(result.entry.name);
                     break;
-                case "require":
-                    requiredCjs.push(result.entry.name);
-                    break;
                 default:
-                    break;
+                    throw new Error(`unexpected validation action '${result.action}'.`)
             }
         }
     }
@@ -176,34 +153,6 @@ await describe("package.json", async () => {
             ).join('\n')
         );
     });
-
-    const missingCjs = expectedCjs.filter(v => !requiredCjs.includes(v));
-    const unexpectedCjs = requiredCjs.filter(v => !expectedCjs.includes(v));
-    await it('...is expected to expose CJS modules and is configured to do so', () => {
-        if (expectedCjs.length > 0) {
-            packemonCjs
-            notStrictEqual(
-                packemonCjs?.inputs,
-                undefined,
-                `packemon was not configured for CJS, but CJS modules were expected! Comment out entries in ${nameof_expectedCjs}.`)
-        }
-    })
-    await it('...exposes all expected CJS modules', () => {
-        deepStrictEqual(
-            missingCjs,
-            [],
-            `One or more input modules (${missingCjs.map(v => `"${v}"`).join(", ")}) were not required! Is this a breaking change?`)
-    });
-    await it('...exposes no unexpected CJS modules', () => {
-        deepStrictEqual(
-            unexpectedCjs,
-            [],
-            `One or more exposed modules were imported, but were not found in ${nameof_expectedCjs}. ` +
-            `Add the modules' names (${unexpectedCjs.map(v => `"${v}"`).join(", ")}) to './tests/package.test.ts#${nameof_expectedCjs}' to ensure they are not accidentally removed later!`
-        );
-    });
-
-    // #region FinalEsmTests
 
     await it('...is expected to expose ESM, but was not configured to do so', () => {
         if (expectedEsm.length > 0) {
@@ -232,6 +181,4 @@ await describe("package.json", async () => {
             `Add the modules' names (${unexpectedEsm.map(v => `"${v}"`).join(", ")}) to './tests/package.test.ts#${nameof_expectedEsm}' to ensure they are not accidentally removed later!`
         );
     });
-
-    // #endregion FinalEsmTests
 });
