@@ -6,7 +6,7 @@
  * add any unspecified settings with default values.
  *
  ** How to review the 'actual' config
- * `npx semantic-release--debug`.
+ * `npx semantic-release --debug`.
  *
  ** Plugins Configuration
  * Plugins are configured via tuple-like arrays e.g. ['plugin name', {config object}].
