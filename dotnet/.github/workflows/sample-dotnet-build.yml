@@ -1,4 +1,4 @@
-﻿# This workflow demonstrates the minimal requirements for
+# This workflow demonstrates the minimal requirements for
 # building, publishing, and packing a CSharp Project with DotNet CLI
 
 on:
@@ -13,7 +13,6 @@ jobs:
       with:
         submodules: 'recursive'
         fetch-depth: 0
-
     - uses: actions/setup-dotnet@v4
 
     - run: dotnet build src/SPV3.csproj -c Release -p:ContinuousIntegrationBuild=true

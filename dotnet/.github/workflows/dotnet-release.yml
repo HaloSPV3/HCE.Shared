@@ -31,18 +31,10 @@ jobs:
       with:
         fetch-depth: 0 # Required by GitVersion, Semantic Release
         submodules: "recursive" # submodule fetch depth unknown
-    
-    - name: Setup Dotnet
-      uses: actions/setup-dotnet@v4
-    
-    - name: Setup Node
-      uses: actions/setup-node@v4
-
-    - name: NPM - Update NPM to Latest
-      run: npm install -g npm@latest
-
-    - name: NPM - Clean Install
-      run: npm ci # Required by Semantic Release
+    - uses: actions/setup-dotnet@v4
+    - uses: actions/setup-node@v4
+    - run: npm install -g npm@latest
+    - run: npm ci # Required by Semantic Release
 
     ################
     # RELEASE
