@@ -1,6 +1,6 @@
 <!-- Provides sane defaults for CI builds -->
 <Project>
-  <PropertyGroup Condition="'$(CI)' != '' AND '$(CI)' != 'Debug'">
+  <PropertyGroup Condition="'$(CI)' == 'true'">
     <Configuration>Release</Configuration>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <Deterministic>true</Deterministic>
