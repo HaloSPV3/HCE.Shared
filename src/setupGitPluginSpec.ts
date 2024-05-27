@@ -2,8 +2,9 @@ import type { PluginSpec } from 'semantic-release';
 import type { AssetEntry, Options as GitOptions } from '@semantic-release/git';
 
 export const GitPluginId = '@semantic-release/git';
+/** As specified at https://github.com/semantic-release/git#options */
 export const DefaultOptions = {
-	assets: ['CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json'],
+	assets: ['README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json'],
 	// eslint-disable-next-line no-template-curly-in-string
 	message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
 } satisfies GitOptions;
