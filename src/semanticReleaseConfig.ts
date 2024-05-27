@@ -3,8 +3,8 @@ import jsYaml from 'js-yaml';
 import type { Options, PluginSpec } from 'semantic-release';
 import { findStaticConfig } from './findStaticConfig.js';
 
-export const defaultPlugins = [
-	'@semantic-release/commit-analyzer' as PluginSpec,
+export const defaultPlugins: readonly PluginSpec[] = [
+	'@semantic-release/commit-analyzer',
 	'@semantic-release/release-notes-generator',
 	'@semantic-release/npm',
 	'@semantic-release/github',
