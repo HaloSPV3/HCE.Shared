@@ -16,6 +16,7 @@ import type { Options, PluginSpec } from 'semantic-release';
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js';
 import { baseConfig, defaultPlugins } from './semanticReleaseConfig.js';
 import { setupGitPluginSpec } from './setupGitPluginSpec.js';
+import debug from './debug.js'
 
 /**
  * TODO: options/params for inserts/edits. NOT ready for production. Currently, this can only add Git plugin's options if undefined or one or more is missing.
@@ -66,9 +67,9 @@ export function appendPlugins(
  * @param projectsToPackAndPush 
  * @returns a semantic-release Options object, based on @halospv3/hce.shared-config (our base config), with the `@semantic-release/exec` plugin configured to `dotnet` publish, pack, and push the provided projects.
  */
-export function getConfig(projectsToPublish: string[], projectsToPackAndPush: string[]): Options {
-	if (process.argv.includes('--debug') || process.argv.includes('--verbose')) {
-		log(`hce.shared-config:\n${JSON.stringify(baseConfig, null, 2)}`);
+export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPush: string[] = []): Options {
+	if (debug.enabled) {
+		debug.log(`hce.shared-config:\n${JSON.stringify(baseConfig, null, 2)}`);
 	}
 
 	let newConfig = { ...baseConfig };
