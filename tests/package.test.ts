@@ -217,7 +217,7 @@ await describe("package.json", async () => {
         }
     });
 
-    const missingEsm = expectedEsm.filter(expected => importedEsm.includes(expected));
+    const missingEsm = expectedEsm.filter(expected => !importedEsm.includes(expected));
     const unexpectedEsm = importedEsm.filter(imported => !expectedEsm.includes(imported));
 
     await it('...exposes all expected ESM modules', () => {
