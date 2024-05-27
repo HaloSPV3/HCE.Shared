@@ -15,7 +15,7 @@ on:
 jobs:
   ci:
     name: CI # run test.yml. If it fails, this job fails.
-    uses: ./.github/workflows/ci.yml
+    uses: ./.github/workflows/ci.yml # <- your CI workflow here. Example: 'file://./ci.yml'
   release:
     needs: [ci] # start 'release' if 'ci' completes successfully
     runs-on: ubuntu-latest
@@ -38,19 +38,13 @@ jobs:
 
     ################
     # RELEASE
-    # `dotnet publish` must be executed by @semantic-release/exec
-    # see 'dotnet/.releaserc.cjs'
+    # @semantic-release/exec should be configured to execute
+    # `dotnet publish`, `dotnet pack`, and `dotnet nuget push`
+    # You can use this package's semanticReleaseConfigDotnet exports to do so.
     ################
     # https://github.com/semantic-release/semantic-release
     - name: Semantic Release
       run: npx semantic-release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Publish to GitHub Packages
-      working-directory: publish
-      run: dotnet nuget push *.nupkg -s https://nuget.pkg.github.com/HaloSPV3/index.json -k ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Publish to nuget.org
-      working-directory: publish
-      run: dotnet nuget push *.nupkg -k ${{ secrets.NUGET_TOKEN }}
+        NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}

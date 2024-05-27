@@ -4,7 +4,7 @@ name: CI
 
 on:
   push:
-    branches-ignore: # if CI must run on these branches, Release will call CI
+    branches-ignore: # Ignore Release branches. The Release workflow will invoke CI
       - main
       - develop
   pull_request:
@@ -19,4 +19,4 @@ env:
 jobs:
   unit_test:
     name: Unit Test
-    uses: ./.github/workflows/_unit_test.yml
+    uses: ./.github/workflows/_unit_test.yml # <- your unit test workflow here. Example: file://./_unit_test.yml

@@ -50,7 +50,6 @@ jobs:
     ################
     # RELEASE
     # `dotnet publish` must be executed by @semantic-release/exec
-    # see 'dotnet/.releaserc.cjs'
     ################
     # https://github.com/semantic-release/semantic-release
     - name: Semantic Release
