@@ -11,7 +11,6 @@
  *
  */
 
-import { log } from 'node:console';
 import type { Options, PluginSpec } from 'semantic-release';
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js';
 import { baseConfig, defaultPlugins } from './semanticReleaseConfig.js';
@@ -29,24 +28,29 @@ import debug from './debug.js'
  * @returns a modified copy of {@link config}
  */
 export function insertAndEditPlugins(config: Options): Options {
-	const newConfig = config;
 	// const insertAndEditCommands = [];
-	newConfig.plugins = [...(config.plugins ?? defaultPlugins)];
+	config.plugins = [...(config.plugins ?? defaultPlugins)];
 
-	newConfig.plugins = setupGitPluginSpec(newConfig.plugins as PluginSpec[]);
+	config.plugins = setupGitPluginSpec(config.plugins as PluginSpec[]);
 
-	return newConfig;
+	return config;
 }
 
+/**
+ * Currently, only configures `@semantic-release/exec` with `prepareCmd: configurePrepareCmd(projectsToPublish, projectsToPackAndPush)` and `publishCmd: configureDotnetNugetPush()`
+ * @param config 
+ * @param projectsToPublish 
+ * @param projectsToPackAndPush 
+ * @returns config with the specified plugins and plugin options.
+ */
 export function appendPlugins(
 	config: Options,
 	projectsToPublish: string[],
-	projectsToPackAndPush: string[],
-) {
-	const newConfig = config;
-	if (newConfig.plugins === undefined)
+	projectsToPackAndPush: string[] | false,
+): Options {
+	if (config.plugins === undefined)
 		throw new Error('Plugins array was undefined when it should be an array!');
-	(newConfig.plugins as PluginSpec[]).push(
+	(config.plugins as PluginSpec[]).push(
 		// APPEND this array of [pluginName, pluginConfig] to plugins
 		// https://github.com/semantic-release/exec#usage
 		[
@@ -58,27 +62,67 @@ export function appendPlugins(
 			},
 		],
 	);
-	return newConfig;
+	return config;
 }
 
 /**
  * Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet` publish, pack, and push.
- * @param projectsToPublish 
- * @param projectsToPackAndPush 
- * @returns a semantic-release Options object, based on @halospv3/hce.shared-config (our base config), with the `@semantic-release/exec` plugin configured to `dotnet` publish, pack, and push the provided projects.
+ * @param projectsToPublish An array of dotnet projects' relative paths. If
+ * empty or unspecified, tries getting projects' semi-colon-separated relative
+ * paths from the `PROJECTS_TO_PUBLISH` environment variable. If configured as
+ * recommended, the projects' publish outputs will be zipped to '$PWD/publish'
+ * for use in the `publish` semantic-release step (typically, GitHub release).
+ * @param projectsToPackAndPush An array of dotnet projects' relative paths. If
+ * false, `dotnet pack` and `dotnet nuget push` will be left out of the exec
+ * commands. If empty or unspecified, tries getting projects'
+ * semi-colon-separated relative paths from the `PROJECTS_TO_PACK_AND_PUSH`
+ * environment variable. If configured as recommended, `dotnet pack` will output
+ * the nupkg/snupk files to `$PWD/publish` where they will be globbed by `dotnet
+ * nuget push`.
+ * @returns a semantic-release Options object, based on `@halospv3/hce.shared-config` (our base config), with the `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and `push` the specified projects.
  */
-export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPush: string[] = []): Options {
+export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPush: string[] | false = []): Options {
 	if (debug.enabled) {
 		debug.log(`hce.shared-config:\n${JSON.stringify(baseConfig, null, 2)}`);
 	}
 
-	let newConfig = { ...baseConfig };
-	newConfig = insertAndEditPlugins(newConfig);
-	newConfig = appendPlugins(newConfig, projectsToPublish, projectsToPackAndPush);
+	const errors: Error[] = [];
 
-	if (process.argv.includes('--debug') || process.argv.includes('--verbose')) {
-		log(`modified plugins array:\n${JSON.stringify(newConfig.plugins, null, 2)}`);
+	if (projectsToPublish.length === 0) {
+		const _ = process.env["PROJECTS_TO_PUBLISH"];
+		if (_ === undefined)
+			errors.push(new Error("projectsToPublish or PROJECTS_TO_PUBLISH must be defined."));
+		else
+			projectsToPublish = _.split(';');
 	}
 
-	return newConfig;
+	if (projectsToPackAndPush && projectsToPackAndPush.length) {
+		const _ = process.env["PROJECTS_TO_PACK_AND_PUSH"]
+		if (_ === undefined)
+			errors.push(new Error("projectsToPackAndPush or PROJECTS_TO_PACK_AND_PUSH must be defined."));
+		else
+			projectsToPackAndPush = _.split(';');
+	}
+
+	if (errors.length > 0) {
+		throw new Error(
+			[
+				"getConfig cannot continue. One or more errors occurred.",
+				...(errors.map(v => v.message))
+			].join('\n')
+		)
+	}
+
+	let config = { ...baseConfig };
+	config = insertAndEditPlugins(config);
+	if (projectsToPublish)
+		config = appendPlugins(config, projectsToPublish, projectsToPackAndPush);
+
+	if (debug.enabled) {
+		debug.log(`modified plugins array:\n${JSON.stringify(config.plugins, null, 2)}`);
+	}
+
+	return config;
 }
+
+export default getConfig;
