@@ -16,6 +16,43 @@ npm install --save-dev @halospv3/hce.shared-config
 
 ### 2. Customize Semantic Release
 
+WARNING! Defining a property will _overwrite_ the previous value. Arrays and
+objects are _not_ merged. You can...
+
+- Assign to certain top-level variables (e.g. `options.preset`) to avoid
+  modifying the plugins array. Caveat: only *some* plugins read these properties.
+- Write your config in MJS; It is recommended you use
+  [deepmerge](https://www.npmjs.com/package/deepmerge) to recursively merge
+  objects and arrays instead of using `extends`. Doing so will allow your IDE to
+  tell you when a shareable config cannot be found.
+
+#### Base Config
+
+> - Uses the [conventionalcommits preset](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits).
+> - Releases `main` branch; Pre-releases `develop`.
+> - Adds and configures [`semantic-release-export-data`](https://github.com/felipecrs/semantic-release-export-data) to export `new-release-published` and `new-release-version` to GitHub Actions' outputs.
+> - Adds and configures [`@semantic-release/changelog`](https://github.com/semantic-release/changelog) to update CHANGELOG.md.
+> - Configures [`@semantic-release/git`](https://github.com/semantic-release/git) to add README.md and CHANGELOG.md in a release commit if they have changes. Uses GitHub job's token to commit.
+> - Configures [`@semantic-release/github`](https://github.com/semantic-release/github) to release all files found in `$PWD/publish`.
+
+##### Usage
+
+```js
+// releaserc.config.js
+import hceSharedConfig from "@halospv3/hce.shared-config"
+
+// modify it however you wish before the export statement!
+
+export default hceSharedConfig;
+```
+
+```js
+// releaserc.config.js
+export default {
+	extends: ["@halospv3/hce.shared-config"]
+}
+```
+
 ```json
 // package.json
 {
@@ -25,31 +62,104 @@ npm install --save-dev @halospv3/hce.shared-config
 }
 ```
 
-WARNING! Defining a property will _overwrite_ the previous value. Arrays and objects are _not_
-merged. You can...
+#### Dotnet Config
 
-- Assign to top-level variables to avoid modifying the plugins array.
-- Write your config in CJS and manually merge objects and arrays.
+> An extension of our base config.
+> Exports a function with parameters for 'projects to pack' and 'projects to push (to nuget)'.
+> Although `@halospv3/hce.shared-config/semanticReleaseConfigDotnet` can be used
+  via `extends` and configured via the `PROJECTS_TO_PUBLISH` and
+  `PROJECTS_TO_PACK_AND_PUSH` environment variables, it is recommended to call
+  the function and pass it parameters so errors are caught before they reach
+  production.
+>
+> Differences to the base config:
+> - Utilizes `@semantic-release/exec` for shell commands.
+>   - Executes `dotnet publish` and `dotnet pack` upon the configured projects during the `prepare` step.
+>   - (WIP) Executes `dotnet nuget sign` during `prepare` upon the `dotnet pack` outputs if `projectsToPackAndPush` is not set to `false` (default: `[]`).
+>   - Executes `dotnet nuget push` during the `publish` step.
 
-**Configs**
+##### Usage
 
-- `hce.shared-config`: [static/.releaserc.yml](static/.releaserc.yml)
-- [dotnet/.releaserc.cjs](dotnet/.releaserc.cjs) based on [BinToss/GroupBox.Avalonia's Semantic Release config](https://github.com/BinToss/GroupBox.Avalonia).
+```js
+// releaserc.config.js
+import { getConfig } from "@halospv3/hce.shared-config/semanticReleaseConfigDotnet"
+
+/* Caveat: semantic-release will version and release all specified projects under the same Git tags and GitHub releases.
+ * To version and release them separately, use [https://github.com/pmowrer/semantic-release-monorepo](semantic-release-monorepo).
+ */
+
+/* `prepareCmd` will contain command lines to publish 
+ * both Library and Sample to your GitHub release.
+ * Their `TargetFrameworks` and `RuntimeIdentifiers`
+ * properties will be evaluated and a command line 
+ * will be added for each unique combination, 
+ * _regardless of compatibility and intended combinations_.
+ */
+const projectsToPublish = [
+	"./Library/Library.csproj",
+	"./Sample/Sample.csproj"
+];
+/*
+ * `prepareCmd` will also contain `dotnet pack` and
+ * `dotnet nuget sign` commands to pack Library to a nupkg.
+ * `publishCmd` will contain `dotnet nuget push` commands
+ *  to push Library to Nuget.org and GitHub Package Registry.
+ */
+const projectsToPackAndPush = ["./Library/Library.csproj"];
+
+// runs getConfig and exports its return value
+export default getConfig(projectsToPublish, projectsToPackAndPush)
+```
+
+###### `extends` key in a javascript config file
+
+Using `extends` is NOT recommended, but I won't stop you.
+Your projects' paths must be assigned to environment variables. See [Dotnet Config](#dotnet-config).
+```js
+// releaserc.config.js (if {"type": "module"} in package.json)
+export default {
+	extends: ["@halospv3/hce.shared-config"]
+}
+```
+
+```js
+// releaserc.config.js (if {"type": "commonjs"} in package.json)
+module.exports = {
+	extends: ["@halospv3/hce.shared-config"]
+}
+```
+
+###### `release` key in package.json
+
+```json
+// package.json
+// `npm install --save-dev cross-env`
+{
+	"scripts":{
+		"release":"cross-env PROJECTS_TO_PUBLISH=\"./Library/Library.csproj;./Sample/Sample.csproj\" semantic-release"
+	},
+	"release": {
+		"extends": ["@halospv3/hce.shared-config/semanticReleaseConfigDotnet"]
+	}
+}
+```
+
+---
 
 **Notable Plugin Properties**
 
 - [`@semantic-release/commit-analyzer`](https://github.com/semantic-release/commit-analyzer#options)
-	- preset (set to conventionalcommits)
+	- preset (set to `conventionalcommits`)
 	- parserOpts
 	- releaseRules
 - [`@semantic-release/release-notes-generator`](https://github.com/semantic-release/release-notes-generator#options)
-	- preset (set to conventionalcommits)
+	- preset (set to `conventionalcommits`)
 	- parserOpts
 	- writerOpts
 - [`@semantic-release/changelog`](https://github.com/semantic-release/changelog#options)
-	- changelogFile (default: CHANGELOG.md)
+	- changelogFile (default: `'CHANGELOG.md'`)
 - [`@semantic-release/git`](https://github.com/semantic-release/git#options)
-	- assets (default: ['CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json'])
+	- assets (default: `['README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json']`)
 - `@semantic-release/exec`
 	- prepareCmd
 - [`@semantic-release/github`](https://github.com/semantic-release/github#options)
@@ -62,7 +172,7 @@ merged. You can...
 // package.json
 {
 	"commitlint": {
-		"extends": ["@halospv3/hce.shared-config/commitLintConfig"]
+		"extends": ["@halospv3/hce.shared-config/commitlintConfig"]
 	}
 }
 ```
@@ -70,11 +180,12 @@ or
 
 ```ts
 /* eslint-disable import/no-default-export */
-import commitlintConfig from '@halospv3/hce.shared-config/commitLintConfig';
+import commitlintConfig from '@halospv3/hce.shared-config/commitlintConfig';
 
 export default commitlintConfig;
 ```
 
+Then...
 ```sh
 npx husky
 npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
@@ -82,51 +193,28 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 
 ### 4. (dotnet) Add/Edit Directory.Build.props
 
-> Example Directory.Build.props from [BinToss/GroupBox.Avalonia](https://github.com/BinToss/GroupBox.Avalonia)
-
 ```xml
 <Project>
+	<Import Project="$(HCESharedDir)/dotnet/HCE.Shared.targets"/>
+
 	<PropertyGroup>
 		<RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
 		<HCESharedDir Condition="'$(HCESharedDir)' == ''">$(RepoRoot)node_modules/@halospv3/hce.shared-config/</HCESharedDir>
-		<GitVersion_Path Condition="'$(GitVersion_Path)' == ''">$(HCESharedDir)GitVersion.yml</GitVersion_Path>
-		<AvaloniaVersion>11.0.10</AvaloniaVersion>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(CI)' == 'true'">
-		<Configuration>Release</Configuration>
-		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-		<Deterministic>true</Deterministic>
-	</PropertyGroup>
-
-	<Import Project="$(HCESharedDir)/dotnet/ZipPublishDir.targets" />
-</Project>
-```
-
----
-
-Add the file `Directory.Build.props` to your repository's root directory or solution directory if
-you haven't already. Then, add the following properties:
-
-```xml
-<Project> <!-- Minimal requirements for dotnet/msbuild integration -->
-	<Import Project="./node_modules/@halospv3/hce.shared-config/dotnet/ZipPublishDir.targets" />
-	<PropertyGroup>
-		<ProjectRootDir>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</ProjectRootDir>
-		<HCESharedDir>$(ProjectRootDir)/node_modules/@halospv3/hce.shared-config/</HCESharedDir>
+		<!--<GitVersion_Path Condition="'$(GitVersion_Path)' == ''">Path/To/Your/GitVersion.yml</GitVersion_Path>-->
 	</PropertyGroup>
 </Project>
 ```
 
 These may evaluate to the following:
-| Property | Evaluated Value|
-| - | - |
-|`ProjectRootDir` | `c:\Repos\HaloSPV3\HCE.Shared\` |
+| Property     | Evaluated Value|
+| ------------ | -------------- |
+|`RepoRootDir` | `c:\Repos\HaloSPV3\HCE.Shared\` |
 |`HCESharedDir`| `c:\Repos\HaloSPV3\HCE.Shared\node_modules\@halospv3\hce.shared-config\` |
 
-<br/>
-
 #### CI/CD-Only Properties
+
+> Note: Already included when importing HCE.Shared.targets
+> If you don't import HCE.Shared.targets, you may import HCE.Shared.CI.props or define your own conditional property group.
 
 If you want properties set only in a CI/CD environment (e.g. a GitHub workflow), add the following
 conditional property group to the props file:
@@ -159,10 +247,29 @@ If you're satisfied by [dotnet/GitVersion.yml](dotnet/GitVersion.yml), you can c
 to use this config file. GitVersion does not have 'extend' functionality typical of Node.js
 packages.
 
+You can...
+
+...define it yourself
 ```xml
-<PropertyGroup>
-	<GitVersion_Path>$(ProjectRootDir)/node_modules/@halospv3/hce.shared-config/dotnet/GitVersion.yml</GitVersion_Path>
-</PropertyGroup>
+<Project>
+	<PropertyGroup>
+		<GitVersion_Path>$(ProjectRootDir)/node_modules/@halospv3/hce.shared-config/dotnet/GitVersion.yml</GitVersion_Path>
+	</PropertyGroup>
+</Project>
+```
+
+...import HCE.Shared.props
+```xml
+<Project>
+	<Import Project="$(HCESharedDir)/dotnet/HCE.Shared.props">
+</Project>
+```
+
+...import HCE.Shared.Targets (which imports HCE.Shared.props)
+```xml
+<Project>
+	<Import Project="$(HCESharedDir)/dotnet/HCE.Shared.props">
+</Project>
 ```
 
 ## Tips
@@ -172,12 +279,7 @@ packages.
 If you want to use this information in other Semantic Release steps, you'll need
 `semantic-release-export-data`.
 
-```sh
-npm i -D semantic-release-export-data
-```
-
 Run the following to preview the version:
-
 ```sh
 npx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"
 ```
@@ -185,7 +287,7 @@ npx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,sema
 If the first plugin doesn't run into any issues and infers a version bump from unreleased commits,
 it will print the next version to the console. The
 [second plugin](https://github.com/felipecrs/semantic-release-export-data#readme) will export the
-next version and other information as GitHub Action Step exports.
+next version and other information as [GitHub Action Step outputs](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-using-output-as-url).
 
 ### Don't intend to publish a Node package?
 
@@ -197,9 +299,11 @@ Add the following to `package.json`:
 }
 ```
 
-## TODO:
+## WIP
 
 ### Reusable, configurable GitHub workflows
+
+See callable workflows such as [dotnet-ci](./.github/workflows/dotnet-ci.yml)
 
 ```yml
 jobs:
@@ -212,26 +316,4 @@ jobs:
 					projects:
 					- src/lib/lib.csproj
 					- src/lib-sample/sample.csproj
-```
-
-### Ease Semantic Release Configuration
-
-JSON/YAML configs _could_ have merge-edit capabilities driven by data from custom, top-level
-properties. Each property would contain the command moniker and the config data (parameters) similar
-to RPC implementations. This will require quite a bit of datatype validation behind the scenes.
-
-```json
-{
-	"modify_plugins": {
-		"op": "Append",
-		"data": [
-			[
-				"newplugin",
-				{
-					"newpluginoption": true
-				}
-			]
-		]
-	}
-}
 ```
