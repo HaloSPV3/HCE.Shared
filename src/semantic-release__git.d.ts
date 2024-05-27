@@ -1,4 +1,6 @@
+/** @see 'file://./../node_modules/@semantic-release/git/index.js' */
 declare module '@semantic-release/git' {
+	import type { Options as SemanticReleaseOptions } from "semantic-release";
 	export type MicromatchGlob = string;
 	export interface AssetObject {
 		path: MicromatchGlob;
@@ -64,4 +66,26 @@ declare module '@semantic-release/git' {
 		 */
 		message?: string;
 	}
+
+	function verifyConditions(
+		pluginConfig: Options,
+		context: {
+			options: {
+				prepare: unknown
+			}
+		}
+	): void;
+	async function prepare(
+		pluginConfig: Options,
+		context: {
+			env,
+			cwd: string,
+			branch: { name: string },
+			options: SemanticReleaseOptions,
+			lastRelease,
+			nextRelease: { version, notes, gitTag },
+			logger: { log(_0: string, _1: unknown | number): void },
+		}
+	): Promise<void>;
+	export { verifyConditions, prepare }
 }
