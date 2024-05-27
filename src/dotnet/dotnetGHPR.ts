@@ -1,4 +1,5 @@
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
+import { request } from '@octokit/request'
 
 // todo: support custom base URL for private GitHub instances
 async function tokenCanWritePackages(tokenEnvVar: string) {
@@ -6,8 +7,6 @@ async function tokenCanWritePackages(tokenEnvVar: string) {
 	if (tokenValue === undefined)
 		throw new TypeError(`The environment variable ${tokenEnvVar} is undefined!`)
 	const reqH = { authorization: `token ${tokenValue}` };
-	// CJS compatibility - import { request } from '@octokit/request
-	const request = (await import('@octokit/request')).request;
 	const response = await request('GET /', { headers: reqH });
 	const scopes = response.headers['x-oauth-scopes'];
 	if (scopes) {
