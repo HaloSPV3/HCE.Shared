@@ -6,5 +6,5 @@ await describe("eslintConfig", async () => {
     await it('exports an array', () => {
         ok(Array.isArray(eslintConfig))
     })
-    await todo('');
+    await todo('excludes certain paths from linting');
 });
