@@ -1,6 +1,8 @@
 <Project>
   <PropertyGroup>
-    <HCESharedDir>$([System.IO.Path]::GetDirectoryName($(MSBuildThisFileDirectory)))</HCESharedDir>
-    <GitVersion_Path Condition="'$(GitVersion_Path)' == ''">$(MSBuildThisFileDirectory)GitVersion.yml</GitVersion_Path>
+    <HCESharedDir Condition="!Exists('$(HCESharedDir)')">
+      $([System.IO.Path]::GetDirectoryName($([System.IO.Path]::GetDirectoryName($(MSBuildThisFileDirectory)))))
+    </HCESharedDir>
+    <GitVersion_Path Condition=" '$(GitVersion_Path)' == '' ">$(MSBuildThisFileDirectory)GitVersion.yml</GitVersion_Path>
   </PropertyGroup>
 </Project>
