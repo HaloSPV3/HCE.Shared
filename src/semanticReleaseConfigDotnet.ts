@@ -83,7 +83,7 @@ export function appendPlugins(
  */
 export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPush: string[] | false = []): Options {
 	if (debug.enabled) {
-		debug.log(`hce.shared-config:\n${JSON.stringify(baseConfig, null, 2)}`);
+		debug('hce.shared-config:\n%o', baseConfig);
 	}
 
 	const errors: Error[] = [];
@@ -119,7 +119,7 @@ export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPus
 		config = appendPlugins(config, projectsToPublish, projectsToPackAndPush);
 
 	if (debug.enabled) {
-		debug.log(`modified plugins array:\n${JSON.stringify(config.plugins, null, 2)}`);
+		debug('modified plugins array:\n%o', config.plugins);
 	}
 
 	return config;
