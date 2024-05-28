@@ -33,16 +33,16 @@ await describe('configDotnet', async () => {
 	await describe('getConfig', async () => {
 		strictEqual(getConfig.name, 'getConfig');
 
-		await it('throws Error when projectsToPublish, projectsToPackAndPush are both empty arrays.', () => {
+		await it('throws Error when projectsToPublish is an empty array, projectsToPackAndPush are both empty arrays.', () => {
 			const actual = (() => {
 				try {
-					return getConfig([], []);
+					return getConfig([], false);
 				} catch (error) {
 					return error as Error;
 				}
 			})();
 			ok(actual instanceof Error)
-			strictEqual(actual.message, "Type of projectsToPublish (object) is not allowed. Expected a string[] where length > 0.")
+			strictEqual(actual.message, "getConfig cannot continue. One or more errors occurred.\nprojectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path.")
 		})
 	});
 });

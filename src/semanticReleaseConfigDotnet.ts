@@ -91,7 +91,7 @@ export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPus
 	if (projectsToPublish.length === 0) {
 		const _ = process.env["PROJECTS_TO_PUBLISH"];
 		if (_ === undefined)
-			errors.push(new Error("projectsToPublish or PROJECTS_TO_PUBLISH must be defined."));
+			errors.push(new Error("projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path."));
 		else
 			projectsToPublish = _.split(';');
 	}
@@ -99,7 +99,7 @@ export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPus
 	if (projectsToPackAndPush && projectsToPackAndPush.length) {
 		const _ = process.env["PROJECTS_TO_PACK_AND_PUSH"]
 		if (_ === undefined)
-			errors.push(new Error("projectsToPackAndPush or PROJECTS_TO_PACK_AND_PUSH must be defined."));
+			errors.push(new Error("projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path."));
 		else
 			projectsToPackAndPush = _.split(';');
 	}
