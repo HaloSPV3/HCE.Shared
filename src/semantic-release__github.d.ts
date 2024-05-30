@@ -1,4 +1,10 @@
+/**
+ * @see https://github.com/semantic-release/github
+ * @see https://github.com/semantic-release/github/blob/v10.0.5/index.js
+ */
 declare module "@semantic-release/github" {
+    // #region manual types
+
     /**
      * @see https://github.com/semantic-release/github#configuration
      */
@@ -142,4 +148,55 @@ declare module "@semantic-release/github" {
          */
         discussionCategoryName?: string | false
     }
+
+    // #endregion manual types
+
+    // #region types generated from node_modules\@semantic-release\github\index.js (@semantic-release/github@10.0.5)
+
+    export function verifyConditions(pluginConfig: any, context: any, { Octokit }?: {
+        Octokit?: typeof import("@octokit/core").Octokit & import("@octokit/core/dist-types/types.js").Constructor<{
+            paginate: import("@octokit/plugin-paginate-rest").PaginateInterface;
+        } & {
+            retry: {
+                retryRequest: (error: import("@octokit/request-error").RequestError, retries: number, retryAfter: number) => import("@octokit/request-error").RequestError;
+            };
+        }>;
+    }): Promise<void>;
+    export function publish(pluginConfig: any, context: any, { Octokit }?: {
+        Octokit?: typeof import("@octokit/core").Octokit & import("@octokit/core/dist-types/types.js").Constructor<{
+            paginate: import("@octokit/plugin-paginate-rest").PaginateInterface;
+        } & {
+            retry: {
+                retryRequest: (error: import("@octokit/request-error").RequestError, retries: number, retryAfter: number) => import("@octokit/request-error").RequestError;
+            };
+        }>;
+    }): Promise<any>;
+    export function addChannel(pluginConfig: any, context: any, { Octokit }?: {
+        Octokit?: typeof import("@octokit/core").Octokit & import("@octokit/core/dist-types/types.js").Constructor<{
+            paginate: import("@octokit/plugin-paginate-rest").PaginateInterface;
+        } & {
+            retry: {
+                retryRequest: (error: import("@octokit/request-error").RequestError, retries: number, retryAfter: number) => import("@octokit/request-error").RequestError;
+            };
+        }>;
+    }): Promise<any>;
+    export function success(pluginConfig: any, context: any, { Octokit }?: {
+        Octokit?: typeof import("@octokit/core").Octokit & import("@octokit/core/dist-types/types.js").Constructor<{
+            paginate: import("@octokit/plugin-paginate-rest").PaginateInterface;
+        } & {
+            retry: {
+                retryRequest: (error: import("@octokit/request-error").RequestError, retries: number, retryAfter: number) => import("@octokit/request-error").RequestError;
+            };
+        }>;
+    }): Promise<void>;
+    export function fail(pluginConfig: any, context: any, { Octokit }?: {
+        Octokit?: typeof import("@octokit/core").Octokit & import("@octokit/core/dist-types/types.js").Constructor<{
+            paginate: import("@octokit/plugin-paginate-rest").PaginateInterface;
+        } & {
+            retry: {
+                retryRequest: (error: import("@octokit/request-error").RequestError, retries: number, retryAfter: number) => import("@octokit/request-error").RequestError;
+            };
+        }>;
+    }): Promise<void>;
+
 }

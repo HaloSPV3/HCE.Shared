@@ -2,6 +2,9 @@ import type { TransformOptions as BabelOptions } from "@babel/core";
 import type { Options as SwcOptions } from '@swc/core';
 import { writeFileSync } from "fs";
 import type { RollupOptions, OutputOptions as RollupOutputOptions } from 'rollup';
+import packageJson from './package.json' with {type: "json"}
+import { minVersion, gte } from 'semver'
+import { ok } from "node:assert/strict";
 
 // #region Types copied from packemon because it doesn't export declarations
 interface FeatureFlags {
@@ -54,11 +57,25 @@ export interface ConfigFile {
 
 // #endregion Types
 
+const minNodeVersion = minVersion(packageJson.engines.node);
+ok(minNodeVersion)
+ok(gte(minNodeVersion, '20.8.1'), 'minNodeVersion is not greater than 20.8.1')
+const minNodeMajorMinor = minNodeVersion.major + '.' + minNodeVersion.minor;
+
 /**
  * @type {ConfigFile}
  */
 export default {
     babelInput(config: BabelOptions) {
+        config.targets = { node: minNodeMajorMinor }
+
+        if (config.plugins == null)
+            config.plugins = [];
+        if (!config.plugins.join(';').includes('plugin-proposal-json-modules'))
+            config.plugins.push('@babel/plugin-proposal-json-modules');
+
+        console.log(JSON.stringify(config, null, 2))
+
         const tmp = { ...config, caller: undefined, configFile: undefined };
         writeFileSync("./babel.config.json", `${JSON.stringify(tmp, undefined, 2)}`, { encoding: "utf8" });
     }
