@@ -22,10 +22,10 @@ export const baseConfig = {
 		}
 	],
 	plugins: [
-		"@semantic-release/commit-analyzer",
-		"semantic-release-export-data",
-		"@semantic-release/release-notes-generator",
-		"@semantic-release/changelog",
+		["@semantic-release/commit-analyzer", {}],
+		["semantic-release-export-data", {}],
+		["@semantic-release/release-notes-generator", {}],
+		["@semantic-release/changelog", {}],
 		[
 			"@semantic-release/git",
 			DefaultOptions
@@ -36,9 +36,8 @@ export const baseConfig = {
 		//   be visible to dotnet(and GitVersion).Dotnet artifacts will be
 		//   versioned accordingly.
 		// Plugins' Steps: https://github.com/semantic-release/semantic-release/blob/master/docs/extending/plugins-list.md
-		"@semantic-release/exec",
-		[
-			"@semantic-release/github",
+		["@semantic-release/exec", {}],
+		["@semantic-release/github",
 			{
 				assets: [{
 					path: './publish/*'
