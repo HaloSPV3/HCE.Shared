@@ -17,12 +17,18 @@
 
 import hceSharedConfig from '@halospv3/hce.shared-config'
 import { ok } from 'node:assert/strict';
+import { inspect } from 'node:util';
 
-ok(hceSharedConfig.plugins)
+const config = { ...(hceSharedConfig) };
+ok(config.plugins)
+
+console.log(inspect(config))
+
+
 
 // #region COMMIT ANALYZER
 const COMMIT_ANALYZER_ID = '@semantic-release/commit-analyzer';
-const commitAnalyzerIndex = hceSharedConfig.plugins.findIndex(pluginSpec =>
+const commitAnalyzerIndex = config.plugins.findIndex(pluginSpec =>
 	pluginSpec === COMMIT_ANALYZER_ID || pluginSpec[0] === COMMIT_ANALYZER_ID
 );
 
@@ -30,7 +36,7 @@ const commitAnalyzerIndex = hceSharedConfig.plugins.findIndex(pluginSpec =>
  * @type {import('semantic-release').PluginSpec<import('@semantic-release/commit-analyzer').CommitAnalyzerConfig>} 
  * https://github.com/semantic-release/commit-analyzer#options
  */
-let commitAnalyzer = hceSharedConfig.plugins[commitAnalyzerIndex];
+let commitAnalyzer = config.plugins[commitAnalyzerIndex];
 if (typeof commitAnalyzer === 'string')
 	commitAnalyzer = [COMMIT_ANALYZER_ID, {}];
 
@@ -56,7 +62,7 @@ releaseRules.push(
 )
 commitAnalyzer[1].releaseRules = releaseRules;
 // @ts-expect-error Index signature in type 'readonly PluginSpec<any>[]' only permits reading. ts(2542)
-hceSharedConfig.plugins[commitAnalyzerIndex] = commitAnalyzer;
+config.plugins[commitAnalyzerIndex] = commitAnalyzer;
 
 // #endregion COMMIT ANALYZER
 
@@ -68,18 +74,18 @@ function getGitIndex(pluginsArray) { return pluginsArray.findIndex(v => v[0] ===
 // #region NPM
 
 // assert it's not already in the plugin array
-ok(!hceSharedConfig.plugins.find(v => v[0] === '@semantic-release/npm'));
-const arr = [...hceSharedConfig.plugins];
+ok(!config.plugins.find(v => v[0] === '@semantic-release/npm'));
+const arr = [...config.plugins];
 arr.splice(getGitIndex(arr) + 1, 0, ['@semantic-release/npm', {}])
 
 // #endregion NPM
 
 // #region GITHUB
 
-ok(hceSharedConfig.plugins);
-const githubIndex = hceSharedConfig.plugins.findIndex(v => v[0] === "@semantic-release/github");
-hceSharedConfig.plugins[githubIndex][1].assets = ['halospv3-hce.shared-*.tgz'];
+ok(config.plugins);
+const githubIndex = config.plugins.findIndex(v => v[0] === "@semantic-release/github");
+config.plugins[githubIndex][1].assets = ['halospv3-hce.shared-*.tgz'];
 
 // #endregion github
 
-export default hceSharedConfig;
+export default config;
