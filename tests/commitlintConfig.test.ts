@@ -39,9 +39,15 @@ await describe("commitlintConfig", async () => {
 		const config = await load(rawConfig);
 		await it('has parserPreset', async () => {
 			const preset = await createPreset();
+			ok(preset);
+			ok(preset.parserOpts)
 			ok(config.parserPreset);
 			deepStrictEqual(config.parserPreset.name, commitLintConventional.parserPreset);
-			deepStrictEqual(config.parserPreset.parserOpts, preset.parser);
+			if ("parser" in preset)
+				deepStrictEqual(config.parserPreset.parserOpts, preset.parser);
+			else {
+				deepStrictEqual(config.parserPreset.parserOpts, preset.parserOpts)
+			}
 		});
 		await it('has rules', async () => {
 			deepStrictEqual(config.rules['body-leading-blank'], commitLintConventional.rules['body-leading-blank']);
