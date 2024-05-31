@@ -88,6 +88,23 @@ ok(config.plugins);
 const githubIndex = config.plugins.findIndex(v => v[0] === "@semantic-release/github");
 config.plugins[githubIndex][1].assets = ['halospv3-hce.shared-*.tgz'];
 
+/* modify branches */
+
+ok(config.branches)
+
+// isArray doesn't work well with readonly arrays
+if (typeof config.branches === 'string' || (!('find' in config.branches && 'findIndex' in config.branches))) {
+	config.branches = [config.branches];
+}
+
+/** @type { import('semantic-release').BranchSpec }*/
+const next_3xx = { name: 'next/3.0.0', prerelease: 'beta', range: '3.x' }
+config.branches = [
+	...config.branches,
+	next_3xx
+]
+
+
 // #endregion github
 
 export default config;
