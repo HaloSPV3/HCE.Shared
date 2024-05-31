@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/halospv3/hce.shared/compare/v2.4.1...v2.4.2) (2024-05-31)
+
+
+### Bug Fixes
+
+* fix adding npm plugin to private semantic-release config ([fe2542b](https://github.com/halospv3/hce.shared/commit/fe2542b9e3d1dc3b3d00351f3dbef840b1f99486))
+
 ## [2.4.1](https://github.com/halospv3/hce.shared/compare/v2.4.0...v2.4.1) (2024-05-31)
 
 
