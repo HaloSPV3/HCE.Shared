@@ -1,3 +1,10 @@
+## [2.4.3](https://github.com/halospv3/hce.shared/compare/v2.4.2...v2.4.3) (2024-05-31)
+
+
+### Bug Fixes
+
+* fix error being thrown because an 'else' is missing ([a4ed781](https://github.com/halospv3/hce.shared/commit/a4ed781dd9ebf696deae7b7914d8cf77e2beb5fb))
+
 ## [2.4.2](https://github.com/halospv3/hce.shared/compare/v2.4.1...v2.4.2) (2024-05-31)
 
 
