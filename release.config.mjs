@@ -74,9 +74,11 @@ function getGitIndex(pluginsArray) { return pluginsArray.findIndex(v => v[0] ===
 // #region NPM
 
 // assert it's not already in the plugin array
-ok(!config.plugins.find(v => v[0] === '@semantic-release/npm'));
-const arr = [...config.plugins];
-arr.splice(getGitIndex(arr) + 1, 0, ['@semantic-release/npm', {}])
+if (undefined === config.plugins.find(v => v[0] === '@semantic-release/npm')) {
+	const plugins = [...config.plugins];
+	plugins.splice(getGitIndex(plugins) + 1, 0, ['@semantic-release/npm', {}])
+	config.plugins = plugins;
+}
 
 // #endregion NPM
 
