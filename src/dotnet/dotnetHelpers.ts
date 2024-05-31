@@ -176,8 +176,8 @@ export async function configureDotnetNugetPush(
 		.map(
 			(registry) => {
 				const tokenValue = process.env[registry.tokenEnvVar];
-				ok(tokenValue, `The environment variable ${registry.tokenEnvVar} is undefined!`);
-				`dotnet nuget push ${nupkgDir} --source ${registry.url} --token ${tokenValue}`
+				ok(process.env['SKIP_TOKEN'] === 'true' || tokenValue, `The environment variable ${registry.tokenEnvVar} is undefined!`);
+				`dotnet nuget push ${nupkgDir} --source ${registry.url} --token ${tokenValue ?? '**placeholder**'}`
 			}
 		)
 		.join(' && ');

@@ -69,7 +69,7 @@ export class MSBuildProject {
 			const obj = JSON.parse(out) as object;
 			if ("Properties" in obj && typeof obj.Properties === 'object' && obj.Properties !== null)
 				props = obj.Properties as Record<string, string>;
-			throw new Error('When evaluating properties with MSBuild, "Properties" could not be found in the deserialized JSON object.')
+			else throw new Error('When evaluating properties with MSBuild, "Properties" could not be found in the deserialized JSON object...\n' + JSON.stringify(obj))
 		}
 		else {
 			props = { [properties[0]]: out.trim() }

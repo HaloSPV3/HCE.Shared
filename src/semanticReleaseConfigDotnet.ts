@@ -96,7 +96,7 @@ export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPus
 			projectsToPublish = _.split(';');
 	}
 
-	if (projectsToPackAndPush && projectsToPackAndPush.length) {
+	if (projectsToPackAndPush !== false && projectsToPackAndPush.length === 0) {
 		const _ = process.env["PROJECTS_TO_PACK_AND_PUSH"]
 		if (_ === undefined)
 			errors.push(new Error("projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path."));

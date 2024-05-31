@@ -88,6 +88,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/debug": "^4.1.12",
     "@types/eslint__eslintrc": "^2.1.1",
+    "@types/tmp": "^0.2.6",
     "ajv": "^8.13.0",
     "ajv-draft-04": "^1.0.0",
     "eslint": "^8.57.0",
@@ -95,6 +96,7 @@
     "packemon": "^4.0.1",
     "prettier": "^3.2.5",
     "prettier-config-moon": "^1.1.2",
+    "tmp": "^0.2.3",
     "tslib": "^2.6.2",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5"

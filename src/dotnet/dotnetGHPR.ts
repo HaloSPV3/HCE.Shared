@@ -72,5 +72,7 @@ export async function getGithubNugetRegistryPair(
 	if (isTokenDefined && isUrlDefined && canTokenWritePackages)
 		return { tokenEnvVar, url };
 
+	if (process.env['SKIP_TOKEN'] === 'true')
+		return undefined;
 	throw new Error(`One more more errors occurred when getting GHPR url-token pair. Errors:\n${errors.map(v => v.message).join('\n')}`);
 }

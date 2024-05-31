@@ -1,6 +1,8 @@
 import { describe, it } from 'node:test';
 import { appendPlugins, getConfig, insertAndEditPlugins } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet';
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert';
+import { fileSync, setGracefulCleanup } from 'tmp'
+import { unlinkSync, writeFileSync } from 'node:fs';
 
 await describe('configDotnet', async () => {
 	await describe('appendPlugins', () => {
@@ -33,7 +35,29 @@ await describe('configDotnet', async () => {
 	await describe('getConfig', async () => {
 		strictEqual(getConfig.name, 'getConfig');
 
-		await it('throws Error when projectsToPublish is an empty array, projectsToPackAndPush are both empty arrays.', () => {
+
+		await it('does not throw when projectToPackAndPush contains at least one item', () => {
+			process.env['SKIP_TOKEN'] = 'true';
+			const actual = (() => {
+				setGracefulCleanup();
+				const tmpProj = fileSync({ postfix: '.csproj', discardDescriptor: true });
+				writeFileSync(tmpProj.name, '<Project> <PropertyGroup> <TargetFramework>net6.0</TargetFramework> <RuntimeIdentifier>win7-x86</RuntimeIdentifier> </PropertyGroup> </Project>')
+				try {
+					return getConfig([tmpProj.name], [tmpProj.name])
+				}
+				catch (e) {
+					if (e instanceof AggregateError)
+						return e
+					return e as Error
+				}
+				finally {
+					unlinkSync(tmpProj.name)
+				}
+			})();
+			ok(!(actual instanceof Error), '`actual` should not be an Error.\n' + actual.message)
+		})
+
+		await it('throws Error when projectsToPublish is an empty array.', () => {
 			const actual = (() => {
 				try {
 					return getConfig([], false);
