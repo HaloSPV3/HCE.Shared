@@ -1,3 +1,11 @@
+## [2.4.1-develop.1](https://github.com/halospv3/hce.shared/compare/v2.4.0...v2.4.1-develop.1) (2024-05-31)
+
+
+### Bug Fixes
+
+* :ambulance: bump braces to 3.0.3 ([c4a0948](https://github.com/halospv3/hce.shared/commit/c4a09484c3e7c2f0337453e3543e4b143d5d026c))
+* **deps:** :arrow_down: downgrade conventional-changelog-conventionalcommits ([7d7d418](https://github.com/halospv3/hce.shared/commit/7d7d418b072e57848207a7fcf368985adb76e016)), closes [#402](https://github.com/halospv3/hce.shared/issues/402)
+
 ## [2.2.4](https://github.com/halospv3/hce.shared/compare/v2.2.3...v2.2.4) (2024-04-06)
 
 ## [2.2.3](https://github.com/halospv3/hce.shared/compare/v2.2.2...v2.2.3) (2024-03-29)

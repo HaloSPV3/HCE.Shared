@@ -14,7 +14,9 @@
 	"conventionalCommits.scopes": [
 		"dotnet",
 		"node",
-		"vscode"
+		"vscode",
+		"deps",
+		"deps-dev"
 	],
 	"cSpell.words": [
 		"conventionalcommits",
