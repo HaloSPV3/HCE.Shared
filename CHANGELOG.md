@@ -1,3 +1,10 @@
+## [2.4.3-develop.1](https://github.com/halospv3/hce.shared/compare/v2.4.2...v2.4.3-develop.1) (2024-06-01)
+
+### Bug Fixes
+
+* **deps:** update dependency conventional-changelog-conventionalcommits to v8 ([e1defcd](https://github.com/halospv3/hce.shared/commit/e1defcd94ba51eda7384c1ca87f33c9928610e20))
+* **deps:** update semantic-release monorepo ([39fcf98](https://github.com/halospv3/hce.shared/commit/39fcf988fe55b894e269d64de1b48c7f8dfb950c))
+
 ## [2.4.2](https://github.com/halospv3/hce.shared/compare/v2.4.1...v2.4.2) (2024-05-31)
 
 
