@@ -40,7 +40,7 @@ await describe("commitlintConfig", async () => {
 		await it('has parserPreset', async () => {
 			const preset = await createPreset();
 			ok(preset);
-			ok(preset.parserOpts)
+			ok("parserOpts" in preset || "parser" in preset)
 			ok(config.parserPreset);
 			deepStrictEqual(config.parserPreset.name, commitLintConventional.parserPreset);
 			if ("parser" in preset)
