@@ -5,10 +5,13 @@ async function tokenCanWritePackages(tokenEnvVar: string) {
 	const tokenValue = process.env[tokenEnvVar];
 	if (tokenValue === undefined)
 		throw new TypeError(`The environment variable ${tokenEnvVar} is undefined!`)
-	const reqH = { authorization: `token ${tokenValue}` };
 	// CJS compatibility - import { request } from '@octokit/request
 	const request = (await import('@octokit/request')).request;
-	const response = await request('GET /', { headers: reqH });
+	const response = await request('GET /', {
+		headers: {
+			authorization: `Bearer ${tokenValue}`
+		}
+	});
 	const scopes = response.headers['x-oauth-scopes'];
 	if (scopes) {
 		return scopes.includes('write:packages') || scopes.includes('write:packages');
