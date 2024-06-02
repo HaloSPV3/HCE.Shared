@@ -16,6 +16,7 @@ import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHe
 import { baseConfig, defaultPlugins } from './semanticReleaseConfig.js';
 import { setupGitPluginSpec } from './setupGitPluginSpec.js';
 import debug from './debug.js'
+import { inspect } from 'node:util';
 
 /**
  * TODO: options/params for inserts/edits. NOT ready for production. Currently, this can only add Git plugin's options if undefined or one or more is missing.
@@ -83,7 +84,7 @@ export function appendPlugins(
  */
 export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPush: string[] | false = []): Options {
 	if (debug.enabled) {
-		debug('hce.shared-config:\n%o', baseConfig);
+		console.debug('hce.shared-config:\n' + inspect(baseConfig, false, 8, true));
 	}
 
 	const errors: Error[] = [];
