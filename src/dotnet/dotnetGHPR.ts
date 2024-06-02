@@ -1,10 +1,21 @@
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
 
-// todo: support custom base URL for private GitHub instances
+/**
+ * @todo support custom base URL for private GitHub instances
+ * @param tokenEnvVar The name of the environment variable containing the NUGET token 
+ * @returns `true` if the token is 
+ * @throws 
+ * - TypeError: The environment variable ${tokenEnvVar} is undefined!
+ * - Error: The value of the token in ${tokenEnvVar} begins with 'github_pat_' which means it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.
+ */
 async function tokenCanWritePackages(tokenEnvVar: string) {
 	const tokenValue = process.env[tokenEnvVar];
 	if (tokenValue === undefined)
 		throw new TypeError(`The environment variable ${tokenEnvVar} is undefined!`)
+
+	if (tokenValue.startsWith('github_pat_'))
+		throw new Error(`The value of the token in ${tokenEnvVar} begins with 'github_pat_' which means it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`)
+
 	// CJS compatibility - import { request } from '@octokit/request
 	const request = (await import('@octokit/request')).request;
 	const response = await request('GET /', {
@@ -13,10 +24,10 @@ async function tokenCanWritePackages(tokenEnvVar: string) {
 		}
 	});
 	const scopes = response.headers['x-oauth-scopes'];
-	if (scopes) {
+	if (scopes)
 		return scopes.includes('write:packages') || scopes.includes('write:packages');
-	}
-	return false;
+
+	throw new Error('GitHub API response header lacked "x-oauth-scopes". This indicates the token we provided is not a workflow token nor a Personal Access Token (classic) and can never have permission to push packages.')
 }
 
 const { GITHUB_REPOSITORY_OWNER } = process.env;
@@ -39,12 +50,11 @@ export async function getGithubNugetRegistryPair(
 	tokenEnvVar = 'GITHUB_TOKEN',
 	url: string | undefined = nugetGitHubUrl,
 ): Promise<NuGetRegistryInfo | undefined> {
+	const errors: Error[] = [];
 	// yes, this is stupid. No, I won't change it.
 	const isTokenDefined = process.env[tokenEnvVar] !== undefined;
 	const isUrlDefined = url !== undefined;
-	const canTokenWritePackages = isTokenDefined ? await tokenCanWritePackages(tokenEnvVar) : false;
-
-	const errors: Error[] = [];
+	let canTokenWritePackages = false;
 
 	if (!isTokenDefined)
 		errors.push(
@@ -61,6 +71,19 @@ export async function getGithubNugetRegistryPair(
 			),
 		);
 	}
+
+	if (isTokenDefined) {
+		try {
+			canTokenWritePackages = await tokenCanWritePackages(tokenEnvVar);
+		}
+		catch (err) {
+			if (err instanceof Error)
+				errors.push(err);
+			else
+				errors.push(new Error(String(err)));
+		}
+	}
+
 	if (!canTokenWritePackages) {
 		// yes, this is a critical error that should be fixed before Semantic Release can succeed.
 		// yes, this is incredibly irritating to deal with in local runs.
