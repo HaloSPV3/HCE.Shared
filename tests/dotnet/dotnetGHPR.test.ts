@@ -144,11 +144,9 @@ await describe('dotnetGHPR', async () => {
 		await it("can return when classic or workflow GITHUB_TOKEN or GH_TOKEN is defined with write:packages.", async (t) => {
 			const _dotenv = configDotenv(dotenvOptions);
 			strictEqual(_dotenv.error, undefined);
-			if (false === _isTokenDefinedInfo.isDefined && env.SKIP_TOKEN === 'true')
-				t.skip('SKIP: GitHub token unavailable and SKIP_TOKEN is "true". If you WANT to test a valid token, create a ".env" file in the repo root and add "GITHUB_TOKEN=ghp_****".')
+			if (false === _isTokenDefinedInfo.isDefined)
+				t.skip('SKIP: GitHub token unavailable. To test a valid token, create a ".env" file in the repo root and add "GITHUB_TOKEN=ghp_****".')
 			else {
-				if (false === _isTokenDefinedInfo.isDefined)
-					console.log('IMPENDING DOOM: GitHub token unavailable and SKIP_TOKEN is not "true". If you WANT to test a valid token, create a ".env" file in the repo root and add "GITHUB_TOKEN=ghp_****".')
 				let pair: NuGetRegistryInfo | Error | undefined = undefined;
 				let canWritePackages: boolean | Error = false;
 
