@@ -16,8 +16,12 @@ import { describe, it, todo } from 'node:test';
 import "dotenv";
 import { configDotenv, type DotenvConfigOptions } from 'dotenv';
 import { dirname, join } from 'node:path';
+import { existsSync, writeFileSync } from 'node:fs';
 
-const dotenvOptions: DotenvConfigOptions = { path: join(dirname(dirname(import.meta.dirname)), '.env') }
+const dotenvPath = join(dirname(dirname(import.meta.dirname)), '.env');
+if (!existsSync(dotenvPath))
+	writeFileSync(dotenvPath, '')
+const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }
 
 await describe('dotnetGHPR', async () => {
 	// await it(`nugetGitHubUrl is defined`, { signal: c.signal }, () => {
