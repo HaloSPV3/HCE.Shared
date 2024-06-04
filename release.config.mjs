@@ -22,9 +22,7 @@ import { inspect } from 'node:util';
 const config = { ...(hceSharedConfig) };
 ok(config.plugins)
 
-console.log(inspect(config))
-
-
+console.debug(inspect(config, false, Infinity))
 
 // #region COMMIT ANALYZER
 const COMMIT_ANALYZER_ID = '@semantic-release/commit-analyzer';
