@@ -25,7 +25,7 @@ async function tokenCanWritePackages(tokenEnvVar: string) {
 	});
 	const scopes = response.headers['x-oauth-scopes'];
 	if (scopes)
-		return scopes.includes('write:packages') || scopes.includes('write:packages');
+		return scopes.includes('write:packages')
 
 	throw new Error('GitHub API response header lacked "x-oauth-scopes". This indicates the token we provided is not a workflow token nor a Personal Access Token (classic) and can never have permission to push packages.')
 }
