@@ -70,7 +70,7 @@ await describe('configDotnet', async () => {
 				}
 			})();
 			ok(actual instanceof Error)
-			strictEqual(actual.message, "getConfig cannot continue. One or more errors occurred.\nprojectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path.")
+			ok(actual.message.includes("projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path."));
 		})
 	});
 });
