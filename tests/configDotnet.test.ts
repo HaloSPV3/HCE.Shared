@@ -1,8 +1,9 @@
 import { describe, it } from 'node:test';
 import { appendPlugins, getConfig, insertAndEditPlugins } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet';
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert';
-import { fileSync, setGracefulCleanup } from 'tmp'
+import { fileSync, setGracefulCleanup } from 'tmp';
 import { unlinkSync, writeFileSync } from 'node:fs';
+import { env } from 'node:process';
 
 await describe('configDotnet', async () => {
 	await describe('appendPlugins', () => {
@@ -37,7 +38,7 @@ await describe('configDotnet', async () => {
 
 
 		await it('does not throw when projectToPackAndPush contains at least one item', () => {
-			process.env['SKIP_TOKEN'] = 'true';
+			env['SKIP_TOKEN'] = 'true';
 			const actual = (() => {
 				setGracefulCleanup();
 				const tmpProj = fileSync({ postfix: '.csproj', discardDescriptor: true });

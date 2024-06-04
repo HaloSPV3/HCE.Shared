@@ -2,6 +2,7 @@ import { ok } from 'node:assert/strict';
 import { getGithubNugetRegistryPair, nugetGitHubUrlBase } from './dotnetGHPR.js';
 import { getGitlabNugetRegistryPair } from './dotnetGLPR.js';
 import { MSBuildProject, MSBuildProjectPreDefinedProperties } from './MSBuildProject.js';
+import { env } from 'node:process';
 
 
 function formatDotnetPublish(projectsToPublish: string[], publishProperties: string[]): string {
@@ -175,8 +176,8 @@ export async function configureDotnetNugetPush(
 	return registries
 		.map(
 			(registry) => {
-				const tokenValue = process.env[registry.tokenEnvVar];
-				ok(process.env['SKIP_TOKEN'] === 'true' || tokenValue, `The environment variable ${registry.tokenEnvVar} is undefined!`);
+				const tokenValue = env[registry.tokenEnvVar];
+				ok(env['SKIP_TOKEN'] === 'true' || tokenValue, `The environment variable ${registry.tokenEnvVar} is undefined!`);
 				`dotnet nuget push ${nupkgDir} --source ${registry.url} --token ${tokenValue ?? '**placeholder**'}`
 			}
 		)
