@@ -58,7 +58,7 @@ await describe('configDotnet', async () => {
 					unlinkSync(tmpProj.name)
 				}
 			})();
-			ok(!(actual instanceof Error), '`actual` should not be an Error.\n' + actual.message)
+			ok(!(actual instanceof Error), '`actual` should not be an Error.\n' + actual.stack)
 		})
 
 		await it('throws Error when projectsToPublish is an empty array.', () => {

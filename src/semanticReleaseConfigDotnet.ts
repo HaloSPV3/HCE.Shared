@@ -110,7 +110,7 @@ export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPus
 		throw new Error(
 			[
 				"getConfig cannot continue. One or more errors occurred.",
-				...(errors.map(v => v.message))
+				...(errors.map(v => v.stack))
 			].join('\n')
 		)
 	}

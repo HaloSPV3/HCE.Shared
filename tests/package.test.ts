@@ -173,7 +173,7 @@ await describe("package.json", async () => {
             [],
             errored.map(
                 result =>
-                    `Unable to ${result.action} ${result.entry.source}. Reason:\n${result.validity.message}`
+                    `Unable to ${result.action} ${result.entry.source}. Reason:\n${result.validity.stack}`
             ).join('\n')
         );
     });
