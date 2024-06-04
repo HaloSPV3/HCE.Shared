@@ -3,7 +3,6 @@ import { describe, it } from "node:test";
 import { deepStrictEqual, notStrictEqual } from "node:assert";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { inspect } from "node:util";
 import { packemon } from "../package.json" with { type: "json" };
 // import { isMainThread, Worker } from "node:worker_threads";
 
@@ -94,7 +93,7 @@ await describe("package.json", async () => {
             else if (typeof error === "string")
                 result.validity = new Error(error);
             else
-                result.validity = new Error(inspect(error))
+                result.validity = new Error(String(error));
             return result;
         }
     }

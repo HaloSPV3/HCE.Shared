@@ -46,10 +46,13 @@ await describe('configDotnet', async () => {
 				try {
 					return getConfig([tmpProj.name], [tmpProj.name])
 				}
-				catch (e) {
-					if (e instanceof AggregateError)
-						return e
-					return e as Error
+				catch (err) {
+					if (err instanceof AggregateError)
+						return err;
+					else if (err instanceof Error)
+						return err;
+					else
+						return new Error(String(err));
 				}
 				finally {
 					unlinkSync(tmpProj.name)
