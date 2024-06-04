@@ -82,7 +82,7 @@ await describe("package.json", async () => {
 
             // const worker = new Worker(`const def = ${action}('${id})`);
             const cp = spawnSync('node', ['-', `${verb}('${id}');.exit`], { encoding: "utf8" });
-            if (cp.error ?? cp.stderr.length > 0)
+            if (cp.error ?? (cp.stderr.length > 0 && cp.stderr.replaceAll('\r\n', '') !== 'Debugger attached.Waiting for the debugger to disconnect...'))
                 throw cp.error ?? new Error(cp.stderr);
 
             result.validity = true;
