@@ -1,3 +1,14 @@
+## [2.5.0](https://github.com/halospv3/hce.shared/compare/v2.4.3...v2.5.0) (2024-06-04)
+
+### Features
+
+* overhaul dotnetGHPR; misc refactors ([8d0a1d6](https://github.com/halospv3/hce.shared/commit/8d0a1d657e7f4754881c9a130fd4aa8191fb3e81))
+
+### Bug Fixes
+
+* **deps:** update dependency conventional-changelog-conventionalcommits to v8 ([e1defcd](https://github.com/halospv3/hce.shared/commit/e1defcd94ba51eda7384c1ca87f33c9928610e20))
+* **deps:** update semantic-release monorepo ([39fcf98](https://github.com/halospv3/hce.shared/commit/39fcf988fe55b894e269d64de1b48c7f8dfb950c))
+
 ## [2.4.3](https://github.com/halospv3/hce.shared/compare/v2.4.2...v2.4.3) (2024-05-31)
 
 
