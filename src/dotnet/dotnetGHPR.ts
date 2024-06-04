@@ -1,3 +1,4 @@
+import { ok } from 'node:assert/strict';
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
 import { env } from 'node:process'
 
@@ -12,6 +13,13 @@ import { env } from 'node:process'
  *   - The GitHub API response header lacked "x-oauth-scopes". This indicates the token we provided is not a workflow token nor a Personal Access Token (classic) and can never have permission to push packages.
  */
 export async function tokenCanWritePackages(tokenEnvVar: string) {
+	/* double-check the token exists */
+	const info = isTokenDefined(tokenEnvVar);
+	ok(info.isDefined)
+
+	if (info.fallback)
+		tokenEnvVar = info.fallback;
+
 	const tokenValue = env[tokenEnvVar];
 	if (tokenValue === undefined)
 		throw new TypeError(`The environment variable ${tokenEnvVar} is undefined!`)

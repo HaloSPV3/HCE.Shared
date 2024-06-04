@@ -128,13 +128,8 @@ await describe('dotnetGHPR', async () => {
 	});
 
 	await describe('getGithubNugetRegistryPair', async () => {
-		const GITHUB_REPOSITORY_OWNER = "HaloSPV3";
-		env["GITHUB_REPOSITORY_OWNER"] = GITHUB_REPOSITORY_OWNER;
-		const tokenEnvVar = "GITHUB_TOKEN";
 		const _dotenv = configDotenv(dotenvOptions);
 		strictEqual(_dotenv.error, undefined)
-		const _isTokenDefinedInfo = isTokenDefined();
-		const _nugetGitHubUrl = `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json`;
 
 		await it('getGitHubNugetRegistryPair is function', () => {
 			const t = typeof getGithubNugetRegistryPair;
@@ -142,6 +137,11 @@ await describe('dotnetGHPR', async () => {
 		});
 
 		await it("can return when classic or workflow GITHUB_TOKEN or GH_TOKEN is defined with write:packages.", async (t) => {
+			const GITHUB_REPOSITORY_OWNER = "HaloSPV3";
+			env["GITHUB_REPOSITORY_OWNER"] = GITHUB_REPOSITORY_OWNER;
+			const _nugetGitHubUrl = `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json`;
+			const tokenEnvVar = "GITHUB_TOKEN";
+			const _isTokenDefinedInfo = isTokenDefined();
 			const _dotenv = configDotenv(dotenvOptions);
 			strictEqual(_dotenv.error, undefined);
 			if (false === _isTokenDefinedInfo.isDefined)
