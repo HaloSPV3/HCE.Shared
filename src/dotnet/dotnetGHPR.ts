@@ -76,6 +76,7 @@ export const nugetGitHubUrlBase = 'https://nuget.pkg.github.com';
 /** @deprecated use {@link getNugetGitHubUrl()} instead. */
 export const nugetGitHubUrl: string | undefined = getNugetGitHubUrl();
 
+// todo!: refactor to "return string else throw"
 export function getNugetGitHubUrl() {
 	const owner = getOwner();
 	if (owner)
