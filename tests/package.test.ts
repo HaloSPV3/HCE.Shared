@@ -101,6 +101,7 @@ await describe("package.json", async () => {
     const nameof_expectedEsm = "expectedEsm";
     const expectedEsm: string[] = [
         // "commitlintConfig",
+        // "dotnet",
         // "eslintConfig",
         // "envUtils",
         // "findStaticConfig",
