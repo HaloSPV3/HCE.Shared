@@ -44,7 +44,7 @@
     "presemantic-release": "npm run pack && npm run check",
     "semantic-release": "npx semantic-release",
     "pretest": "npm run build",
-    "test": "node --test --import tsx ./tests/**/*.test.ts",
+    "test": "tsx --test ./tests/**/*.test.ts",
     "type": "tsc --build",
     "validate": "packemon validate",
     "watch": "packemon watch"
