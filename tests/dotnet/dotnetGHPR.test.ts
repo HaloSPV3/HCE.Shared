@@ -26,20 +26,28 @@ const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }
 await describe('dotnetGHPR', async () => {
 	await describe('tokenCanWritePackages', async () => {
 		await it('returns true when GITHUB_TOKEN is valid and GITHUB_REPOSITORY_OWNER is defined', async (t) => {
-			if (getEnvVarValue('GITHUB_TOKEN')?.startsWith('g') !== true)
-				t.skip('GITHUB_TOKEN is unavailable for testing');
-			else if (!getEnvVarValue('GITHUB_REPOSITORY_OWNER'))
-				t.skip('GITHUB_REPOSITORY_OWNER is unavailable for testing.')
-			else {
-				const url = getNugetGitHubUrl();
-				ok(url);
-
-				const canWrite = await tokenCanWritePackages('GITHUB_TOKEN', url)
-				ok(canWrite);
+			if (getEnvVarValue('GITHUB_TOKEN')?.startsWith('ghp') !== true) {
+				t.skip('Personal GITHUB_TOKEN is unavailable for testing');
+				return;
 			}
+
+			if (!getEnvVarValue('GITHUB_REPOSITORY_OWNER')) {
+				t.skip('GITHUB_REPOSITORY_OWNER is unavailable for testing.')
+				return;
+			}
+
+			const url = getNugetGitHubUrl();
+			ok(url);
+
+			const canWrite = await tokenCanWritePackages('GITHUB_TOKEN', url)
+			ok(canWrite, 'tokenCanWritePackages determined GITHUB_TOKEN failed ');
 		})
 
-		await it('returns false when GITHUB_TOKEN is invalid', async () => {
+		await it('returns false when GITHUB_TOKEN is invalid', async (t) => {
+			if (!getEnvVarValue('GITHUB_REPOSITORY_OWNER')) {
+				t.skip('GITHUB_REPOSITORY_OWNER is unavailable for testing.')
+				return;
+			}
 			const warnBak = console.warn;
 			try {
 				console.warn = () => { return };
