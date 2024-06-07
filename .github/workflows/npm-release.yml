@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
   push:
-    branches: [main, develop]
+    branches: [main, develop, next/v3.0.0]
 
 permissions:
   contents: write # to be able to publish a GitHub release
