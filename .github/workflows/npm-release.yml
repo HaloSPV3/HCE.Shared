@@ -25,15 +25,9 @@ jobs:
           check-latest: true
 
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
-      
-      - name: npm clean-install
-        run: npm ci
-
-      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
-        run: npm audit signatures
-      
+      - run: npm ci
+      - run: npm audit signatures
       - run: npm run pack
-      
       - run: npm run check
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
