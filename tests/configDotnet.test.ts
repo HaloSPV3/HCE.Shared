@@ -1,9 +1,9 @@
-import { describe, it } from 'node:test';
 import { appendPlugins, getConfig, insertAndEditPlugins } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet';
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert';
-import { fileSync, setGracefulCleanup } from 'tmp';
 import { unlinkSync, writeFileSync } from 'node:fs';
 import { env } from 'node:process';
+import { describe, it } from 'node:test';
+import { fileSync, setGracefulCleanup } from 'tmp';
 
 await describe('configDotnet', async () => {
 	await describe('appendPlugins', () => {

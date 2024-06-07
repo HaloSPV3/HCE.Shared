@@ -1,8 +1,8 @@
-import jsonc from "eslint-plugin-jsonc";
-import tseslint from "typescript-eslint";
-import { type TSESLint } from "@typescript-eslint/utils";
 import eslint from "@eslint/js";
+import { type TSESLint } from "@typescript-eslint/utils";
+import jsonc from "eslint-plugin-jsonc";
 import { createRequire } from "module";
+import tseslint from "typescript-eslint";
 
 // CJS compatibility; it started transpiling to a top-level await after upgrading from packemon 4.0.1 to 4.1.0
 const require = createRequire(import.meta.url);

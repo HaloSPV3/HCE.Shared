@@ -1,5 +1,5 @@
-import type { PluginSpec } from 'semantic-release';
 import type { AssetEntry, Options as GitOptions } from '@semantic-release/git';
+import type { PluginSpec } from 'semantic-release';
 
 export const GitPluginId = '@semantic-release/git';
 /** As specified at https://github.com/semantic-release/git#options */

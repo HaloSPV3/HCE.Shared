@@ -1,5 +1,5 @@
+import { getEnv, getEnvVarValue } from '../envUtils.js';
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
-import { getEnv, getEnvVarValue } from '../envUtils.js'
 
 const { CI_API_V4_URL, CI_PROJECT_ID } = getEnv();
 const nameof = {

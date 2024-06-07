@@ -1,7 +1,7 @@
+import { getEnv, getEnvVarValue } from "@halospv3/hce.shared-config/envUtils";
 import { strictEqual } from "node:assert";
 import { env } from "node:process";
 import { describe, it } from "node:test";
-import { getEnvVarValue, getEnv } from "@halospv3/hce.shared-config/envUtils"
 
 await describe('envUtils', async () => {
     await describe('getEnvVarValue', async () => {

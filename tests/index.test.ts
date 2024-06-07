@@ -1,3 +1,7 @@
+import HceSharedConfig from '@halospv3/hce.shared-config';
+import Ajv, { type SchemaObject } from 'ajv';
+import AjvDraft04 from 'ajv-draft-04';
+import fetch from 'node-fetch';
 import {
 	deepStrictEqual,
 	notStrictEqual,
@@ -6,11 +10,7 @@ import {
 } from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import { URL } from 'node:url';
-import Ajv, { type SchemaObject } from 'ajv';
-import AjvDraft04 from 'ajv-draft-04';
-import fetch from 'node-fetch';
 import type { Options } from 'semantic-release';
-import HceSharedConfig from '@halospv3/hce.shared-config';
 
 async function loadRemoteSchemaFile(url: string): Promise<SchemaObject> {
 	const res = await fetch(new URL(url));

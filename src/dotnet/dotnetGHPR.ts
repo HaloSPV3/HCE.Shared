@@ -1,9 +1,9 @@
 import { notDeepStrictEqual, ok } from 'node:assert/strict';
-import type { NuGetRegistryInfo } from './dotnetHelpers.js';
-import { getEnvVarValue } from '../envUtils.js';
 import { exec, type ExecException } from 'node:child_process';
-import { createDummyNupkg } from './createDummyNupkg.js';
 import { promisify } from 'node:util';
+import { getEnvVarValue } from '../envUtils.js';
+import { createDummyNupkg } from './createDummyNupkg.js';
+import type { NuGetRegistryInfo } from './dotnetHelpers.js';
 
 /**
  * @param tokenEnvVar The name of the environment variable containing the NUGET token 

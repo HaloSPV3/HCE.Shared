@@ -1,11 +1,11 @@
 import { deepStrictEqual, ok } from 'node:assert';
 import { describe, it } from 'node:test';
-// @ts-expect-error ts(7016) Could not find a declaration file
-import createPreset from 'conventional-changelog-conventionalcommits';
 import commitLintConventional from '@commitlint/config-conventional';
 import load from '@commitlint/load';
-import { type QualifiedRuleConfig, RuleConfigSeverity } from '@commitlint/types';
+import { RuleConfigSeverity, type QualifiedRuleConfig } from '@commitlint/types';
 import rawConfig from '@halospv3/hce.shared-config/commitlintConfig';
+// @ts-expect-error ts(7016) Could not find a declaration file
+import createPreset from 'conventional-changelog-conventionalcommits';
 
 await describe("commitlintConfig", async () => {
 	await describe("rawConfig", async () => {

@@ -1,8 +1,8 @@
 import { ok } from 'node:assert/strict';
+import { getEnvVarValue } from '../envUtils.js';
+import { MSBuildProject, MSBuildProjectPreDefinedProperties } from './MSBuildProject.js';
 import { getGithubNugetRegistryPair, nugetGitHubUrlBase } from './dotnetGHPR.js';
 import { getGitlabNugetRegistryPair } from './dotnetGLPR.js';
-import { MSBuildProject, MSBuildProjectPreDefinedProperties } from './MSBuildProject.js';
-import { getEnvVarValue } from '../envUtils.js';
 
 function formatDotnetPublish(projectsToPublish: string[], publishProperties: string[]): string {
 	/* Fun Fact: You can define a property and get the evaluated value in the same command!

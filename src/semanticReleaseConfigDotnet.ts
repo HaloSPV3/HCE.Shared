@@ -11,13 +11,13 @@
  *
  */
 
+import { inspect } from 'node:util';
 import type { Options, PluginSpec } from 'semantic-release';
+import debug from './debug.js';
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js';
+import { getEnvVarValue } from './envUtils.js';
 import { baseConfig, defaultPlugins } from './semanticReleaseConfig.js';
 import { setupGitPluginSpec } from './setupGitPluginSpec.js';
-import debug from './debug.js'
-import { inspect } from 'node:util';
-import { getEnvVarValue } from './envUtils.js';
 
 /**
  * TODO: options/params for inserts/edits. NOT ready for production. Currently, this can only add Git plugin's options if undefined or one or more is missing.

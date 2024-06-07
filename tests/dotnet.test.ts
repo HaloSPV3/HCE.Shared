@@ -1,6 +1,6 @@
-import * as dotnet from "@halospv3/hce.shared-config/dotnet" // see a ts(2307) here? It's probably safe to ignore!
-import { ok } from "assert/strict"
-import { describe } from "node:test"
+import * as dotnet from "@halospv3/hce.shared-config/dotnet"; // see a ts(2307) here? It's probably safe to ignore!
+import { ok } from "assert/strict";
+import { describe } from "node:test";
 
 // simple "symbol exists" checks only. More specific checks in each module's respective test file.
 

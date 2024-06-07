@@ -1,5 +1,5 @@
-import { env } from 'node:process';
 import { config as loadDotenv, type DotenvConfigOptions } from "dotenv";
+import { env } from 'node:process';
 
 /**
  * Load a .env file from the CWD with the given options (or defaults), returns the new value of process.env
