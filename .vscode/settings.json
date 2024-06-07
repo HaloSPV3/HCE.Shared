@@ -31,7 +31,10 @@
 		"tsout"
 	],
 	"files.readonlyInclude": {
-		"node_modules/**": true
+		"_tsout/**": true,
+		"node_modules/**": true,
+		"cjs/**": true,
+		"mjs/**": true
 	},
 	"nodejs-testing.include": [
 		"./",

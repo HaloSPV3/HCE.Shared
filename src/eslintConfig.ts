@@ -1,8 +1,8 @@
-import jsonc from "eslint-plugin-jsonc";
-import tseslint from "typescript-eslint";
-import { type TSESLint } from "@typescript-eslint/utils";
 import eslint from "@eslint/js";
+import { type TSESLint } from "@typescript-eslint/utils";
+import jsonc from "eslint-plugin-jsonc";
 import globals from 'globals/globals.json' with { type: "json" }
+import tseslint from "typescript-eslint";
 
 // https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config
 // https://www.google.com/search?q=javascript+recurse+through+object+and+remove+undefined+properties

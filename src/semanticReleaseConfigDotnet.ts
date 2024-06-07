@@ -11,11 +11,13 @@
  *
  */
 
+import { inspect } from 'node:util';
 import type { Options, PluginSpec } from 'semantic-release';
+import debug from './debug.js';
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js';
+import { getEnvVarValue } from './envUtils.js';
 import { baseConfig, defaultPlugins } from './semanticReleaseConfig.js';
 import { setupGitPluginSpec } from './setupGitPluginSpec.js';
-import debug from './debug.js'
 
 /**
  * TODO: options/params for inserts/edits. NOT ready for production. Currently, this can only add Git plugin's options if undefined or one or more is missing.
@@ -83,21 +85,21 @@ export function appendPlugins(
  */
 export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPush: string[] | false = []): Options {
 	if (debug.enabled) {
-		debug('hce.shared-config:\n%o', baseConfig);
+		console.debug('hce.shared-config:\n' + inspect(baseConfig, false, Infinity, true));
 	}
 
 	const errors: Error[] = [];
 
 	if (projectsToPublish.length === 0) {
-		const _ = process.env["PROJECTS_TO_PUBLISH"];
+		const _ = getEnvVarValue("PROJECTS_TO_PUBLISH");
 		if (_ === undefined)
 			errors.push(new Error("projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path."));
 		else
 			projectsToPublish = _.split(';');
 	}
 
-	if (projectsToPackAndPush && projectsToPackAndPush.length) {
-		const _ = process.env["PROJECTS_TO_PACK_AND_PUSH"]
+	if (projectsToPackAndPush !== false && projectsToPackAndPush.length === 0) {
+		const _ = getEnvVarValue("PROJECTS_TO_PACK_AND_PUSH")
 		if (_ === undefined)
 			errors.push(new Error("projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path."));
 		else
@@ -108,7 +110,7 @@ export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPus
 		throw new Error(
 			[
 				"getConfig cannot continue. One or more errors occurred.",
-				...(errors.map(v => v.message))
+				...(errors.map(v => v.stack))
 			].join('\n')
 		)
 	}
@@ -119,7 +121,7 @@ export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPus
 		config = appendPlugins(config, projectsToPublish, projectsToPackAndPush);
 
 	if (debug.enabled) {
-		debug('modified plugins array:\n%o', config.plugins);
+		console.debug(`modified plugins array:\n${inspect(config.plugins, false, Infinity)}`);
 	}
 
 	return config;

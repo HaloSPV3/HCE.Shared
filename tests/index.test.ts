@@ -1,3 +1,4 @@
+import HceSharedConfig from '@halospv3/hce.shared-config';
 import {
 	deepStrictEqual,
 	notStrictEqual,
@@ -5,8 +6,6 @@ import {
 } from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import type { Options } from 'semantic-release';
-import HceSharedConfig from '@halospv3/hce.shared-config';
-
 
 const options: Options = HceSharedConfig;
 

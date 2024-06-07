@@ -1,6 +1,6 @@
+import type { Options as GitOptions } from '@semantic-release/git';
+import type { Options as GithubOptions } from '@semantic-release/github';
 import type { Options, PluginSpec } from 'semantic-release';
-import type { Options as GitOptions } from '@semantic-release/git'
-import type { Options as GithubOptions } from '@semantic-release/github'
 import { DefaultOptions } from './setupGitPluginSpec.js';
 
 export const defaultPlugins: readonly PluginSpec[] = [

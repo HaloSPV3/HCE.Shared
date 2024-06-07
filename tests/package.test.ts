@@ -3,7 +3,6 @@ import { describe, it } from "node:test";
 import { deepStrictEqual, notStrictEqual } from "node:assert";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { inspect } from "node:util";
 import { packemon } from "../package.json" with { type: "json" };
 // import { isMainThread, Worker } from "node:worker_threads";
 
@@ -83,7 +82,7 @@ await describe("package.json", async () => {
 
             // const worker = new Worker(`const def = ${action}('${id})`);
             const cp = spawnSync('node', ['-', `${verb}('${id}');.exit`], { encoding: "utf8" });
-            if (cp.error ?? cp.stderr.length > 0)
+            if (cp.error ?? (cp.stderr.length > 0 && cp.stderr.replaceAll('\r\n', '') !== 'Debugger attached.Waiting for the debugger to disconnect...'))
                 throw cp.error ?? new Error(cp.stderr);
 
             result.validity = true;
@@ -94,7 +93,7 @@ await describe("package.json", async () => {
             else if (typeof error === "string")
                 result.validity = new Error(error);
             else
-                result.validity = new Error(inspect(error))
+                result.validity = new Error(String(error));
             return result;
         }
     }
@@ -104,6 +103,7 @@ await describe("package.json", async () => {
         "commitlintConfig",
         "dotnet",
         "eslintConfig",
+        "envUtils",
         "index",
         "semanticReleaseConfig",
         "semanticReleaseConfigDotnet",
@@ -149,7 +149,7 @@ await describe("package.json", async () => {
             [],
             errored.map(
                 result =>
-                    `Unable to ${result.action} ${result.entry.source}. Reason:\n${result.validity.message}`
+                    `Unable to ${result.action} ${result.entry.source}. Reason:\n${result.validity.stack}`
             ).join('\n')
         );
     });

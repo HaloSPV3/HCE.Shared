@@ -1,14 +1,19 @@
-import { ok } from 'node:assert/strict';
-import { describe, todo } from 'node:test';
 import { setupGitPluginSpec } from '@halospv3/hce.shared-config/setupGitPluginSpec';
-import { deepEqual } from 'node:assert';
+import { deepStrictEqual, notDeepStrictEqual } from 'node:assert';
+import { describe, it } from 'node:test';
 
 await describe('setupGitPluginSpec', async () => {
-    // placeholder. Remove when tests are implemented.
-    ok(typeof setupGitPluginSpec === 'function');
+    await it('returns original array if it lacks Git PluginSpec', () => {
+        deepStrictEqual(
+            setupGitPluginSpec([]),
+            []
+        );
+    });
 
-    deepEqual([], setupGitPluginSpec([]));
-
-    await todo('if git plugin included, return modified plugins array');
-    await todo('if git plugin NOT included, return original plugins array');
+    await it('modifies provided array if it includes Git PluginSpec', () => {
+        notDeepStrictEqual(
+            setupGitPluginSpec(['@semantic-release/git']),
+            ['@semantic-release/git']
+        );
+    });
 });

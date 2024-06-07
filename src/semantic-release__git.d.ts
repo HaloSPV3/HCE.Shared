@@ -87,5 +87,5 @@ declare module '@semantic-release/git' {
 			logger: { log(_0: string, _1: unknown | number): void },
 		}
 	): Promise<void>;
-	export { verifyConditions, prepare }
+	export { prepare, verifyConditions };
 }

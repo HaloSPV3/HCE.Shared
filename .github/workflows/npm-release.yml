@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
   push:
-    branches: [main, develop]
+    branches: [main, develop, next/v3.0.0]
 
 permissions:
   contents: write # to be able to publish a GitHub release
@@ -25,16 +25,12 @@ jobs:
           check-latest: true
 
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
-      
-      - name: npm clean-install
-        run: npm ci
-
-      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
-        run: npm audit signatures
-      
+      - run: npm ci
+      - run: npm audit signatures
       - run: npm run pack
-      
       - run: npm run check
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - run: npx semantic-release # make git tag, commit updated files, release to GitHub/GitLab.
         env:
