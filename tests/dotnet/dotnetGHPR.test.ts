@@ -64,10 +64,15 @@ await describe('dotnetGHPR', async () => {
 		});
 
 		await it('returns undefined when GITHUB_REPOSITORY_OWNER is undefined', () => {
-			delete env.GITHUB_REPOSITORY_OWNER;
-			deepStrictEqual(getNugetGitHubUrl(), undefined);
-		}).finally(() => {
-			env.GITHUB_REPOSITORY_OWNER = owner;
+			const warnBak = console.warn;
+			try {
+				delete env.GITHUB_REPOSITORY_OWNER;
+				console.warn = () => { return }
+				deepStrictEqual(getNugetGitHubUrl(), undefined);
+			} finally {
+				env.GITHUB_REPOSITORY_OWNER = owner;
+				console.warn = warnBak
+			}
 		});
 	});
 
@@ -167,43 +172,45 @@ await describe('dotnetGHPR', async () => {
 		});
 
 		await it("can return when classic or workflow GITHUB_TOKEN or GH_TOKEN is defined with write:packages.", async (t) => {
-			const GITHUB_REPOSITORY_OWNER = "HaloSPV3";
-			env["GITHUB_REPOSITORY_OWNER"] = GITHUB_REPOSITORY_OWNER;
+			const GITHUB_REPOSITORY_OWNER = env.GITHUB_REPOSITORY_OWNER = "HaloSPV3";
 			const _nugetGitHubUrl = `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json`;
 			const tokenEnvVar = "GITHUB_TOKEN";
 			const _isTokenDefinedInfo = isTokenDefined();
 			const _dotenv = configDotenv(dotenvOptions);
+
 			strictEqual(_dotenv.error, undefined);
-			if (false === _isTokenDefinedInfo.isDefined)
+
+			if (!_isTokenDefinedInfo.isDefined) {
 				t.skip('SKIP: GitHub token unavailable. To test a valid token, create a ".env" file in the repo root and add "GITHUB_TOKEN=ghp_****".')
-			else {
-				let pair: NuGetRegistryInfo | Error | undefined = undefined;
-				let canWritePackages: boolean | Error = false;
-
-				try {
-					canWritePackages = await tokenCanWritePackages(
-						_isTokenDefinedInfo.fallback ?? tokenEnvVar);
-				}
-				catch (err) {
-					canWritePackages = err instanceof Error ? err : new Error(String(err));
-				}
-
-				strictEqual(canWritePackages, true)
-
-				try {
-					env.GITHUB_REPOSITORY_OWNER ??= owner;
-					pair = await getGithubNugetRegistryPair();
-				} catch (err) {
-					pair = err instanceof Error ? err : new Error(String(err));
-				}
-
-				if (pair instanceof Error)
-					strictEqual(pair, undefined);
-				else if (pair === undefined)
-					notStrictEqual(pair, undefined);
-				else
-					deepStrictEqual(pair.url, _nugetGitHubUrl)
+				return;
 			}
+
+			let pair: NuGetRegistryInfo | Error | undefined = undefined;
+			let canWritePackages: boolean | Error = false;
+
+			try {
+				canWritePackages = await tokenCanWritePackages(
+					_isTokenDefinedInfo.fallback ?? tokenEnvVar);
+			}
+			catch (err) {
+				canWritePackages = err instanceof Error ? err : new Error(String(err));
+			}
+
+			strictEqual(canWritePackages, true, 'unable to push packages');
+
+			try {
+				env.GITHUB_REPOSITORY_OWNER ??= owner;
+				pair = await getGithubNugetRegistryPair();
+			} catch (err) {
+				pair = err instanceof Error ? err : new Error(String(err));
+			}
+
+			if (pair instanceof Error)
+				strictEqual(pair, undefined);
+			else if (pair === undefined)
+				notStrictEqual(pair, undefined);
+			else
+				deepStrictEqual(pair.url, _nugetGitHubUrl)
 		});
 
 		todo('mock insufficient token');
