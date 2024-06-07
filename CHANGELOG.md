@@ -1,3 +1,10 @@
+## [2.6.0](https://github.com/halospv3/hce.shared/compare/v2.5.0...v2.6.0) (2024-06-07)
+
+### Features
+
+* add createDummyNupkg ([ed67d06](https://github.com/halospv3/hce.shared/commit/ed67d06cd06e56a78b0a9ff2e51efb83ddd94386)), closes [#406](https://github.com/halospv3/hce.shared/issues/406)
+* add EnvUtils (getEnvVarValue, getEnv) ([f86562a](https://github.com/halospv3/hce.shared/commit/f86562aa1c19a13a612e6571ba2122bf134ba196))
+
 ## [2.5.0](https://github.com/halospv3/hce.shared/compare/v2.4.3...v2.5.0) (2024-06-04)
 
 ### Features
