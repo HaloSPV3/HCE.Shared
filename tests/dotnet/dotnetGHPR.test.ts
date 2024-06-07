@@ -11,7 +11,7 @@ import {
 } from '@halospv3/hce.shared-config/dotnet/dotnetGHPR';
 import type { NuGetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/dotnetHelpers';
 import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils';
-import { deepStrictEqual, notStrictEqual, strictEqual } from 'node:assert';
+import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'node:assert';
 import { env } from 'node:process';
 import { beforeEach, describe, it, todo } from 'node:test';
 import { configDotenv, type DotenvConfigOptions } from 'dotenv';
@@ -24,18 +24,38 @@ if (!existsSync(dotenvPath))
 const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }
 
 await describe('dotnetGHPR', async () => {
-	// await it(`nugetGitHubUrl is defined`, { signal: c.signal }, () => {
-	// 	const { GITHUB_REPOSITORY_OWNER } = env;
-	// 	if (GITHUB_REPOSITORY_OWNER) {
-	// 		ok(nugetGitHubUrl);
-	// 		strictEqual(typeof nugetGitHubUrl, "string", `nugetGitHubUrl should be a string when GITHUB_REPOSITORY_OWNER is in process environment! It is "${typeof nugetGitHubUrl}"`);
-	// 		strictEqual(typeof nugetGitHubUrlBase, "string", `nugetGitHubUrlBase should be a string! It is "${typeof nugetGitHubUrlBase}"`);
-	// 		ok(nugetGitHubUrl.startsWith(nugetGitHubUrlBase));
-	// 	}
-	// 	else {
-	// 		strictEqual(nugetGitHubUrl, undefined);
-	// 	}
-	// });
+	await describe('tokenCanWritePackages', async () => {
+		await it('returns true when GITHUB_TOKEN is valid and GITHUB_REPOSITORY_OWNER is defined', async (t) => {
+			if (getEnvVarValue('GITHUB_TOKEN')?.startsWith('g') !== true)
+				t.skip('GITHUB_TOKEN is unavailable for testing');
+			else if (!getEnvVarValue('GITHUB_REPOSITORY_OWNER'))
+				t.skip('GITHUB_REPOSITORY_OWNER is unavailable for testing.')
+			else {
+				const url = getNugetGitHubUrl();
+				ok(url);
+
+				const canWrite = await tokenCanWritePackages('GITHUB_TOKEN', url)
+				ok(canWrite);
+			}
+		})
+
+		await it('returns false when GITHUB_TOKEN is invalid', async () => {
+			const warnBak = console.warn;
+			try {
+				console.warn = () => { return };
+				const url = getNugetGitHubUrl();
+				ok(url);
+
+				const TOKEN_CANNOT_WRITE = 'TOKEN_CANNOT_WRITE';
+				getEnv(undefined, { TOKEN_CANNOT_WRITE })
+				const canWrite = await tokenCanWritePackages(TOKEN_CANNOT_WRITE);
+				strictEqual(canWrite, false);
+			}
+			finally {
+				console.warn = warnBak;
+			}
+		});
+	});
 
 	await describe('getNugetGitHubUrl', async () => {
 		await it('returns string when GITHUB_REPOSITORY_OWNER is defined', () => {

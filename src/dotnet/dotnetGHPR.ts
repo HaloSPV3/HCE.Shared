@@ -1,21 +1,31 @@
-import { ok } from 'node:assert/strict';
+import { notDeepStrictEqual, ok } from 'node:assert/strict';
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
 import { getEnvVarValue } from '../envUtils.js';
+import { exec, type ExecException } from 'node:child_process';
+import { createDummyNupkg } from './createDummyNupkg.js';
+import { promisify } from 'node:util';
 
 /**
- * @todo support custom base URL for private GitHub instances
  * @param tokenEnvVar The name of the environment variable containing the NUGET token 
- * @returns `true` if the token is 
+ * @returns `true` if the token can be used to push nupkg to the given Nuget registry
  * @throws
  * - TypeError: The environment variable ${tokenEnvVar} is undefined!
  * - Error: 
  *   - The value of the token in ${tokenEnvVar} begins with 'github_pat_' which means it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.
  *   - The GitHub API response header lacked "x-oauth-scopes". This indicates the token we provided is not a workflow token nor a Personal Access Token (classic) and can never have permission to push packages.
  */
-export async function tokenCanWritePackages(tokenEnvVar: string) {
+export async function tokenCanWritePackages(tokenEnvVar: string, url?: string) {
 	/* double-check the token exists */
 	const info = isTokenDefined(tokenEnvVar);
 	ok(info.isDefined)
+
+	if (url === undefined) {
+		console.debug(`tokenCanWritePackages was called without a NuGet Source URL. Defaulting to use ${`${nugetGitHubUrlBase}/\${GITHUB_REPOSITORY_OWNER}/index.json`} where GITHUB_REPOSITORY_OWNER is '${getOwner()}'`)
+		url = getNugetGitHubUrl();
+	}
+
+	notDeepStrictEqual(url, undefined);
+	notDeepStrictEqual(url, '');
 
 	if (info.fallback)
 		tokenEnvVar = info.fallback;
@@ -27,18 +37,33 @@ export async function tokenCanWritePackages(tokenEnvVar: string) {
 	if (tokenValue.startsWith('github_pat_'))
 		throw new Error(`The value of the token in ${tokenEnvVar} begins with 'github_pat_' which means it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`)
 
-	// CJS compatibility - import { request } from '@octokit/request
-	const request = (await import('@octokit/request')).request;
-	const response = await request('GET /', {
-		headers: {
-			authorization: `Bearer ${tokenValue}`
-		}
-	});
-	const scopes = response.headers['x-oauth-scopes'];
-	if (scopes)
-		return scopes.includes('write:packages')
+	const dummyNupkgPath = createDummyNupkg();
+	const promiseExec = promisify(exec);
 
-	throw new Error('GitHub API response header lacked "x-oauth-scopes". This indicates the token we provided is not a workflow token nor a Personal Access Token (classic) and can never have permission to push packages.')
+	try {
+		const pushResult = await promiseExec(`dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key ${tokenValue} --skip-duplicate`, { encoding: 'utf8' })
+		const errNewline = pushResult.stderr.includes('\r\n') ? '\r\n' : pushResult.stdout.includes('\r') ? '\r' : '\n';
+
+		// if any *lines* start with "error: " or "Error: ", log stderr
+		const errorCount = pushResult.stderr.split(errNewline ?? '\n').filter(line => line.trim().startsWith('error: ') || line.trim().startsWith('Error: ')).length;
+		if (errorCount > 0)
+			console.error(pushResult.stderr);
+
+		// if any lines start with "warn : ", log stdout
+		const warningCount = pushResult.stdout.split(errNewline ?? '\n').filter(line => line.trim().startsWith('warn : ')).length;
+		if (warningCount > 0)
+			console.warn(pushResult.stdout);
+
+		const hasAuthError = pushResult.stderr.includes('401 (Unauthorized)');
+
+		// return true is no lines contain error indicators.
+		return errorCount === 0 && hasAuthError === false;
+	}
+	catch (err) {
+		const stdout = (err as ExecException).stdout ?? '';
+		console.error((err as ExecException).stack + '\n' + stdout.split('Usage: dotnet nuget push')[0]);
+		return false;
+	}
 }
 
 /** returns the value of GITHUB_REPOSITORY_OWNER */
@@ -55,6 +80,7 @@ export function getNugetGitHubUrl() {
 	const owner = getOwner();
 	if (owner)
 		return `${nugetGitHubUrlBase}/${owner}/index.json`;
+	console.warn('GITHUB_REPOSITORY_OWNER is undefined! Default NuGet source for GitHub is unavailable.');
 	return undefined;
 }
 
@@ -113,7 +139,7 @@ export async function getGithubNugetRegistryPair(
 		if (_isTokenDefinedInfo.fallback)
 			tokenEnvVar = _isTokenDefinedInfo.fallback;
 		try {
-			canTokenWritePackages = await tokenCanWritePackages(tokenEnvVar);
+			canTokenWritePackages = await tokenCanWritePackages(tokenEnvVar, url);
 		}
 		catch (err) {
 			if (err instanceof Error)

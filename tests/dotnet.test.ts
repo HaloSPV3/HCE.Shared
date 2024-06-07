@@ -5,6 +5,8 @@ import { describe } from "node:test"
 // simple "symbol exists" checks only. More specific checks in each module's respective test file.
 
 describe('dotnet re-export checks', () => {
+    ok("createDummyNupkg" in dotnet.createDummyNupkg)
+
     ok("getGithubNugetRegistryPair" in dotnet.dotnetGHPR)
     ok("nugetGitHubUrl" in dotnet.dotnetGHPR)
     ok("nugetGitHubUrlBase" in dotnet.dotnetGHPR)
