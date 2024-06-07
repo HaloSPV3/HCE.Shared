@@ -2,8 +2,7 @@ import { ok } from 'node:assert/strict';
 import { getGithubNugetRegistryPair, nugetGitHubUrlBase } from './dotnetGHPR.js';
 import { getGitlabNugetRegistryPair } from './dotnetGLPR.js';
 import { MSBuildProject, MSBuildProjectPreDefinedProperties } from './MSBuildProject.js';
-import { env } from 'node:process';
-
+import { getEnvVarValue } from '../envUtils.js';
 
 function formatDotnetPublish(projectsToPublish: string[], publishProperties: string[]): string {
 	/* Fun Fact: You can define a property and get the evaluated value in the same command!
@@ -176,8 +175,8 @@ export async function configureDotnetNugetPush(
 	return registries
 		.map(
 			(registry) => {
-				const tokenValue = env[registry.tokenEnvVar];
-				ok(env['SKIP_TOKEN'] === 'true' || tokenValue, `The environment variable ${registry.tokenEnvVar} is undefined!`);
+				const tokenValue = getEnvVarValue(registry.tokenEnvVar);
+				ok(getEnvVarValue('SKIP_TOKEN') === 'true' || tokenValue, `The environment variable ${registry.tokenEnvVar} is undefined!`);
 				`dotnet nuget push ${nupkgDir} --source ${registry.url} --token ${tokenValue ?? '**placeholder**'}`
 			}
 		)

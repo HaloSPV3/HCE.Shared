@@ -137,6 +137,7 @@
       "commitlintConfig": "src/commitlintConfig.ts",
       "dotnet": "src/dotnet.ts",
       "eslintConfig": "src/eslintConfig.ts",
+      "envUtils": "src/envUtils.ts",
       "findStaticConfig": "src/findStaticConfig.ts",
       "index": "src/index.ts",
       "semanticReleaseConfig": "src/semanticReleaseConfig.ts",

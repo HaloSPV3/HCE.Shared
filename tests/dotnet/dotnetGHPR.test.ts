@@ -10,10 +10,10 @@ import {
 	tokenCanWritePackages
 } from '@halospv3/hce.shared-config/dotnet/dotnetGHPR';
 import type { NuGetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/dotnetHelpers';
+import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils';
 import { deepStrictEqual, notStrictEqual, strictEqual } from 'node:assert';
 import { env } from 'node:process';
-import { describe, it, todo } from 'node:test';
-import "dotenv";
+import { beforeEach, describe, it, todo } from 'node:test';
 import { configDotenv, type DotenvConfigOptions } from 'dotenv';
 import { dirname, join } from 'node:path';
 import { existsSync, writeFileSync } from 'node:fs';
@@ -101,9 +101,14 @@ await describe('dotnetGHPR', async () => {
 					} as ReturnType<typeof isTokenDefined>
 				)
 			}).finally(async () => {
-				await it('returns false and fallback:"GH_TOKEN" when GITHUB_TOKEN and GH_TOKEN are undefined', () => {
+				await it('returns false and fallback:"GH_TOKEN" when GITHUB_TOKEN and GH_TOKEN are undefined', (t) => {
 					delete env.GH_TOKEN;
 					delete env.GITHUB_TOKEN;
+					const dotenv = getEnv();
+					if (dotenv.GH_TOKEN) {
+						t.skip('GH_TOKEN is defined in .env, so this test will be skipped for the sake of sanity');
+						return;
+					}
 					const _isTokenDefinedInfo = isTokenDefined()
 					deepStrictEqual(
 						_isTokenDefinedInfo,
@@ -128,6 +133,11 @@ await describe('dotnetGHPR', async () => {
 	});
 
 	await describe('getGithubNugetRegistryPair', async () => {
+		beforeEach(() => {
+			if (!env.GITHUB_REPOSITORY_OWNER)
+				env.GITHUB_REPOSITORY_OWNER = "HaloSPV3";
+			configDotenv(dotenvOptions);
+		})
 		const _dotenv = configDotenv(dotenvOptions);
 		strictEqual(_dotenv.error, undefined)
 

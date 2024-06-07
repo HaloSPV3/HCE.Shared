@@ -1,6 +1,6 @@
 import { ok } from 'node:assert/strict';
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
-import { env } from 'node:process'
+import { getEnvVarValue } from '../envUtils.js';
 
 /**
  * @todo support custom base URL for private GitHub instances
@@ -20,7 +20,7 @@ export async function tokenCanWritePackages(tokenEnvVar: string) {
 	if (info.fallback)
 		tokenEnvVar = info.fallback;
 
-	const tokenValue = env[tokenEnvVar];
+	const tokenValue = getEnvVarValue(tokenEnvVar);
 	if (tokenValue === undefined)
 		throw new TypeError(`The environment variable ${tokenEnvVar} is undefined!`)
 
@@ -41,9 +41,9 @@ export async function tokenCanWritePackages(tokenEnvVar: string) {
 	throw new Error('GitHub API response header lacked "x-oauth-scopes". This indicates the token we provided is not a workflow token nor a Personal Access Token (classic) and can never have permission to push packages.')
 }
 
-/** returns the value of {@link env.GITHUB_REPOSITORY_OWNER} */
+/** returns the value of GITHUB_REPOSITORY_OWNER */
 function getOwner(): string | undefined {
-	return env.GITHUB_REPOSITORY_OWNER;
+	return getEnvVarValue('GITHUB_REPOSITORY_OWNER')
 }
 
 export const nugetGitHubUrlBase = 'https://nuget.pkg.github.com';
@@ -66,16 +66,18 @@ export function getNugetGitHubUrl() {
  * @returns `{isDefined: true}` if the token is defined. Else, if tokenEnvVar is 'GITHUB_TOKEN' (default) and token is defined, returns `true`. Else, if 'GH_TOKEN' is defined, returns `true`. Else, returns `false`
  */
 export function isTokenDefined(tokenEnvVar = 'GITHUB_TOKEN'): { isDefined: boolean, fallback?: string } {
+	let token = getEnvVarValue(tokenEnvVar /* custom or GITHUB_TOKEN */);
+
 	if (tokenEnvVar !== 'GITHUB_TOKEN')
-		return {
-			isDefined: (env[tokenEnvVar /* custom */] !== undefined && env[tokenEnvVar /* custom */] !== 'undefined')
-		};
-	else if (env[tokenEnvVar /* GITHUB_TOKEN */] !== undefined && env[tokenEnvVar /* GITHUB_TOKEN */] !== 'undefined')
-		return {
-			isDefined: true
-		};
-	else return {
-		isDefined: (env[tokenEnvVar = 'GH_TOKEN'] !== undefined && env[tokenEnvVar] !== 'undefined'),
+		return { isDefined: (token !== undefined && token !== 'undefined') };
+
+	/* GITHUB_TOKEN */
+	if (token !== undefined && token !== 'undefined')
+		return { isDefined: true };
+
+	token = getEnvVarValue('GH_TOKEN');
+	return {
+		isDefined: (token !== undefined && token !== 'undefined'),
 		fallback: 'GH_TOKEN'
 	};
 }
@@ -142,7 +144,7 @@ export async function getGithubNugetRegistryPair(
 
 	const aggErr = new Error(`One more more errors occurred when getting GHPR url-token pair. Errors:\n${errors.map(v => v.stack).join('\n')}`);
 
-	if (env['SKIP_TOKEN'] === 'true' && aggErr.message.length > 0) {
+	if (getEnvVarValue('SKIP_TOKEN') === 'true' && aggErr.message.length > 0) {
 		console.error('WARN: errors were thrown, but SKIP_TOKEN is defined.\n' + aggErr.stack)
 		return undefined;
 	}

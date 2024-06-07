@@ -1,7 +1,7 @@
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
-import { env } from "node:process"
+import { getEnv, getEnvVarValue } from '../envUtils.js'
 
-const { CI_API_V4_URL, CI_PROJECT_ID } = env;
+const { CI_API_V4_URL, CI_PROJECT_ID } = getEnv();
 const nameof = {
 	CI_API_V4_URL: 'CI_API_V4_URL',
 	CI_PROJECT_ID: 'CI_PROJECT_ID',
@@ -26,7 +26,7 @@ export function getGitlabNugetRegistryPair(
 	url: string | undefined = nugetGitLabUrl,
 ): NuGetRegistryInfo | undefined {
 	// yes, this is stupid. No, I won't change it.
-	if (!env[tokenEnvVar]) {
+	if (!getEnvVarValue(tokenEnvVar)) {
 		console.error(
 			new Error(
 				`The environment variable ${tokenEnvVar} was specified as the source of the token to push a NuGet package to GitLab, but the environment variable does not exist.`,
