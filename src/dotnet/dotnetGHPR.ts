@@ -111,7 +111,6 @@ export function isTokenDefined(tokenEnvVar = 'GITHUB_TOKEN'): { isDefined: boole
 
 /**
  * Get a {@link NuGetRegistryInfo} for pushing to your GitHub Packages NuGet registry.
- * todo: add support for private, custom GitHub instances. Token is only validated against github.com.
  * @export
  * @param {string | 'GITHUB_TOKEN' | 'GH_TOKEN'} [tokenEnvVar="GITHUB_TOKEN"] The name of environment variable storing the GitHub Packages NuGet registry API key. Defaults to `"GITHUB_TOKEN"`. If GITHUB_TOKEN is undefined, fallback to GH_TOKEN;
  * @param {string} [url=tokenEnvVar] The url of the GitHub Packages NuGet registry. Defaults to return value of {@link getNugetGitHubUrl()}.
