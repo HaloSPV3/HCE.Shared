@@ -8,7 +8,7 @@ describe('dotnet re-export checks', () => {
     ok("createDummyNupkg" in dotnet.createDummyNupkg)
 
     ok("getGithubNugetRegistryPair" in dotnet.dotnetGHPR)
-    ok("nugetGitHubUrl" in dotnet.dotnetGHPR)
+    ok("getNugetGitHubUrl" in dotnet.dotnetGHPR)
     ok("nugetGitHubUrlBase" in dotnet.dotnetGHPR)
 
     ok("GitLabTokenEnvVar" in dotnet.dotnetGLPR)

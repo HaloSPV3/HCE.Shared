@@ -9,10 +9,10 @@ await describe('configDotnet', async () => {
 	await describe('appendPlugins', () => {
 		strictEqual(appendPlugins.name, 'appendPlugins');
 
-		it('throws Error when Options parameters lacks "plugins"', () => {
+		it('throws Error when Options parameters lacks "plugins"', async () => {
 			let x = undefined;
 			try {
-				x = appendPlugins({}, [], [])
+				x = await appendPlugins({}, [], [])
 			}
 			catch (error) {
 				strictEqual(error instanceof Error, true)
@@ -37,38 +37,37 @@ await describe('configDotnet', async () => {
 		strictEqual(getConfig.name, 'getConfig');
 
 
-		await it('does not throw when projectToPackAndPush contains at least one item', () => {
+		await it('does not throw when projectToPackAndPush contains at least one item', async () => {
+			env['GITHUB_REPOSITORY_OWNER'] = "HaloSPV3";
 			env['SKIP_TOKEN'] = 'true';
-			const actual = (() => {
-				setGracefulCleanup();
-				const tmpProj = fileSync({ postfix: '.csproj', discardDescriptor: true });
-				writeFileSync(tmpProj.name, '<Project> <PropertyGroup> <TargetFramework>net6.0</TargetFramework> <RuntimeIdentifier>win7-x86</RuntimeIdentifier> </PropertyGroup> </Project>')
-				try {
-					return getConfig([tmpProj.name], [tmpProj.name])
-				}
-				catch (err) {
-					if (err instanceof AggregateError)
-						return err;
-					else if (err instanceof Error)
-						return err;
-					else
-						return new Error(String(err));
-				}
-				finally {
-					unlinkSync(tmpProj.name)
-				}
-			})();
+			setGracefulCleanup();
+			const tmpProj = fileSync({ postfix: '.csproj', discardDescriptor: true });
+			writeFileSync(tmpProj.name, '<Project> <PropertyGroup> <TargetFramework>net6.0</TargetFramework> <RuntimeIdentifier>win7-x86</RuntimeIdentifier> </PropertyGroup> </Project>')
+			let actual = undefined;
+			try {
+				actual = await getConfig([tmpProj.name], [tmpProj.name])
+			}
+			catch (err) {
+				if (err instanceof Error)
+					actual = err;
+				else
+					actual = new Error(String(err));
+			}
+			finally {
+				unlinkSync(tmpProj.name)
+			}
+
 			ok(!(actual instanceof Error), '`actual` should not be an Error.\n' + actual.stack)
 		})
 
-		await it('throws Error when projectsToPublish is an empty array.', () => {
-			const actual = (() => {
-				try {
-					return getConfig([], false);
-				} catch (error) {
-					return error as Error;
-				}
-			})();
+		await it('throws Error when projectsToPublish is an empty array.', async () => {
+			let actual = undefined;
+			try {
+				actual = await getConfig([], false);
+			} catch (error) {
+				actual = error as Error;
+			}
+
 			ok(actual instanceof Error)
 			ok(actual.message.includes("projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path."));
 		})

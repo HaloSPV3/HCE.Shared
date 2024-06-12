@@ -1,8 +1,8 @@
 import { ok } from 'node:assert/strict';
 import { getEnvVarValue } from '../envUtils.js';
 import { MSBuildProject, MSBuildProjectPreDefinedProperties } from './MSBuildProject.js';
-import { getGithubNugetRegistryPair, nugetGitHubUrlBase } from './dotnetGHPR.js';
-import { getGitlabNugetRegistryPair } from './dotnetGLPR.js';
+import { GithubNugetRegistryInfo } from './GithubNugetRegistryInfo.js';
+import { GitlabNugetRegistryInfo } from './GitlabNugetRegistryInfo.js';
 
 function formatDotnetPublish(projectsToPublish: string[], publishProperties: string[]): string {
 	/* Fun Fact: You can define a property and get the evaluated value in the same command!
@@ -133,12 +133,12 @@ export function configurePrepareCmd(
 	].join(' && ');
 }
 
-export interface NuGetRegistryInfo {
+export interface NuGetRegistryPair {
 	tokenEnvVar: string;
 	url: string;
 	user?: string | undefined;
 }
-export const nugetDefault: NuGetRegistryInfo = {
+export const nugetDefault: NuGetRegistryPair = {
 	tokenEnvVar: 'NUGET_TOKEN',
 	url: 'https://api.nuget.org/v3/index.json',
 };
@@ -152,21 +152,22 @@ export const nugetDefault: NuGetRegistryInfo = {
  */
 export async function configureDotnetNugetPush(
 	nupkgDir = './publish',
-	registries: NuGetRegistryInfo[] = [nugetDefault],
+	registries: NuGetRegistryPair[] = [nugetDefault],
 	pushToGitHub = true,
+	pushToGitLab = false
 ) {
 	if (registries.some((registry) => registry.url.trim() === ''))
 		throw new Error('The URL for one of the provided NuGet registries was empty or whitespace.');
 
 	// if user did not specify a GitHub NuGet Registry, try determine default values and add the Source.
-	if (pushToGitHub && !registries.some((reg) => reg.url.startsWith(nugetGitHubUrlBase))) {
-		const ghPair = await getGithubNugetRegistryPair();
+	if (pushToGitHub && !registries.some((reg) => reg.url.startsWith(GithubNugetRegistryInfo.NUGET_PKG_GITHUB_COM))) {
+		const ghPair = await new GithubNugetRegistryInfo().toRegistryPair();
 		if (ghPair) {
 			registries.push(ghPair);
 		}
 	}
-	if (!registries.some((reg) => reg.url.startsWith(nugetGitHubUrlBase))) {
-		const glPair = getGitlabNugetRegistryPair();
+	if (pushToGitLab) {
+		const glPair = await new GitlabNugetRegistryInfo().toRegistryPair();
 		if (glPair) {
 			registries.push(glPair);
 		}

@@ -45,11 +45,11 @@ export function insertAndEditPlugins(config: Options): Options {
  * @param projectsToPackAndPush 
  * @returns config with the specified plugins and plugin options.
  */
-export function appendPlugins(
+export async function appendPlugins(
 	config: Options,
 	projectsToPublish: string[],
 	projectsToPackAndPush: string[] | false,
-): Options {
+): Promise<Options> {
 	if (config.plugins === undefined)
 		throw new Error('Plugins array was undefined when it should be an array!');
 	(config.plugins as PluginSpec[]).push(
@@ -60,7 +60,7 @@ export function appendPlugins(
 			{
 				// 'ZipPublishDir' zips each publish folder to ./publish/*.zip
 				prepareCmd: configurePrepareCmd(projectsToPublish, projectsToPackAndPush),
-				publishCmd: configureDotnetNugetPush(),
+				publishCmd: await configureDotnetNugetPush(),
 			},
 		],
 	);
@@ -83,7 +83,7 @@ export function appendPlugins(
  * nuget push`.
  * @returns a semantic-release Options object, based on `@halospv3/hce.shared-config` (our base config), with the `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and `push` the specified projects.
  */
-export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPush: string[] | false = []): Options {
+export async function getConfig(projectsToPublish: string[] = [], projectsToPackAndPush: string[] | false = []): Promise<Options> {
 	if (debug.enabled) {
 		console.debug('hce.shared-config:\n' + inspect(baseConfig, false, Infinity, true));
 	}
@@ -118,7 +118,7 @@ export function getConfig(projectsToPublish: string[] = [], projectsToPackAndPus
 	let config = { ...baseConfig };
 	config = insertAndEditPlugins(config);
 	if (projectsToPublish)
-		config = appendPlugins(config, projectsToPublish, projectsToPackAndPush);
+		config = await appendPlugins(config, projectsToPublish, projectsToPackAndPush);
 
 	if (debug.enabled) {
 		console.debug(`modified plugins array:\n${inspect(config.plugins, false, Infinity)}`);

@@ -108,7 +108,7 @@ const projectsToPublish = [
 const projectsToPackAndPush = ["./Library/Library.csproj"];
 
 // runs getConfig and exports its return value
-export default getConfig(projectsToPublish, projectsToPackAndPush)
+export default await getConfig(projectsToPublish, projectsToPackAndPush)
 ```
 
 ###### `extends` key in a javascript config file
