@@ -1,26 +1,53 @@
 import { execFileSync } from 'node:child_process';
-import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
+import { existsSync } from 'node:fs';
+import { basename, isAbsolute, resolve } from 'node:path';
 
 /**
- * All pre-defined properties of {@link MSBuildProjectProperties} except FullPath
- */
-export const MSBuildProjectPreDefinedProperties = Object.keys(
-	new MSBuildProjectProperties('', false),
-).filter((p) => p !== 'FullPath');
-/** @todo Experimental and may be removed in a later release.
- * A cache for your evaluated MSBuild Projects.
- */
-export const MSBuildEvaluatedProjects: MSBuildProject[] = [];
+* Known properties. Additional properties may be added upon request.
+*/
+class MSBuildProjectProperties {
+	[Property: string]: string;
+
+	FullPath = '';
+
+	TargetFramework = '';
+
+	TargetFrameworks = '';
+
+	RuntimeIdentifier = '';
+
+	RuntimeIdentifiers = '';
+
+	constructor(fullPath: string, exists = true) {
+		this.FullPath = fullPath;
+		if (!isAbsolute(this.FullPath)) this.FullPath = resolve(this.FullPath);
+		if (!existsSync(this.FullPath) && exists)
+			throw new Error(
+				`Project ${basename(this.FullPath)} could not be found at "${this.FullPath}"`,
+			);
+	}
+}
 
 export class MSBuildProject {
-	Properties: MSBuildProjectProperties;
+	/**
+	 * All pre-defined properties of {@link MSBuildProjectProperties}
+	 */
+	public static PredefinedProperties: string[] = Object.keys(MSBuildProjectProperties.prototype);
+	public static MatrixProperties: string[] = [
+		"TargetFramework",
+		"TargetFrameworks",
+		"RuntimeIdentifier",
+		"RuntimeIdentifiers"
+	];
+
+	public Properties: MSBuildProjectProperties;
 
 	/**
 	 *
 	 * @param fullPath The full path of the .NET MSBuild project file.
 	 * @param customProperties MSBuild properties to evaluate in addition to those pre-defined in {@link MSBuildProjectProperties}
 	 */
-	constructor(fullPath: string, customProperties?: string[]) {
+	public constructor(fullPath: string, customProperties?: string[]) {
 		// super();
 		this.Properties = MSBuildProject.evaluateProperties(fullPath, customProperties ?? []);
 	}
@@ -47,11 +74,11 @@ export class MSBuildProject {
 	 * var ridArray = JSON.parse(out).Properties.RuntimeIdentifiers.split(';');
 	 * ```
 	 */
-	static evaluateProperties(fullPath: string, properties: string[]): MSBuildProjectProperties {
+	public static evaluateProperties(fullPath: string, properties: string[]): MSBuildProjectProperties {
 		const evaluatedProps: MSBuildProjectProperties = new MSBuildProjectProperties(fullPath);
 
 		// if a default prop isn't in properties, add it
-		const defaultProps = MSBuildProjectPreDefinedProperties;
+		const defaultProps = this.MatrixProperties;
 		for (const defaultProp of defaultProps) {
 			if (!properties.includes(defaultProp)) properties.push(defaultProp);
 		}
