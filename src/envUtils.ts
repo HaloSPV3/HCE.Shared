@@ -17,7 +17,7 @@ export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.P
 }
 
 /**
- * Get the value from the given env var. If undefined, load .env from CWD and try again or return undefined.
+ * Get the value from the given env var. If undefined, load .env from CWD and try again or return undefined. If found by dotenv, the variable will be loaded into process.env.
  * @param envVar 
  * @returns 
  */
