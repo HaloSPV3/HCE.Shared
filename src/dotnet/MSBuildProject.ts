@@ -78,9 +78,10 @@ export class MSBuildProject {
 		const evaluatedProps: MSBuildProjectProperties = new MSBuildProjectProperties(fullPath);
 
 		// if a default prop isn't in properties, add it
-		const defaultProps = this.MatrixProperties;
-		for (const defaultProp of defaultProps) {
-			if (!properties.includes(defaultProp)) properties.push(defaultProp);
+		for (const defaultProp of this.MatrixProperties) {
+			if (!properties.includes(defaultProp)) {
+				properties.push(defaultProp)
+			};
 		}
 		const getPropArgs: string[] = properties.map((propName) => `-getProperty:${propName}`);
 		// should return a single value OR string-encoded JSON object with 'Properties' object-type property.
