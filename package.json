@@ -121,7 +121,6 @@
     "platform": "node",
     "inputs": {
       "commitlintConfig": "src/commitlintConfig.ts",
-      "dotnet": "src/dotnet.ts",
       "eslintConfig": "src/eslintConfig.ts",
       "envUtils": "src/envUtils.ts",
       "index": "src/index.ts",
