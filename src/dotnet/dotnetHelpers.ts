@@ -1,8 +1,8 @@
 import { ok } from 'node:assert/strict';
 import { getEnvVarValue } from '../envUtils.js';
-import { MSBuildProject, MSBuildProjectPreDefinedProperties } from './MSBuildProject.js';
-import { getGithubNugetRegistryPair, nugetGitHubUrlBase } from './dotnetGHPR.js';
-import { getGitlabNugetRegistryPair } from './dotnetGLPR.js';
+import { MSBuildProject } from './MSBuildProject.js';
+import { GithubNugetRegistryInfo } from './GithubNugetRegistryInfo.js';
+import { GitlabNugetRegistryInfo } from './GitlabNugetRegistryInfo.js';
 
 function formatDotnetPublish(projectsToPublish: string[], publishProperties: string[]): string {
 	/* Fun Fact: You can define a property and get the evaluated value in the same command!
@@ -76,8 +76,8 @@ function formatDotnetPublish(projectsToPublish: string[], publishProperties: str
 	}).map((args) => `dotnet publish ${args.join(' ')}`).join(' && ');
 }
 
-function formatDotnetPack(projectsToPackAndPush: string[] | false): string {
-	return projectsToPackAndPush === false
+function formatDotnetPack(projectsToPackAndPush?: string[]): string {
+	return !projectsToPackAndPush
 		? ""
 		: projectsToPackAndPush
 			.map(v => `dotnet pack ${v}`)
@@ -120,11 +120,11 @@ function formatDotnetNugetSign(dotnetNugetSignArgs: string[]): string {
  */
 export function configurePrepareCmd(
 	projectsToPublish: string[],
-	projectsToPackAndPush: string[] | false,
+	projectsToPackAndPush?: string[],
 	dotnetNugetSignArgs: string[] = ['./publish'],
-) {
+): string {
 	// These are later evaluated with MSBuild, but are passed via --framework and --runtime arguments instead of -p:TargetFramework
-	const publishProperties = MSBuildProjectPreDefinedProperties;
+	const publishProperties = MSBuildProject.MatrixProperties;
 
 	return [
 		formatDotnetPublish(projectsToPublish, publishProperties),
@@ -133,18 +133,18 @@ export function configurePrepareCmd(
 	].join(' && ');
 }
 
-export interface NuGetRegistryInfo {
+export interface NugetRegistryPair {
 	tokenEnvVar: string;
 	url: string;
 	user?: string | undefined;
 }
-export const nugetDefault: NuGetRegistryInfo = {
+export const nugetDefault: NugetRegistryPair = {
 	tokenEnvVar: 'NUGET_TOKEN',
 	url: 'https://api.nuget.org/v3/index.json',
 };
 
 /**
- * todo -
+ * todo - split into separate functions. Token verification should be in verifyConditionsCmd. Each package may be signed individually.
  * @param nupkgDir
  * @param registries
  * @param pushToGitHub
@@ -152,21 +152,22 @@ export const nugetDefault: NuGetRegistryInfo = {
  */
 export async function configureDotnetNugetPush(
 	nupkgDir = './publish',
-	registries: NuGetRegistryInfo[] = [nugetDefault],
+	registries: NugetRegistryPair[] = [nugetDefault],
 	pushToGitHub = true,
-) {
+	pushToGitLab = false,
+): Promise<string> {
 	if (registries.some((registry) => registry.url.trim() === ''))
 		throw new Error('The URL for one of the provided NuGet registries was empty or whitespace.');
 
 	// if user did not specify a GitHub NuGet Registry, try determine default values and add the Source.
-	if (pushToGitHub && !registries.some((reg) => reg.url.startsWith(nugetGitHubUrlBase))) {
-		const ghPair = await getGithubNugetRegistryPair();
+	if (pushToGitHub && !registries.some((reg) => reg.url.startsWith(GithubNugetRegistryInfo.NUGET_PKG_GITHUB_COM))) {
+		const ghPair = await new GithubNugetRegistryInfo().toRegistryPair();
 		if (ghPair) {
 			registries.push(ghPair);
 		}
 	}
-	if (!registries.some((reg) => reg.url.startsWith(nugetGitHubUrlBase))) {
-		const glPair = getGitlabNugetRegistryPair();
+	if (pushToGitLab) {
+		const glPair = await new GitlabNugetRegistryInfo().toRegistryPair();
 		if (glPair) {
 			registries.push(glPair);
 		}
