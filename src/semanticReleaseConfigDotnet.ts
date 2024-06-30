@@ -133,36 +133,6 @@ public class semanticReleaseConfigDotnet {
 	}
 }
 
-/**
- * Currently, only configures `@semantic-release/exec` with `prepareCmd: configurePrepareCmd(projectsToPublish, projectsToPackAndPush)` and `publishCmd: configureDotnetNugetPush()`
- * @param config 
- * @param projectsToPublish 
- * @param projectsToPackAndPush 
- * @returns config with the specified plugins and plugin options.
- */
-export async function appendPlugins(
-	config: Options,
-	projectsToPublish: string[],
-	projectsToPackAndPush?: string[],
-): Promise<Options> {
-	if (config.plugins === undefined)
-		throw new Error('Plugins array was undefined when it should be an array!');
-
-	(config.plugins as PluginSpec[]).push(
-		// APPEND this array of [pluginName, pluginConfig] to plugins
-		// https://github.com/semantic-release/exec#usage
-		[
-			'@semantic-release/exec',
-			{
-				verifyConditionsCmd: projectsToPackAndPush ?;
-				// 'ZipPublishDir' zips each publish folder to ./publish/*.zip
-				prepareCmd: configurePrepareCmd(projectsToPublish, projectsToPackAndPush),
-				publishCmd: projectsToPackAndPush ? await configureDotnetNugetPush() : undefined,
-			} satisfies SRExecOptions,
-		],
-	);
-	return config;
-}
 
 /**
  * Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet` publish, pack, and push.
@@ -215,7 +185,7 @@ export async function getConfig(projectsToPublish: string[], projectsToPackAndPu
 	let config = { ...baseConfig };
 	config = insertAndEditPlugins(config);
 	if (projectsToPublish)
-		config = await appendPlugins(config, projectsToPublish, projectsToPackAndPush);
+		throw new Error("function appendPlugins is being refactored to an instance method of class SemanticReleaseConfigDotnet.")
 
 	if (debug.enabled) {
 		console.debug(`modified plugins array:\n${inspect(config.plugins, false, Infinity)}`);
