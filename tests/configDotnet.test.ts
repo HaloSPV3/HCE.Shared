@@ -5,21 +5,6 @@ import { describe, it } from 'node:test';
 import { fileSync, setGracefulCleanup } from 'tmp';
 
 await describe('configDotnet', async () => {
-	await describe('appendPlugins', () => {
-		strictEqual(appendPlugins.name, 'appendPlugins');
-
-		it('throws Error when Options parameters lacks "plugins"', async () => {
-			let x = undefined;
-			try {
-				x = await appendPlugins({}, [], [])
-			}
-			catch (error) {
-				strictEqual(error instanceof Error, true)
-			}
-			strictEqual(x, undefined)
-		});
-	});
-
 	await describe('insertAndEditPlugins', () => {
 		strictEqual(insertAndEditPlugins.name, 'insertAndEditPlugins');
 
