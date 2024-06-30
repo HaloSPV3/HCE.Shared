@@ -193,5 +193,3 @@ export async function getConfig(projectsToPublish: string[], projectsToPackAndPu
 
 	return config;
 }
-
-export default getConfig;
