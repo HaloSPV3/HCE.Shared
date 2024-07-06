@@ -3,8 +3,8 @@ import { existsSync } from 'node:fs';
 import { basename, isAbsolute, resolve } from 'node:path';
 
 /**
-* Known properties. Additional properties may be added upon request.
-*/
+ * Known properties. Additional properties may be added upon request.
+ */
 class MSBuildProjectProperties {
 	[Property: string]: string;
 
