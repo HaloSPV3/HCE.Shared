@@ -29,10 +29,6 @@ class MSBuildProjectProperties {
 }
 
 export class MSBuildProject {
-	/**
-	 * All pre-defined properties of {@link MSBuildProjectProperties}
-	 */
-	public static PredefinedProperties: string[] = Object.keys(MSBuildProjectProperties.prototype);
 	public static MatrixProperties: string[] = [
 		"TargetFramework",
 		"TargetFrameworks",
