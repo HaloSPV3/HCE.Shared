@@ -1,6 +1,8 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { basename, isAbsolute, resolve } from 'node:path';
+import { Dirent, existsSync } from 'node:fs';
+import { readdir, realpath, stat } from 'node:fs/promises';
+import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
+
 
 /**
  * Known properties. Additional properties may be added upon request.
@@ -10,6 +12,8 @@ class MSBuildProjectProperties {
 
 	FullPath = '';
 
+	AssemblyName = '';
+
 	TargetFramework = '';
 
 	TargetFrameworks = '';
@@ -18,13 +22,62 @@ class MSBuildProjectProperties {
 
 	RuntimeIdentifiers = '';
 
-	constructor(fullPath: string, exists = true) {
+	constructor(fullPath: string) {
 		this.FullPath = fullPath;
 		if (!isAbsolute(this.FullPath)) this.FullPath = resolve(this.FullPath);
-		if (!existsSync(this.FullPath) && exists)
+		if (!existsSync(this.FullPath))
 			throw new Error(
 				`Project ${basename(this.FullPath)} could not be found at "${this.FullPath}"`,
 			);
+	}
+}
+
+class NugetProperties extends MSBuildProjectProperties {
+	public constructor(
+		fullPath: string,
+		packageId?: string,
+		version?: string,
+		authors?: string,
+		company?: string,
+		product?: string
+	) {
+		super(fullPath);
+		this.PackageId = packageId ?? this.AssemblyName;
+		this.Version = version ?? "1.0.0";
+		this.Authors = authors ?? this.AssemblyName;
+		this.Company = company ?? this.Authors;
+		this.Product = product ?? this.AssemblyName;
+	}
+
+	/** 
+	 * The package identifier. 
+	 * Must be unique across nuget.org and any other targets that host the package.
+	 * If you don't specify a value, the command uses the AssemblyName. 
+	 */
+	public readonly PackageId: string;
+	/** 
+	 * A specific version number in the form Major.Minor.Patch[-Suffix], where -Suffix identifies prerelease versions.
+	 * If not specified, the default value is 1.0.0.
+	 */
+	public readonly Version: string;
+	/** 
+	 * The authors of the package.
+	 * If not specified, the default value is the {@link AssemblyName}.
+	 */
+	public readonly Authors: string;
+	/** 
+	 * Company is company information.
+	 * If not specified, the default value is the {@link Authors} value.
+	 */
+	public readonly Company: string;
+	/** 
+	 * Product is product information. 
+	 * If not specified, the default value is the AssemblyName. 
+	 */
+	public readonly Product: string;
+
+	public static GetOwnPropertyKeys(): string[] {
+		return Object.getOwnPropertyNames(NugetProperties.prototype)
 	}
 }
 
@@ -103,5 +156,49 @@ export class MSBuildProject {
 			...evaluatedProps,
 			...props,
 		};
+	}
+
+	public static async PackableProjectsToMSBuildProjects(projectsToPackAndPush: string[]): Promise<MSBuildProject[]> {
+		async function toDirEntries(projectsToPackAndPush: string[]): Promise<Dirent[]> {
+			async function makeAbsolute(path: string) {
+				return isAbsolute(path) ? path : resolve(path);
+			}
+			const dirEntries: (Dirent | Dirent[])[] = await Promise.all(
+				projectsToPackAndPush.map(async (proj) => {
+					proj = await realpath(await makeAbsolute(proj));
+					const stats = await stat(proj);
+					let entries: Dirent[];
+
+					if (stats.isFile()) {
+						entries = await readdir(dirname(proj), { withFileTypes: true });
+						const dirent: Dirent | undefined = entries.find(v =>
+							resolve(v.parentPath, v.name) === proj
+						);
+						if (dirent)
+							return dirent;
+						else
+							throw new Error(`file "${proj}" not found. It may have been moved or deleted.`);
+					}
+					if (!stats.isDirectory())
+						throw new Error(`"${proj}" is not a file or directory`);
+
+					entries = await readdir(proj, { withFileTypes: true });
+					return entries.filter(v =>
+						v.isFile() && (v.name.endsWith('.csproj') || v.name.endsWith('.fsproj'))
+					);
+				})
+			);
+
+			return dirEntries.flat();
+		}
+
+		const projects: MSBuildProject[] = (await toDirEntries(projectsToPackAndPush))
+			.map(v =>
+				new MSBuildProject(
+					join(v.parentPath, v.name),
+					Object.keys(NugetProperties..NugetProperties)
+				)
+			);
+		return projects;
 	}
 }
