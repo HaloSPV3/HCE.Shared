@@ -1,85 +1,9 @@
 import { execFileSync } from 'node:child_process';
 import { Dirent, existsSync } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
-import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
-
-
-/**
- * Known properties. Additional properties may be added upon request.
- */
-class MSBuildProjectProperties {
-	[Property: string]: string;
-
-	FullPath = '';
-
-	AssemblyName = '';
-
-	TargetFramework = '';
-
-	TargetFrameworks = '';
-
-	RuntimeIdentifier = '';
-
-	RuntimeIdentifiers = '';
-
-	constructor(fullPath: string) {
-		this.FullPath = fullPath;
-		if (!isAbsolute(this.FullPath)) this.FullPath = resolve(this.FullPath);
-		if (!existsSync(this.FullPath))
-			throw new Error(
-				`Project ${basename(this.FullPath)} could not be found at "${this.FullPath}"`,
-			);
-	}
-}
-
-class NugetProperties extends MSBuildProjectProperties {
-	public constructor(
-		fullPath: string,
-		packageId?: string,
-		version?: string,
-		authors?: string,
-		company?: string,
-		product?: string
-	) {
-		super(fullPath);
-		this.PackageId = packageId ?? this.AssemblyName;
-		this.Version = version ?? "1.0.0";
-		this.Authors = authors ?? this.AssemblyName;
-		this.Company = company ?? this.Authors;
-		this.Product = product ?? this.AssemblyName;
-	}
-
-	/** 
-	 * The package identifier. 
-	 * Must be unique across nuget.org and any other targets that host the package.
-	 * If you don't specify a value, the command uses the AssemblyName. 
-	 */
-	public readonly PackageId: string;
-	/** 
-	 * A specific version number in the form Major.Minor.Patch[-Suffix], where -Suffix identifies prerelease versions.
-	 * If not specified, the default value is 1.0.0.
-	 */
-	public readonly Version: string;
-	/** 
-	 * The authors of the package.
-	 * If not specified, the default value is the {@link AssemblyName}.
-	 */
-	public readonly Authors: string;
-	/** 
-	 * Company is company information.
-	 * If not specified, the default value is the {@link Authors} value.
-	 */
-	public readonly Company: string;
-	/** 
-	 * Product is product information. 
-	 * If not specified, the default value is the AssemblyName. 
-	 */
-	public readonly Product: string;
-
-	public static GetOwnPropertyKeys(): string[] {
-		return Object.getOwnPropertyNames(NugetProperties.prototype)
-	}
-}
+import { dirname, isAbsolute, join, resolve } from 'node:path';
+import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
+import { NugetProjectProperties } from './NugetProjectProperties.js';
 
 export class MSBuildProject {
 	public static MatrixProperties: string[] = [
@@ -152,10 +76,7 @@ export class MSBuildProject {
 			props = { [properties[0]]: out.trim() }
 		}
 
-		return {
-			...evaluatedProps,
-			...props,
-		};
+		return Object.assign(evaluatedProps, props);
 	}
 
 	public static async PackableProjectsToMSBuildProjects(projectsToPackAndPush: string[]): Promise<MSBuildProject[]> {
