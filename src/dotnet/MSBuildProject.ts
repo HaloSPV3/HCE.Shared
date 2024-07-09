@@ -21,7 +21,6 @@ export class MSBuildProject {
 	 * @param customProperties MSBuild properties to evaluate in addition to those pre-defined in {@link MSBuildProjectProperties}
 	 */
 	public constructor(fullPath: string, customProperties?: string[]) {
-		// super();
 		this.Properties = MSBuildProject.evaluateProperties(fullPath, customProperties ?? []);
 	}
 
