@@ -1,3 +1,9 @@
+## [2.6.1-develop.1](https://github.com/halospv3/hce.shared/compare/v2.6.0...v2.6.1-develop.1) (2024-07-23)
+
+### Bug Fixes
+
+* **deps:** :ambulance: bump ws to 8.18.0 (>=8.17.1) ([d0dcf52](https://github.com/halospv3/hce.shared/commit/d0dcf527ad2b98f550840c9375c92c2d15ae1d57))
+
 ## [2.6.0](https://github.com/halospv3/hce.shared/compare/v2.5.0...v2.6.0) (2024-06-07)
 
 ### Features
