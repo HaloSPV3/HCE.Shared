@@ -67,8 +67,8 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.12.12",
     "@types/semantic-release": "^20.0.6",
-    "@typescript-eslint/eslint-plugin": "^7.10.0",
-    "@typescript-eslint/parser": "^7.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "debug": "^4.3.4",
     "eslint-plugin-jsonc": "^2.15.1",
@@ -78,7 +78,7 @@
     "node-fetch": "^3.3.2",
     "semantic-release": "^24.0.0",
     "semantic-release-export-data": "^1.0.1",
-    "typescript-eslint": "^7.10.0"
+    "typescript-eslint": "^8.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.6",
