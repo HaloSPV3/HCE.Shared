@@ -4,6 +4,169 @@ import { readdir, realpath, stat } from 'node:fs/promises';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
 import { NugetProjectProperties } from './NugetProjectProperties.js';
+import { type } from "arktype";
+
+/**
+ * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
+ * Additional string-type properties may be present (e.g. `{ SubType: "designer" }`).
+ */
+const iItemMetadataBuiltIn = type({
+	"[string]": "string",
+	/** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\ConsoleApp1.dll" */
+	Identity: "string",
+	/** @example ".NETCoreApp" */
+	TargetFrameworkIdentifier: "string",
+	TargetPlatformMoniker: "string",
+	/** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\obj\\Debug\\net6.0\\ConsoleApp1.csproj.CopyComplete" */
+	CopyUpToDateMarker: "string",
+	TargetPlatformIdentifier: "string",
+	/** @example "6.0" */
+	TargetFrameworkVersion: "string",
+	/** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\obj\\Debug\\net6.0\\ref\\ConsoleApp1.dll" */
+	ReferenceAssembly: "string",
+	/** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\ConsoleApp1.dll" */
+	FullPath: "string",
+	/** @example "c:\\" */
+	RootDir: "string",
+	/** @example "ConsoleApp1" */
+	Filename: "string",
+	/** @example ".dll" */
+	Extension: "string",
+	/** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\" */
+	RelativeDir: "string",
+	/** @example "source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\" */
+	Directory: "string",
+	RecursiveDir: "string",
+	/** @example "2023-11-30 13:38:06.5084339" */
+	ModifiedTime: "string",
+	/** @example "2023-11-30 13:38:06.9308716" */
+	CreatedTime: "string",
+	/** @example "2023-11-30 13:38:06.9318732" */
+	AccessedTime: "string",
+	/** @example "C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets" */
+	DefiningProjectFullPath: "string",
+	/** @example "C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\MSBuild\\Current\\Bin\\amd64\\" */
+	DefiningProjectDirectory: "string",
+	/** @example "Microsoft.Common.CurrentVersion" */
+	DefiningProjectName: "string",
+	/** @example ".targets" */
+	DefiningProjectExtension: "string"
+});
+
+const targetSuccess = type({
+	Result: "'Success'",
+	Items: iItemMetadataBuiltIn.array()
+});
+
+const targetFailure = type({
+	Result: "'Failure'",
+	Items: "never[]"
+});
+
+const msbuildEvaluationOutput = type({
+	"Properties?": type({ "[string]": "string" }),
+	"Items?": type({ "[string]": iItemMetadataBuiltIn.array() }),
+	"TargetResults?": type({ "[string]": targetSuccess.or(targetFailure) })
+});
+
+class MSBuildEvaluationOutput {
+	/**
+	 * @param knownObj The output of a CLI MSBuild project evaluation. May be the
+	 * UTF-8 string-encoded JSON or the object decoded from that JSON.
+	 */
+	constructor(obj: string | unknown) {
+		if (typeof obj === "string")
+			obj = JSON.parse(obj);
+		const knownObj = msbuildEvaluationOutput.assert(obj);
+
+		this.Properties = knownObj.Properties;
+		this.Items = knownObj.Items;
+		this.TargetResults = knownObj.TargetResults;
+	}
+
+	/**
+	 * The specified properties and their values as evaluated by MSBuild Core.
+	 * `-getProperty:{propertyName,...}`
+	 */
+	Properties?: typeof msbuildEvaluationOutput.infer.Properties;
+	/**
+	 * The specified items and their values and associated metadata as evaluated
+	 * by MSBuild Core.
+	 * `-getItem:{itemName,...}`
+	 */
+	Items?: typeof msbuildEvaluationOutput.infer.Items;
+	/**
+	 * The specified Targets and their output values as evaluated by MSBuild
+	 * Core.
+	 * `-getTargetResult:{targetName,...}`
+	 */
+	TargetResults?: typeof msbuildEvaluationOutput.infer.TargetResults;
+}
+
+const iEvaluationOptions = type(
+	{
+		FullName: "string",
+		SetProperties: type({ "[string]": "string" }),
+		Targets: "string[]",
+		GetItems: "string[]",
+		GetProperties: "string[]",
+		GetTargetResults: "string[]"
+	}
+)
+
+class EvaluationOptions {
+	constructor(opts: typeof iEvaluationOptions.infer) {
+		opts = iEvaluationOptions.assert(opts);
+		this.FullName = opts.FullName;
+		this.Properties = opts.SetProperties;
+		this.GetItem = opts.GetItems;
+		this.GetProperty = opts.GetProperties;
+		this.Target = opts.Targets;
+		this.GetTargetResults = opts.GetTargetResults;
+	}
+	/**
+	 * The project file's full path.
+	 */
+	FullName: string;
+	/**
+	 * User-defined Properties and their values.
+	 * { Configuration: "Release" } will cause the MSBuild to first set the
+	 * Configuration property  to Release before evaluating the project
+	 * or the project's Target(s).
+	 * ```sh
+	 *   -property:<n>=<v>  Set or override these project-level properties. <n> is
+	 *                      the property name, and <v> is the property value. Use a
+	 *                      semicolon or a comma to separate multiple properties, or
+	 *                      specify each property separately. (Short form: -p)
+	 *                      Example:
+	 *                        -property:WarningLevel=2;OutDir=bin\Debug\
+	 * ```
+	 */
+	Properties: Record<string, string>;
+	/** 
+	 * MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
+	 * including {@link MSBuild}
+	 */
+	GetItem: string[];
+	GetProperty: string[];
+	/**
+	 * The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
+	 * Property values may be changed by Targets such as those provided by
+	 * dependencies.
+	 * 
+	 * ```sh
+	 *   -target:<targets>  Build these targets in this project. Use a semicolon or a
+	 *                      comma to separate multiple targets, or specify each
+	 *                      target separately. (Short form: -t)
+	 *                      Example:
+	 *                        -target:Resources;Compile
+	 * ```
+	 * 
+	 * @default []
+	 */
+	Target: string[] = [];
+	GetTargetResults: string[];
+}
 
 export class MSBuildProject {
 	public static MatrixProperties: string[] = [
