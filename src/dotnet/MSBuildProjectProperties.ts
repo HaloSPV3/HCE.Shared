@@ -18,6 +18,19 @@ export type StringBoolean = "true" | "false";
 export class MSBuildProjectProperties {
     public static readonly InstanceProperties: readonly string[] = Object.freeze(Object.keys(MSBuildProjectProperties.prototype));
 
+    /**
+     * Resolve the given path is not absolute. If the path exists, it is returned. Else, an Error is thrown.
+     * @param path 
+     * @returns 
+     */
+    static GetFullPath(path: string) {
+        if (!isAbsolute(path))
+            path = resolve(path);
+        if (!existsSync(path))
+            throw new Error(`${basename(path)} could not be found at "${path}"`);
+        return path;
+    }
+
     public constructor(fullPath: string, ...rest: string[]) {
         this.FullPath = fullPath;
         if (!isAbsolute(this.FullPath)) this.FullPath = resolve(this.FullPath);
