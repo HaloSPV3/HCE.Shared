@@ -100,9 +100,10 @@ await describe("package.json", async () => {
 
     const nameof_expectedEsm = "expectedEsm";
     const expectedEsm: string[] = [
+        "CaseInsensitiveMap",
         "commitlintConfig",
-        "eslintConfig",
         "envUtils",
+        "eslintConfig",
         "index",
         "semanticReleaseConfig",
         "semanticReleaseConfigDotnet",
