@@ -22,7 +22,7 @@ function formatDotnetPublish(projectsToPublish: string[], publishProperties: str
 	// args appended to "dotnet publish", joined by space
 
 	return evaluatedProjects.flatMap(proj => {
-		const args: string[] = [proj.Properties.FullPath];
+		const args: string[] = [proj.Properties.MSBuildProjectFullPath];
 
 		function appendCustomProperties(publishProperties: string[]) {
 			// convert to dictionary and filter for user-defined properties.

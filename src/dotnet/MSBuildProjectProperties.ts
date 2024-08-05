@@ -31,12 +31,12 @@ export class MSBuildProjectProperties {
         return path;
     }
 
-    public constructor(fullPath: string, ...rest: string[]) {
-        this.FullPath = fullPath;
-        if (!isAbsolute(this.FullPath)) this.FullPath = resolve(this.FullPath);
-        if (!existsSync(this.FullPath))
+    public constructor(msbuildProjectFullPath: string, ...rest: string[]) {
+        this.MSBuildProjectFullPath = msbuildProjectFullPath;
+        if (!isAbsolute(this.MSBuildProjectFullPath)) this.MSBuildProjectFullPath = resolve(this.MSBuildProjectFullPath);
+        if (!existsSync(this.MSBuildProjectFullPath))
             throw new Error(
-                `Project ${basename(fullPath)} could not be found at "${this.FullPath}"`
+                `Project ${basename(msbuildProjectFullPath)} could not be found at "${this.MSBuildProjectFullPath}"`
             );
 
         // filter rest for only property names not yet defined.
@@ -56,7 +56,7 @@ export class MSBuildProjectProperties {
 
     readonly [Property: string]: string;
 
-    public readonly FullPath: string = "";
+    public readonly MSBuildProjectFullPath: string = "";
 
     public readonly AssemblyName: string = "";
 
