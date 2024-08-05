@@ -133,7 +133,7 @@ class EvaluationOptions {
 	 * { Configuration: "Release" } will cause the MSBuild to first set the
 	 * Configuration property  to Release before evaluating the project
 	 * or the project's Target(s).
-	 * ```sh
+	 * ```txt
 	 *   -property:<n>=<v>  Set or override these project-level properties. <n> is
 	 *                      the property name, and <v> is the property value. Use a
 	 *                      semicolon or a comma to separate multiple properties, or
@@ -154,7 +154,7 @@ class EvaluationOptions {
 	 * Property values may be changed by Targets such as those provided by
 	 * dependencies.
 	 * 
-	 * ```sh
+	 * ```txt
 	 *   -target:<targets>  Build these targets in this project. Use a semicolon or a
 	 *                      comma to separate multiple targets, or specify each
 	 *                      target separately. (Short form: -t)
