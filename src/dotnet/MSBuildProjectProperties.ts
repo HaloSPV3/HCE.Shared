@@ -1,5 +1,7 @@
+import { ok } from 'node:assert';
 import { existsSync } from 'node:fs';
 import { basename, isAbsolute, resolve } from 'node:path';
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 
 export type StringBoolean = "true" | "false";
 
@@ -31,49 +33,63 @@ export class MSBuildProjectProperties {
         return path;
     }
 
-    constructor(msbuildProjectFullPath: string, ...rest: string[]) {
-        this.MSBuildProjectFullPath = msbuildProjectFullPath;
-        if (!isAbsolute(this.MSBuildProjectFullPath)) this.MSBuildProjectFullPath = resolve(this.MSBuildProjectFullPath);
-        if (!existsSync(this.MSBuildProjectFullPath))
-            throw new Error(
-                `Project ${basename(msbuildProjectFullPath)} could not be found at "${this.MSBuildProjectFullPath}"`
-            );
-
-        // filter rest for only property names not yet defined.
-        const instanceMembersLowerCase: string[] = MSBuildProjectProperties.InstanceProperties.map(v => v.toLowerCase());
-        const remainingProps: Record<string, string>[] = [...rest].filter(v => {
-            const lc = v.toLowerCase()
-            if (instanceMembersLowerCase.includes(lc)) {
-                instanceMembersLowerCase.splice(instanceMembersLowerCase.indexOf(lc))
-                return false;
+    constructor(msbuildProjectFullPath: string, properties: CaseInsensitiveMap<string, string>) {
+        this.MSBuildProjectFullPath = MSBuildProjectProperties.GetFullPath(msbuildProjectFullPath);
+        ok(properties instanceof CaseInsensitiveMap)
+        const keys: string[] = [...properties.keys()];
+        function getAndForget(key: string): string | undefined {
+            const v: string | undefined = properties.get(key);
+            if (v !== undefined)
+                keys.splice(keys.indexOf(key));
+            return v;
+        }
+        this.AssemblyName = getAndForget("AssemblyName") ?? "";
+        this.Description = getAndForget("Description") ?? "";
+        this.RuntimeIdentifier = getAndForget("RuntimeIdentifier") ?? "";
+        this.RuntimeIdentifiers = getAndForget("RuntimeIdentifiers") ?? "";
+        this.TargetFramework = getAndForget("TargetFramework") ?? "";
+        this.TargetFrameworks = getAndForget("TargetFrameworks") ?? "";
+        this.Version = getAndForget("Version") ?? "";
+        this.VersionPrefix = getAndForget("VersionPrefix") ?? "";
+        this.VersionSuffix = getAndForget("VersionSuffix") ?? "";
+        // rest
+        for (const k of keys) {
+            const v = properties.get(k);
+            if (v !== undefined) {
+                Object.defineProperty(
+                    this,
+                    k,
+                    {
+                        value: v,
+                        writable: false,
+                        enumerable: true,
+                        configurable: true
+                    }
+                );
             }
-            return true;
-        }).map(v => {
-            return { [v]: "" } as Record<string, string>
-        });
-        Object.assign(this, remainingProps);
+        }
     }
 
     readonly [Property: string]: string;
 
-    readonly MSBuildProjectFullPath: string = "";
+    readonly MSBuildProjectFullPath: string;
 
-    readonly AssemblyName: string = "";
+    readonly AssemblyName: string;
 
     /**
      * A long description for the assembly.
      * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
      */
-    readonly Description: string = "";
+    readonly Description: string;
 
     /** Set Version -OR- VersionPrefix. */
-    readonly Version: string = "";
+    readonly Version: string;
 
     /**
      * Set Version -OR- VersionPrefix.
      * @remarks Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
      */
-    readonly VersionPrefix: string = "";
+    readonly VersionPrefix: string;
 
     /**
      * The effect of this property on the package version depends on the values of the Version and VersionPrefix properties, as shown in the following table:
@@ -86,13 +102,13 @@ export class MSBuildProjectProperties {
      * | VersionPrefix and VersionSuffix | $(VersionPrefix)-$(VersionSuffix) |
      * @remarks Setting {@link PackageVersion} overwrites {@link VersionSuffix}
      */
-    readonly VersionSuffix: string = "";
+    readonly VersionSuffix: string;
 
-    readonly TargetFramework: string = "";
+    readonly TargetFramework: string;
 
-    readonly TargetFrameworks: string = "";
+    readonly TargetFrameworks: string;
 
-    readonly RuntimeIdentifier: string = "";
+    readonly RuntimeIdentifier: string;
 
-    readonly RuntimeIdentifiers: string = "";
+    readonly RuntimeIdentifiers: string;
 }
