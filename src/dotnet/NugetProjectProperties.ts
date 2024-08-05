@@ -282,12 +282,4 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * @defaultValue {@link AssemblyName}
      */
     readonly Product: string = this.AssemblyName;
-
-    static GetUniquePropertyKeys(): readonly string[] {
-        return Object.freeze(
-            NugetProjectProperties.InstanceProperties.filter(v =>
-                !MSBuildProjectProperties.InstanceProperties.includes(v)
-            )
-        );
-    }
 }
