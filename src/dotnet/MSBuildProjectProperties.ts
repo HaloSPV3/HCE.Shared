@@ -3,8 +3,6 @@ import { existsSync } from 'node:fs';
 import { basename, isAbsolute, resolve } from 'node:path';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 
-export type StringBoolean = "true" | "false";
-
 /**
  * Known properties. Additional properties may be added upon request.
  * 
