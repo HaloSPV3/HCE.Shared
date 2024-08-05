@@ -77,16 +77,16 @@ export class MSBuildProjectProperties {
      * A long description for the assembly.
      * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
      */
-    readonly Description: string = "";
+    readonly Description: string;
 
     /** Set Version -OR- VersionPrefix. */
-    readonly Version: string = "";
+    readonly Version: string;
 
     /**
      * Set Version -OR- VersionPrefix.
      * @remarks Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
      */
-    readonly VersionPrefix: string = "";
+    readonly VersionPrefix: string;
 
     /**
      * The effect of this property on the package version depends on the values of the Version and VersionPrefix properties, as shown in the following table:
