@@ -138,7 +138,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * Determines the output path in which the packed package will be dropped.
      * Default is `$(OutputPath)` ({@link This.OutputPath}).
      */
-    readonly PackageOutputPath: string = this.OutputPath ?? "";
+    public readonly PackageOutputPath: string = this.OutputPath;
 
     /**
      * This Boolean value indicates whether the package should create an
