@@ -121,9 +121,10 @@
   "packemon": {
     "platform": "node",
     "inputs": {
+      "CaseInsensitiveMap": "src/CaseInsensitiveMap.ts",
       "commitlintConfig": "src/commitlintConfig.ts",
-      "eslintConfig": "src/eslintConfig.ts",
       "envUtils": "src/envUtils.ts",
+      "eslintConfig": "src/eslintConfig.ts",
       "index": "src/index.ts",
       "semanticReleaseConfig": "src/semanticReleaseConfig.ts",
       "semanticReleaseConfigDotnet": "src/semanticReleaseConfigDotnet.ts",
