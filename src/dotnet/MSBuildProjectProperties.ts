@@ -41,6 +41,7 @@ export class MSBuildProjectProperties {
         }
         this.AssemblyName = getAndForget("AssemblyName") ?? "";
         this.Description = getAndForget("Description") ?? "";
+        this.OutputPath = getAndForget("OutputPath") ?? "";
         this.RuntimeIdentifier = getAndForget("RuntimeIdentifier") ?? "";
         this.RuntimeIdentifiers = getAndForget("RuntimeIdentifiers") ?? "";
         this.TargetFramework = getAndForget("TargetFramework") ?? "";
@@ -77,6 +78,8 @@ export class MSBuildProjectProperties {
      * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
      */
     readonly Description: string;
+
+    readonly OutputPath: string;
 
     /** Set Version -OR- VersionPrefix. */
     readonly Version: string;
