@@ -57,7 +57,7 @@ export class MSBuildProject {
 		}
 		const getPropArgs: string[] = properties.map((propName) => `-getProperty:${propName}`);
 		// should return a single value OR string-encoded JSON object with 'Properties' object-type property.
-		const out = execFileSync('dotnet', ['msbuild', evaluatedProps.FullPath, ...getPropArgs], {
+		const out = execFileSync('dotnet', ['msbuild', evaluatedProps.MSBuildProjectFullPath, ...getPropArgs], {
 			encoding: 'utf8',
 			stdio: 'pipe',
 		}).trim();
