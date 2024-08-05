@@ -11,9 +11,9 @@ import { MSBuildProjectProperties, type StringBoolean } from './MSBuildProjectPr
  * @extends {MSBuildProjectProperties}
  */
 export class NugetProjectProperties extends MSBuildProjectProperties {
-    public static override readonly InstanceProperties: readonly string[] = Object.keys(NugetProjectProperties.prototype);
+    static override readonly InstanceProperties: readonly string[] = Object.keys(NugetProjectProperties.prototype);
 
-    public constructor(fullPath: string, ...rest: string[]) {
+    constructor(fullPath: string, ...rest: string[]) {
         // filter rest for only property names not yet defined.
         const instanceMembersLowerCase: string[] = NugetProjectProperties.InstanceProperties.map(v => v.toLowerCase());
         const remainingProps: Record<string, string>[] = [...rest].filter(v => {
@@ -34,14 +34,14 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * The default value is `true`.
      * @default "true"
      */
-    public readonly IsPackable: StringBoolean = "true";
+    readonly IsPackable: StringBoolean = "true";
 
 
     /**
      * Set to `true` to suppress package dependencies from the generated NuGet package.
      * @default "false"
      */
-    public readonly SuppressDependenciesWhenPacking: StringBoolean = "false";
+    readonly SuppressDependenciesWhenPacking: StringBoolean = "false";
 
     /**
      * A specific version number in the form Major.Minor.Patch[-Suffix], where
@@ -50,7 +50,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * @remarks This is semver compatible, for example 1.0.0, 1.0.0-beta, or 1.0.0-beta-00345.
      * @defaultValue {@link Version}
      */
-    public readonly PackageVersion: string = this.Version;
+    readonly PackageVersion: string = this.Version;
 
     /**
      * Specifies the name for the resulting package.
@@ -58,13 +58,13 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * AssemblyName or directory name as the name of the package.
      * @defaultValue {@link AssemblyName}
      */
-    public readonly PackageId: string = this.AssemblyName;
+    readonly PackageId: string = this.AssemblyName;
 
     /**
      * A long description of the package for UI display.
      * @defaultValue {@link Description}
      */
-    public readonly PackageDescription: string = this.Description;
+    readonly PackageDescription: string = this.Description;
 
     /**
      * A semicolon-separated list of packages authors, matching the profile
@@ -73,17 +73,17 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * cross-reference packages by the same authors.
      * If not specified, the default value is the {@link AssemblyName}.
      */
-    public readonly Authors: string = this.AssemblyName;
+    readonly Authors: string = this.AssemblyName;
 
     /** Copyright details for the package. */
-    public readonly Copyright: string = "";
+    readonly Copyright: string = "";
 
     /**
      * A Boolean value that specifies whether the client must prompt the
      * consumer to accept the package license before installing the package.
      * @default "false"
      */
-    public readonly PackageRequireLicenseAcceptance: StringBoolean = "false";
+    readonly PackageRequireLicenseAcceptance: StringBoolean = "false";
 
     /**
      * A Boolean value that specifies whether the package is marked as a
@@ -94,22 +94,22 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * For more information, see [DevelopmentDependency support for
      * PackageReference](https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference).
      */
-    public readonly DevelopmentDependency: StringBoolean | "" = "";
+    readonly DevelopmentDependency: StringBoolean | "" = "";
 
     /**
      * An [SPDX license identifier](https://spdx.org/licenses/) or expression,
      * for example, `Apache-2.0`.
      * For more information, see [Packing a license expression or a license file](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-a-license-expression-or-a-license-file).
      */
-    public readonly PackageLicenseExpression: string = "";
+    readonly PackageLicenseExpression: string = "";
 
     /**
      * Path to a license file within the package if you're using a custom
      * license or a license that hasn't been assigned an SPDX identifier.
      */
-    public readonly PackageLicenseFile: string = "";
+    readonly PackageLicenseFile: string = "";
 
-    public readonly PackageProjectUrl: string = "";
+    readonly PackageProjectUrl: string = "";
 
     /**
      * Specifies the package icon path, relative to the root of the package. For
@@ -119,25 +119,25 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-an-icon-image-file)
      * and [icon metadata](https://learn.microsoft.com/en-us/nuget/reference/nuspec#icon).
      */
-    public readonly PackageIcon: string = "";
+    readonly PackageIcon: string = "";
 
     /** Release notes for the package. */
-    public readonly PackageReleaseNotes: string = "";
+    readonly PackageReleaseNotes: string = "";
 
     /**
      * Readme for the package.
      * @remarks You need to explicitly pack the referenced readme file.
      */
-    public readonly PackageReadmeFile: string = "";
+    readonly PackageReadmeFile: string = "";
 
     /** A semicolon-delimited list of tags that designates the package. */
-    public readonly PackageTags: string = "";
+    readonly PackageTags: string = "";
 
     /**
      * Determines the output path in which the packed package will be dropped.
      * Default is `$(OutputPath)` ({@link This.OutputPath}).
      */
-    public readonly PackageOutputPath: string = this.OutputPath ?? "";
+    readonly PackageOutputPath: string = this.OutputPath ?? "";
 
     /**
      * This Boolean value indicates whether the package should create an
@@ -149,7 +149,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * .exe, .winmd, .xml, .json, .pri). Note that setting IncludeSymbols=true
      * creates a regular package and a symbols package.
      */
-    public readonly IncludeSymbols: StringBoolean | "" = "";
+    readonly IncludeSymbols: StringBoolean | "" = "";
 
     /**
      * This Boolean value indicates whether the pack process should create a
@@ -158,12 +158,12 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * directory in the resulting package file. For more information, see
      * [IncludeSource](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesource).
      */
-    public readonly IncludeSource: StringBoolean | "" = "";
+    readonly IncludeSource: StringBoolean | "" = "";
 
     /**
      * @default ""
      */
-    public readonly PackageType: string = "";
+    readonly PackageType: string = "";
 
     /**
      * Specifies whether all output files are copied to the *tools* folder
@@ -171,19 +171,19 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * [IsTool](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#istool).
      * @default ""
      */
-    public readonly IsTool: StringBoolean | "" = "";
+    readonly IsTool: StringBoolean | "" = "";
 
     /**
      * Repository URL used to clone or retrieve source code. Example:
      * _[https://github.com/NuGet/NuGet.Client.git](https://github.com/NuGet/NuGet.Client.git)_.
      */
-    public readonly RepositoryUrl: string = "";
+    readonly RepositoryUrl: string = "";
 
     /**
      * Repository type. Examples: git (default), tfs.
      * @default "git"
      */
-    public readonly RepositoryType: "git" | "tfs" = "git";
+    readonly RepositoryType: "git" | "tfs" = "git";
 
     /**
      * Optional repository commit or changeset to indicate which source the
@@ -191,7 +191,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * this property to be included. Example:
      * _0e4d1b598f350b3dc675018d539114d1328189ef_ (NuGet 4.7.0+).
      */
-    public readonly RepositoryCommit: string = "";
+    readonly RepositoryCommit: string = "";
 
     /**
      * Specifies the format of the symbols package. If "symbols.nupkg", a
@@ -201,13 +201,13 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * is "symbols.nupkg".
      * @default "symbols.nupkg"
      */
-    public readonly SymbolPackageFormat: "symbols.nupkg" | "snupkg" = "symbols.nupkg";
+    readonly SymbolPackageFormat: "symbols.nupkg" | "snupkg" = "symbols.nupkg";
 
     /**
      * Specifies that `pack` should not run package analysis after building the package.
      * @default ""
      */
-    public readonly NoPackageAnalysis: string = "";
+    readonly NoPackageAnalysis: string = "";
 
     /**
      * Specifies the minimum version of the NuGet client that can install
@@ -215,26 +215,26 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * Manager.
      * @default ""
      */
-    public readonly MinClientVersion: string = "";
+    readonly MinClientVersion: string = "";
 
     /**
      * This Boolean value specifies whether the build output assemblies should
      * be packed into the .nupkg file or not.
      * @default "true"
      */
-    public readonly IncludeBuildOutput: StringBoolean = "true";
+    readonly IncludeBuildOutput: StringBoolean = "true";
 
     /**
      * This Boolean value specifies whether any items that have a type of
      * Content are included in the resulting package automatically.
      * @default "true"
      */
-    public readonly IncludeContentInPack: StringBoolean = "true";
+    readonly IncludeContentInPack: StringBoolean = "true";
 
     /**
      * Specifies the folder where to place the output assemblies. The output assemblies (and other output files) are copied into their respective framework folders. For more information, see [Output assemblies](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#output-assemblies).
      */
-    public readonly BuildOutputTargetFolder: string = "";
+    readonly BuildOutputTargetFolder: string = "";
 
     /**
      * Specifies the default location of where all the content files should go
@@ -243,7 +243,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * package](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#including-content-in-a-package).
      * @default "content;contentFiles"
      */
-    public readonly ContentTargetFolders: string = "content;contentFiles"
+    readonly ContentTargetFolders: string = "content;contentFiles"
 
     /**
      * Relative or absolute path to the *.nuspec* file being used for packing.
@@ -251,39 +251,39 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * any information in the projects is not used.
      * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
      */
-    public readonly NuspecFile: string = "";
+    readonly NuspecFile: string = "";
 
     /**
      * Base path for the *.nuspec* file. 
      * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
      */
-    public readonly NuspecBasePath: string = "";
+    readonly NuspecBasePath: string = "";
 
     /**
      * Semicolon separated list of key=value pairs.
      * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
      */
-    public readonly NuspecProperties: string = "";
+    readonly NuspecProperties: string = "";
 
     /**
      * A human-friendly title of the package, typically used in UI displays as
      * on nuget.org and the Package Manager in Visual Studio.
      */
-    public readonly Title: string = this.PackageId;
+    readonly Title: string = this.PackageId;
 
     /**
      * Company is company information.
      * If not specified, the default value is the {@link Authors} value.
      */
-    public readonly Company: string = this.Authors;
+    readonly Company: string = this.Authors;
 
     /**
      * Product is product information.
      * @defaultValue {@link AssemblyName}
      */
-    public readonly Product: string = this.AssemblyName;
+    readonly Product: string = this.AssemblyName;
 
-    public static GetUniquePropertyKeys(): readonly string[] {
+    static GetUniquePropertyKeys(): readonly string[] {
         return Object.freeze(
             NugetProjectProperties.InstanceProperties.filter(v =>
                 !MSBuildProjectProperties.InstanceProperties.includes(v)
