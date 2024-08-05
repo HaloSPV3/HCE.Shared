@@ -1,4 +1,5 @@
-import { MSBuildProjectProperties, type StringBoolean } from './MSBuildProjectProperties.js';
+import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
+import { type BooleanString } from '../utils/miscTypes.js';
 
 // https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target-inputs
 
@@ -34,14 +35,14 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * The default value is `true`.
      * @default "true"
      */
-    readonly IsPackable: StringBoolean = "true";
+    readonly IsPackable: BooleanString = "true";
 
 
     /**
      * Set to `true` to suppress package dependencies from the generated NuGet package.
      * @default "false"
      */
-    readonly SuppressDependenciesWhenPacking: StringBoolean = "false";
+    readonly SuppressDependenciesWhenPacking: BooleanString = "false";
 
     /**
      * A specific version number in the form Major.Minor.Patch[-Suffix], where
@@ -83,7 +84,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * consumer to accept the package license before installing the package.
      * @default "false"
      */
-    readonly PackageRequireLicenseAcceptance: StringBoolean = "false";
+    readonly PackageRequireLicenseAcceptance: BooleanString = "false";
 
     /**
      * A Boolean value that specifies whether the package is marked as a
@@ -94,7 +95,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * For more information, see [DevelopmentDependency support for
      * PackageReference](https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference).
      */
-    readonly DevelopmentDependency: StringBoolean | "" = "";
+    readonly DevelopmentDependency: BooleanString | "" = "";
 
     /**
      * An [SPDX license identifier](https://spdx.org/licenses/) or expression,
@@ -149,7 +150,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * .exe, .winmd, .xml, .json, .pri). Note that setting IncludeSymbols=true
      * creates a regular package and a symbols package.
      */
-    readonly IncludeSymbols: StringBoolean | "" = "";
+    readonly IncludeSymbols: BooleanString | "" = "";
 
     /**
      * This Boolean value indicates whether the pack process should create a
@@ -158,7 +159,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * directory in the resulting package file. For more information, see
      * [IncludeSource](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesource).
      */
-    readonly IncludeSource: StringBoolean | "" = "";
+    readonly IncludeSource: BooleanString | "" = "";
 
     /**
      * @default ""
@@ -171,7 +172,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * [IsTool](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#istool).
      * @default ""
      */
-    readonly IsTool: StringBoolean | "" = "";
+    readonly IsTool: BooleanString | "" = "";
 
     /**
      * Repository URL used to clone or retrieve source code. Example:
@@ -222,14 +223,14 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * be packed into the .nupkg file or not.
      * @default "true"
      */
-    readonly IncludeBuildOutput: StringBoolean = "true";
+    readonly IncludeBuildOutput: BooleanString = "true";
 
     /**
      * This Boolean value specifies whether any items that have a type of
      * Content are included in the resulting package automatically.
      * @default "true"
      */
-    readonly IncludeContentInPack: StringBoolean = "true";
+    readonly IncludeContentInPack: BooleanString = "true";
 
     /**
      * Specifies the folder where to place the output assemblies. The output assemblies (and other output files) are copied into their respective framework folders. For more information, see [Output assemblies](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#output-assemblies).
