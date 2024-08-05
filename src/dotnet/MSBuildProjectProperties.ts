@@ -16,7 +16,7 @@ export type StringBoolean = "true" | "false";
  * - [Microsoft.NET.Sdk.Desktop](https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop)
  */
 export class MSBuildProjectProperties {
-    public static readonly InstanceProperties: readonly string[] = Object.freeze(Object.keys(MSBuildProjectProperties.prototype));
+    static readonly InstanceProperties: readonly string[] = Object.freeze(Object.keys(MSBuildProjectProperties.prototype));
 
     /**
      * Resolve the given path is not absolute. If the path exists, it is returned. Else, an Error is thrown.
@@ -31,7 +31,7 @@ export class MSBuildProjectProperties {
         return path;
     }
 
-    public constructor(msbuildProjectFullPath: string, ...rest: string[]) {
+    constructor(msbuildProjectFullPath: string, ...rest: string[]) {
         this.MSBuildProjectFullPath = msbuildProjectFullPath;
         if (!isAbsolute(this.MSBuildProjectFullPath)) this.MSBuildProjectFullPath = resolve(this.MSBuildProjectFullPath);
         if (!existsSync(this.MSBuildProjectFullPath))
@@ -56,24 +56,24 @@ export class MSBuildProjectProperties {
 
     readonly [Property: string]: string;
 
-    public readonly MSBuildProjectFullPath: string = "";
+    readonly MSBuildProjectFullPath: string = "";
 
-    public readonly AssemblyName: string = "";
+    readonly AssemblyName: string = "";
 
     /**
      * A long description for the assembly.
      * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
      */
-    public readonly Description: string = "";
+    readonly Description: string = "";
 
     /** Set Version -OR- VersionPrefix. */
-    public readonly Version: string = "";
+    readonly Version: string = "";
 
     /**
      * Set Version -OR- VersionPrefix.
      * @remarks Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
      */
-    public readonly VersionPrefix: string = "";
+    readonly VersionPrefix: string = "";
 
     /**
      * The effect of this property on the package version depends on the values of the Version and VersionPrefix properties, as shown in the following table:
@@ -86,13 +86,13 @@ export class MSBuildProjectProperties {
      * | VersionPrefix and VersionSuffix | $(VersionPrefix)-$(VersionSuffix) |
      * @remarks Setting {@link PackageVersion} overwrites {@link VersionSuffix}
      */
-    public readonly VersionSuffix: string = "";
+    readonly VersionSuffix: string = "";
 
-    public readonly TargetFramework: string = "";
+    readonly TargetFramework: string = "";
 
-    public readonly TargetFrameworks: string = "";
+    readonly TargetFrameworks: string = "";
 
-    public readonly RuntimeIdentifier: string = "";
+    readonly RuntimeIdentifier: string = "";
 
-    public readonly RuntimeIdentifiers: string = "";
+    readonly RuntimeIdentifiers: string = "";
 }
