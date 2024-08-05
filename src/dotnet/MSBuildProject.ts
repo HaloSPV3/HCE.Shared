@@ -169,12 +169,12 @@ class EvaluationOptions {
 }
 
 export class MSBuildProject {
-	public static MatrixProperties: string[] = [
+	public static readonly MatrixProperties: readonly string[] = Object.freeze([
 		"TargetFramework",
 		"TargetFrameworks",
 		"RuntimeIdentifier",
 		"RuntimeIdentifiers"
-	];
+	]);
 
 	public Properties: MSBuildProjectProperties;
 
