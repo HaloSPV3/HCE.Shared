@@ -16,8 +16,6 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
  * - [Microsoft.NET.Sdk.Desktop](https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop)
  */
 export class MSBuildProjectProperties {
-    static readonly InstanceProperties: readonly string[] = Object.freeze(Object.keys(MSBuildProjectProperties.prototype));
-
     /**
      * Resolve the given path is not absolute. If the path exists, it is returned. Else, an Error is thrown.
      * @param path 

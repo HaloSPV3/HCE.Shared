@@ -12,7 +12,7 @@ import { type BooleanString, type EmptyOrBooleanString } from '../utils/miscType
  * @extends {MSBuildProjectProperties}
  */
 export class NugetProjectProperties extends MSBuildProjectProperties {
-    static override readonly InstanceProperties: readonly string[] = Object.keys(NugetProjectProperties.prototype);
+    static readonly InstanceProperties: readonly string[] = Object.keys(NugetProjectProperties.prototype);
 
     constructor(fullPath: string, ...rest: string[]) {
         // filter rest for only property names not yet defined.
