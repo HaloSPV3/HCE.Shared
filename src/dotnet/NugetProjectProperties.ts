@@ -1,5 +1,5 @@
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
-import { type BooleanString } from '../utils/miscTypes.js';
+import { type BooleanString, type EmptyOrBooleanString } from '../utils/miscTypes.js';
 
 // https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target-inputs
 
@@ -95,7 +95,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * For more information, see [DevelopmentDependency support for
      * PackageReference](https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference).
      */
-    readonly DevelopmentDependency: BooleanString | "" = "";
+    readonly DevelopmentDependency: EmptyOrBooleanString = "";
 
     /**
      * An [SPDX license identifier](https://spdx.org/licenses/) or expression,
@@ -150,7 +150,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * .exe, .winmd, .xml, .json, .pri). Note that setting IncludeSymbols=true
      * creates a regular package and a symbols package.
      */
-    readonly IncludeSymbols: BooleanString | "" = "";
+    readonly IncludeSymbols: EmptyOrBooleanString = "";
 
     /**
      * This Boolean value indicates whether the pack process should create a
@@ -159,7 +159,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * directory in the resulting package file. For more information, see
      * [IncludeSource](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesource).
      */
-    readonly IncludeSource: BooleanString | "" = "";
+    readonly IncludeSource: EmptyOrBooleanString = "";
 
     /**
      * @default ""
@@ -172,7 +172,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * [IsTool](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#istool).
      * @default ""
      */
-    readonly IsTool: BooleanString | "" = "";
+    readonly IsTool: EmptyOrBooleanString = "";
 
     /**
      * Repository URL used to clone or retrieve source code. Example:
