@@ -28,27 +28,27 @@ export class MSBuildProjectProperties {
             throw new Error(`${basename(path)} could not be found at "${path}"`);
         return path;
     }
+    protected static getAndForget(properties: CaseInsensitiveMap<string, string>, keys: string[], key: string): string | undefined {
+        const v: string | undefined = properties.get(key);
+        if (v !== undefined)
+            keys.splice(keys.indexOf(key));
+        return v;
+    }
 
     constructor(msbuildProjectFullPath: string, properties: CaseInsensitiveMap<string, string>) {
         this.MSBuildProjectFullPath = MSBuildProjectProperties.GetFullPath(msbuildProjectFullPath);
         ok(properties instanceof CaseInsensitiveMap)
         const keys: string[] = [...properties.keys()];
-        function getAndForget(key: string): string | undefined {
-            const v: string | undefined = properties.get(key);
-            if (v !== undefined)
-                keys.splice(keys.indexOf(key));
-            return v;
-        }
-        this.AssemblyName = getAndForget("AssemblyName") ?? "";
-        this.Description = getAndForget("Description") ?? "";
-        this.OutputPath = getAndForget("OutputPath") ?? "";
-        this.RuntimeIdentifier = getAndForget("RuntimeIdentifier") ?? "";
-        this.RuntimeIdentifiers = getAndForget("RuntimeIdentifiers") ?? "";
-        this.TargetFramework = getAndForget("TargetFramework") ?? "";
-        this.TargetFrameworks = getAndForget("TargetFrameworks") ?? "";
-        this.Version = getAndForget("Version") ?? "";
-        this.VersionPrefix = getAndForget("VersionPrefix") ?? "";
-        this.VersionSuffix = getAndForget("VersionSuffix") ?? "";
+        this.AssemblyName = MSBuildProjectProperties.getAndForget(properties, keys, "AssemblyName") ?? "";
+        this.Description = MSBuildProjectProperties.getAndForget(properties, keys, "Description") ?? "";
+        this.OutputPath = MSBuildProjectProperties.getAndForget(properties, keys, "OutputPath") ?? "";
+        this.RuntimeIdentifier = MSBuildProjectProperties.getAndForget(properties, keys, "RuntimeIdentifier") ?? "";
+        this.RuntimeIdentifiers = MSBuildProjectProperties.getAndForget(properties, keys, "RuntimeIdentifiers") ?? "";
+        this.TargetFramework = MSBuildProjectProperties.getAndForget(properties, keys, "TargetFramework") ?? "";
+        this.TargetFrameworks = MSBuildProjectProperties.getAndForget(properties, keys, "TargetFrameworks") ?? "";
+        this.Version = MSBuildProjectProperties.getAndForget(properties, keys, "Version") ?? "";
+        this.VersionPrefix = MSBuildProjectProperties.getAndForget(properties, keys, "VersionPrefix") ?? "";
+        this.VersionSuffix = MSBuildProjectProperties.getAndForget(properties, keys, "VersionSuffix") ?? "";
         // rest
         for (const k of keys) {
             const v = properties.get(k);
