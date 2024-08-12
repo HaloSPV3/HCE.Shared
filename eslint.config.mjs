@@ -8,6 +8,7 @@ import { config } from 'typescript-eslint'
 export default config(
   ...eslintConfig,
   stylistic.configs['recommended-flat'],
+  { rules: { '@stylistic/no-extra-parens': 'error' } },
   {
     languageOptions: {
       parserOptions: {
