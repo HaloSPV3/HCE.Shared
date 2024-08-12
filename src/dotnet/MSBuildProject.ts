@@ -144,7 +144,7 @@ class EvaluationOptions {
 	 * ```
 	 */
 	Properties: Record<string, string>;
-	/** 
+	/**
 	 * MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
 	 * including {@link MSBuild}
 	 */
@@ -154,7 +154,7 @@ class EvaluationOptions {
 	 * The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
 	 * Property values may be changed by Targets such as those provided by
 	 * dependencies.
-	 * 
+	 *
 	 * ```txt
 	 *   -target:<targets>  Build these targets in this project. Use a semicolon or a
 	 *                      comma to separate multiple targets, or specify each
@@ -162,7 +162,7 @@ class EvaluationOptions {
 	 *                      Example:
 	 *                        -target:Resources;Compile
 	 * ```
-	 * 
+	 *
 	 * @default []
 	 */
 	Target: string[] = [];
