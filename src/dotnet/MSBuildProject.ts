@@ -104,20 +104,20 @@ class MSBuildEvaluationOutput {
 	TargetResults?: typeof msbuildEvaluationOutput.infer.TargetResults;
 }
 
-const iEvaluationOptions = type(
-	{
-		FullName: "string",
-		SetProperties: type({ "[string]": "string" }),
-		Targets: "string[]",
-		GetItems: "string[]",
-		GetProperties: "string[]",
-		GetTargetResults: "string[]"
-	}
-)
-
 class EvaluationOptions {
-	constructor(opts: typeof iEvaluationOptions.infer) {
-		opts = iEvaluationOptions.assert(opts);
+	private static t = type(
+		{
+			FullName: "string",
+			SetProperties: type({ "[string]": "string" }),
+			Targets: "string[]",
+			GetItems: "string[]",
+			GetProperties: "string[]",
+			GetTargetResults: "string[]"
+		}
+	)
+
+	constructor(opts: typeof EvaluationOptions.t.infer) {
+		opts = EvaluationOptions.t.assert(opts);
 		this.FullName = opts.FullName;
 		this.Properties = opts.SetProperties;
 		this.GetItem = opts.GetItems;
