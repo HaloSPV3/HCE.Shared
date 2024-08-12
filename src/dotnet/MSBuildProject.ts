@@ -177,8 +177,6 @@ export class MSBuildProject {
 		"RuntimeIdentifiers"
 	]);
 
-	public Properties: MSBuildProjectProperties;
-
 	/**
 	 *
 	 * @param fullPath The full path of the .NET MSBuild project file.
@@ -187,6 +185,8 @@ export class MSBuildProject {
 	public constructor(fullPath: string, customProperties?: string[]) {
 		this.Properties = MSBuildProject.evaluateProperties(fullPath, customProperties ?? []);
 	}
+
+	public Properties: MSBuildProjectProperties;
 
 	/**
 	 *
