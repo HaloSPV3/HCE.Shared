@@ -561,3 +561,4 @@ lib/
 mjs/
 _tsout/
 babel.config.json
+.playground.ts
