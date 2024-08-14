@@ -1,10 +1,11 @@
-import { execFileSync } from 'node:child_process';
+import { exec, execFileSync } from 'node:child_process';
 import { Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
 import { NugetProjectProperties } from './NugetProjectProperties.js';
 import { type } from "arktype";
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 import { getOwnPropertyDescriptors } from '../utils/reflection.js';
 
 /**
@@ -178,15 +179,42 @@ export class MSBuildProject {
 	]);
 
 	/**
-	 *
-	 * @param fullPath The full path of the .NET MSBuild project file.
-	 * @param customProperties MSBuild properties to evaluate in addition to those pre-defined in {@link MSBuildProjectProperties}
+	 * Creates an instance of MSBuildProject.
+	 * @param {object} opts The order-independent arguments for this constructor.
+	 * Properties may be added or moved around in this definition without
+	 * breaking compatibility.
+	 * @param {string} opts.fullPath
 	 */
-	public constructor(fullPath: string, customProperties?: string[]) {
-		this.Properties = MSBuildProject.evaluateProperties(fullPath, customProperties ?? []);
+	public constructor(opts: { fullPath: string, projTargets: string[], evaluation: MSBuildEvaluationOutput }) {
+		this.Items = opts.evaluation.Items ?? {};
+		this.Properties = new NugetProjectProperties(
+			opts.fullPath,
+			new CaseInsensitiveMap<string, string>(
+				Object.entries(opts.evaluation.Properties ?? {})
+			)
+		);
+		this.Targets = opts.projTargets;
+		this.TargetResults = opts.evaluation.TargetResults !== undefined ? [opts.evaluation.TargetResults] : [];
 	}
 
-	public Properties: MSBuildProjectProperties;
+	readonly Items: Readonly<Required<MSBuildEvaluationOutput>["Items"]>;
+	readonly Properties: Readonly<NugetProjectProperties>;
+	readonly Targets: readonly string[];
+	/**
+	 * @remarks Allows appending subsequent target results.
+	 */
+	readonly TargetResults: Required<MSBuildEvaluationOutput>["TargetResults"][];
+
+	static async getTargets(projectPath: string, includeNonPublic = false): Promise<string[]> {
+		const execAsync = exec.__promisify__
+		return execAsync(`dotnet msbuild ${projectPath} -targets`
+		).then((v) => {
+			const targets = v.stdout.split('\n');
+			if (includeNonPublic)
+				return targets;
+			return targets.filter(v => !v.startsWith('_'))
+		})
+	}
 
 	/**
 	 *
@@ -276,23 +304,37 @@ export class MSBuildProject {
 			return dirEntries.flat();
 		}
 
-		const projects: MSBuildProject[] = (await toDirEntries(projectsToPackAndPush))
-			.map(v =>
-				new MSBuildProject(
-					join(v.parentPath, v.name),
-					getOwnPropertyDescriptors(
-						NugetProjectProperties,
-						true,
-						true
+		const projects: Promise<MSBuildProject>[] = await toDirEntries(projectsToPackAndPush)
+			.then((dirents) => {
+				return dirents.map(async (v): Promise<MSBuildProject> => {
+					const fullPath = join(v.parentPath, v.name);
+					const projTargets: Promise<string[]> = MSBuildProject.getTargets(fullPath, false); // TODO. should return a string[]. Option to exclude underscored targets?
+					// this might be too long for a command line. What was is on Windows?
+					// 2^15 (32,768) character limit for command lines?
+					const getProperties = getOwnPropertyDescriptors(/* enumerate getters (own and inherited) */
+						NugetProjectProperties, true, true
 					).map(
 						o => Object.entries(o)
-					).flat().filter(
-						e => typeof e[1].get === 'function' && e[0] !== '__protot__'
-					).map(
-						v => v[0]
-					)
-				)
-			);
-		return projects;
+					).flat().filter(/* if predicate is true, e is a getter */
+						e => typeof e[1].get === "function" && e[0] !== '__proto__'
+					).map(/* return the getter's name (the MSBuild property name) */
+						v => v[0])
+					const options = new EvaluationOptions({
+						FullName: fullPath,
+						GetItems: [],
+						GetProperties: getProperties,
+						GetTargetResults: [],
+						SetProperties: {},
+						Targets: await projTargets.then(v => v.includes("Pack") ? ["Pack"] : [])
+					});
+					return new MSBuildProject({
+						fullPath,
+						projTargets: await projTargets,
+						evaluation: await MSBuildProject.Evaluate(options)
+					});
+				}
+				);
+			});
+		return Promise.all(projects);
 	}
 }
