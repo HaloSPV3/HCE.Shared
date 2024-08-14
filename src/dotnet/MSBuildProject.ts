@@ -110,7 +110,7 @@ class EvaluationOptions {
 		{
 			FullName: "string",
 			SetProperties: type({ "[string]": "string" }),
-			Targets: "string[]",
+			Target: "string[]",
 			GetItems: "string[]",
 			GetProperties: "string[]",
 			GetTargetResults: "string[]"
@@ -123,9 +123,10 @@ class EvaluationOptions {
 		this.Properties = opts.SetProperties;
 		this.GetItem = opts.GetItems;
 		this.GetProperty = opts.GetProperties;
-		this.Target = opts.Targets;
+		this.Target = opts.Target;
 		this.GetTargetResults = opts.GetTargetResults;
 	}
+
 	/**
 	 * The project file's full path.
 	 */
@@ -304,37 +305,37 @@ export class MSBuildProject {
 			return dirEntries.flat();
 		}
 
-		const projects: Promise<MSBuildProject>[] = await toDirEntries(projectsToPackAndPush)
-			.then((dirents) => {
-				return dirents.map(async (v): Promise<MSBuildProject> => {
-					const fullPath = join(v.parentPath, v.name);
-					const projTargets: Promise<string[]> = MSBuildProject.getTargets(fullPath, false); // TODO. should return a string[]. Option to exclude underscored targets?
-					// this might be too long for a command line. What was is on Windows?
-					// 2^15 (32,768) character limit for command lines?
-					const getProperties = getOwnPropertyDescriptors(/* enumerate getters (own and inherited) */
-						NugetProjectProperties, true, true
-					).map(
-						o => Object.entries(o)
-					).flat().filter(/* if predicate is true, e is a getter */
-						e => typeof e[1].get === "function" && e[0] !== '__proto__'
-					).map(/* return the getter's name (the MSBuild property name) */
-						v => v[0])
-					const options = new EvaluationOptions({
-						FullName: fullPath,
-						GetItems: [],
-						GetProperties: getProperties,
-						GetTargetResults: [],
-						SetProperties: {},
-						Targets: await projTargets.then(v => v.includes("Pack") ? ["Pack"] : [])
-					});
-					return new MSBuildProject({
-						fullPath,
-						projTargets: await projTargets,
-						evaluation: await MSBuildProject.Evaluate(options)
-					});
-				}
-				);
-			});
-		return Promise.all(projects);
+		return Promise.all(
+			await toDirEntries(projectsToPackAndPush)
+				.then(direntArr =>
+					direntArr.map(async (dirent): Promise<MSBuildProject> => {
+						const fullPath = join(dirent.parentPath, dirent.name)
+						const projTargets: Promise<string[]> = MSBuildProject.getTargets(fullPath, false)
+						// this might be too long for a command line. What was is on Windows?
+						// 2^15 (32,768) character limit for command lines?
+						const getProperties = getOwnPropertyDescriptors(
+							NugetProjectProperties, true, true
+						).map(
+							o => Object.entries(o)
+						).flat().filter(// if predicate is true, e is a getter
+							e => typeof e[1].get === "function" && e[0] !== '__proto__'
+						).map(// return the getter's name (the MSBuild property name)
+							v => v[0]
+						)
+						return await this.Evaluate(
+							new EvaluationOptions(
+								{
+									FullName: fullPath,
+									GetItems: [],
+									GetProperties: getProperties,
+									GetTargetResults: [],
+									SetProperties: {},
+									Target: await projTargets.then(v => v.includes("Pack") ? ["Pack"] : []),
+								}
+							)
+						)
+					})
+				)
+		);
 	}
 }
