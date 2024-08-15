@@ -7,7 +7,7 @@ import { config } from 'typescript-eslint'
 
 export default config(
   ...eslintConfig,
-  stylistic.configs['recommended-flat'],
+  Object.assign(stylistic.configs['recommended-flat'], { ignores: ['**/*.json'] }),
   { rules: { '@stylistic/no-extra-parens': 'error' } },
   {
     languageOptions: {
