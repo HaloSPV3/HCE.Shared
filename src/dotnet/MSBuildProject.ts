@@ -8,6 +8,8 @@ import { getOwnPropertyDescriptors } from '../utils/reflection.js';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
 import { NugetProjectProperties } from './NugetProjectProperties.js';
 
+const execAsync = exec.__promisify__;
+
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
  * Additional string-type properties may be present (e.g. `{ SubType: "designer" }`).
@@ -209,7 +211,6 @@ export class MSBuildProject {
 	readonly TargetResults: Required<MSBuildEvaluationOutput>["TargetResults"][];
 
 	static async getTargets(projectPath: string, includeNonPublic = false): Promise<string[]> {
-		const execAsync = exec.__promisify__
 		return execAsync(`dotnet msbuild ${projectPath} -targets`
 		).then((v) => {
 			const targets = v.stdout.split('\n');
