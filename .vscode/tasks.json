@@ -1,24 +1,27 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"dependsOn": [
-				"npm: install"
-			],
-			"detail": "install dependencies from package",
-			"label": "npm install on open",
-			"presentation": {
-				"reveal": "silent",
-				"focus": false,
-				"panel": "dedicated",
-				"showReuseMessage": false,
-				"close": true,
-				"clear": false
-			},
-			"problemMatcher": [],
-			"runOptions": {
-				"runOn": "folderOpen"
-			}
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "dependsOn": [
+        {
+          "type": "npm",
+          "script": "install"
+        }
+      ],
+      "detail": "install dependencies from package",
+      "label": "npm install on open",
+      "presentation": {
+        "reveal": "silent",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "close": true,
+        "clear": false
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
 }
