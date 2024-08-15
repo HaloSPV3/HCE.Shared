@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { Dirent, existsSync } from 'node:fs';
+import { Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
