@@ -236,7 +236,7 @@ export class MSBuildProject {
     const getItem = options.GetItem.length === 0 ? '' : `"-getItem:${options.GetItem.join()}"`
     const getProperty = options.GetProperty.length === 0 ? '' : `"-getProperty:${options.GetProperty.join()}"`
     const getTargetResult = options.GetTargetResults.length === 0 ? '' : `"-getTargetResult:${options.GetTargetResults.join()}"`
-    const cmdLine = ['dotnet', 'msbuild', property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
+    const cmdLine = ['dotnet', 'msbuild', options.FullName, property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
     const stdPair = await execAsync(cmdLine)
     const evaluation = new MSBuildEvaluationOutput(
       stdPair.stdout.startsWith('{')
