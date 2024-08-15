@@ -16,48 +16,48 @@ const execAsync = promisify(exec)
  * Additional string-type properties may be present (e.g. `{ SubType: "designer" }`).
  */
 const iItemMetadataBuiltIn = type({
-  /* eslint-disable @stylistic/quote-props */
   '[string]': 'string',
   /** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\ConsoleApp1.dll" */
-  Identity: 'string',
+  'Identity': 'string',
+  /** @example "Designer" */
+  'SubType?': 'string',
   /** @example ".NETCoreApp" */
-  TargetFrameworkIdentifier: 'string',
-  TargetPlatformMoniker: 'string',
+  'TargetFrameworkIdentifier?': 'string',
+  'TargetPlatformMoniker?': 'string',
   /** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\obj\\Debug\\net6.0\\ConsoleApp1.csproj.CopyComplete" */
-  CopyUpToDateMarker: 'string',
-  TargetPlatformIdentifier: 'string',
+  'CopyUpToDateMarker?': 'string',
+  'TargetPlatformIdentifier?': 'string',
   /** @example "6.0" */
-  TargetFrameworkVersion: 'string',
+  'TargetFrameworkVersion?': 'string',
   /** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\obj\\Debug\\net6.0\\ref\\ConsoleApp1.dll" */
-  ReferenceAssembly: 'string',
+  'ReferenceAssembly?': 'string',
   /** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\ConsoleApp1.dll" */
-  FullPath: 'string',
+  'FullPath': 'string',
   /** @example "c:\\" */
-  RootDir: 'string',
+  'RootDir': 'string',
   /** @example "ConsoleApp1" */
-  Filename: 'string',
+  'Filename': 'string',
   /** @example ".dll" */
-  Extension: 'string',
+  'Extension': 'string',
   /** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\" */
-  RelativeDir: 'string',
+  'RelativeDir': 'string',
   /** @example "source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\" */
-  Directory: 'string',
-  RecursiveDir: 'string',
+  'Directory': 'string',
+  'RecursiveDir': 'string',
   /** @example "2023-11-30 13:38:06.5084339" */
-  ModifiedTime: 'string',
+  'ModifiedTime': 'string',
   /** @example "2023-11-30 13:38:06.9308716" */
-  CreatedTime: 'string',
+  'CreatedTime': 'string',
   /** @example "2023-11-30 13:38:06.9318732" */
-  AccessedTime: 'string',
+  'AccessedTime': 'string',
   /** @example "C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets" */
-  DefiningProjectFullPath: 'string',
+  'DefiningProjectFullPath': 'string',
   /** @example "C:\\Program Files\\Microsoft Visual Studio\\2022\\Preview\\MSBuild\\Current\\Bin\\amd64\\" */
-  DefiningProjectDirectory: 'string',
+  'DefiningProjectDirectory': 'string',
   /** @example "Microsoft.Common.CurrentVersion" */
-  DefiningProjectName: 'string',
+  'DefiningProjectName': 'string',
   /** @example ".targets" */
-  DefiningProjectExtension: 'string',
-  /* eslint-enable @stylistic/quote-props */
+  'DefiningProjectExtension': 'string',
 })
 
 const targetSuccess = type({
