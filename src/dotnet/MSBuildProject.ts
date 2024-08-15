@@ -224,6 +224,8 @@ export class MSBuildProject {
   /**
    * Evaluate {@link Items}, {@link Properties}, and {@link TargetResults},
    * returning them as an instance of {@link MSBuildProject}.\
+   * @remarks MSBuild will probably fail if Restore is skipped and another
+   * target is specified. If you choose Pack, you must do ['Restore', 'Pack']
    */
   public static async Evaluate(options: EvaluationOptions, projTargets?: string[]): Promise<MSBuildProject> {
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
