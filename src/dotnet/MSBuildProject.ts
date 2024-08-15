@@ -13,6 +13,7 @@ import { NugetProjectProperties } from './NugetProjectProperties.js';
  * Additional string-type properties may be present (e.g. `{ SubType: "designer" }`).
  */
 const iItemMetadataBuiltIn = type({
+	/* eslint-disable @stylistic/quote-props */
 	"[string]": "string",
 	/** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\ConsoleApp1.dll" */
 	Identity: "string",
@@ -53,6 +54,7 @@ const iItemMetadataBuiltIn = type({
 	DefiningProjectName: "string",
 	/** @example ".targets" */
 	DefiningProjectExtension: "string"
+	/* eslint-enable @stylistic/quote-props */
 });
 
 const targetSuccess = type({
