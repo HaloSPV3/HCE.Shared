@@ -5,109 +5,188 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 
 /**
  * Known properties. Additional properties may be added upon request.
- * 
+ *
  * todo: add Reserved properties, Well-Known properties, Common properties, and more. Maybe as sub classes.\
- * See: 
+ * See:
  * - [MSBuild Reserved and Well-known Properties](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2022)
  * - [Common MSBuild project properties](https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2022)
  * - [Microsoft.NET.Sdk](https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props)
  * - [Microsoft.NET.Sdk.Web](https://learn.microsoft.com/en-us/aspnet/core/razor-pages/web-sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json#properties)
  * - [Microsoft.NET.Sdk.Razor](https://learn.microsoft.com/en-us/aspnet/core/razor-pages/sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json)
  * - [Microsoft.NET.Sdk.Desktop](https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop)
- */
+*/
 export class MSBuildProjectProperties {
-    /**
-     * Resolve the given path is not absolute. If the path exists, it is returned. Else, an Error is thrown.
-     * @param path 
-     * @returns 
-     */
-    static GetFullPath(path: string) {
-        if (!isAbsolute(path))
-            path = resolve(path);
-        if (!existsSync(path))
-            throw new Error(`${basename(path)} could not be found at "${path}"`);
-        return path;
+  // #region static
+
+  /**
+   * Resolve the given path is not absolute. If the path exists, it is returned. Else, an Error is thrown.
+   * @param path
+   * @returns
+   */
+  static GetFullPath(path: string) {
+    if (!isAbsolute(path))
+      path = resolve(path);
+    if (!existsSync(path))
+      throw new Error(`${basename(path)} could not be found at "${path}"`);
+    return path;
+  }
+
+  /**
+   * Try to get an element from {@link properties} by its {@link key}.
+   * If an element is found, it is removed and the value of the element is returned.
+   * Otherwise, `undefined` is returned.
+   * @param properties The CaseInsensitiveMap of properties passed to the constructor.
+   * @param key The key of the property to get from {@link properties}
+   * @returns If found, the value of the `[string, string]` tuple found in {@link properties}. Else, `undefined`.
+   * @remarks This method may remove elements from {@link properties}.
+   */
+  protected static getAndForget(properties: CaseInsensitiveMap<string, string>, key: string): string | undefined {
+    const v: string | undefined = properties.get(key);
+    if (v !== undefined)
+      properties.delete(key)
+    return v;
+  }
+
+  // #endregion static
+
+  // #region private
+  private _msbuildProjectFullPath: string | undefined;
+  private _assemblyName: string | undefined;
+  private _description: string | undefined;
+  private _outputPath: string | undefined;
+  private _runtimeIdentifier: string | undefined;
+  private _runtimeIdentifiers: string | undefined;
+  private _targetFramework: string | undefined;
+  private _targetFrameworks: string | undefined;
+  private _version: string | undefined;
+  private _versionPrefix: string | undefined;
+  private _versionSuffix: string | undefined;
+  // #endregion private
+
+  constructor(msbuildProjectFullPath: string, properties: CaseInsensitiveMap<string, string>) {
+    this._msbuildProjectFullPath = MPP.GetFullPath(msbuildProjectFullPath);
+    ok(properties instanceof CaseInsensitiveMap)
+    this._assemblyName = MPP.getAndForget(properties, "AssemblyName") ?? "";
+    this._description = MPP.getAndForget(properties, "Description") ?? "";
+    this._outputPath = MPP.getAndForget(properties, "OutputPath") ?? "";
+    this._runtimeIdentifier = MPP.getAndForget(properties, "RuntimeIdentifier") ?? "";
+    this._runtimeIdentifiers = MPP.getAndForget(properties, "RuntimeIdentifiers") ?? "";
+    this._targetFramework = MPP.getAndForget(properties, "TargetFramework") ?? "";
+    this._targetFrameworks = MPP.getAndForget(properties, "TargetFrameworks") ?? "";
+    this._version = MPP.getAndForget(properties, "Version") ?? "";
+    this._versionPrefix = MPP.getAndForget(properties, "VersionPrefix") ?? "";
+    this._versionSuffix = MPP.getAndForget(properties, "VersionSuffix") ?? "";
+    // rest
+    for (const key of properties.keys()) {
+      const value = MPP.getAndForget(properties, key);
+      if (value !== undefined) {
+        Object.defineProperty(
+          this,
+          key,
+          {
+            value: value,
+            writable: false,
+            enumerable: true,
+            configurable: true
+          }
+        );
+      }
     }
-    protected static getAndForget(properties: CaseInsensitiveMap<string, string>, keys: string[], key: string): string | undefined {
-        const v: string | undefined = properties.get(key);
-        if (v !== undefined)
-            keys.splice(keys.indexOf(key));
-        return v;
-    }
+  }
 
-    constructor(msbuildProjectFullPath: string, properties: CaseInsensitiveMap<string, string>) {
-        this.MSBuildProjectFullPath = MSBuildProjectProperties.GetFullPath(msbuildProjectFullPath);
-        ok(properties instanceof CaseInsensitiveMap)
-        const keys: string[] = [...properties.keys()];
-        this.AssemblyName = MSBuildProjectProperties.getAndForget(properties, keys, "AssemblyName") ?? "";
-        this.Description = MSBuildProjectProperties.getAndForget(properties, keys, "Description") ?? "";
-        this.OutputPath = MSBuildProjectProperties.getAndForget(properties, keys, "OutputPath") ?? "";
-        this.RuntimeIdentifier = MSBuildProjectProperties.getAndForget(properties, keys, "RuntimeIdentifier") ?? "";
-        this.RuntimeIdentifiers = MSBuildProjectProperties.getAndForget(properties, keys, "RuntimeIdentifiers") ?? "";
-        this.TargetFramework = MSBuildProjectProperties.getAndForget(properties, keys, "TargetFramework") ?? "";
-        this.TargetFrameworks = MSBuildProjectProperties.getAndForget(properties, keys, "TargetFrameworks") ?? "";
-        this.Version = MSBuildProjectProperties.getAndForget(properties, keys, "Version") ?? "";
-        this.VersionPrefix = MSBuildProjectProperties.getAndForget(properties, keys, "VersionPrefix") ?? "";
-        this.VersionSuffix = MSBuildProjectProperties.getAndForget(properties, keys, "VersionSuffix") ?? "";
-        // rest
-        for (const k of keys) {
-            const v = properties.get(k);
-            if (v !== undefined) {
-                Object.defineProperty(
-                    this,
-                    k,
-                    {
-                        value: v,
-                        writable: false,
-                        enumerable: true,
-                        configurable: true
-                    }
-                );
-            }
-        }
-    }
+  get MSBuildProjectFullPath(): string {
+    return this._msbuildProjectFullPath ??= "";
+  }
 
-    readonly [Property: string]: string;
+  get AssemblyName(): string {
+    return this._assemblyName ??= "";
+  }
 
-    readonly MSBuildProjectFullPath: string;
+  /**
+   * A long description for the assembly.
+   * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
+   */
+  get Description(): string {
+    return this._description ??= "";
+  }
 
-    readonly AssemblyName: string;
+  get OutputPath(): string {
+    return this._outputPath ??= "";
+  }
 
-    /**
-     * A long description for the assembly.
-     * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
-     */
-    readonly Description: string;
+  /** Set Version -OR- VersionPrefix. */
+  get Version(): string {
+    return this._version ??= "";
+  }
 
-    readonly OutputPath: string;
+  /**
+   * Set Version -OR- VersionPrefix.
+   * @remarks Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
+   */
+  get VersionPrefix(): string {
+    return this._versionPrefix ??= "";
+  }
 
-    /** Set Version -OR- VersionPrefix. */
-    readonly Version: string;
+  /**
+   * The effect of this property on the package version depends on the values of the Version and VersionPrefix properties, as shown in the following table:
+   * | Properties with values | Package version |
+   * | ---------------------- | --------------- |
+   * | None                   | 1.0.0           |
+   * | Version                | $(Version)      |
+   * | VersionPrefix only     | $(VersionPrefix) |
+   * | VersionSuffix only     | 1.0.0-$(VersionSuffix) |
+   * | VersionPrefix and VersionSuffix | $(VersionPrefix)-$(VersionSuffix) |
+   * @remarks Setting {@link PackageVersion} overwrites {@link VersionSuffix}
+   */
+  get VersionSuffix(): string {
+    return this._versionSuffix ??= "";
+  }
 
-    /**
-     * Set Version -OR- VersionPrefix.
-     * @remarks Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
-     */
-    readonly VersionPrefix: string;
+  /**
+   * https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframework
+   * @see
+   * https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
+   * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
+   */
+  get TargetFramework(): string {
+    return this._targetFramework ??= "";
+  }
 
-    /**
-     * The effect of this property on the package version depends on the values of the Version and VersionPrefix properties, as shown in the following table:
-     * | Properties with values | Package version |
-     * | ---------------------- | --------------- |
-     * | None                   | 1.0.0           |
-     * | Version                | $(Version)      |
-     * | VersionPrefix only     | $(VersionPrefix) |
-     * | VersionSuffix only     | 1.0.0-$(VersionSuffix) |
-     * | VersionPrefix and VersionSuffix | $(VersionPrefix)-$(VersionSuffix) |
-     * @remarks Setting {@link PackageVersion} overwrites {@link VersionSuffix}
-     */
-    readonly VersionSuffix: string;
+  /**
+   * https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframeworks
+   * @see
+   * https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
+   * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
+   */
+  get TargetFrameworks(): string {
+    return this._targetFrameworks ??= "";
+  }
 
-    readonly TargetFramework: string;
+  /**
+   * https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier
+   * > The `RuntimeIdentifier` property lets you specify a single runtime
+   * > identifier (RID) for the project. The RID enables publishing a
+   * > self-contained deployment.
+   * @see
+   * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
+   */
+  get RuntimeIdentifier(): string {
+    return this._runtimeIdentifier ??= "";
+  }
 
-    readonly TargetFrameworks: string;
-
-    readonly RuntimeIdentifier: string;
-
-    readonly RuntimeIdentifiers: string;
+  /**
+   * https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifiers
+   * > The `RuntimeIdentifiers` property lets you specify a
+   * > semicolon-delimited list of runtime identifiers (RIDs) for the project.
+   * > Use this property if you need to publish for multiple runtimes.
+   * > `RuntimeIdentifiers` is used at restore time to ensure the right assets
+   * > are in the graph.
+   * @see
+   * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
+   */
+  get RuntimeIdentifiers(): string {
+    return this._runtimeIdentifiers ??= "";
+  }
 }
+
+const MPP = MSBuildProjectProperties;
