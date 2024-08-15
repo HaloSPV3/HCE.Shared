@@ -5,6 +5,7 @@ import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
 import { NugetProjectProperties } from './NugetProjectProperties.js';
 import { type } from "arktype";
+import { getOwnPropertyDescriptors } from '../utils/reflection.js';
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
@@ -279,7 +280,17 @@ export class MSBuildProject {
 			.map(v =>
 				new MSBuildProject(
 					join(v.parentPath, v.name),
-					Object.keys(NugetProperties..NugetProperties)
+					getOwnPropertyDescriptors(
+						NugetProjectProperties,
+						true,
+						true
+					).map(
+						o => Object.entries(o)
+					).flat().filter(
+						e => typeof e[1].get === 'function' && e[0] !== '__protot__'
+					).map(
+						v => v[0]
+					)
 				)
 			);
 		return projects;
