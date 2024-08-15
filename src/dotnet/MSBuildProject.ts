@@ -3,12 +3,13 @@ import { exec } from 'node:child_process'
 import { type Dirent } from 'node:fs'
 import { readdir, realpath, stat } from 'node:fs/promises'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
+import { promisify } from 'node:util'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
 import { getOwnPropertyDescriptors } from '../utils/reflection.js'
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
 import { NugetProjectProperties } from './NugetProjectProperties.js'
 
-const execAsync = exec.__promisify__
+const execAsync = promisify(exec)
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
