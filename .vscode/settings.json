@@ -31,6 +31,9 @@
 		"tseslint",
 		"tsout"
 	],
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
 	"files.readonlyInclude": {
 		"_tsout/**": true,
 		"node_modules/**": true,
