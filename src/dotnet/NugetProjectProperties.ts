@@ -3,6 +3,7 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 import { strictEqual } from 'assert';
 import { type } from 'arktype';
 import { isOfType, tBooleanString, type BooleanString, tEmptyOrBooleanString, type EmptyOrBooleanString } from '../utils/miscTypes.js';
+import { listOwnGetters } from '../utils/reflection.js';
 
 /**
  * A readonly record of a .csproj or .fsproj with NuGet configuration properties in
@@ -67,7 +68,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
         strictEqual([...properties.values()].every(v => typeof v === "string"), true, "all values in arg 'properties' should be strings");
 
         // keys of properties to consume in this constructor, not super. These are the names of getters, lowercased.
-        const keysToMoveOut = NPP.listGetters(NPP)
+        const keysToMoveOut = listOwnGetters(NPP)
             .map(v => v.toLowerCase());
         const consumables = new CaseInsensitiveMap<string, string>();
         // move property by key from properties to consumables
