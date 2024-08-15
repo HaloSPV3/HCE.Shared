@@ -214,7 +214,7 @@ export class MSBuildProject {
   static async getTargets(projectPath: string, includeNonPublic = false): Promise<string[]> {
     return execAsync(`dotnet msbuild ${projectPath} -targets`,
     ).then((v) => {
-      const targets = v.stdout.split('\n').map(v => v.replace('\r', ''))
+      const targets = v.stdout.split('\n').filter((v, index) => v !== '' && index !== 0).map(v => v.replace('\r', '')).sort()
       if (includeNonPublic)
         return targets
       return targets.filter(v => !v.startsWith('_'))
