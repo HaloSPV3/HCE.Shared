@@ -122,7 +122,7 @@ class EvaluationOptions {
 	)
 
 	constructor(opts: typeof EvaluationOptions.t.infer) {
-		opts = EvaluationOptions.t.assert(opts);
+		opts = EvaluationOptions.t.from(opts);
 		this.FullName = opts.FullName;
 		this.Properties = opts.SetProperties;
 		this.GetItem = opts.GetItems;
