@@ -2,7 +2,6 @@ import { type } from 'arktype'
 import { exec } from 'node:child_process'
 import { type Dirent } from 'node:fs'
 import { readdir, realpath, stat } from 'node:fs/promises'
-import { EOL } from 'node:os'
 import { dirname, isAbsolute, join, resolve } from 'node:path'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
 import { getOwnPropertyDescriptors } from '../utils/reflection.js'
@@ -225,7 +224,7 @@ export class MSBuildProject {
    * Evaluate {@link Items}, {@link Properties}, and {@link TargetResults},
    * returning them as an instance of {@link MSBuildProject}.\
    */
-  public static async Evaluate(options: EvaluationOptions): Promise<MSBuildProject> {
+  public static async Evaluate(options: EvaluationOptions, projTargets?: string[]): Promise<MSBuildProject> {
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName)
     const _pairs = Object.entries(options.Properties)
@@ -238,7 +237,6 @@ export class MSBuildProject {
     const getTargetResult = options.GetTargetResults.length === 0 ? '' : `"-getTargetResult:${options.GetTargetResults.join()}"`
     const cmdLine = ['dotnet', 'msbuild', property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
     const stdPair = await execAsync(cmdLine)
-    const projTargets = (await execAsync(`dotnet msbuild "${options.FullName}" "-targets"`)).stdout.split(EOL).sort()
     const evaluation = new MSBuildEvaluationOutput(
       stdPair.stdout.startsWith('{')
         ? JSON.parse(stdPair.stdout)
@@ -250,7 +248,7 @@ export class MSBuildProject {
     )
     return new MSBuildProject({
       fullPath: options.FullName,
-      projTargets,
+      projTargets: projTargets ?? await MSBuildProject.getTargets(options.FullName),
       evaluation,
     })
   }
@@ -294,7 +292,7 @@ export class MSBuildProject {
         .then(direntArr =>
           direntArr.map(async (dirent): Promise<MSBuildProject> => {
             const fullPath = join(dirent.parentPath, dirent.name)
-            const projTargets: Promise<string[]> = MSBuildProject.getTargets(fullPath, false)
+            const projTargets: Promise<string[]> = MSBuildProject.getTargets(fullPath)
             // this might be too long for a command line. What was is on Windows?
             // 2^15 (32,768) character limit for command lines?
             const getProperties = getOwnPropertyDescriptors(
@@ -317,6 +315,7 @@ export class MSBuildProject {
                   Target: await projTargets.then(v => v.includes('Pack') ? ['Pack'] : []),
                 },
               ),
+              await projTargets,
             )
           }),
         ),
