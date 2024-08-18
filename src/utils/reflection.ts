@@ -194,15 +194,22 @@ export function getFunctionPrototype(obj: unknown): object | undefined {
 
 /**
  * A very jank function to determine if an object can be the target of Reflect.construct.
+ * Unfortunately, many functions have a constructor in their prototype. These
+ * functions are treated like classes due to JavaScript's poor distinction between
+ * classes and functions.\
+ * Typescript can enforce "new" keyword usage, but overriding the type
+ * allows you to `new isConstructor()` despite this function not intended to be
+ * used with the `new` keyword.
  * @param obj
  * @returns
  */
-export function isConstructor<T>(obj: T): obj is T & ConstructorLike<T> {
+export function isConstructor<T>(obj: T, ...args: Args): obj is T & ConstructorLike<T> {
   if (typeof obj !== 'function')
     return false
   try {
-    Reflect.construct<Args, T>(obj as new (...args: Args) => T, Object.freeze([]) as Readonly<Args>)
-    return true
+    const _retVal0 = Reflect.construct<Args, T>(obj as new (...args: Args) => T, args ?? Object.freeze([]) as Readonly<Args>)
+    const retVal1 = new (obj as new (...args: Args) => T)()
+    return _retVal0 !== undefined && retVal1 !== undefined
   }
   catch (e) {
     if (e instanceof TypeError && e.name === 'TypeError' && e.message.endsWith(' is not a constructor'))
