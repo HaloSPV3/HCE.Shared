@@ -1,3 +1,5 @@
+import _debug from '../debug.js'
+
 /**
  * Returns the names of the non-static, not-inherited getters derived from the
  * given prototype or prototype of the given object.
@@ -51,6 +53,16 @@ export function getOwnPropertyDescriptors(classDef: ConstructorLike<unknown>, in
   let parent: object | null
   const descriptors: ReturnType<typeof Object.getOwnPropertyDescriptors>[] = []
 
+  // variables for debugging
+  let nameInCurrent: boolean | undefined = undefined
+  let currentNameIsString: boolean | undefined = undefined
+  let currentNameDescIsNotUndefined: boolean | undefined = undefined
+  let currentNameDescIsNotWritable: boolean | undefined = undefined
+  let currentNameDescIsNotEnumerable: boolean | undefined = undefined
+  let currentNameIsNotEmpty: boolean | undefined = undefined
+  let parentIsNotNull: boolean | undefined = undefined
+  let parentIsConstructor: boolean | undefined = undefined
+
   if (instanceProps) {
     if (!recurse) {
       descriptors.push(Object.getOwnPropertyDescriptors(current.prototype))
@@ -66,16 +78,32 @@ export function getOwnPropertyDescriptors(classDef: ConstructorLike<unknown>, in
      * - parent is a constructor function (or class definition)
      */
     while (
-      'name' in current
-      && typeof current.name === 'string'
-      && (currentNameDesc = Reflect.getOwnPropertyDescriptor(current, 'name')) !== undefined
-      && currentNameDesc.writable === false
-      && currentNameDesc.enumerable === false
-      && current.name !== ''
-      && (parent = Reflect.getPrototypeOf(current)) !== null
-      && isConstructor(parent)) {
+      (nameInCurrent = 'name' in current)
+      && (currentNameIsString = typeof current.name === 'string')
+      && (currentNameDescIsNotUndefined = (currentNameDesc = Reflect.getOwnPropertyDescriptor(current, 'name')) !== undefined)
+      && (currentNameDescIsNotWritable = currentNameDesc.writable === false)
+      && (currentNameDescIsNotEnumerable = currentNameDesc.enumerable === false)
+      && (currentNameIsNotEmpty = current.name !== '')) {
       descriptors.push(Object.getOwnPropertyDescriptors(current.prototype))
-      current = parent
+      if (
+        (parentIsNotNull = (parent = Reflect.getPrototypeOf(current)) !== null)
+        && (parentIsConstructor = isConstructor(parent))) {
+        current = parent
+      }
+      else {
+        if (_debug.enabled) {
+          const message = `${nameInCurrent},
+        ${currentNameIsString},
+        ${currentNameDescIsNotUndefined},
+        ${currentNameDescIsNotWritable},
+        ${currentNameDescIsNotEnumerable},
+        ${currentNameIsNotEmpty},
+        ${parentIsNotNull},
+        ${parentIsConstructor}`
+          _debug.log(message)
+        }
+        break
+      }
     }
     return descriptors
   }
@@ -83,16 +111,32 @@ export function getOwnPropertyDescriptors(classDef: ConstructorLike<unknown>, in
   if (!recurse)
     return [Object.getOwnPropertyDescriptors(classDef)]
   while (
-    'name' in current
-    && typeof current.name === 'string'
-    && (currentNameDesc = Reflect.getOwnPropertyDescriptor(current, 'name')) !== undefined
-    && currentNameDesc.writable === false
-    && currentNameDesc.enumerable === false
-    && current.name !== ''
-    && (parent = Reflect.getPrototypeOf(current)) !== null
-    && isConstructor(parent)) {
-    descriptors.push(Object.getOwnPropertyDescriptors(current)) // only difference to above WHILE is the the lack of prototype
-    current = parent
+    (nameInCurrent = 'name' in current)
+    && (currentNameIsString = typeof current.name === 'string')
+    && (currentNameDescIsNotUndefined = (currentNameDesc = Reflect.getOwnPropertyDescriptor(current, 'name')) !== undefined)
+    && (currentNameDescIsNotWritable = currentNameDesc.writable === false)
+    && (currentNameDescIsNotEnumerable = currentNameDesc.enumerable === false)
+    && (currentNameIsNotEmpty = current.name !== '')) {
+    descriptors.push(Object.getOwnPropertyDescriptors(current))
+    if (
+      (parentIsNotNull = (parent = Reflect.getPrototypeOf(current)) !== null)
+      && (parentIsConstructor = isConstructor(parent))) {
+      current = parent
+    }
+    else {
+      if (_debug.enabled) {
+        const message = `${nameInCurrent},
+        ${currentNameIsString},
+        ${currentNameDescIsNotUndefined},
+        ${currentNameDescIsNotWritable},
+        ${currentNameDescIsNotEnumerable},
+        ${currentNameIsNotEmpty},
+        ${parentIsNotNull},
+        ${parentIsConstructor}`
+        _debug.log(message)
+      }
+      break
+    }
   }
   return descriptors
 }
