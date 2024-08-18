@@ -152,21 +152,22 @@ export function getPrototypes(classDef: ConstructorLike<unknown>) {
   let parent: object | null
   let prototypeOfCurrent
   while (
-    (null !== (parent = Reflect.getPrototypeOf(current)))
-    && isConstructor(parent)
-    && '' !== parent.name
-    && undefined !== (prototypeOfCurrent = getFunctionPrototype(current))
+    undefined !== (prototypeOfCurrent = getFunctionPrototype(current))
   ) {
     // assume current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
-    if (prototypeOfCurrent !== undefined)
-      prototypes.push(prototypeOfCurrent)
+    prototypes.push(prototypeOfCurrent)
     /*
      * Assign the super class to current.
      * If the argument is a class, Object.getPrototypeOf method returns the
      * superclass.
      */
-    if (parent !== undefined)
+    if (
+      (null !== (parent = Reflect.getPrototypeOf(current)))
+      && isConstructor(parent)
+      && '' !== parent.name
+      && parent !== undefined)
       current = parent
+    else { break }
   }
   return prototypes
   /*
