@@ -23,7 +23,7 @@ await describe('NugetProjectProperties', async (c0) => {
     ok('prototype' in NPP)
   })
 
-  const emptyMap = new CaseInsensitiveMap<string, string>();
+  const emptyMap = new CaseInsensitiveMap<string, string>()
   const npp = new NPP('', emptyMap)
 
   await describe('AssemblyName', async () => {
