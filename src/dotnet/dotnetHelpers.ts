@@ -21,7 +21,7 @@ export function configurePrepareCmd(
   dotnetNugetSignArgs: string[] = ['./publish'],
 ): string {
   // These are later evaluated with MSBuild, but are passed via --framework and --runtime arguments instead of -p:TargetFramework
-  const publishProperties = MSBuildProject.MatrixProperties
+  const publishProperties = [...MSBuildProject.MatrixProperties]
 
   return [
     formatDotnetPublish(projectsToPublish, publishProperties),
