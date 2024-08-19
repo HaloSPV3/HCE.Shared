@@ -40,10 +40,6 @@ export function configurePrepareCmd(
     if (!Array.isArray(projectsToPublish) || projectsToPublish.length === 0)
       throw new Error(`Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] where length > 0.`)
 
-    // each may have TargetFramework OR TargetFrameworks (plural)
-    const evaluatedProjects: MSBuildProject[] = projectsToPublish.map(
-      proj => new MSBuildProject(proj, publishProperties),
-    )
     // args appended to "dotnet publish", joined by space
 
     function appendCustomProperties(args: string[], proj: MSBuildProject, publishProperties: string[]): void {
@@ -58,6 +54,12 @@ export function configurePrepareCmd(
         )
       }
     }
+
+    // each may have TargetFramework OR TargetFrameworks (plural)
+    const evaluatedProjects: MSBuildProject[] = projectsToPublish.map(
+      proj => new MSBuildProject(proj, publishProperties),
+    )
+
     return evaluatedProjects.flatMap(async (proj) => {
       const props = await proj.Properties
       const args: string[] = [props.MSBuildProjectFullPath]
