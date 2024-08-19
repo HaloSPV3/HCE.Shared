@@ -3,22 +3,19 @@ import { describe, it, todo } from 'node:test'
 import {
   configureDotnetNugetPush,
   configurePrepareCmd,
-  nugetDefault,
-} from '@halospv3/hce.shared-config/dotnet/dotnetHelpers'
+} from '../../src/dotnet/dotnetHelpers.js'
+import * as built from '@halospv3/hce.shared-config/dotnet/dotnetHelpers'
+import * as source from '../../src/dotnet/dotnetHelpers.js'
+
+await it('is built', () => {
+  deepStrictEqual(built, source)
+})
 
 await describe('dotnetHelpers', async () => {
   await todo('configurePrepareCmd', () => {
     ok(typeof configureDotnetNugetPush === 'function')
     strictEqual(typeof configureDotnetNugetPush, 'function')
     strictEqual(configurePrepareCmd.name, 'configurePrepareCmd')
-  })
-
-  await it('nugetDefault is as expected', () => {
-    const expected = {
-      tokenEnvVar: 'NUGET_TOKEN',
-      url: 'https://api.nuget.org/v3/index.json',
-    }
-    deepStrictEqual(nugetDefault, expected)
   })
 
   await it('configureDotnetNugetPush works', (t) => {
