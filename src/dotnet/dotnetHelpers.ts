@@ -66,37 +66,33 @@ export function configurePrepareCmd(
 
       const cmdPermutations: string[][] = [] // forEach, run dotnet [...args,...v]
 
-      function formatFrameworksAndRuntimes() {
-        const RIDs: string[]
-          = props.RuntimeIdentifiers.length > 0
-            ? props.RuntimeIdentifiers.split(';')
-            : []
-        const TFMs: string[]
-          = props.TargetFrameworks.length > 0
-            ? props.TargetFrameworks.split(';')
-            : []
-        if (RIDs.length > 0) {
-          if (TFMs.length > 0) {
-            for (const RID of RIDs) {
-              for (const TFM of TFMs) {
-                cmdPermutations.push(['--runtime', RID, '--framework', TFM])
-              }
-            }
-          }
-          else {
-            // assume singular TFM. No need to specify it.
-            for (const RID of RIDs) {
-              cmdPermutations.push(['--runtime', RID])
+      /** formatFrameworksAndRuntimes */
+      const RIDs: string[] = props.RuntimeIdentifiers.length > 0
+        ? props.RuntimeIdentifiers.split(';')
+        : []
+      const TFMs: string[] = props.TargetFrameworks.length > 0
+        ? props.TargetFrameworks.split(';')
+        : []
+      if (RIDs.length > 0) {
+        if (TFMs.length > 0) {
+          for (const RID of RIDs) {
+            for (const TFM of TFMs) {
+              cmdPermutations.push(['--runtime', RID, '--framework', TFM])
             }
           }
         }
-        else if (TFMs.length > 0) {
-          for (const TFM of TFMs) {
-            cmdPermutations.push(['--framework', TFM])
+        else {
+          // assume singular TFM. No need to specify it.
+          for (const RID of RIDs) {
+            cmdPermutations.push(['--runtime', RID])
           }
         }
       }
-      formatFrameworksAndRuntimes()
+      else if (TFMs.length > 0) {
+        for (const TFM of TFMs) {
+          cmdPermutations.push(['--framework', TFM])
+        }
+      }
 
       return cmdPermutations.length > 0
         ? cmdPermutations.map(permArgs => [...args, ...permArgs]) // string[][]
