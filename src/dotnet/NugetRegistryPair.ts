@@ -2,6 +2,10 @@
 import { ok } from 'node:assert'
 import { getEnvVarValue } from '../envUtils.js'
 import { NugetRegistryInfo } from './NugetRegistryInfo.js'
+import { type } from 'arktype'
+
+const tString = type('string')
+const tOptionalString = type('string | undefined')
 
 /**
  * A simple record-like class with optional 'user' property for user-password authentication.
@@ -9,9 +13,9 @@ import { NugetRegistryInfo } from './NugetRegistryInfo.js'
  */
 export class NugetRegistryPair {
   constructor(tokenEnvVar: string, url: string, user?: string) {
-    this.tokenEnvVar = tokenEnvVar
-    this.url = url
-    this.user = user
+    this.tokenEnvVar = tString.assert(tokenEnvVar)
+    this.url = tString.assert(url)
+    this.user = tOptionalString.assert(user)
   }
 
   readonly tokenEnvVar: string
