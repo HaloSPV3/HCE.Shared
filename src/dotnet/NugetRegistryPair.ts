@@ -28,5 +28,11 @@ export class NugetRegistryPair {
     ok(getEnvVarValue('SKIP_TOKEN') === 'true' || tokenValue, `The environment variable ${this.tokenEnvVar} is undefined!`)
     return `dotnet nuget push ${packageOutputPath} --source ${this.url} --token ${tokenValue ?? '**placeholder**'}`
   }
+
+  /** alias for {@link NugetRegistryInfo.toRegistryPair} */
+  static async fromNugetRegistryInfoAsync(o: NugetRegistryInfo) {
+    ok(o instanceof NugetRegistryInfo)
+    return await o.toRegistryPair()
+  }
 }
 export const nugetDefault = new NugetRegistryPair('NUGET_TOKEN', 'https://api.nuget.org/v3/index.json')
