@@ -1,8 +1,7 @@
-import { ok } from 'node:assert/strict'
-import { getEnvVarValue } from '../envUtils.js'
 import { MSBuildProject } from './MSBuildProject.js'
 import { GithubNugetRegistryInfo } from './GithubNugetRegistryInfo.js'
 import { GitlabNugetRegistryInfo } from './GitlabNugetRegistryInfo.js'
+import { nugetDefault, NugetRegistryPair } from './NugetRegistryPair.js'
 
 /** args appended to "dotnet publish", joined by space */
 function appendCustomProperties(args: string[], proj: MSBuildProject, publishProperties: string[]): void {
@@ -140,37 +139,6 @@ export function configurePrepareCmd(
     }
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { NugetRegistryInfo } from './NugetRegistryInfo.js'
-
-/**
- * A simple record-like class with optional 'user' property for user-password authentication.
- * Input of {@link configureDotnetNugetPush} and output of {@link NugetRegistryInfo.prototype.toRegistryPair}.
- */
-export class NugetRegistryPair {
-  public constructor(tokenEnvVar: string, url: string, user?: string) {
-    this.tokenEnvVar = tokenEnvVar
-    this.url = url
-    this.user = user
-  }
-
-  public readonly tokenEnvVar: string
-  public readonly url: string
-  public readonly user?: string | undefined
-
-  /**
-   * convert this class to a `dotnet nuget push command`
-   * @param packageOutputPath
-   * @returns command
-   */
-  public toCommand(packageOutputPath: string): string {
-    const tokenValue = getEnvVarValue(this.tokenEnvVar)
-    ok(getEnvVarValue('SKIP_TOKEN') === 'true' || tokenValue, `The environment variable ${this.tokenEnvVar} is undefined!`)
-    return `dotnet nuget push ${packageOutputPath} --source ${this.url} --token ${tokenValue ?? '**placeholder**'}`
-  }
-}
-export const nugetDefault = new NugetRegistryPair('NUGET_TOKEN', 'https://api.nuget.org/v3/index.json')
 
 /**
  * todo - split into separate functions. Token verification should be in verifyConditionsCmd. Each package may be signed individually.
