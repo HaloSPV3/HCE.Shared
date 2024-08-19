@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 import { promisify } from "node:util";
 import { dir, type DirResult, setGracefulCleanup } from "tmp";
 import { getEnvVarValue } from "../envUtils.js";
-import type { NugetRegistryPair } from "./dotnetHelpers.js";
+import { NugetRegistryPair } from './NugetRegistryPair.js';
 import { fileURLToPath } from 'node:url';
 
 const execAsync = promisify(exec);
@@ -263,12 +263,9 @@ export class NugetRegistryInfo {
      * @returns the name of the variable containing the token value and the url to which nupkgs and snupkgs are pushed
      */
     async toRegistryPair(): Promise<NugetRegistryPair> {
-        return await this.canPushPackagesToUrl.then(() => {
-            return {
-                tokenEnvVar: this.resolvedEnvVariable,
-                url: this.url
-            };
-        });
+        return await this.canPushPackagesToUrl.then(() =>
+            new NugetRegistryPair(this.resolvedEnvVariable, this.url),
+        )
     }
 
     /**
