@@ -1,4 +1,4 @@
-import { appendPlugins, getConfig, insertAndEditPlugins } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet';
+import { getConfig, insertAndEditPlugins } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet';
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert';
 import { unlinkSync, writeFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
