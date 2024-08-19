@@ -4,6 +4,20 @@ import { MSBuildProject } from './MSBuildProject.js'
 import { GithubNugetRegistryInfo } from './GithubNugetRegistryInfo.js'
 import { GitlabNugetRegistryInfo } from './GitlabNugetRegistryInfo.js'
 
+/** args appended to "dotnet publish", joined by space */
+function appendCustomProperties(args: string[], proj: MSBuildProject, publishProperties: string[]): void {
+  // convert to dictionary and filter for user-defined properties.
+  const dictionary = Object.entries(proj.Properties).filter(
+    p => !publishProperties.includes(p[0]),
+  )
+  if (dictionary.length > 0) {
+    /* format remaining properties as "-p:Property=Value" and append to args */
+    args.push(
+      ...dictionary.map(keyValuePair => `-p:${keyValuePair[0]}=${keyValuePair[1]}`),
+    )
+  }
+}
+
 /**
  * Build a prepareCmd string from .NET project paths and `dotnet nuget sign` arguments.
  *
@@ -39,21 +53,6 @@ export function configurePrepareCmd(
     */
     if (!Array.isArray(projectsToPublish) || projectsToPublish.length === 0)
       throw new Error(`Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] where length > 0.`)
-
-    // args appended to "dotnet publish", joined by space
-
-    function appendCustomProperties(args: string[], proj: MSBuildProject, publishProperties: string[]): void {
-      // convert to dictionary and filter for user-defined properties.
-      const dictionary = Object.entries(proj.Properties).filter(
-        p => !publishProperties.includes(p[0]),
-      )
-      if (dictionary.length > 0) {
-        /* format remaining properties as "-p:Property=Value" and append to args */
-        args.push(
-          ...dictionary.map(keyValuePair => `-p:${keyValuePair[0]}=${keyValuePair[1]}`),
-        )
-      }
-    }
 
     // each may have TargetFramework OR TargetFrameworks (plural)
     const evaluatedProjects: MSBuildProject[] = projectsToPublish.map(
