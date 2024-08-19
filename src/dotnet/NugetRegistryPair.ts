@@ -8,22 +8,22 @@ import { NugetRegistryInfo } from './NugetRegistryInfo.js'
  * Input of {@link configureDotnetNugetPush} and output of {@link NugetRegistryInfo.prototype.toRegistryPair}.
  */
 export class NugetRegistryPair {
-  public constructor(tokenEnvVar: string, url: string, user?: string) {
+  constructor(tokenEnvVar: string, url: string, user?: string) {
     this.tokenEnvVar = tokenEnvVar
     this.url = url
     this.user = user
   }
 
-  public readonly tokenEnvVar: string
-  public readonly url: string
-  public readonly user?: string | undefined
+  readonly tokenEnvVar: string
+  readonly url: string
+  readonly user?: string | undefined
 
   /**
    * convert this class to a `dotnet nuget push command`
    * @param packageOutputPath
    * @returns command
    */
-  public toCommand(packageOutputPath: string): string {
+  toCommand(packageOutputPath: string): string {
     const tokenValue = getEnvVarValue(this.tokenEnvVar)
     ok(getEnvVarValue('SKIP_TOKEN') === 'true' || tokenValue, `The environment variable ${this.tokenEnvVar} is undefined!`)
     return `dotnet nuget push ${packageOutputPath} --source ${this.url} --token ${tokenValue ?? '**placeholder**'}`
