@@ -250,6 +250,12 @@ export class NugetRegistryInfo {
     return this.#canPushPackagesToUrl = finalResult
   }
 
+  /**
+   * The first environment variable found to have a defined value.
+   *
+   * @readonly
+   * @type {string}
+   */
   readonly resolvedEnvVariable: string
   readonly url: string
 
