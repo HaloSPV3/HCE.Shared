@@ -35,4 +35,10 @@ export class NugetRegistryPair {
     return await o.toRegistryPair()
   }
 }
+
+/**
+ * @remarks (BinToss) I've considered moving or renaming this several times, but
+ * I've never had a good enough reason to commit to it. Module-scope is
+ * convenient and the current name is more succinct than "defaultNugetPair".
+ */
 export const nugetDefault = new NugetRegistryPair('NUGET_TOKEN', 'https://api.nuget.org/v3/index.json')
