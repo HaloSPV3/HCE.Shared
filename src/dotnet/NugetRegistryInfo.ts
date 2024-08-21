@@ -29,7 +29,14 @@ export class NugetRegistryInfo {
     // this.canPushPackagesToUrl;
   }
 
-  private static async pushDummyAsync(url: string, tokenValue: string) {
+  /**
+   * Execute `dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key ${tokenValue} --skip-duplicate`
+   * @param url The URL of the NuGet Source's API endpoint.
+   * @param tokenValue The value of the api key retrieved from the Environment variables.
+   * @returns The STDOUT and STDERR of the command.
+   * @remark This should run at the beginning of Semantic Release's `prepare` step.
+   */
+  private static async pushDummyAsync(url: string, tokenValue: string): Promise<{ stdout: string, stderr: string }> {
     const dummyNupkgPath = await getDummyNupkgAsync()
     const pushResult = await execAsync(`dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key ${tokenValue} --skip-duplicate`,
       { encoding: 'utf8' },
