@@ -30,11 +30,21 @@ export class NugetRegistryInfo {
   }
 
   /**
-   * Execute `dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key ${tokenValue} --skip-duplicate`
+   * Execute `dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key
+   * ${tokenValue} --skip-duplicate`
    * @param url The URL of the NuGet Source's API endpoint.
-   * @param tokenValue The value of the api key retrieved from the Environment variables.
+   * @param tokenValue The value of the api key retrieved from the Environment
+   * variables.
    * @returns The STDOUT and STDERR of the command.
-   * @remark This should run at the beginning of Semantic Release's `prepare` step.
+   * @remark This should run at the beginning of Semantic Release's `prepare`
+   * step.
+   * @deprecated Pushing a generic DUMMY package will not work with NuGet.org.
+   * To improve upon this, we need the actual package ID **and**  the actual
+   * package with its version set to 0.0.1-DUMMY. This will allow the NuGet
+   * Source to perform the authorization check on the actual package ID and
+   * verify the actual package is in good shape. HOWEVER, this also means a
+   * successful release will push a package two a source *twice*—once with the
+   * dummy version and again with nextVersion.
    */
   private static async pushDummyAsync(url: string, tokenValue: string): Promise<{ stdout: string, stderr: string }> {
     const dummyNupkgPath = await getDummyNupkgAsync()
