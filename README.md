@@ -4,6 +4,9 @@ Infrastructure resources shared with other HaloSPV3 repositories.
 
 It is recommended to "install" this repo via [Node Package Manager](#npm)
 
+**NOTE**
+HCE.Shared's API offers convenience and flexibility not present in similar .NET/NuGet-publishing NPM packages, but this project is incredibly messy. You'll find many traces of scrapped or unfinished ideas in the form of both documentation and code.
+
 ## Usage
 
 ### 1. Install `@halospv3/hce.shared-config`
