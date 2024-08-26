@@ -11,10 +11,6 @@ await describe('NugetProjectProperties', async (c0) => {
   await it('exists', () => {
     ok(NPP)
   })
-  await it('is exposed', async () => {
-    const exposed = await import('@halospv3/hce.shared-config/dotnet/NugetProjectProperties')
-    ok(exposed)
-  })
   await it('is built', async () => {
     const exposed = await import('@halospv3/hce.shared-config/dotnet/NugetProjectProperties')
     deepStrictEqual(NPP, exposed)
