@@ -9,25 +9,56 @@ import { dir, type DirResult, setGracefulCleanup } from 'tmp'
 import { getEnvVarValue } from '../envUtils.js'
 import { NugetRegistryPair } from './NugetRegistryPair.js'
 import { fileURLToPath } from 'node:url'
+import type { MSBuildProject } from './MSBuildProject.js'
 
 const execAsync = promisify(exec)
 
 export class NugetRegistryInfo {
   #canPushPackagesToUrl: Promise<true> | undefined = undefined
 
+  public static readonly DefaultTokenEnvVars: readonly ['NUGET_TOKEN'] = Object.freeze(
+    ['NUGET_TOKEN'] as const,
+  )
+
   /**
-     * Creates an instance of NugetRegistryInfo.
-     * @constructor
-     * @param {string} [url="https://api.nuget.org/v3/index.json"] A NuGet package registry's API URL. Default: https://api.nuget.org/v3/index.json
-     * @param {string} [tokenEnvVar="NUGET_TOKEN"] The environment variable whose value is a token with permission to push a package to the NuGet package registry. If the environment variable doesn't exist, this constructor will throw an Error. Default: NUGET_TOKEN
-     * @param {string[]} [fallbackEnvVars=[]] Additional environment variables to check if {@link tokenEnvVar} is not found by {@link getEnvVarValue}
-     */
-  constructor(url = 'https://api.nuget.org/v3/index.json', tokenEnvVar = 'NUGET_TOKEN', fallbackEnvVars: string[] = []) {
+   * Creates an instance of NugetRegistryInfo.\
+   * This class enables the ability to push a given {@link project}'s
+   * package(s) to the {@link url} of a given NuGet Source's API endpoint with
+   * a user-defined API key. This API key, herein referred to as a "token", is
+   * derived from the {@link tokenEnvVars} array. This array is iterated through
+   * until one of the items is discovered to be an existing environment variable
+   * (or is defined in a file named '.env' in the current working directory for
+   * LOCAL TESTING ONLY! Do NOT `git add` your private keys!).
+   * \
+   * WARNING:
+   * - The token value is stored privately within this class, but it is plain text.
+   * - This private key may be copied to command line strings stored in Semantic
+   *   Release's config object for later use by `@semantic-release/exec`.
+   * - Other EcmaScript modules can access the environment variable(s) and steal
+   *   your key. Be aware of malicious dependencies!
+   * @constructor
+   * @param {string} [url="https://api.nuget.org/v3/index.json"] A NuGet package
+   * registry's API URL. Default: https://api.nuget.org/v3/index.json
+   * @param {string} [tokenEnvVars="NUGET_TOKEN"] The environment variables
+   * whose values are tokens with permission to push a package to the NuGet
+   * package registry. The array is iterated through until one token is found.
+   * If none of the environment variables are defined, this constructor will
+   * throw an {@link Error}.
+   * @param {MSBuildProject} project The project whose package(s) will be
+   * pushed. Its `PackageId` will be read. Its `PackageVersion` will be
+   * overridden via CLI args to create a dummy package. The real package's
+   * `PackageVersion` will *not* be overridden.
+   */
+  constructor(url = 'https://api.nuget.org/v3/index.json', tokenEnvVars: readonly string[] = NugetRegistryInfo.DefaultTokenEnvVars, project: MSBuildProject) {
     this.url = url
     /* get token value - may throw */
-    this.resolvedEnvVariable = NugetRegistryInfo.isTokenDefined(tokenEnvVar, fallbackEnvVars)
+    this.resolvedEnvVariable = NugetRegistryInfo.getTokenValue(tokenEnvVars)
+    this._project = project
     // this.canPushPackagesToUrl;
   }
+
+  private readonly _project: MSBuildProject
+  public get project(): MSBuildProject { return this._project }
 
   /**
    * Execute `dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key
@@ -287,29 +318,30 @@ export class NugetRegistryInfo {
   }
 
   /**
-     *
-     * @param tokenEnvVar The name of the environment variable whose value is a NuGet API key. Defaults to 'NUGET_TOKEN'.
-     * @param fallbacks Additional env vars to check if `tokenEnvVar` is not present.
-     * @returns
-     */
-  protected static isTokenDefined(tokenEnvVar = 'NUGET_TOKEN', fallbacks: string[] = []): string {
-    let token = getEnvVarValue(tokenEnvVar)
-    let errMsg = `The environment variable ${tokenEnvVar} was specified `
-      + `as the source of the token to push a NuGet package to GitHub, `
-      + `but the environment variable does not exist.`
+   * This method is called by NugetRegistryInfo's constructor, but it
+   * should be executed during...\
+   * Semantic Release Step: `verifyConditions`
+   * @param tokenEnvVars The name of the environment variable(s) whose value is a NuGet API key.
+   * @returns The value of the first defined environment variable.
+   * @throws {Error} when none of the provided environment variables are defined.
+   */
+  public static getTokenValue(tokenEnvVars: readonly string[]): string {
+    const tokens: readonly string[] = Object.freeze(
+      tokenEnvVars.map(
+        v => getEnvVarValue(v),
+      ).filter(
+        v => v !== undefined,
+      ),
+    )
 
-    // note: we also check for 'undefined' in case someone mistakenly tried deleting the property by assigning undefined.
-    if (token !== undefined && token !== 'undefined')
-      return tokenEnvVar
-
-    if (fallbacks.length > 0) {
-      for (const envVar of fallbacks) {
-        token = getEnvVarValue(envVar)
-        if (token !== undefined && token !== 'undefined')
-          return envVar
-      }
-      errMsg = errMsg + ` The following fallback variable(s) were also undefined: ${fallbacks.join()}`
+    if (tokens.length === 0) {
+      throw new Error(
+        `\
+The environment variables [${tokenEnvVars.join(', ')}] were specified \
+as the source of the token to push a NuGet package to GitHub, \
+but no tokens were defined.`)
     }
-    throw new Error(errMsg)
+
+    return tokenEnvVars[0]
   }
 }
