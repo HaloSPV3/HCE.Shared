@@ -68,8 +68,9 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         const registryInfo = new NRI(undefined, undefined, MSBuildProject.prototype)
 
         const canPush = await registryInfo.canPushPackagesToUrl.catch((reason) => {
-          const err = reason
-          return (err instanceof Error) ? err : new Error(inspect(err, { depth: Infinity }))
+          return (reason instanceof Error)
+            ? reason
+            : new Error(inspect(reason, { depth: Infinity }))
         })
 
         if (canPush === true)
