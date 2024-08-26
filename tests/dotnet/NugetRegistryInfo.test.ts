@@ -1,4 +1,4 @@
-import { NugetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'
+import { NugetRegistryInfo as NRI } from '@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'
 import { nugetDefault } from '@halospv3/hce.shared-config/dotnet/dotnetHelpers'
 import { getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 import { notDeepStrictEqual } from 'node:assert'
@@ -9,11 +9,11 @@ import { inspect } from 'node:util'
 await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is a class', async () => {
     // bullshit, but that's how classes are implemented
-    deepStrictEqual(typeof NugetRegistryInfo, 'function')
+    deepStrictEqual(typeof NRI, 'function')
   })
 
   await it('has expected name', async () => {
-    deepStrictEqual(NugetRegistryInfo.name, ctx0.name)
+    deepStrictEqual(NRI.name, ctx0.name)
   })
 
   await describe('an instance of NugetRegistryInfo', async () => {
@@ -22,7 +22,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     await it('defaults url to expected value', async () => {
       process.env.NUGET_TOKEN ??= predefinedToken ?? 'placeholder'
 
-      strictEqual(new NugetRegistryInfo().url, 'https://api.nuget.org/v3/index.json')
+      strictEqual(new NRI().url, 'https://api.nuget.org/v3/index.json')
 
       if (predefinedToken)
         process.env.NUGET_TOKEN = predefinedToken
@@ -32,13 +32,13 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
     await it('assigns first argument to url', async () => {
       process.env.NUGET_TOKEN ??= 'placeholder'
-      strictEqual(new NugetRegistryInfo('').url, '')
+      strictEqual(new NRI('').url, '')
     })
 
     await describe('canPushPackagesToUrl', async () => {
       await it('rejects promise if token invalid', async () => {
         process.env.INVALID_TOKEN = 'placeholder'
-        const value = await new NugetRegistryInfo(nugetDefault.url, 'INVALID_TOKEN')
+        const value = await new NRI(nugetDefault.url, 'INVALID_TOKEN')
           .canPushPackagesToUrl
           .catch(async reason =>
             reason instanceof Error ? reason : new Error(String(reason)))
@@ -52,7 +52,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         if (!predefinedToken)
           return t.skip('NUGET_TOKEN environment variable undefined')
 
-        const registryInfo = new NugetRegistryInfo()
+        const registryInfo = new NRI()
 
         const canPush = await registryInfo.canPushPackagesToUrl.catch((reason) => {
           const err = reason
@@ -69,33 +69,33 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
   await describe('canPushPackagesToUrl', (ctx1) => {
     it('exists in NugetRegistryInfo prototype', async () => {
-      strictEqual(ctx1.name in NugetRegistryInfo.prototype, true)
+      strictEqual(ctx1.name in NRI.prototype, true)
     })
 
     it('returns Promise<true>', async () => {
-      const x = await (Promise.resolve(true) as typeof NugetRegistryInfo.prototype.canPushPackagesToUrl)
+      const x = await (Promise.resolve(true) as typeof NRI.prototype.canPushPackagesToUrl)
       strictEqual(x, true)
     })
   })
 
   await describe('resolvedEnvVariable', async () => {
     await it('is undefined if not initialized', async () => {
-      strictEqual(typeof NugetRegistryInfo.prototype.resolvedEnvVariable, 'undefined')
+      strictEqual(typeof NRI.prototype.resolvedEnvVariable, 'undefined')
     })
 
     await it('can be a string', async () => {
-      const x = { resolvedEnvVariable: '' } as NugetRegistryInfo
+      const x = { resolvedEnvVariable: '' } as NRI
       strictEqual(typeof x.resolvedEnvVariable, 'string')
     })
   })
 
   await describe('toRegistryPair', async (ctx1) => {
     await it('exists in NugetRegistryInfo prototype', async () => {
-      strictEqual(ctx1.name in NugetRegistryInfo.prototype, true)
+      strictEqual(ctx1.name in NRI.prototype, true)
     })
 
     await it('is a function', async () => {
-      strictEqual(typeof NugetRegistryInfo.prototype.toRegistryPair, 'function')
+      strictEqual(typeof NRI.prototype.toRegistryPair, 'function')
     })
 
     await it('returns Promise<NugetRegistryPair>', async () => {
@@ -103,7 +103,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         tokenEnvVar: '',
         url: '',
         user: '',
-      }) as ReturnType<typeof NugetRegistryInfo.prototype.toRegistryPair>
+      }) as ReturnType<typeof NRI.prototype.toRegistryPair>
 
       deepStrictEqual(
         await x,
@@ -118,8 +118,8 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
   await describe('url', async (ctx1) => {
     await it('undefined in NugetRegistryInfo prototype', async () => {
-      strictEqual(ctx1.name in NugetRegistryInfo.prototype, false)
-      strictEqual(NugetRegistryInfo.prototype.url, undefined)
+      strictEqual(ctx1.name in NRI.prototype, false)
+      strictEqual(NRI.prototype.url, undefined)
     })
 
     // This does not work. It is "any" with a value of "undefined"
