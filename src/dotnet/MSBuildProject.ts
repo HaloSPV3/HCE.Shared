@@ -110,8 +110,8 @@ class MSBuildEvaluationOutput {
   TargetResults?: typeof msbuildEvaluationOutput.infer.TargetResults
 }
 
-class EvaluationOptions {
-  private static t = type(
+export class EvaluationOptions {
+  static t = type(
     {
       FullName: 'string',
       SetProperties: type({ '[string]': 'string' }),
