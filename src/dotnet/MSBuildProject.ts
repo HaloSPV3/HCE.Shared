@@ -111,7 +111,7 @@ class MSBuildEvaluationOutput {
 }
 
 export class EvaluationOptions {
-  static t = type(
+  static readonly t = Object.freeze(type(
     {
       FullName: 'string',
       SetProperties: type({ '[string]': 'string' }),
@@ -120,7 +120,7 @@ export class EvaluationOptions {
       GetProperties: 'string[]',
       GetTargetResults: 'string[]',
     },
-  )
+  ))
 
   constructor(opts: typeof EvaluationOptions.t.infer) {
     opts = EvaluationOptions.t.from(opts)
