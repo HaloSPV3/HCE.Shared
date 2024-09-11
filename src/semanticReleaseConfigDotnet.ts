@@ -109,15 +109,17 @@ export class semanticReleaseConfigDotnet {
     const srExecIndex = this.options.plugins.findIndex(v => v[0] === '@semantic-release/exec')
     const execOptions = this.options.plugins[srExecIndex] as SRExecOptions
 
-    const prepareCmdAppendix = configurePrepareCmd(projectsToPublish, projectsToPackAndPush)
+    const prepareCmdAppendix = await configurePrepareCmd(projectsToPublish, projectsToPackAndPush)
 
     // 'ZipPublishDir' zips each publish folder to ./publish/*.zip
-    execOptions.prepareCmd = execOptions.prepareCmd && execOptions.prepareCmd.length > 0
-      ? execOptions.prepareCmd + ' && ' + prepareCmdAppendix
+    execOptions.prepareCmd = (execOptions.prepareCmd?.length ?? 0) > 0
+      ? `${execOptions.prepareCmd} && ${prepareCmdAppendix}`
       : prepareCmdAppendix
 
     if (projectsToPackAndPush) {
-      const verifyConditionsCmdAppendix = await getTokenTestingCommands()
+      // TODO: this.getTokenTestingCommands
+      // prepend token-testing dry-push commands
+      execOptions.prepareCmd = `${await this.getTokenTestingCommands()} && ${execOptions.prepareCmd}`
 
       const publishCmdAppendix = await configureDotnetNugetPush()
       execOptions.publishCmd = (execOptions.publishCmd && execOptions.publishCmd.length > 0)
