@@ -40,7 +40,9 @@ export async function configurePrepareCmd(
       MSBuildProject.MatrixProperties),
     formatDotnetPack(projectsToPackAndPush),
     formatDotnetNugetSign(dotnetNugetSignArgs),
-  ].join(' && ')
+    // remove no-op commands
+  ].filter(v => v !== undefined)
+    .join(' && ')
 
   async function formatDotnetPublish(projectsToPublish: string[] | MSBuildProject[], publishProperties: readonly string[] | string[]): Promise<string> {
     /* Fun Fact: You can define a property and get the evaluated value in the same command!
