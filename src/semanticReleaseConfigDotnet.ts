@@ -12,7 +12,7 @@
  */
 
 import { inspect } from 'node:util'
-import type { Options, PluginSpec } from 'semantic-release'
+import type { Options } from 'semantic-release'
 import type { Options as SRExecOptions } from '@semantic-release/exec'
 import debug from './debug.js'
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js'
