@@ -16,15 +16,23 @@ function appendCustomProperties(args: string[], proj: MSBuildProject, publishPro
 }
 
 /**
- * Build a prepareCmd string from .NET project paths and `dotnet nuget sign` arguments.
+ * Build a prepareCmd string from .NET projects.\
+ * This will include a `dotnet publish` for each project's RID and TFM permutation,\
+ * `dotnet pack` for each project with output paths separated by NuGet Source and PackageId,\
+ * and `dotnet nuget sign` for each nupkg output directory.
  *
- * todo: parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild). If multi-targeting frameworks and/or runtime, evaluate those properties for Publish permutation matrix.
+ * todo: parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild).
  * todo: cleanup, docs
  * @export
- * @param {string[] | NugetRegistryInfo[]} projectsToPublish
- * @param {string[]|false} projectsToPackAndPush Relative and/or full file paths of projects to pass to `dotnet pack`. By default, these will be output to `./publish/`.
- * @param {string[]|false} projectsToPackAndPush Relative and/or full file paths of projects to pass to `dotnet pack`. By default, these will be output to `./publish/`.
- * @param {string[]} dotnetNugetSignArgs Arguments appended to `dotnet nuget sign`. You can also append '&&' if you want to start a new command or if you want to sign different sets of packages with different keys.
+ * @param {string[] | MSBuildProject[]} projectsToPublish
+ * @param {string[] | NugetRegistryInfo[] | undefined} projectsToPackAndPush
+ *  Relative and/or full file paths of projects to pass to `dotnet pack`.
+ * @param {string[] } [dotnetNugetSignArgs=['./publish']]
+ * Arguments appended to `dotnet nuget sign`. You may append an arbitrary
+ * command by splitting it into arguments e.g.
+ * [..., '&& dotnet nuget sign your/package/path --certificate-path your/cert/path']
+ * This can be used to sign a package with a different key. In fact, any
+ * arbitrary command may be added here.
  */
 export async function configurePrepareCmd(
   projectsToPublish: string[] | MSBuildProject[],
