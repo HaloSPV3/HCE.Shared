@@ -13,22 +13,22 @@ export class CaseInsensitiveMap<T, U> extends Map<T, U> {
 
   override get(key: T): U | undefined {
     if (typeof key === 'string') {
-      key = key.toLowerCase() as T;
+      key = key.toLowerCase() as T
     }
-    return super.get(key);
+    return super.get(key)
   }
 
   override has(key: T): boolean {
     if (typeof key === 'string') {
-      key = key.toLowerCase() as T;
+      key = key.toLowerCase() as T
     }
-    return super.has(key);
+    return super.has(key)
   }
 
   override set(key: T, value: U): this {
     if (typeof key === 'string') {
-      key = key.toLowerCase() as T;
+      key = key.toLowerCase() as T
     }
-    return super.set(key, value);
+    return super.set(key, value)
   }
 }
