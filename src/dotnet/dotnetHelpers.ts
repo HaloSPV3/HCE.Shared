@@ -1,7 +1,5 @@
 import { MSBuildProject } from './MSBuildProject.js'
-import { GithubNugetRegistryInfo } from './GithubNugetRegistryInfo.js'
-import { GitlabNugetRegistryInfo } from './GitlabNugetRegistryInfo.js'
-import { nugetDefault, NugetRegistryPair } from './NugetRegistryPair.js'
+import type { NugetRegistryInfo } from './NugetRegistryInfo.js'
 
 /** args appended to "dotnet publish", joined by space */
 function appendCustomProperties(args: string[], proj: MSBuildProject, publishProperties: string[]): void {
@@ -23,26 +21,28 @@ function appendCustomProperties(args: string[], proj: MSBuildProject, publishPro
  * todo: parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild). If multi-targeting frameworks and/or runtime, evaluate those properties for Publish permutation matrix.
  * todo: cleanup, docs
  * @export
- * @param {string[]} projectsToPublish
+ * @param {string[] | NugetRegistryInfo[]} projectsToPublish
  * @param {string[]|false} projectsToPackAndPush Relative and/or full file paths of projects to pass to `dotnet pack`. By default, these will be output to `./publish/`.
  * @param {string[]|false} projectsToPackAndPush Relative and/or full file paths of projects to pass to `dotnet pack`. By default, these will be output to `./publish/`.
  * @param {string[]} dotnetNugetSignArgs Arguments appended to `dotnet nuget sign`. You can also append '&&' if you want to start a new command or if you want to sign different sets of packages with different keys.
  */
-export function configurePrepareCmd(
-  projectsToPublish: string[],
-  projectsToPackAndPush?: string[],
+export async function configurePrepareCmd(
+  projectsToPublish: string[] | MSBuildProject[],
+  projectsToPackAndPush?: string[] | NugetRegistryInfo[],
   dotnetNugetSignArgs: string[] = ['./publish'],
-): string {
-  // These are later evaluated with MSBuild, but are passed via --framework and --runtime arguments instead of -p:TargetFramework
-  const publishProperties = [...MSBuildProject.MatrixProperties]
-
+): Promise<string> {
   return [
-    formatDotnetPublish(projectsToPublish, publishProperties),
+    await formatDotnetPublish(
+      projectsToPublish.map(p =>
+        typeof p === 'string'
+          ? p
+          : p.Properties.MSBuildProjectFullPath),
+      MSBuildProject.MatrixProperties),
     formatDotnetPack(projectsToPackAndPush),
     formatDotnetNugetSign(dotnetNugetSignArgs),
   ].join(' && ')
 
-  function formatDotnetPublish(projectsToPublish: string[], publishProperties: string[]): string {
+  async function formatDotnetPublish(projectsToPublish: string[] | MSBuildProject[], publishProperties: readonly string[] | string[]): Promise<string> {
     /* Fun Fact: You can define a property and get the evaluated value in the same command!
     ```pwsh
     dotnet msbuild .\src\HXE.csproj -property:RuntimeIdentifiers="""place;holder""" -getProperty:RuntimeIdentifiers
@@ -51,12 +51,22 @@ export function configurePrepareCmd(
       enclosing with """ is required in pwsh to prevent the semicolon from breaking the string.
     */
     if (!Array.isArray(projectsToPublish) || projectsToPublish.length === 0)
-      throw new Error(`Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] where length > 0.`)
+      throw new Error(`Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] or MSBuildProject[] where length > 0.`)
 
     // each may have TargetFramework OR TargetFrameworks (plural)
-    const evaluatedProjects: MSBuildProject[] = projectsToPublish.map(
-      proj => new MSBuildProject(proj, publishProperties),
-    )
+    const evaluatedProjects: MSBuildProject[] = await Promise.all(
+      projectsToPublish.map(async proj =>
+        proj instanceof MSBuildProject
+          ? proj
+          : await MSBuildProject.Evaluate({
+            FullName: proj,
+            GetProperty: publishProperties,
+            GetItem: [],
+            GetTargetResult: [],
+            Property: {},
+            Targets: ['Pack'],
+          }),
+      ))
 
     return evaluatedProjects.flatMap(async (proj) => {
       const props = await proj.Properties
@@ -101,12 +111,12 @@ export function configurePrepareCmd(
       .join(' && ')
   }
 
-  function formatDotnetPack(projectsToPackAndPush?: string[]): string {
-    return !projectsToPackAndPush
-      ? ''
-      : projectsToPackAndPush
-        .map(v => `dotnet pack ${v}`)
-        .join(' && ')
+  function formatDotnetPack(projectsToPackAndPush?: string[] | NugetRegistryInfo[]): string {
+    if (!projectsToPackAndPush)
+      return ''
+    return projectsToPackAndPush
+      .map(proj => `dotnet pack ${typeof proj === 'string' ? proj : proj.project.Properties.MSBuildProjectFullPath}`)
+      .join(' && ')
   }
 
   /**
