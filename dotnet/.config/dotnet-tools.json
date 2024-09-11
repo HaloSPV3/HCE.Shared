@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "kuinox.nupkgdeterministicator": {
+      "version": "1.0.0",
+      "commands": [
+        "NupkgDeterministicator"
+      ],
+      "rollForward": false
+    }
+  }
+}

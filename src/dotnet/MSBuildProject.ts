@@ -114,22 +114,22 @@ export class EvaluationOptions {
   static readonly t = Object.freeze(type(
     {
       FullName: 'string',
-      SetProperties: type({ '[string]': 'string' }),
-      Target: 'string[]',
-      GetItems: 'string[]',
-      GetProperties: 'string[]',
-      GetTargetResults: 'string[]',
+      Property: type({ '[string]': 'string' }),
+      Targets: 'string[]',
+      GetItem: 'string[]',
+      GetProperty: 'string[]',
+      GetTargetResult: 'string[]',
     },
   ))
 
   constructor(opts: typeof EvaluationOptions.t.infer) {
     opts = EvaluationOptions.t.from(opts)
     this.FullName = opts.FullName
-    this.Properties = opts.SetProperties
-    this.GetItem = opts.GetItems
-    this.GetProperty = opts.GetProperties
-    this.Target = opts.Target
-    this.GetTargetResults = opts.GetTargetResults
+    this.Property = opts.Property
+    this.GetItem = opts.GetItem
+    this.GetProperty = opts.GetProperty
+    this.Targets = opts.Targets
+    this.GetTargetResult = opts.GetTargetResult
   }
 
   /**
@@ -150,7 +150,7 @@ export class EvaluationOptions {
    *                        -property:WarningLevel=2;OutDir=bin\Debug\
    * ```
    */
-  Properties: Record<string, string>
+  Property: Record<string, string>
   /**
    * MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
    * including {@link MSBuild}
@@ -172,8 +172,8 @@ export class EvaluationOptions {
    *
    * @default []
    */
-  Target: string[] = []
-  GetTargetResults: string[]
+  Targets: string[] = []
+  GetTargetResult: string[]
 }
 
 export class MSBuildProject {
@@ -211,7 +211,7 @@ export class MSBuildProject {
    */
   readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][]
 
-  static async getTargets(projectPath: string, includeNonPublic = false): Promise<string[]> {
+  static async GetTargets(projectPath: string, includeNonPublic = false): Promise<string[]> {
     return execAsync(`dotnet msbuild ${projectPath} -targets`,
     ).then((v) => {
       const targets = v.stdout.split('\n').filter((v, index) => v !== '' && index !== 0).map(v => v.replace('\r', '')).sort()
@@ -226,18 +226,20 @@ export class MSBuildProject {
    * returning them as an instance of {@link MSBuildProject}.\
    * @remarks MSBuild will probably fail if Restore is skipped and another
    * target is specified. If you choose Pack, you must do ['Restore', 'Pack']
+   * @throws if the exec command fails -OR- the JSON parse fails -OR-
+   * MSBuildProject's constructor fails.
    */
-  public static async Evaluate(options: EvaluationOptions, projTargets?: string[]): Promise<MSBuildProject> {
+  public static async Evaluate(options: EvaluationOptions): Promise<MSBuildProject> {
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName)
-    const _pairs = Object.entries(options.Properties)
+    const _pairs = Object.entries(options.Property)
     const property = _pairs.length === 0
       ? ''
       : `"-p:${_pairs.map(pair => `${pair[0]}=${pair[1]}`).join(';')}"`
-    const target = options.Target.length === 0 ? '' : `"-t:${options.Target.join(';')}"`
+    const target = options.Targets.length === 0 ? '' : `"-t:${options.Targets.join(';')}"`
     const getItem = options.GetItem.length === 0 ? '' : `"-getItem:${options.GetItem.join()}"`
     const getProperty = options.GetProperty.length === 0 ? '' : `"-getProperty:${options.GetProperty.join()}"`
-    const getTargetResult = options.GetTargetResults.length === 0 ? '' : `"-getTargetResult:${options.GetTargetResults.join()}"`
+    const getTargetResult = options.GetTargetResult.length === 0 ? '' : `"-getTargetResult:${options.GetTargetResult.join()}"`
     const cmdLine = ['dotnet', 'msbuild', options.FullName, property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
     const stdPair = await execAsync(cmdLine)
     const evaluation = new MSBuildEvaluationOutput(
@@ -251,7 +253,7 @@ export class MSBuildProject {
     )
     return new MSBuildProject({
       fullPath: options.FullName,
-      projTargets: projTargets ?? await MSBuildProject.getTargets(options.FullName),
+      projTargets: await MSBuildProject.GetTargets(options.FullName),
       evaluation,
     })
   }
@@ -295,7 +297,7 @@ export class MSBuildProject {
         .then(direntArr =>
           direntArr.map(async (dirent): Promise<MSBuildProject> => {
             const fullPath = join(dirent.parentPath, dirent.name)
-            const projTargets: Promise<string[]> = MSBuildProject.getTargets(fullPath)
+            const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath)
             // this might be too long for a command line. What was is on Windows?
             // 2^15 (32,768) character limit for command lines?
             const getProperties = getOwnPropertyDescriptors(
@@ -308,17 +310,14 @@ export class MSBuildProject {
               v => v[0],
             )
             return await this.Evaluate(
-              new EvaluationOptions(
-                {
-                  FullName: fullPath,
-                  GetItems: [],
-                  GetProperties: getProperties,
-                  GetTargetResults: [],
-                  SetProperties: {},
-                  Target: await projTargets.then(v => v.includes('Pack') ? ['Pack'] : []),
-                },
-              ),
-              await projTargets,
+              new EvaluationOptions({
+                FullName: fullPath,
+                GetItem: [],
+                GetProperty: getProperties,
+                GetTargetResult: [],
+                Property: {},
+                Targets: await projTargets.then(v => v.includes('Pack') ? ['Pack'] : []),
+              }),
             )
           }),
         ),
