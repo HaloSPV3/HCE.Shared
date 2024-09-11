@@ -240,14 +240,17 @@ export class MSBuildProject {
     const getItem = options.GetItem.length === 0 ? '' : `"-getItem:${options.GetItem.join()}"`
     const getProperty = options.GetProperty.length === 0 ? '' : `"-getProperty:${options.GetProperty.join()}"`
     const getTargetResult = options.GetTargetResult.length === 0 ? '' : `"-getTargetResult:${options.GetTargetResult.join()}"`
-    const cmdLine = ['dotnet', 'msbuild', options.FullName, property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
-    const stdPair = await execAsync(cmdLine)
+    const cmdLine = ['dotnet', 'msbuild', `"${options.FullName}"`, property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
+    const stdOutErr = await execAsync(cmdLine)
+      .catch((reason) => {
+        throw new Error((reason as Error).stack ?? reason, { cause: reason })
+      })
     const evaluation = new MSBuildEvaluationOutput(
-      stdPair.stdout.startsWith('{')
-        ? JSON.parse(stdPair.stdout)
+      stdOutErr.stdout.startsWith('{')
+        ? JSON.parse(stdOutErr.stdout)
         : msbuildEvaluationOutput.from({
           Properties: {
-            [options.GetProperty[0]]: String(JSON.parse(stdPair.stdout)),
+            [options.GetProperty[0]]: String(JSON.parse(stdOutErr.stdout)),
           },
         }),
     )
