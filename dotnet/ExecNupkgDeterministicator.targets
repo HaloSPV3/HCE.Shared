@@ -1,0 +1,84 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- ExecNupkgDeterministicator
+  <Summary>
+    | Inputs                | Values/Types                | Default                     | Usage |
+    | - - - - - - - - - - - | - - - - - - - - - - - - - - | - - - - - - - - - - - - - - | - - - - - - |
+    | Deterministic         | `'true'`/`'false'`/`''`     | `'true'`                    | If true, run NupkgDeterministicator on the nupkg and snupkg (if applicable) |
+    | PackageOutputPath     | string                      | `'$(OutputPath)'`           | The directory in which the package was created |
+    | PackageId             | string                      | `'$(AssemblyName)'`         | Used to identify the nupkg and symbols package |
+    | PackageVersion        | string                      | `'$(Version)'`              | Used to identify the nupkg and symbols package |
+    | IncludeSymbols        | `'true'`/`'false'`/`''`     | `''` (falsey)               | If true, deterministicate the symbols package |
+    | SymbolPackageFormat   | `'symbols.nupkg'`/`'snupkg'`| `'symbols.nupkg'` (legacy)  | Used to identify the symbols package |
+  </Summary>
+  TODO: contribute 'Kuinox.NupkgDeterministicator.MSBuild' and deprecate this target. https://github.com/Kuinox/NupkgDeterministicator
+  https://stackoverflow.com/a/16804205/14894786
+
+  The first "finished" version of this file is located at https://gist.github.com/BinToss/5776bf9efd962e8885f4427c72498480
+   -->
+  <Target Condition="'$(Deterministic)' == 'true'" Name="ExecNupkgDeterministicator" AfterTargets="Pack">
+    <PropertyGroup>
+      <_PackageFullPathExtensionless>$(MSBuildProjectDirectory)\$(PackageOutputPath)\$(PackageId).$(PackageVersion)</_PackageFullPathExtensionless>
+      <_PackageFullPath>$(_PackageFullPathExtensionless).nupkg</_PackageFullPath>
+      <_PackageSymbolsFullPath Condition=" ('$(IncludeSymbols)' == 'true')">$(_PackageFullPathExtensionless).$(SymbolPackageFormat)</_PackageSymbolsFullPath>
+      <_ToolListLocalExitCode>0</_ToolListLocalExitCode>
+      <_ToolListGlobalExitCode>0</_ToolListGlobalExitCode>
+    </PropertyGroup>
+
+    <!-- Check if the tool is installed locally (i.e. added to './.config/dotnet-tools.json') -->
+    <Exec
+      Command="dotnet tool list kuinox.nupkgdeterministicator"
+      StandardOutputImportance="low"
+      ContinueOnError="true" >
+      <Output TaskParameter="ExitCode" PropertyName="_ToolListLocalExitCode" />
+    </Exec>
+    <!-- Error codes other than 0 and 1 are unknown and cannot be handled. -->
+    <Error Condition=" ('$(_ToolListLocalExitCode)' != '0') AND ('$(_ToolListLocalExitCode)' != '1')"
+      Text="The Exec command 'dotnet tool list kuinox.nupkgdeterministicator' exited with the unrecognized code '$(_ToolListLocalExitCode)'."
+    />
+
+    <!-- If the tool is not installed locally, check if it's installed globally. -->
+    <Exec Condition=" '$(_ToolListLocalExitCode)' == '1' "
+      Command="dotnet tool list -g kuinox.nupkgdeterministicator"
+      StandardOutputImportance="low"
+      ContinueOnError="true" >
+      <Output TaskParameter="ExitCode" PropertyName="_ToolListGlobalExitCode" />
+    </Exec>
+    <!-- Error codes other than 0 and 1 are unknown and cannot be handled. -->
+    <Error Condition=" ('$(_ToolListGlobalExitCode)' != '0') AND ('$(_ToolListGlobalExitCode)' != '1')"
+      Text="The Exec command 'dotnet tool list -g kuinox.nupkgdeterministicator' exited with the unrecognized code '$(_ToolListGlobalExitCode)'."
+    />
+
+    <PropertyGroup>
+      <_missing>Kuinox.NupkgDeterministicator is unavailable. Run ONE of the following commands and try again:
+
+dotnet tool install -g Kuinox.NupkgDeterministicator
+
+dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
+      </_missing>
+    </PropertyGroup>
+
+    <!-- If NupkgDeterministicator not installed locally nor globally, Error -->
+    <Error Condition=" '$(_ToolListLocalExitCode)' != '0' AND '$(_ToolListLocalExitCode)' != '0' "
+      Text="$(_missing)"/>
+
+    <PropertyGroup>
+      <_BaseCmd>NupkgDeterministicator</_BaseCmd>
+      <_BaseCmd Condition=" '$(_ToolListLocalExitCode)' == '0' ">dotnet tool run $(_BaseCmd)</_BaseCmd>
+    </PropertyGroup>
+
+    <Exec Command="$(_BaseCmd) $(_PackageFullPath)"/>
+    <Exec
+      Condition=" '$(IncludeSymbols)' == 'true' "
+      Command="$(_BaseCmd) $(_PackageSymbolsFullPath)"
+    />
+
+    <Message
+      Text="Successfully determinized package '$(_PackageFullPath)'"
+      Importance="high"
+    />
+    <Message Condition=" '$(IncludeSymbols)' == 'true' "
+      Text="Successfully determinized symbols package '$(_PackageSymbolsFullPath)'"
+      Importance="high"
+    />
+  </Target>
+</Project>

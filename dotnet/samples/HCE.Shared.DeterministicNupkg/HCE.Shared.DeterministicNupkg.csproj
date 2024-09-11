@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>A sample project for use by https://github.com/HaloSPV3/HCE.Shared. This package is published to test MSBuild Targets and other .NET/MSBuild capabilities.</Description>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <GenerateFullPaths>true</GenerateFullPaths>
+    <IncludeSymbols>true</IncludeSymbols>
+    <PackageOutputPath>packages</PackageOutputPath>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <Version>0.0.1-DUMMY</Version>
+  </PropertyGroup>
+
+  <!-- 
+  Executes Kuinox.NupkgDeterministicator after Pack to make the nupkg
+  (and symbols package, if applicable) deterministic.
+  See the targets file for its usage -->
+  <Import Project="../../ExecNupkgDeterministicator.targets" />
+
+</Project>
