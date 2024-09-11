@@ -4,6 +4,13 @@
  * changes: add overrides, remove "as any", remove empty lines
  */
 export class CaseInsensitiveMap<T, U> extends Map<T, U> {
+  override delete(key: T): boolean {
+    if (typeof key === 'string') {
+      key = key.toLowerCase() as T
+    }
+    return super.delete(key)
+  }
+
   override get(key: T): U | undefined {
     if (typeof key === 'string') {
       key = key.toLowerCase() as T;
