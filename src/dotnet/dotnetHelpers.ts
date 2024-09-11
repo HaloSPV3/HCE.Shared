@@ -2,7 +2,7 @@ import { MSBuildProject } from './MSBuildProject.js'
 import type { NugetRegistryInfo } from './NugetRegistryInfo.js'
 
 /** args appended to "dotnet publish", joined by space */
-function appendCustomProperties(args: string[], proj: MSBuildProject, publishProperties: string[]): void {
+function appendCustomProperties(args: string[], proj: MSBuildProject, publishProperties: readonly string[] | string[]): void {
   // convert to dictionary and filter for user-defined properties.
   const dictionary = Object.entries(proj.Properties).filter(
     p => !publishProperties.includes(p[0]),

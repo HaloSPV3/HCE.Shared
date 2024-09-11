@@ -150,13 +150,13 @@ export class EvaluationOptions {
    *                        -property:WarningLevel=2;OutDir=bin\Debug\
    * ```
    */
-  Property: Record<string, string>
+  Property: Readonly<Record<string, string>> | Record<string, string>
   /**
    * MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
    * including {@link MSBuild}
    */
-  GetItem: string[]
-  GetProperty: string[]
+  GetItem: readonly string[] | string[]
+  GetProperty: readonly string[] | string[]
   /**
    * The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
    * Property values may be changed by Targets such as those provided by
@@ -172,8 +172,8 @@ export class EvaluationOptions {
    *
    * @default []
    */
-  Targets: string[] = []
-  GetTargetResult: string[]
+  Targets: readonly string[] | string[] = []
+  GetTargetResult: readonly string[] | string[]
 }
 
 export class MSBuildProject {
