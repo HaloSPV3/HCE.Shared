@@ -28,9 +28,8 @@ interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
  *
  * @public
  * @class semanticReleaseConfigDotnet
- * @typedef {semanticReleaseConfigDotnet}
  */
-export class semanticReleaseConfigDotnet {
+export class SemanticReleaseConfigDotnet {
   private options: SRConfigDotnetOptions
 
   /**
