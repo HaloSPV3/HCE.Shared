@@ -53,7 +53,7 @@ export class semanticReleaseConfigDotnet {
    * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
    * @param {string[]} signProjectPackages
    */
-  public constructor(projectsToPublish: string[], packAndPushProjects: string[], signProjectPackages: string[]) {
+  constructor(projectsToPublish: string[], packAndPushProjects: string[], signProjectPackages: string[]) {
     if (!packAndPushProjects.every(v => signProjectPackages.includes(v)))
       throw new Error('all signProjectPackages should be in packAndPushProjects')
 
@@ -61,7 +61,7 @@ export class semanticReleaseConfigDotnet {
     this.options.plugins.map(pluginSpec => typeof pluginSpec === 'string' ? [pluginSpec, {}] : pluginSpec)
   }
 
-  public async insertPlugin(afterPluginsIDs: string[], insertPluginIDs: string[], beforePluginsIDs: string[]) {
+  async insertPlugin(afterPluginsIDs: string[], insertPluginIDs: string[], beforePluginsIDs: string[]) {
     const errors: Error[] = []
     const pluginIDs = new Array(...this.options.plugins).map(v => typeof v === 'string' ? v : v[0])
 
@@ -102,7 +102,7 @@ export class semanticReleaseConfigDotnet {
    * @returns {*}
    * @see https://github.com/semantic-release/exec#usage
    */
-  public async setupDotnetCommands_0(
+  async setupDotnetCommands_0(
     projectsToPublish: string[],
     projectsToPackAndPush?: string[],
   ) {
