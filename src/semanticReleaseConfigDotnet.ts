@@ -4,7 +4,6 @@
  * extends {@link baseConfig }
  *
  * <-- TABLE OF CONTENTS -->
- * - evaluateProperties
  * - configureDotnetRelease
  * - Insert-Edit Plugins
  * - Append Plugins
