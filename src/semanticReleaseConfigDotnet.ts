@@ -17,6 +17,11 @@ import debug from './debug.js'
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js'
 import { getEnvVarValue } from './envUtils.js'
 import { baseConfig } from './semanticReleaseConfig.js'
+import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js'
+import { MSBuildProject } from './dotnet/MSBuildProject.js'
+import { NugetProjectProperties } from './dotnet/NugetProjectProperties.js'
+import { listOwnGetters } from './utils/reflection.js'
+import { MSBuildProjectProperties } from './dotnet/MSBuildProjectProperties.js'
 
 type UnArray<T> = T extends (infer U)[] ? U : T
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
@@ -27,14 +32,29 @@ interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
  * Description placeholder
  *
  * @public
- * @class semanticReleaseConfigDotnet
+ * @class SemanticReleaseConfigDotnet
  */
 export class SemanticReleaseConfigDotnet {
   private options: SRConfigDotnetOptions
+  private _projectsToPublish: string[] | MSBuildProject[]
+  private _projectsToPackAndPush: string[] | NugetRegistryInfo[]
+  private _evaluatedProjects: MSBuildProject[]
 
   /**
-   * Creates an instance of semanticReleaseConfigDotnet.
+   * Creates an instance of SemanticReleaseConfigDotnet.
    * Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet` publish, pack, and push.
+   *
+   * Note: To sign packages, create a Target in the corresponding project(s) e.g.
+   * ```xml
+   * <Target Name="SignNupkgs" AfterTargets="Pack">
+   *   <Exec Command="dotnet nuget sign $(PackageOutputPath) [remaining args]" ConsoleToMsBuild="true" />
+   * </Target>
+   * ```
+   * OR pass the command lines to
+   * parameter {@link typeof_dotnetNugetSignArgs dotnetNugetSignArgs} of configurePrepareCmd.
+   * If you sign different signatures depending on the NuGet registry,
+   * splice your signing command (with "overwrite signature" enabled, if
+   * desired) before the corresponding registry's `dotnet nuget push` command.
    *
    * @constructor
    * @public
@@ -43,21 +63,56 @@ export class SemanticReleaseConfigDotnet {
    * paths from the `PROJECTS_TO_PUBLISH` environment variable. If configured as
    * recommended, the projects' publish outputs will be zipped to '$PWD/publish'
    * for use in the `publish` semantic-release step (typically, GitHub release).
-   * @param {string[]} packAndPushProjects An array of dotnet projects' relative paths. If
-   * false, `dotnet pack` and `dotnet nuget push` will be left out of the exec
-   * commands. If empty or unspecified, tries getting projects' semi-colon-separated
+   * @param {string[] | NugetRegistryInfo[]} projectsToPackAndPush An array of dotnet projects' relative paths.
+   * If empty or unspecified, tries getting projects' semi-colon-separated
    * relative paths from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
+   * Otherwise, no packages will be packed and pushed.
    * If configured as recommended, `dotnet pack` will output the nupkg/snupk
    * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
-   * @param {string[]} signProjectPackages
    */
-  constructor(projectsToPublish: string[], packAndPushProjects: string[], signProjectPackages: string[]) {
-    if (!packAndPushProjects.every(v => signProjectPackages.includes(v)))
-      throw new Error('all signProjectPackages should be in packAndPushProjects')
-
+  constructor(
+    projectsToPublish: string[] | MSBuildProject[],
+    projectsToPackAndPush: string[] | NugetRegistryInfo[],
+  ) {
     this.options = baseConfig
-    this.options.plugins.map(pluginSpec => typeof pluginSpec === 'string' ? [pluginSpec, {}] : pluginSpec)
+    /* normalize PluginSpecs to tuples */
+    this.options.plugins.map(pluginSpec => typeof pluginSpec === 'string'
+      ? [pluginSpec, {}]
+      : pluginSpec,
+    )
+
+    this._projectsToPublish = projectsToPublish
+    if (this._projectsToPublish.length === 0) {
+      const p = getEnvVarValue('PROJECTS_TO_PUBLISH')?.split(';')
+      if (p && p.length > 0) {
+        this._projectsToPublish = p
+      }
+      else if (debug.enabled) {
+        debug.log(new Error('At least one project must be published. `projectsToPackAndPush` is empty and environment variable `PROJECTS_TO_PUBLISH` is undefined or empty.'))
+      }
+    }
+
+    this._projectsToPackAndPush = projectsToPackAndPush
+    if (this._projectsToPackAndPush.length === 0) {
+      const p = getEnvVarValue('PROJECTS_TO_PACK_AND_PUSH')?.split(';')
+      if (p && p.length > 0) {
+        projectsToPackAndPush = p
+      }
+      else if (debug.enabled) {
+        debug.log(new Error('projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.'))
+      }
+    }
+
+    // may be zero-length array
+    this._evaluatedProjects = [
+      ...this._projectsToPublish.filter(v => v instanceof MSBuildProject),
+      ...this._projectsToPackAndPush.filter(v => v instanceof NugetRegistryInfo).map(v => v.project),
+    ]
   }
+
+  get ProjectsToPublish(): string[] | MSBuildProject[] { return this._projectsToPublish }
+  get ProjectsToPackAndPush(): string[] | NugetRegistryInfo[] { return this._projectsToPackAndPush }
+  get EvaluatedProjects(): MSBuildProject[] { return this._evaluatedProjects }
 
   async insertPlugin(afterPluginsIDs: string[], insertPluginIDs: string[], beforePluginsIDs: string[]) {
     const errors: Error[] = []
@@ -91,39 +146,64 @@ export class SemanticReleaseConfigDotnet {
   }
 
   /**
-   * generate dotnet commands for @semantic-release/exec, appending commands with ' && ' when necessary.
+   * generate dotnet commands for \@semantic-release/exec, appending commands with ' && ' when necessary.
+   * ?todo: change to builder method? e.g. static async SetupDotnetCommands(this: SemanticReleaseConfigDotnet): Promise<SemanticReleaseConfigDotnet>
    *
    * @public
    * @async
-   * @param {string[]} projectsToPublish
-   * @param {?string[]} [projectsToPackAndPush]
-   * @returns {*}
    * @see https://github.com/semantic-release/exec#usage
    */
-  async setupDotnetCommands_0(
-    projectsToPublish: string[],
-    projectsToPackAndPush?: string[],
-  ) {
+  async setupDotnetCommands(): Promise<void> {
     const srExecIndex = this.options.plugins.findIndex(v => v[0] === '@semantic-release/exec')
     const execOptions = this.options.plugins[srExecIndex] as SRExecOptions
 
-    const prepareCmdAppendix = await configurePrepareCmd(projectsToPublish, projectsToPackAndPush)
+    // TODO: move configurePrepareCmd into SemanticReleaseConfigDotnet
+    // ensure all packable projects are evaluated
+    this._projectsToPackAndPush = await Promise.all(
+      this.ProjectsToPackAndPush.map(async (v) => {
+        if (typeof v === 'string') {
+          const msbp = await MSBuildProject.Evaluate({
+            FullName: v,
+            GetItem: [],
+            GetProperty: [
+              ...MSBuildProject.MatrixProperties,
+              ...listOwnGetters(MSBuildProjectProperties.prototype),
+              ...listOwnGetters(NugetProjectProperties.prototype),
+            ],
+            GetTargetResult: [],
+            Property: {},
+            Targets: ['Restore', 'Pack'],
+          })
+
+          this._evaluatedProjects.push(msbp)
+
+          return new NugetRegistryInfo(
+            undefined,
+            undefined,
+            msbp,
+          )
+        }
+        else return v
+      }),
+    )
+    // todo: double-check token-testing commands. Are they formatted prepended correctly?
+    const prepareCmdAppendix = await configurePrepareCmd(this._projectsToPublish, this._projectsToPackAndPush)
 
     // 'ZipPublishDir' zips each publish folder to ./publish/*.zip
     execOptions.prepareCmd = (execOptions.prepareCmd?.length ?? 0) > 0
       ? `${execOptions.prepareCmd} && ${prepareCmdAppendix}`
       : prepareCmdAppendix
 
-    if (projectsToPackAndPush) {
-      // TODO: this.getTokenTestingCommands
-      // prepend token-testing dry-push commands
-      execOptions.prepareCmd = `${await this.getTokenTestingCommands()} && ${execOptions.prepareCmd}`
-
-      const publishCmdAppendix = await configureDotnetNugetPush()
+    // FINISHED execOptions.prepareCmd
+    // STARTING execOptions.publishCmd
+    if (this._projectsToPackAndPush.length > 0) {
+      const publishCmdAppendix = await configureDotnetNugetPush(undefined, this._projectsToPackAndPush)
       execOptions.publishCmd = (execOptions.publishCmd && execOptions.publishCmd.length > 0)
         ? execOptions.publishCmd + ' && ' + publishCmdAppendix
         : publishCmdAppendix
     }
+
+    // FINISHED execOptions.publishCmd
   }
 
   async toOptions(): Promise<Options> {
@@ -139,7 +219,7 @@ export class SemanticReleaseConfigDotnet {
  * recommended, the projects' publish outputs will be zipped to '$PWD/publish'
  * for use in the `publish` semantic-release step (typically, GitHub release).
  * @param projectsToPackAndPush An array of dotnet projects' relative paths. If
- * false, `dotnet pack` and `dotnet nuget push` will be left out of the exec
+ * [], `dotnet pack` and `dotnet nuget push` will be left out of the exec
  * commands. If empty or unspecified, tries getting projects'
  * semi-colon-separated relative paths from the `PROJECTS_TO_PACK_AND_PUSH`
  * environment variable. If configured as recommended, `dotnet pack` will output
@@ -147,7 +227,7 @@ export class SemanticReleaseConfigDotnet {
  * nuget push`.
  * @returns a semantic-release Options object, based on `@halospv3/hce.shared-config` (our base config), with the `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and `push` the specified projects.
  */
-export async function getConfig(projectsToPublish: string[], projectsToPackAndPush?: string[]): Promise<Options> {
+export async function getConfig(projectsToPublish: string[] | MSBuildProject[], projectsToPackAndPush?: string[] | NugetRegistryInfo[]): Promise<Options> {
   if (debug.enabled) {
     debug.log('hce.shared-config:\n' + inspect(baseConfig, false, Infinity, true))
   }
@@ -179,14 +259,13 @@ export async function getConfig(projectsToPublish: string[], projectsToPackAndPu
     )
   }
 
-  let config = { ...baseConfig }
-  config = insertAndEditPlugins(config)
-  if (projectsToPublish)
-    throw new Error('function appendPlugins is being refactored to an instance method of class SemanticReleaseConfigDotnet.')
+  const config = new SemanticReleaseConfigDotnet(projectsToPublish, projectsToPackAndPush ?? [])
+  await config.setupDotnetCommands()
 
+  const options = await config.toOptions()
   if (debug.enabled) {
-    console.debug(`modified plugins array:\n${inspect(config.plugins, false, Infinity)}`)
+    console.debug(`modified plugins array:\n${inspect(options.plugins, false, Infinity)}`)
   }
 
-  return config
+  return options
 }
