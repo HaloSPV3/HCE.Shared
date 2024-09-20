@@ -13,6 +13,8 @@
       Multi-runtimes?
       Only useful if you need Self-Contained i.e. include the runtime with your project.
       If you want to publish Single-File, you don't *need* Self-Contained. Just inform users they must install a particular runtime/framework beforehand.
+
+      Note: "PlatformTarget" (CPU arch) is overridden by RuntimeIdentifier.
   -->
 <Project>
 
