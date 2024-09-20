@@ -22,7 +22,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     deepStrictEqual(NRI.name, ctx0.name)
   })
 
-  await describe('an instance of NugetRegistryInfo', async () => {
+  await describe('an instance of NugetRegistryInfo...', async () => {
     const predefinedToken = getEnvVarValue('NUGET_TOKEN')
 
     await it('defaults url to expected value', async () => {
