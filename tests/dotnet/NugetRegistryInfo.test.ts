@@ -6,6 +6,7 @@ import { describe, it } from 'node:test'
 import { inspect } from 'node:util'
 import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
 import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js'
+import { resolve } from 'node:path'
 
 await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is built', async () => {
@@ -65,7 +66,22 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         if (!predefinedToken)
           return t.skip('NUGET_TOKEN environment variable undefined')
 
-        const registryInfo = new NRI(undefined, undefined, MSBuildProject.prototype)
+        const registryInfo = new NRI(
+          undefined,
+          undefined,
+          await MSBuildProject.Evaluate(
+            {
+              FullName: resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
+              Property: {
+                Version: '0.0.1-DUMMY',
+              },
+              GetItem: [],
+              GetProperty: [],
+              Targets: ['Pack'],
+              GetTargetResult: [],
+            },
+          ),
+        )
 
         const canPush = await registryInfo.canPushPackagesToUrl.catch((reason) => {
           return (reason instanceof Error)
@@ -73,10 +89,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
             : new Error(inspect(reason, { depth: Infinity }))
         })
 
-        if (canPush === true)
-          return
-
-        throw canPush
+        deepStrictEqual(canPush, true)
       })
     })
   })
