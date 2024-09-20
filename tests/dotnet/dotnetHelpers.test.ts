@@ -4,11 +4,12 @@ import {
   configureDotnetNugetPush,
   configurePrepareCmd,
 } from '../../src/dotnet/dotnetHelpers.js'
-import * as built from '@halospv3/hce.shared-config/dotnet/dotnetHelpers'
-import * as source from '../../src/dotnet/dotnetHelpers.js'
 
-await it('is built', () => {
-  deepStrictEqual(built, source)
+await it('is built', async () => {
+  deepStrictEqual(
+    Object.entries(await import('@halospv3/hce.shared-config/dotnet/dotnetHelpers')),
+    Object.entries(await import('../../src/dotnet/dotnetHelpers.js')),
+  )
 })
 
 await describe('dotnetHelpers', async () => {

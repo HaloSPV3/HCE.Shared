@@ -1,6 +1,3 @@
-import {
-  MSBuildProject as exposed,
-} from '@halospv3/hce.shared-config/dotnet/MSBuildProject'
 import { deepStrictEqual, ok } from 'node:assert'
 import { existsSync, readdirSync, rmSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -10,13 +7,14 @@ import {
   MSBuildProject as MSBP,
 } from '../../src/dotnet/MSBuildProject.js'
 
-await describe('MSBuildProject', async (c00) => {
-  await it('is exposed', () => {
-    deepStrictEqual(exposed.name, c00.name)
-  })
-  await it('is built', () => {
-    deepStrictEqual(exposed, MSBP)
-  })
+await it('is built', async () => {
+  deepStrictEqual(
+    Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProject')),
+    Object.entries(await import('../../src/dotnet/MSBuildProject.js')),
+  )
+})
+
+await describe('MSBuildProject', async () => {
   await describe('MatrixProperties', async (ctx1) => {
     await it('has expected name', async () => {
       ok(ctx1.name in MSBP)
