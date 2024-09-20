@@ -8,12 +8,14 @@ import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
 import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js'
 import { resolve } from 'node:path'
 
-await describe('NugetRegistryInfo', async (ctx0) => {
-  await it('is built', async () => {
-    const built = (await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo')).NugetRegistryInfo
-    deepStrictEqual(built, NRI)
-  })
+await it('is built', async () => {
+  deepStrictEqual(
+    Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo')),
+    Object.entries(await import('../../src/dotnet/NugetRegistryInfo.js')),
+  )
+})
 
+await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is a class', async () => {
     // bullshit, but that's how classes are implemented
     deepStrictEqual(typeof NRI, 'function')

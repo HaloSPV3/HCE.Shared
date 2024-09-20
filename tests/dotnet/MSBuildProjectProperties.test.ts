@@ -1,10 +1,16 @@
 import { ok, strictEqual } from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { MSBuildProjectProperties as exposed } from '@halospv3/hce.shared-config/dotnet/MSBuildProjectProperties'
 import { MSBuildProjectProperties as MPP } from '../../src/dotnet/MSBuildProjectProperties.js'
 import { CaseInsensitiveMap } from './../../src/CaseInsensitiveMap.js'
 import { deepStrictEqual } from 'node:assert'
 import { tmpNameSync } from 'tmp'
+
+await it('is built', async () => {
+  deepStrictEqual(
+    Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProjectProperties')),
+    Object.entries(await import('../../src/dotnet/MSBuildProjectProperties.js')),
+  )
+})
 
 await describe('MSBuildProjectProperties', async (c0) => {
   const emptyMap = new CaseInsensitiveMap<string, string>()
@@ -24,12 +30,6 @@ await describe('MSBuildProjectProperties', async (c0) => {
   })
   await it('has expected name', () => {
     strictEqual(MPP.name, c0.name)
-  })
-  await it('is exposed', () => {
-    ok(exposed)
-  })
-  await it('has been built', () => {
-    deepStrictEqual(MPP, exposed)
   })
   await it('has prototype', () => {
     ok('prototype' in MPP)

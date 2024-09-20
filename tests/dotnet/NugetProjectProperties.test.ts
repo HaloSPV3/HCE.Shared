@@ -4,16 +4,19 @@ import { describe, it } from 'node:test'
 import { CaseInsensitiveMap } from '../../src/CaseInsensitiveMap.js'
 import { NugetProjectProperties as NPP } from '../../src/dotnet/NugetProjectProperties.js'
 
+await it('is built', async () => {
+  deepStrictEqual(
+    Object.entries(await import('../../src/dotnet/NugetProjectProperties.js')),
+    Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetProjectProperties')),
+  )
+})
+
 await describe('NugetProjectProperties', async (c0) => {
   await it('has expected name', () => {
     strictEqual(NPP.name, c0.name)
   })
   await it('exists', () => {
     ok(NPP)
-  })
-  await it('is built', async () => {
-    const exposed = await import('@halospv3/hce.shared-config/dotnet/NugetProjectProperties')
-    deepStrictEqual(NPP, exposed)
   })
   await it('has prototype', () => {
     ok('prototype' in NPP)
