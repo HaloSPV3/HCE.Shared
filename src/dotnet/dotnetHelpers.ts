@@ -23,6 +23,7 @@ function appendCustomProperties(args: string[], proj: MSBuildProject, publishPro
  *
  * todo: parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild).
  * todo: cleanup, docs
+ * todo: change to instance method of SemanticReleaseConfigDotnet
  * @export
  * @param {string[] | MSBuildProject[]} projectsToPublish
  * @param {string[] | NugetRegistryInfo[] | undefined} projectsToPackAndPush
