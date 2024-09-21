@@ -5,7 +5,8 @@ import type { Options, PluginSpec } from 'semantic-release'
 import { DefaultOptions } from './setupGitPluginSpec.js'
 
 /**
- * @satisfies { PluginSpec[] }
+ * @type { PluginSpec[] }
+ * @satisfies { readonly PluginSpec[] }
  */
 export const defaultPlugins = [
   '@semantic-release/commit-analyzer',
@@ -14,6 +15,32 @@ export const defaultPlugins = [
   '@semantic-release/github',
 ] satisfies readonly PluginSpec[]
 
+/**
+ * The base configuration for various Semantic Release scenarios.
+ * - Prefers preset "conventionalcommits"
+ *   (Conventional-Changelog-ConventionalCommits).
+ * - Creates tags and release commits on "main" branch, pre-releases on
+ *   "develop" branch in "develop" channel.
+ * - Creates GitHub Releases.
+ * - Exports the following variables as GitHub Actions outputs:
+ *   - "new-release-published": "true" | "false"
+ *   - "new-release-version" : string
+ *   - "new-release-git-tag" : string
+ * - includes default plugins (except `@semantic-release/npm`) and more
+ *   - `@semantic-release/commit-analyzer`
+ *   - semantic-release-export-data
+ *   - `@semantic-release/release-notes-generator`
+ *   - `@semantic-release/changelog`
+ *   - `@semantic-release/git`
+ *     - add modified CHANGELOG.md in release commit
+ *   - `@semantic-release/exec`
+ *     - does nothing by default. Included for convenience.
+ *   - `@semantic-release/github`
+ *     - uploads all files from `./publish/*`. This is non-recursive.
+ *     - adds a list of links to related release pages (e.g. the release's page on npmjs.com)
+ *
+ * @satisfies {Options}
+ */
 export const baseConfig = {
   /** @see https://semantic-release.gitbook.io/semantic-release/usage/plugins#plugin-options-configuration */
   preset: 'conventionalcommits',
