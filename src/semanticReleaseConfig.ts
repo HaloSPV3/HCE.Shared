@@ -40,6 +40,7 @@ export const baseConfig = {
     ['@semantic-release/exec', {} as SRExecOptions] satisfies PluginSpec<SRExecOptions>,
     ['@semantic-release/github',
       {
+        addReleases: 'bottom',
         assets: [{
           path: './publish/*',
         }],
