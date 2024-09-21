@@ -7,6 +7,7 @@ import { inspect } from 'node:util'
 import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
 import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js'
 import { resolve } from 'node:path'
+import { isConstructor } from '../../src/utils/reflection.js'
 
 await it('is built', async () => {
   deepStrictEqual(
@@ -17,8 +18,7 @@ await it('is built', async () => {
 
 await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is a class', async () => {
-    // bullshit, but that's how classes are implemented
-    deepStrictEqual(typeof NRI, 'function')
+    deepStrictEqual(isConstructor(NRI), true)
   })
 
   await it('has expected name', async () => {
