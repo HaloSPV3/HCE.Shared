@@ -3,6 +3,7 @@ import { exec } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { createReadStream, existsSync, type PathLike } from 'node:fs'
 import { readFile, stat, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
@@ -12,6 +13,21 @@ import type { MSBuildProject } from './MSBuildProject.js'
 import { NugetRegistryPair } from './NugetRegistryPair.js'
 
 const execAsync = promisify(exec)
+const tmpDirNamespace = join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
+
+/**
+ * Get HCE.Shared's temporary directory for .NET projects' dummy packages.
+ * @param project The MSBuild project whose PackageId will be used to create a
+ * directory for its dummy packages.
+ * @returns a platform-specific path like
+ * `${tmpdir}/HCE.Shared/.NET/Dummies/${project.Properties.PackageId}` if
+ * {@link project} is defined. Else `${tmpdir}/HCE.Shared/.NET/Dummies`
+ */
+function getDummiesDir(project?: MSBuildProject): string {
+  return project !== undefined
+    ? join(tmpDirNamespace, project.Properties.PackageId)
+    : tmpDirNamespace
+}
 
 export class NugetRegistryInfo {
   #canPushPackagesToUrl: Promise<true> | undefined = undefined
@@ -59,6 +75,33 @@ export class NugetRegistryInfo {
 
   private readonly _project: MSBuildProject
   public get project(): MSBuildProject { return this._project }
+
+  /**
+   * Execute `dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${outDir}` to create the dummy package for the current
+   * {@link project} and returns the full paths of all nupkg, symbols.nupkg, and snupkg files
+   * created by the Pack target.
+   */
+  public async PackDummyPackage(): Promise<string[]> {
+    /** e.g.
+     * ```txt
+     *  Determining projects to restore...
+     *  All projects are up-to-date for restore.
+     *  GroupBox.Avalonia -> C:\Repos\BinToss\GroupBox.Avalonia\GroupBox.Avalonia\bin\Release\net6.0\GroupBox.Avalonia.dll
+     *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.nupkg'.
+     *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
+     * ```
+     */
+    const consoleOutput = await execAsync(`dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this.project)}`)
+    return consoleOutput.stdout
+      .replace('\r', '')
+      .split('\n')
+      .filter(line => line.endsWith(`.nupkg'.`) || line.endsWith(`.snupkg'.`))
+      // remove everything up to and including the first apostrophe.
+      // Pray no cultures add another apostrophe before the path.
+      .map(line => line.replace(/^[^']+'/, ''))
+      // trim the apostrophe and period from the end of the string.
+      .map(line => line.replace(`'.`, ''))
+  }
 
   /**
    * Execute `dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key
