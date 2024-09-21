@@ -1,14 +1,20 @@
 import { getEnvVarValue } from '../envUtils.js'
+import type { MSBuildProject } from './MSBuildProject.js'
 import { NugetRegistryInfo } from './NugetRegistryInfo.js'
 
 export class GithubNugetRegistryInfo extends NugetRegistryInfo {
   static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
-  constructor(url: string = GithubNugetRegistryInfo.getNugetGitHubUrl(), tokenEnvVar = 'GITHUB_TOKEN', fallbackEnvVars: string[] = []) {
-    if (!fallbackEnvVars.includes('GH_TOKEN'))
-      fallbackEnvVars.push('GH_TOKEN')
-    if (!fallbackEnvVars.includes('NUGET_TOKEN'))
-      fallbackEnvVars.push('NUGET_TOKEN')
-    super(url, tokenEnvVar, fallbackEnvVars)
+  static readonly DefaultGithubTokenEnvVars = Object.freeze([
+    'GITHUB_TOKEN',
+    'GH_TOKEN',
+  ] as const)
+
+  constructor(
+    url: string = GithubNugetRegistryInfo.getNugetGitHubUrl(),
+    tokenEnvVars: readonly string[] = GithubNugetRegistryInfo.DefaultGithubTokenEnvVars,
+    dotnetProject: MSBuildProject,
+  ) {
+    super(url, tokenEnvVars, dotnetProject)
   }
 
   /**
