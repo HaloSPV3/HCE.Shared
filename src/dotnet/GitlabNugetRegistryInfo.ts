@@ -14,7 +14,7 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
 
   // static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
 
-  public static readonly DefaultGitlabTokenEnvVars = Object.freeze(['CI_JOB_TOKEN', 'GITLAB_TOKEN', 'GL_TOKEN'] as const)
+  static readonly DefaultGitlabTokenEnvVars = Object.freeze(['CI_JOB_TOKEN', 'GITLAB_TOKEN', 'GL_TOKEN'] as const)
 
   /**
    * Creates an instance of GitlabNugetRegistryInfo.
@@ -24,7 +24,7 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
    * @param {readonly string[]} [tokenEnvVars=GitlabNugetRegistryInfo.DefaultTokenEnvVars]
    * @param {boolean} [useGroupLevelEndpoint] If `true`, the default of {@link url} is {@link GitlabNugetRegistryInfo.groupUrl}. If `false`, it's {@link GitlabNugetRegistryInfo.projectUrl}
    */
-  public constructor(
+  constructor(
     url = '',
     tokenEnvVars: readonly string[] = GitlabNugetRegistryInfo.DefaultGitlabTokenEnvVars,
     dotnetProject: MSBuildProject,
