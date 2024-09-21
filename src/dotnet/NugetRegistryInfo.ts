@@ -4,12 +4,12 @@ import { createHash } from 'node:crypto'
 import { createReadStream, existsSync, type PathLike } from 'node:fs'
 import { readFile, stat, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { dir, type DirResult, setGracefulCleanup } from 'tmp'
 import { getEnvVarValue } from '../envUtils.js'
-import { NugetRegistryPair } from './NugetRegistryPair.js'
-import { fileURLToPath } from 'node:url'
 import type { MSBuildProject } from './MSBuildProject.js'
+import { NugetRegistryPair } from './NugetRegistryPair.js'
 
 const execAsync = promisify(exec)
 
