@@ -17,33 +17,30 @@
 
   <PropertyGroup Label="DotnetNugetSign">
     <!-- Directory where the signed package(s) should be saved. By default the original package is overwritten by the signed package. -->
-    <DotnetNugetSignOutput></DotnetNugetSignOutput>
+    <DotnetNugetSignOutput Condition=" '$(DotnetNugetSignOutput)' == ''"></DotnetNugetSignOutput>
     <!-- File path to the certificate to be used while signing the package. -->
-    <DotnetNugetSignCertificatePath></DotnetNugetSignCertificatePath>
+    <DotnetNugetSignCertificatePath Condition=" '$(DotnetNugetSignCertificatePath)' == ''"></DotnetNugetSignCertificatePath>
     <!-- (default: "My") Name of the X.509 certificate store to use to search for the certificate. Defaults to "My", the X.509 certificate store for personal certificates. This option should be used when specifying the certificate via $(DotnetNugetSignCertificateSubjectName) or $(DotnetNugetSignCertificateFingerprint). 
         (values: ["AddressBook","AuthRoot","CertificateAuthority","Disallowed","My","Root","TrustedPeople","TrustedPublisher"])
     -->
-    <DotnetNugetSignCertificateStoreName></DotnetNugetSignCertificateStoreName>
+    <DotnetNugetSignCertificateStoreName Condition=" '$(DotnetNugetSignCertificateStoreName)' == ''"></DotnetNugetSignCertificateStoreName>
     <!-- (default: "CurrentUser") Name of the X.509 certificate store to use to search for the certificate. Defaults to "CurrentUser", the X.509 certificate store used by the current user. This option should be used when specifying the certificate via $(DotnetNugetSignCertificateSubjectName) or $(DotnetNugetSignCertificateFingerprint). -->
-    <DotnetNugetSignCertificateStoreLocation></DotnetNugetSignCertificateStoreLocation>
+    <DotnetNugetSignCertificateStoreLocation Condition=" '$(DotnetNugetSignCertificateStoreLocation)' == ''"></DotnetNugetSignCertificateStoreLocation>
     <!-- (required if DotnetNugetSignCertificatePath unspecified) Subject name of the certificate used to search a local certificate store for the certificate. The search is a case-insensitive string comparison using the supplied value, which will find all certificates with the subject name containing that string, regardless of other subject values. The certificate store can be specified by $(DotnetNugetSignCertificateStoreName) and $(DotnetNugetSignCertificateStoreLocation) options. -->
-    <DotnetNugetSignCertificateSubjectName></DotnetNugetSignCertificateSubjectName>
+    <DotnetNugetSignCertificateSubjectName Condition=" '$(DotnetNugetSignCertificateSubjectName)' == ''"></DotnetNugetSignCertificateSubjectName>
     <!-- (required if DotnetNugetSignCertificatePath unspecified) SHA-1 fingerprint of the certificate used to search a local certificate store for the certificate. The certificate store can be specified by $(DotnetNugetSignCertificateStoreName) and $(DotnetNugetSignCertificateStoreLocation) options. -->
-    <DotnetNugetSignCertificateFingerprint></DotnetNugetSignCertificateFingerprint>
+    <DotnetNugetSignCertificateFingerprint Condition=" '$(DotnetNugetSignCertificateFingerprint)' == ''"></DotnetNugetSignCertificateFingerprint>
     <!-- Password for the certificate, if needed. This option can be used to specify the password for the certificate. The command will throw an error message if certificate is password protected but password is not provided as input. -->
-    <DotnetNugetSignCertificatePassword></DotnetNugetSignCertificatePassword>
+    <DotnetNugetSignCertificatePassword Condition=" '$(DotnetNugetSignCertificatePassword)' == ''"></DotnetNugetSignCertificatePassword>
     <!-- (default: "SHA256") Hash algorithm to be used by the RFC 3161 timestamp server. Defaults to SHA256. -->
-    <DotnetNugetSignHashAlgorithm></DotnetNugetSignHashAlgorithm>
+    <DotnetNugetSignHashAlgorithm Condition=" '$(DotnetNugetSignHashAlgorithm)' == ''"></DotnetNugetSignHashAlgorithm>
     <!-- URL to an RFC 3161 timestamping server. Signed packages should include a timestamp to make sure the signature remains valid when the signing certificate has expired. Else the sign operation will produce a warning. See NU3002 (https://learn.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu3002)
          (Noah Sherwin: for the sake of convenience, I have set the default value of this property to https://rfc3161.ai.moda/) -->
-    <DotnetNugetSignTimestamper>https://rfc3161.ai.moda/</DotnetNugetSignTimestamper>
+    <DotnetNugetSignTimestamper Condition=" '$(DotnetNugetSignTimestamper)' == ''">https://rfc3161.ai.moda/</DotnetNugetSignTimestamper>
     <!-- (default: "SHA256") Hash algorithm to be used by the RFC 3161 timestamp server. Defaults to SHA256. -->
-    <DotnetNugetSignTimestampHashAlgorithm></DotnetNugetSignTimestampHashAlgorithm>
+    <DotnetNugetSignTimestampHashAlgorithm Condition=" '$(DotnetNugetSignTimestampHashAlgorithm)' == ''"></DotnetNugetSignTimestampHashAlgorithm>
     <!-- (default: false) Switch to indicate if the current signature should be overwritten. By default the command will fail if the package already has a signature. -->
-    <DotnetNugetSignOverwrite></DotnetNugetSignOverwrite>
-
-    <PropA>string1</PropA>
-    <PropB>string0 "$(PropA)"</PropB>
+    <DotnetNugetSignOverwrite Condition=" '$(DotnetNugetSignOverwrite)' == ''"></DotnetNugetSignOverwrite>
   </PropertyGroup>
 
   <Target Name="SignAfterPack" AfterTargets="Pack">
@@ -74,8 +71,6 @@
       <_PackageOutputs Include="$(_PackageFullPath);"/>
       <_PackageOutputs Condition="'$(IncludeSymbols)' == 'true'" Include="$(_PackageFullPath);$(_SymbolPackageFullPath)"/>
     </ItemGroup>
-
-    <Message Importance="high" Text="$(_args.replace('|', ' ').trim())"/>
 
     <Exec Command="dotnet nuget sign &quot;@(_PackageOutputs, '&quot; &quot;')&quot; $(_args.replace('|', ' ').trim())"/>
   </Target>
