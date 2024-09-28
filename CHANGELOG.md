@@ -1,3 +1,5 @@
+## [2.6.2](https://github.com/halospv3/hce.shared/compare/v2.6.1...v2.6.2) (2024-09-28)
+
 ## [2.6.1](https://github.com/halospv3/hce.shared/compare/v2.6.0...v2.6.1) (2024-07-23)
 
 ### Bug Fixes
