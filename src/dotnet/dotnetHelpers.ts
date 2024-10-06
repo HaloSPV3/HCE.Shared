@@ -131,33 +131,27 @@ export async function configurePrepareCmd(
   }
 
   /**
-   * todo: finish basic functionality, refactor to allow complex configuration (per-package signing, per-package and per-registry signing)
-   *
    * @param {string[]} dotnetNugetSignArgs
-   * @returns {string}
+   * arguments to append to 'dotnet nuget sign ', joined with spaces.
+   * @returns {string} `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
    */
-  function formatDotnetNugetSign(dotnetNugetSignArgs: string[]): string {
-    switch (dotnetNugetSignArgs.length) {
-      case 0:
-        return ''
-      default:
-        return `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')}`
-      // default: {
-      //     throw new Error("")
-      //     // this needs a rework.
-      //     const packagePaths: string[] = [];
-      //     dotnetNugetSignArgs.forEach((dotnetNugetSignArg, i) => {
-      //         // if current arg doesn't start with '-' and (current arg is first -OR- previous arg also does not start with '-')...
-      //         if (!dotnetNugetSignArg.startsWith("-") && (i === 0 || (i > 0 && !dotnetNugetSignArgs[i - 1].startsWith("-")))) {
-      //             // ...then it's probably a package path.
-      //             packagePaths.push(dotnetNugetSignArg);
-      //         }
-      //     });
-      //     if (packagePaths.length === 0)
-      //         return `dotnet nuget sign ${dotnetNugetSignArgs.join(" ")}`
-      //     else return
-      // }
-    }
+  function formatDotnetNugetSign(dotnetNugetSignArgs?: string[]): string | undefined {
+    if (!dotnetNugetSignArgs || dotnetNugetSignArgs.length === 0)
+      return undefined
+    return `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
+    //     throw new Error("")
+    //     // this needs a rework.
+    //     const packagePaths: string[] = [];
+    //     dotnetNugetSignArgs.forEach((dotnetNugetSignArgs, i) => {
+    //         // if current arg doesn't start with '-' and (current arg is first -OR- previous arg also does not start with '-')...
+    //         if (!dotnetNugetSignArgs.startsWith("-") && (i === 0 || (i > 0 && !dotnetNugetSignArgs[i - 1].startsWith("-")))) {
+    //             // ...then it's probably a package path.
+    //             packagePaths.push(dotnetNugetSignArgs);
+    //         }
+    //     });
+    //     if (packagePaths.length === 0)
+    //         return `dotnet nuget sign ${ dotnetNugetSignArgs.join(" ") } `
+    //     else return
   }
 }
 
