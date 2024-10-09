@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto'
 import { createReadStream, existsSync, type PathLike } from 'node:fs'
 import { readFile, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'node:path'
+import { dirname, join as joinPaths } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { dir, type DirResult, setGracefulCleanup } from 'tmp'
@@ -13,7 +13,7 @@ import type { MSBuildProject } from './MSBuildProject.js'
 import { NugetRegistryPair } from './NugetRegistryPair.js'
 
 const execAsync = promisify(exec)
-const tmpDirNamespace = join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
+const tmpDirNamespace = joinPaths(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
 
 /**
  * Get HCE.Shared's temporary directory for .NET projects' dummy packages.
@@ -25,7 +25,7 @@ const tmpDirNamespace = join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
  */
 function getDummiesDir(project?: MSBuildProject): string {
   return project !== undefined
-    ? join(tmpDirNamespace, project.Properties.PackageId)
+    ? joinPaths(tmpDirNamespace, project.Properties.PackageId)
     : tmpDirNamespace
 }
 
@@ -137,7 +137,7 @@ export class NugetRegistryInfo {
       const packageJson = import.meta.resolve('../../package.json')
       if (!packageJson)
         throw new ReferenceError('failed to get @halospv3/hce.shared-config\'s package.json and its dirname')
-      const dummyPkgPath: string = join(fileURLToPath(dirname(packageJson)), 'static', 'DUMMY.1.0.0.nupkg')
+      const dummyPkgPath: string = joinPaths(fileURLToPath(dirname(packageJson)), 'static', 'DUMMY.1.0.0.nupkg')
       // originally implemented by F1LT3R at https://gist.github.com/F1LT3R/2e4347a6609c3d0105afce68cd101561
       const sha256 = (path: PathLike): Promise<string> => new Promise((resolve, reject) => {
         const hash = createHash('sha256')
@@ -186,10 +186,10 @@ export class NugetRegistryInfo {
             resolve({ name, removeCallback } as DirResult)
           })
         })
-        const dummyFilePath = join(tmpDirResult.name, 'DUMMY')
+        const dummyFilePath = joinPaths(tmpDirResult.name, 'DUMMY')
 
         try {
-          const dummyProjPath: string = join(tmpDirResult.name, 'DUMMY.csproj')
+          const dummyProjPath: string = joinPaths(tmpDirResult.name, 'DUMMY.csproj')
           const promiseNewProj = execAsync(`dotnet new classlib--framework net8.0 --output ${tmpDirResult.name}`)
           const csprojContent: string = await promiseNewProj.then(async () =>
             await readFile(dummyProjPath, { encoding: 'utf8' }),
