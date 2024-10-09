@@ -20,8 +20,8 @@ const tmpDirNamespace = joinPaths(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
  * @param project The MSBuild project whose PackageId will be used to create a
  * directory for its dummy packages.
  * @returns a platform-specific path like
- * `${tmpdir}/HCE.Shared/.NET/Dummies/${project.Properties.PackageId}` if
- * {@link project} is defined. Else `${tmpdir}/HCE.Shared/.NET/Dummies`
+ * `${tmpdir()}/HCE.Shared/.NET/Dummies/${project.Properties.PackageId}` if
+ * {@link project} is defined. Else `${tmpdir()}/HCE.Shared/.NET/Dummies`
  */
 function getDummiesDir(project?: MSBuildProject): string {
   return project !== undefined
