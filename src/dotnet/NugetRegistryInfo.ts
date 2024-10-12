@@ -37,6 +37,25 @@ export class NugetRegistryInfo {
   )
 
   /**
+   * Convert a URL string to a filesystem folder name.
+   *
+   * Intended usage: modify the output path of `dotnet pack` based on the NuGet
+   * Source the package should be pushed to. This is extra work is usually
+   * unnecessary and you'd typically push the same file to multiple sources.
+   * This is for the edge-case scenario of creating multiple nupkgs and signing
+   * each one with a different certificate corresponding to a given NuGet
+   * Source. This is only useful if the Sources have different certificates
+   * registered for a given package/user/organization.
+   * @param url The URL of the NuGet Source
+   * @returns A string suitable for a local filesystem folder name, formatted as
+   * `${hostname}_${pathname.replace('/', '_')}`.
+   */
+  static GetNameForURL(url: string) {
+    const _url = new URL(url)
+    return `${_url.hostname}_${_url.pathname.replace('/', '_')}`
+  }
+
+  /**
    * Creates an instance of NugetRegistryInfo.\
    * This class enables the ability to push a given {@link project}'s
    * package(s) to the {@link url} of a given NuGet Source's API endpoint with
