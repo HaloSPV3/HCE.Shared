@@ -392,15 +392,16 @@ export class NugetRegistryInfo {
    * @throws {Error} when none of the provided environment variables are defined.
    */
   public static getTokenValue(tokenEnvVars: readonly string[]): string {
-    const tokens: readonly string[] = Object.freeze(
+    const definedTokens = Object.freeze(
       tokenEnvVars.map(
-        v => getEnvVarValue(v),
+        // key-value tuple
+        v => [v, getEnvVarValue(v)] as const,
       ).filter(
-        v => v !== undefined,
+        (pair): pair is [string, string] => pair[1] !== undefined,
       ),
     )
 
-    if (tokens.length === 0) {
+    if (definedTokens.length === 0) {
       throw new Error(
         `\
 The environment variables [${tokenEnvVars.join(', ')}] were specified \
@@ -408,7 +409,7 @@ as the source of the token to push a NuGet package to GitHub, \
 but no tokens were defined.`)
     }
 
-    return tokenEnvVars[0]
+    return definedTokens[0][1]
   }
 }
 
