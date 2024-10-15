@@ -411,3 +411,6 @@ but no tokens were defined.`)
     return tokenEnvVars[0]
   }
 }
+
+// shorthand/alias for NugetRegistryInfo
+const NRI = NugetRegistryInfo
