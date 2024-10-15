@@ -36,6 +36,18 @@ export class NugetRegistryInfo {
     ['NUGET_TOKEN'] as const,
   )
 
+  private static _parseStdoutForNupkgs(stdout: string): string[] {
+    return stdout
+      .replace('\r', '')
+      .split('\n')
+      .filter(line => line.endsWith(`.nupkg'.`) || line.endsWith(`.snupkg'.`))
+      // remove everything up to and including the first apostrophe.
+      // Pray no cultures add another apostrophe before the path.
+      .map(line => line.replace(/^[^']+'/, ''))
+      // trim the apostrophe and period from the end of the string.
+      .map(line => line.replace(`'.`, ''))
+  }
+
   /**
    * Convert a URL string to a filesystem folder name.
    *
@@ -110,16 +122,8 @@ export class NugetRegistryInfo {
      *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
      * ```
      */
-    const consoleOutput = await execAsync(`dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this.project)}`)
-    return consoleOutput.stdout
-      .replace('\r', '')
-      .split('\n')
-      .filter(line => line.endsWith(`.nupkg'.`) || line.endsWith(`.snupkg'.`))
-      // remove everything up to and including the first apostrophe.
-      // Pray no cultures add another apostrophe before the path.
-      .map(line => line.replace(/^[^']+'/, ''))
-      // trim the apostrophe and period from the end of the string.
-      .map(line => line.replace(`'.`, ''))
+    const packOutput = await execAsync(`dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this.project)}`)
+    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
   }
 
   /**
