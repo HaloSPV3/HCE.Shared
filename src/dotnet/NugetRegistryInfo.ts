@@ -308,6 +308,10 @@ export class NugetRegistryInfo {
   }
 
   /**
+   * This is not useful without it being executed as part of a Semantic Release
+   * plugin. Deferring this to @semantic-release/exec's prepareCmd is possible,
+   * but impractical. You'd need to configure prepareCmd to invoke something
+   * like `node customScriptFile.mjs`. It's not worth the hassle.
    * @returns `true` if the token can be used to push nupkg to the given Nuget registry
    * @throws
    * - {@link ReferenceError} when NugetRegistryInfo.resolvedVariable is null or undefined
@@ -316,6 +320,7 @@ export class NugetRegistryInfo {
    *   - The token is invalid, of the wrong token type, or lacks permission to push packages
    *   - The URL does not exist or a connection could not be established
    * @type {Promise<true>}
+   * @remarks Semantic Release Step: Beginning of `prepare`
    */
   public get canPushPackagesToUrl(): Promise<true> {
     if (this.#canPushPackagesToUrl !== undefined)
