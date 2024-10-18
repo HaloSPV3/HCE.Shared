@@ -138,6 +138,8 @@ export class NugetRegistryInfo {
           : new Error(String(reason))
     })
     return pushResult
+
+    /** returns the full path of the dummy package */
     async function getDummyNupkgAsync(): Promise<string> {
       // find package.json
       const packageJson = import.meta.resolve('../../package.json')
