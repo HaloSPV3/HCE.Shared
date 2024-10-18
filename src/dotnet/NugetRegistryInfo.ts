@@ -140,7 +140,7 @@ export class NugetRegistryInfo {
    * package with its version set to 0.0.1-DUMMY. This will allow the NuGet
    * Source to perform the authorization check on the actual package ID and
    * verify the actual package is in good shape. HOWEVER, this also means a
-   * successful release will push a package two a source *twice*—once with the
+   * successful release will push a package to a source *twice*—once with the
    * dummy version and again with nextVersion.
    */
   private static async pushDummyAsync(url: string, tokenValue: string): Promise<{ stdout: string, stderr: string }> {
