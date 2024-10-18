@@ -257,11 +257,11 @@ export class NugetRegistryInfo {
         return
 
         /**
-                 * check locally (./.config/dotnet-tools.json) or globally for the given dotnet tool and its command. If not found, try installing it globally.
-                 * @param packageId
-                 * @param cmd
-                 * @returns
-                 */
+         * check locally (./.config/dotnet-tools.json) or globally for the given dotnet tool and its command. If not found, try installing it globally.
+         * @param packageId
+         * @param cmd
+         * @returns
+         */
         async function getDotnetTool(packageId: string, cmd: string, installIfMissing = false): Promise<void> {
           const errors: Error[] = []
           let found = false
@@ -308,15 +308,15 @@ export class NugetRegistryInfo {
   }
 
   /**
-     * @returns `true` if the token can be used to push nupkg to the given Nuget registry
-     * @throws
-     * - {@link ReferenceError} when NugetRegistryInfo.resolvedVariable is null or undefined
-     * - {@link TypeError} when the environment variable {@link NugetRegistryInfo.resolvedEnvVariable} is undefined
-     * - {@link Error}
-     *   - The token is invalid, of the wrong token type, or lacks permission to push packages
-     *   - The URL does not exist or a connection could not be established
-     * @type {Promise<true>}
-     */
+   * @returns `true` if the token can be used to push nupkg to the given Nuget registry
+   * @throws
+   * - {@link ReferenceError} when NugetRegistryInfo.resolvedVariable is null or undefined
+   * - {@link TypeError} when the environment variable {@link NugetRegistryInfo.resolvedEnvVariable} is undefined
+   * - {@link Error}
+   *   - The token is invalid, of the wrong token type, or lacks permission to push packages
+   *   - The URL does not exist or a connection could not be established
+   * @type {Promise<true>}
+   */
   public get canPushPackagesToUrl(): Promise<true> {
     if (this.#canPushPackagesToUrl !== undefined)
       return this.#canPushPackagesToUrl
