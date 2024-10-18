@@ -374,9 +374,10 @@ export class NugetRegistryInfo {
   readonly url: string
 
   /**
-     *
-     * @returns the name of the variable containing the token value and the url to which nupkgs and snupkgs are pushed
-     */
+   * todo: deprecate and remove
+   * if canPushPackagesToUrl, returns a NugetRegistryPair based on `this`.
+   * @returns A NugetRegistryPair representing a NuGet source's API endpoint and the token that can be used to push the name of the variable containing the token value and the url to which nupkgs and snupkgs are pushed
+   */
   async toRegistryPair(): Promise<NugetRegistryPair> {
     return await this.canPushPackagesToUrl.then(() =>
       new NugetRegistryPair(this.resolvedEnvVariable, this.url),
