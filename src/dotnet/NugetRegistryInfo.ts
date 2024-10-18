@@ -497,6 +497,40 @@ but no tokens were defined.`)
   }
 
   /**
+   * !Not ready for use! Remove private modifier and commit as `feat(dotnet)` when ready for release!
+   * Blocking Issue: convert all dotnet-related functionality to a Semantic Release plugin!
+   * The current `semanticReleaseConfigDotnet` leverages @semantic-release/exec
+   * to invoke dotnet commands. This is fine for relatively short command lines,
+   * but chaining commands with ' && ' results in quickly-growing complexity.
+   * NuGet packages should be created during the `prepare` step, but complex
+   * configuration of `dotnet pack` via command lines intended to be invoked by
+   * `@semantic-release/exec` is impractical.
+   * @param opts `dotnet pack` options. See `dotnet pack -h`,
+   * https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack, and
+   * {@link PackPackagesOptionsType}.
+   * @param [usePerSourceSubfolder=false] If `true`, modify the output path to
+   * include a subfolder bearing a path-safe encoding of the NuGet Source that
+   * will receive the nupkg.
+   * package will .
+   * @param [usePerPackageIdSubfolder=false] If `true`, modify the output path
+   * to include a subfolder named after the the PackageId.
+   * @returns a string[] containing the full file paths of all new packages i.e.
+   * .nupkg, .symbols.nupkg, .snupkg
+   */
+  private async PackPackages(
+    opts: typeof NRI.PackPackagesOptionsType.t,
+    usePerSourceSubfolder = false,
+    usePerPackageIdSubfolder = false,
+  ): Promise<string[]> {
+    const packOutput = await execAsync(this.GetPackCommand(
+      opts,
+      usePerSourceSubfolder,
+      usePerPackageIdSubfolder,
+    ))
+    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
+  }
+
+  /**
    * Execute `dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${outDir}` to create the dummy package for the current
    * {@link project} and returns the full paths of all nupkg, symbols.nupkg, and snupkg files
    * created by the Pack target.
