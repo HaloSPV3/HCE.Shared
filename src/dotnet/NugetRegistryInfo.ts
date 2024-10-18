@@ -5,12 +5,14 @@ import { createReadStream, existsSync, type PathLike } from 'node:fs'
 import { readFile, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join as joinPaths } from 'node:path'
+import { cwd } from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { dir, type DirResult, setGracefulCleanup } from 'tmp'
 import { getEnvVarValue } from '../envUtils.js'
 import type { MSBuildProject } from './MSBuildProject.js'
 import { NugetRegistryPair } from './NugetRegistryPair.js'
+import { type } from 'arktype'
 
 const execAsync = promisify(exec)
 const tmpDirNamespace = joinPaths(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
@@ -106,25 +108,6 @@ export class NugetRegistryInfo {
 
   private readonly _project: MSBuildProject
   public get project(): MSBuildProject { return this._project }
-
-  /**
-   * Execute `dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${outDir}` to create the dummy package for the current
-   * {@link project} and returns the full paths of all nupkg, symbols.nupkg, and snupkg files
-   * created by the Pack target.
-   */
-  public async PackDummyPackage(): Promise<string[]> {
-    /** e.g.
-     * ```txt
-     *  Determining projects to restore...
-     *  All projects are up-to-date for restore.
-     *  GroupBox.Avalonia -> C:\Repos\BinToss\GroupBox.Avalonia\GroupBox.Avalonia\bin\Release\net6.0\GroupBox.Avalonia.dll
-     *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.nupkg'.
-     *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
-     * ```
-     */
-    const packOutput = await execAsync(`dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this.project)}`)
-    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
-  }
 
   /**
    * Execute `dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key
@@ -412,6 +395,127 @@ but no tokens were defined.`)
 
     return definedTokens[0][1]
   }
+
+  // #region Pack
+
+  /**
+   * The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
+   * @prop {object} t The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
+   */
+  static readonly PackPackagesOptionsType = Object.freeze(type({
+    artifactsPath: 'string',
+    configuration: '"Release" | "Debug"',
+    disableBuildServers: 'boolean',
+    force: 'boolean',
+    includeSource: 'boolean',
+    includeSymbols: 'boolean',
+    interactive: 'boolean',
+    noBuild: 'boolean',
+    noLogo: 'boolean',
+    noRestore: 'boolean',
+    output: 'string',
+    runtime: 'string',
+    serviceable: 'boolean',
+    terminalLogger: '"auto" | "on" | "off"',
+    useCurrentRuntime: 'boolean',
+    verbosity: '"quiet" | "minimal" | "normal" | "detailed" | "diagnostic"',
+    versionSuffix: 'string',
+  }).partial())
+
+  /**
+   * Get a `dotnet pack` command line string, outputting the package(s) to a
+   * path determined by this method's parameters.
+   * When pushing the package(s), you only need to supply the main .nupkg's path
+   * or its directory to the dotnet CLI—by default, it will also push the
+   * symbols package, if present.
+   * @param {typeof NRI.PackPackagesOptionsType.t} opts Options passed to
+   * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. The
+   * {@link PackPackagesOptionsType.t.output} path is modified according to the
+   * {@link usePerSourceSubfolder} and {@link usePerPackageIdSubfolder} arguments.
+   * @returns `dotnet pack "${this.project.Properties.MSBuildProjectFullPath}"
+   * -o "${outDir}"` where outDir may be `${cwd()}/publish/${NugetRegistryInfo.GetNameForURL(this.url)}/${this._project.Properties.PackageId}`
+   */
+  GetPackCommand(
+    opts: typeof NRI.PackPackagesOptionsType.t,
+    usePerSourceSubfolder = false,
+    usePerPackageIdSubfolder = false,
+  ): string {
+    opts.output ??= `${cwd()}/publish`
+    if (usePerSourceSubfolder === true)
+      opts.output = joinPaths(opts.output, NugetRegistryInfo.GetNameForURL(this.url))
+    if (usePerPackageIdSubfolder)
+      opts.output = joinPaths(opts.output, this._project.Properties.PackageId)
+
+    const packCmdArr: string[] = [
+      'dotnet',
+      'pack',
+      `"${this._project.Properties.MSBuildProjectFullPath}"`,
+      '-o',
+      `"${opts.output}"`,
+    ]
+    if (opts.artifactsPath !== undefined)
+      packCmdArr.push('--artifactsPath', `"${opts.artifactsPath}"`)
+    if (opts.configuration !== undefined)
+      packCmdArr.push('--configuration', opts.configuration)
+    if (opts.disableBuildServers === true)
+      packCmdArr.push('--disable-build-servers')
+    if (opts.force === true)
+      packCmdArr.push('--force')
+    if (opts.includeSource === true)
+      packCmdArr.push('--include-source')
+    if (opts.includeSymbols === true)
+      packCmdArr.push('--include-symbols')
+    if (opts.interactive === true)
+      packCmdArr.push('--interactive')
+    if (opts.noBuild === true)
+      packCmdArr.push('--no-build')
+    if (opts.noLogo === true)
+      packCmdArr.push('--nologo')
+    if (opts.noRestore === true)
+      packCmdArr.push('--no-restore')
+    if (opts.runtime !== undefined)
+      packCmdArr.push('--runtime', opts.runtime)
+    if (opts.serviceable === true)
+      packCmdArr.push('--serviceable')
+    if (opts.terminalLogger !== undefined)
+      packCmdArr.push('--tl', opts.terminalLogger)
+    if (opts.useCurrentRuntime === true)
+      packCmdArr.push('--use-current-runtime')
+    if (opts.verbosity !== undefined)
+      packCmdArr.push('--verbosity', opts.verbosity)
+    if (opts.versionSuffix !== undefined)
+      packCmdArr.push('--version-suffix', opts.versionSuffix)
+
+    return packCmdArr.join(' ')
+  }
+
+  /**
+   * Execute `dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${outDir}` to create the dummy package for the current
+   * {@link project} and returns the full paths of all nupkg, symbols.nupkg, and snupkg files
+   * created by the Pack target.
+   * @param {typeof NRI.PackPackagesOptionsType.t} opts Options passed to
+   * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. {@link GetPackCommand} is called with with both subfolder
+   * booleans set to `true`.
+   */
+  public async PackDummyPackage(
+    opts: typeof NRI.PackPackagesOptionsType.t,
+  ): Promise<string[]> {
+    opts.output = getDummiesDir(this._project)
+
+    /** e.g.
+     * ```txt
+     *  Determining projects to restore...
+     *  All projects are up-to-date for restore.
+     *  GroupBox.Avalonia -> C:\Repos\BinToss\GroupBox.Avalonia\GroupBox.Avalonia\bin\Release\net6.0\GroupBox.Avalonia.dll
+     *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.nupkg'.
+     *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
+     * ```
+     */
+    const packOutput = await execAsync(`${this.GetPackCommand(opts, true, true)} -p:Version=0.0.1-DUMMY`)
+    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
+  }
+
+  // #endregion Pack
 }
 
 // shorthand/alias for NugetRegistryInfo
