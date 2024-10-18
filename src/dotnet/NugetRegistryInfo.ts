@@ -86,14 +86,14 @@ export class NugetRegistryInfo {
    * @constructor
    * @param {string} [url="https://api.nuget.org/v3/index.json"] A NuGet package
    * registry's API URL. Default: https://api.nuget.org/v3/index.json
-   * @param {string} [tokenEnvVars="NUGET_TOKEN"] The environment variables
+   * @param {readonly string[]} [tokenEnvVars=NugetRegistryInfo.DefaultTokenEnvVars] The environment variables
    * whose values are tokens with permission to push a package to the NuGet
    * package registry. The array is iterated through until one token is found.
    * If none of the environment variables are defined, this constructor will
    * throw an {@link Error}.
    * @param {MSBuildProject} project The project whose package(s) will be
    * pushed. Its `PackageId` will be read. Its `PackageVersion` will be
-   * overridden via CLI args to create a dummy package. The real package's
+   * overridden via CLI args when creating a dummy package. The real package's
    * `PackageVersion` will *not* be overridden.
    */
   constructor(url = 'https://api.nuget.org/v3/index.json', tokenEnvVars: readonly string[] = NugetRegistryInfo.DefaultTokenEnvVars, project: MSBuildProject) {
