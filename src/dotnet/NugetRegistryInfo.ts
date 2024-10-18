@@ -557,6 +557,99 @@ but no tokens were defined.`)
   }
 
   // #endregion Pack
+  // #region Push
+
+  /**
+   * Also includes required argument 'ROOT': the directory in which packages
+   * should be present and ready to be pushed the default or specified Source.
+   * The ROOT may also include wildcards e.g. `*.nupkg`, `**\\*.nupkg`
+   * See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-push
+   */
+  static readonly PushPackagesOptionsType = Object.freeze(type({
+    apiKey: 'string | undefined',
+    disableBuffering: 'boolean | undefined',
+    forceEnglishOutput: 'boolean | undefined',
+    interactive: 'boolean | undefined',
+    noServiceEndpoint: 'boolean | undefined',
+    noSymbols: 'boolean | undefined',
+    root: 'string',
+    skipDuplicate: 'boolean | undefined',
+    source: 'string | undefined',
+    symbolApiKey: 'string | undefined',
+    symbolSource: 'string | undefined',
+    timeout: 'number | undefined',
+  } as const))
+
+  GetPushCommand(
+    opts: typeof NRI.PushPackagesOptionsType.t,
+    usePerSourceSubfolder = false,
+    usePerPackageIdSubfolder = false,
+  ): string {
+    opts.root ??= `${cwd()}/publish`
+    if (usePerSourceSubfolder === true)
+      opts.root = joinPaths(opts.root, NugetRegistryInfo.GetNameForURL(this.url))
+    if (usePerPackageIdSubfolder)
+      opts.root = joinPaths(opts.root, this._project.Properties.PackageId)
+
+    const packCmdArr: string[] = [
+      'dotnet',
+      'push',
+      `"${opts.root}"`,
+    ]
+    if ((opts.apiKey ??= NRI.getTokenValue(NRI.DefaultTokenEnvVars)) !== undefined)
+      packCmdArr.push('--api-key', `"${opts.apiKey}"`)
+    if (opts.disableBuffering === true)
+      packCmdArr.push('--disable-buffering')
+    if (opts.forceEnglishOutput === true)
+      packCmdArr.push('--force-english-output')
+    if (opts.interactive === true)
+      packCmdArr.push('--interactive')
+    if (opts.noServiceEndpoint === true)
+      packCmdArr.push('--no-service-endpoint')
+    if (opts.noSymbols === true)
+      packCmdArr.push('--no-symbols')
+    if (opts.skipDuplicate === true)
+      packCmdArr.push('--skip-duplicate')
+    if (opts.source !== undefined)
+      packCmdArr.push('--source', opts.source)
+    if (opts.symbolApiKey !== undefined)
+      packCmdArr.push('--symbol-api-key', opts.symbolApiKey)
+    if (opts.symbolSource !== undefined)
+      packCmdArr.push('--symbol-source', opts.symbolSource)
+    if (opts.timeout !== undefined)
+      packCmdArr.push('--timeout', opts.timeout.toString())
+
+    return packCmdArr.join(' ')
+  }
+
+  /**
+   * Immediately push packages. The input path may be modified according to the
+   * {@link usePerSourceSubfolder} and {@link usePerPackageIdSubfolder}
+   * arguments.
+   * @param opts The `dotnet nuget push` command line options, including the
+   * ROOT argument, the directory containing local nuget packages ready to be
+   * pushed.
+   * @param usePerSourceSubfolder If `true`, the NuGet Source URL is formatted
+   * to a folder name and appended to the ROOT as a subfolder. Do not use
+   * wildcards in ROOT with this set to `true`!
+   * @param usePerPackageIdSubfolder If `true`, the current {@link project}'s
+   * PackageId is appended to the ROOT as a subfolder. Do not use wildcards in
+   * ROOT with this set to `true`!
+   */
+  private async PushPackages(
+    opts: typeof NRI.PushPackagesOptionsType.t,
+    usePerSourceSubfolder = false,
+    usePerPackageIdSubfolder = false,
+  ) {
+    // const pushOutput =
+    await execAsync(this.GetPushCommand(
+      opts,
+      usePerSourceSubfolder,
+      usePerPackageIdSubfolder,
+    ))
+  }
+
+  // #endregion Push
 }
 
 // shorthand/alias for NugetRegistryInfo
