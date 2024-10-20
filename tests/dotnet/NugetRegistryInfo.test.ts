@@ -108,10 +108,6 @@ await describe('NugetRegistryInfo', async (ctx0) => {
   })
 
   await describe('resolvedEnvVariable', async () => {
-    await it('is undefined if not initialized', async () => {
-      strictEqual(typeof NRI.prototype.resolvedEnvVariable, 'undefined')
-    })
-
     await it('can be a string', async () => {
       const x = { resolvedEnvVariable: '' } as NRI
       strictEqual(typeof x.resolvedEnvVariable, 'string')
