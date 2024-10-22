@@ -1,6 +1,5 @@
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
-import { strictEqual } from 'assert'
 import { type } from 'arktype'
 import { isOfType, tBooleanString, type BooleanString, tEmptyOrBooleanString, type EmptyOrBooleanString } from '../utils/miscTypes.js'
 import { listOwnGetters } from '../utils/reflection.js'
@@ -61,17 +60,21 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @param properties The dictionary returned by MSBuild's `-getProperty:propname,...` argument
    */
   constructor(msbuildProjectFullPath: string, properties: CaseInsensitiveMap<string, string>) {
-    // runtime type checks
-    strictEqual(typeof msbuildProjectFullPath, 'string', TypeError(`msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`))
-    strictEqual(properties instanceof CaseInsensitiveMap, true, `arg 'properties' should be instanceof ${CaseInsensitiveMap.name}`)
-    strictEqual([...properties.keys()].every(v => typeof v === 'string'), true, 'all keys in arg \'properties\' should be strings')
-    strictEqual([...properties.values()].every(v => typeof v === 'string'), true, 'all values in arg \'properties\' should be strings')
+    /* runtime type checks */
+    // check msbuildProjectFullPath in super
+    // strictEqual(typeof msbuildProjectFullPath, 'string', TypeError(`msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`))
+    /* properties MUST be instance of CaseInsensitiveMap for `consumables`! */
+    // strictEqual(properties instanceof CaseInsensitiveMap, true, `arg 'properties' should be instanceof ${CaseInsensitiveMap.name}`)
 
-    // keys of properties to consume in this constructor, not super. These are the names of getters, lowercased.
+    /**
+     * names of properties to consume in this constructor instead of its super.
+     * These are the names of getters, lowercased.
+     */
     const keysToMoveOut = listOwnGetters(NPP)
       .map(v => v.toLowerCase())
+    /** Entries to remove from {@link properties} and apply to `this` after calling `super` */
     const consumables = new CaseInsensitiveMap<string, string>()
-    // move property by key from properties to consumables
+    // move property by key from `properties` to `consumables`. The types of keys and values in `properties` do not matter here.
     for (const key of keysToMoveOut) {
       const value = NPP.getAndForget(properties, key)
       if (value !== undefined)
@@ -80,6 +83,14 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
     // Pass the remainder to super
     super(msbuildProjectFullPath, properties)
+
+    /** filter out entries with undefined values; convert values to strings */
+    consumables.forEach((key, value, map) => {
+      if (value === undefined)
+        map.delete(key)
+      if (typeof value !== 'string')
+        consumables.set(key, String(value))
+    })
 
     const _getAndForget = (key: string) => NPP.getAndForget(consumables, key)
     let data
