@@ -11,7 +11,6 @@ import { promisify } from 'node:util'
 import { dir, type DirResult, setGracefulCleanup } from 'tmp'
 import { getEnvVarValue } from '../envUtils.js'
 import type { MSBuildProject } from './MSBuildProject.js'
-import { NugetRegistryPair } from './NugetRegistryPair.js'
 import { type } from 'arktype'
 
 const execAsync = promisify(exec)
@@ -380,17 +379,6 @@ export class NugetRegistryInfo {
    */
   readonly resolvedEnvVariable: string
   readonly url: string
-
-  /**
-   * todo: deprecate and remove
-   * if canPushPackagesToUrl, returns a NugetRegistryPair based on `this`.
-   * @returns A NugetRegistryPair representing a NuGet source's API endpoint and the token that can be used to push the name of the variable containing the token value and the url to which nupkgs and snupkgs are pushed
-   */
-  async toRegistryPair(): Promise<NugetRegistryPair> {
-    return await this.canPushPackagesToUrl.then(() =>
-      new NugetRegistryPair(this.resolvedEnvVariable, this.url),
-    )
-  }
 
   /**
    * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
