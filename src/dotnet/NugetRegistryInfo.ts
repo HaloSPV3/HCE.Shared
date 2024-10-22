@@ -407,7 +407,6 @@ but no tokens were defined.`)
 
   /**
    * The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
-   * @prop {object} t The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
    */
   static readonly PackPackagesOptionsType = Object.freeze(type({
     artifactsPath: 'string',
