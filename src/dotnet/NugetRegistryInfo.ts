@@ -100,10 +100,39 @@ export class NugetRegistryInfo {
    */
   constructor(url = 'https://api.nuget.org/v3/index.json', tokenEnvVars: readonly string[] = NugetRegistryInfo.DefaultTokenEnvVars, project: MSBuildProject) {
     this.url = url
-    /* get token value - may throw */
-    this.resolvedEnvVariable = NugetRegistryInfo.getTokenValue(tokenEnvVars)
+    /**
+     * May throw! Assign key of the first key-value pair to
+     * {@link resolvedEnvVariable}
+     */
+    this.resolvedEnvVariable = _GetTokenEnvVariables()[0][0]
     this._project = project
-    // this.canPushPackagesToUrl;
+
+    /**
+     * Get the environment variables as key-value pairs.
+     * @param tokenEnvVars The name of the environment variables whose values are
+     * NuGet API keys.
+     * @returns an array of key-value pairs of the given environment variables and
+     * their values, filtered to only those whose values are not undefined.
+     * @throws {Error} when none of the provided environment variables are defined.
+     */
+    function _GetTokenEnvVariables() {
+      type.string.array().readonly().assert(tokenEnvVars)
+
+      const definedTokens = Object.freeze(
+        tokenEnvVars.map(
+          // key-value tuple
+          key => [key, getEnvVarValue(key)] as const,
+        ).filter(
+          (pair: readonly [string, string | undefined]): pair is [string, string] =>
+            pair[1] !== undefined,
+        ),
+      )
+
+      if (definedTokens.length !== 0)
+        return definedTokens
+
+      throw new Error(`The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined.`)
+    }
   }
 
   private readonly _project: MSBuildProject
@@ -326,18 +355,7 @@ export class NugetRegistryInfo {
     if (this.#canPushPackagesToUrl !== undefined)
       return this.#canPushPackagesToUrl
 
-    if (!this.resolvedEnvVariable) {
-      const errMsg = 'NugetRegistryInfo.resolvedVariable must not be null or undefined!'
-      const err = new ReferenceError(errMsg)
-      return this.#canPushPackagesToUrl = Promise.reject(err)
-    }
-
-    const tokenValue = getEnvVarValue(this.resolvedEnvVariable)
-    if (tokenValue === undefined) {
-      const errMsg = `The environment variable ${this.resolvedEnvVariable} is undefined!`
-      const err = new TypeError(errMsg)
-      return this.#canPushPackagesToUrl = Promise.reject(err)
-    }
+    const tokenValue = NRI._GetTokenValue(this.resolvedEnvVariable)
 
     if (tokenValue.startsWith('github_pat_')) {
       const errMsg = `The value of the token in ${this.resolvedEnvVariable} begins with 'github_pat_', indicating it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`
@@ -375,32 +393,22 @@ export class NugetRegistryInfo {
   }
 
   /**
-   * This method is called by NugetRegistryInfo's constructor, but it
-   * should be executed during...\
-   * Semantic Release Step: `verifyConditions`
-   * @param tokenEnvVars The name of the environment variable(s) whose value is a NuGet API key.
+   * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
+   * @param tokenEnvVar The name of the environment variable(s) whose value is a NuGet API key.
    * @returns The value of the first defined environment variable.
    * @throws {Error} when none of the provided environment variables are defined.
    */
-  public static getTokenValue(tokenEnvVars: readonly string[]): string {
-    const definedTokens = Object.freeze(
-      tokenEnvVars.map(
-        // key-value tuple
-        v => [v, getEnvVarValue(v)] as const,
-      ).filter(
-        (pair): pair is [string, string] => pair[1] !== undefined,
-      ),
-    )
+  private static _GetTokenValue(resolvedEnvVariable: string): string {
+    type.string.assert(resolvedEnvVariable)
 
-    if (definedTokens.length === 0) {
-      throw new Error(
-        `\
-The environment variables [${tokenEnvVars.join(', ')}] were specified \
-as the source of the token to push a NuGet package to GitHub, \
-but no tokens were defined.`)
+    const tokenValue = getEnvVarValue(resolvedEnvVariable)
+    if (tokenValue === undefined) {
+      throw new Error(`\
+The environment variable ${resolvedEnvVariable} was specified \
+as the source of the token to push a NuGet package, \
+but the environment variable is empty or undefined.`)
     }
-
-    return definedTokens[0][1]
+    return tokenValue
   }
 
   // #region Pack
@@ -594,7 +602,8 @@ but no tokens were defined.`)
       'push',
       `"${opts.root}"`,
     ]
-    if ((opts.apiKey ??= NRI.getTokenValue(NRI.DefaultTokenEnvVars)) !== undefined)
+    if ((opts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable)) !== undefined
+      && opts.apiKey !== '')
       packCmdArr.push('--api-key', `"${opts.apiKey}"`)
     if (opts.disableBuffering === true)
       packCmdArr.push('--disable-buffering')
