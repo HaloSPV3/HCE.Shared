@@ -545,12 +545,14 @@ but the environment variable is empty or undefined.`)
   }
 
   /**
-   * Execute `dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${outDir}` to create the dummy package for the current
-   * {@link project} and returns the full paths of all nupkg, symbols.nupkg, and snupkg files
-   * created by the Pack target.
+   * Execute `dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${outDir}`
+   * to create the dummy package for the current {@link project}.
    * @param {typeof NRI.PackPackagesOptionsType.t} opts Options passed to
-   * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. {@link GetPackCommand} is called with with both subfolder
-   * booleans set to `true`.
+   * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument.
+   * {@link GetPackCommand} is called with with both subfolder booleans set to
+   * `true`.
+   * @returns the full paths of all nupkg, symbols.nupkg, and snupkg files
+   * created by the Pack target, as extracted from the dotnet process's STDOUT.
    */
   public async PackDummyPackage(
     opts: typeof NRI.PackPackagesOptionsType.t,
