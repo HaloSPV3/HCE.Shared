@@ -454,6 +454,10 @@ but the environment variable is empty or undefined.`)
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): string {
+    NRI.PackPackagesOptionsType.assert(opts)
+    type.boolean.assert(usePerSourceSubfolder)
+    type.boolean.assert(usePerPackageIdSubfolder)
+
     opts.output ??= `${cwd()}/publish`
     if (usePerSourceSubfolder === true)
       opts.output = joinPaths(opts.output, NugetRegistryInfo.GetNameForURL(this.url))
@@ -528,6 +532,10 @@ but the environment variable is empty or undefined.`)
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): Promise<string[]> {
+    NRI.PackPackagesOptionsType.assert(opts)
+    type.boolean.assert(usePerSourceSubfolder)
+    type.boolean.assert(usePerPackageIdSubfolder)
+
     const packOutput = await execAsync(this.GetPackCommand(
       opts,
       usePerSourceSubfolder,
@@ -547,6 +555,8 @@ but the environment variable is empty or undefined.`)
   public async PackDummyPackage(
     opts: typeof NRI.PackPackagesOptionsType.t,
   ): Promise<string[]> {
+    NRI.PackPackagesOptionsType.assert(opts)
+
     opts.output = getDummiesDir(this._project)
 
     /** e.g.
