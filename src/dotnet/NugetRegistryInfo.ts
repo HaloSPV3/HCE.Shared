@@ -510,7 +510,6 @@ but no tokens were defined.`)
    * @param [usePerSourceSubfolder=false] If `true`, modify the output path to
    * include a subfolder bearing a path-safe encoding of the NuGet Source that
    * will receive the nupkg.
-   * package will .
    * @param [usePerPackageIdSubfolder=false] If `true`, modify the output path
    * to include a subfolder named after the the PackageId.
    * @returns a string[] containing the full file paths of all new packages i.e.
