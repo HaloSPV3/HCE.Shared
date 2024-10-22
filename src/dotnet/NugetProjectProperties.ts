@@ -81,8 +81,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     // Pass the remainder to super
     super(msbuildProjectFullPath, properties)
 
-    const _getAndForget = (key: string) =>
-      NPP.getAndForget(consumables, key)
+    const _getAndForget = (key: string) => NPP.getAndForget(consumables, key)
     let data
     this._authors = _getAndForget('Authors')
     this._buildOutputTargetFolder = _getAndForget('BuildOutputTargetFolder')
