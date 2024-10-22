@@ -582,19 +582,20 @@ but the environment variable is empty or undefined.`)
    * See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-push
    */
   static readonly PushPackagesOptionsType = Object.freeze(type({
-    apiKey: 'string | undefined',
-    disableBuffering: 'boolean | undefined',
-    forceEnglishOutput: 'boolean | undefined',
-    interactive: 'boolean | undefined',
-    noServiceEndpoint: 'boolean | undefined',
-    noSymbols: 'boolean | undefined',
+    apiKey: 'string',
+    disableBuffering: 'boolean',
+    forceEnglishOutput: 'boolean',
+    interactive: 'boolean',
+    noServiceEndpoint: 'boolean',
+    noSymbols: 'boolean',
+    skipDuplicate: 'boolean',
+    source: 'string',
+    symbolApiKey: 'string',
+    symbolSource: 'string',
+    timeout: 'number',
+  }).partial().and({
     root: 'string',
-    skipDuplicate: 'boolean | undefined',
-    source: 'string | undefined',
-    symbolApiKey: 'string | undefined',
-    symbolSource: 'string | undefined',
-    timeout: 'number | undefined',
-  } as const))
+  }))
 
   GetPushCommand(
     opts: typeof NRI.PushPackagesOptionsType.t,
