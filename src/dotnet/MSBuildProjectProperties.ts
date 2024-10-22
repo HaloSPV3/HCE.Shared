@@ -1,4 +1,4 @@
-import { ok } from 'node:assert'
+import { strictEqual } from 'node:assert/strict'
 import { existsSync } from 'node:fs'
 import { basename, isAbsolute, resolve } from 'node:path'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
@@ -66,8 +66,17 @@ export class MSBuildProjectProperties {
   // #endregion private
 
   constructor(msbuildProjectFullPath: string, properties: CaseInsensitiveMap<string, string>) {
+    // runtime type checks
+    strictEqual(typeof msbuildProjectFullPath, 'string', TypeError(`msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`))
+    strictEqual(properties instanceof CaseInsensitiveMap, true, `arg 'properties' should be instanceof ${CaseInsensitiveMap.name}`)
+    strictEqual([...properties.keys()].every((v): v is string => typeof v === 'string'), true, 'all keys in arg \'properties\' should be strings')
+    // filter out entries with undefined values
+    properties.forEach((key, value) => {
+      if (value === undefined)
+        properties.delete(key)
+    })
+
     this._msbuildProjectFullPath = MPP.GetFullPath(msbuildProjectFullPath)
-    ok(properties instanceof CaseInsensitiveMap)
     this._assemblyName = MPP.getAndForget(properties, 'AssemblyName')
     this._description = MPP.getAndForget(properties, 'Description')
     this._outputPath = MPP.getAndForget(properties, 'OutputPath')
