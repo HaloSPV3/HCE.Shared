@@ -527,7 +527,7 @@ but the environment variable is empty or undefined.`)
    * @returns a string[] containing the full file paths of all new packages i.e.
    * .nupkg, .symbols.nupkg, .snupkg
    */
-  private async PackPackages(
+  private async _PackPackages(
     opts: typeof NRI.PackPackagesOptionsType.t,
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
@@ -654,7 +654,7 @@ but the environment variable is empty or undefined.`)
    * PackageId is appended to the ROOT as a subfolder. Do not use wildcards in
    * ROOT with this set to `true`!
    */
-  private async PushPackages(
+  private async _PushPackages(
     opts: typeof NRI.PushPackagesOptionsType.t,
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
