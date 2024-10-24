@@ -13,6 +13,12 @@ import { dir, type DirResult, setGracefulCleanup } from 'tmp'
 import { getEnvVarValue } from '../envUtils.js'
 import type { MSBuildProject } from './MSBuildProject.js'
 
+/* JSDoc Types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { NugetProjectProperties } from './NugetProjectProperties.js'
+import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet.js'
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
 const execAsync = promisify(exec)
 const tmpDirNamespace = joinPaths(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
 
@@ -93,8 +99,9 @@ export class NugetRegistryInfo {
    * If none of the environment variables are defined, this constructor will
    * throw an {@link Error}.
    * @param {MSBuildProject} project The project whose package(s) will be
-   * pushed. Its `PackageId` will be read. Its `PackageVersion` will be
-   * overridden via CLI args when creating a dummy package. The real package's
+   * pushed.\
+   * - Its {@link NugetProjectProperties#PackageId} will be read.\
+   * - Its {@link NugetProjectProperties#PackageVersion} will be overridden via CLI args when creating a dummy package. The real package's
    * `PackageVersion` will *not* be overridden.
    */
   constructor(url = 'https://api.nuget.org/v3/index.json', tokenEnvVars: readonly string[] = NugetRegistryInfo.DefaultTokenEnvVars, project: MSBuildProject) {
@@ -498,9 +505,10 @@ but the environment variable is empty or undefined.`)
   /**
    * !Not ready for use! Remove private modifier and commit as `feat(dotnet)` when ready for release!
    * Blocking Issue: convert all dotnet-related functionality to a Semantic Release plugin!
-   * The current `semanticReleaseConfigDotnet` leverages @semantic-release/exec
-   * to invoke dotnet commands. This is fine for relatively short command lines,
-   * but chaining commands with ' && ' results in quickly-growing complexity.
+   * The current {@link SemanticReleaseConfigDotnet} leverages
+   * `@semantic-release/exec` to invoke dotnet commands. This is fine for
+   * relatively short command lines, but chaining commands with ' && ' results
+   * in quickly-growing complexity.
    * NuGet packages should be created during the `prepare` step, but complex
    * configuration of `dotnet pack` via command lines intended to be invoked by
    * `@semantic-release/exec` is impractical.
@@ -533,14 +541,18 @@ but the environment variable is empty or undefined.`)
   }
 
   /**
-   * Execute `dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${outDir}`
-   * to create the dummy package for the current {@link project}.
+   * Create a dummy package for the current {@link project} by executing a
+   * command line like \``dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this._project)}/${GetNameForURL(this.url)}`\`
    * @param {typeof NRI.PackPackagesOptionsType.t} opts Options passed to
    * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument.
-   * {@link GetPackCommand} is called with with both subfolder booleans set to
-   * `true`.
+   * - The `output` field is ignored and overwritten. It is replaced with
+   *   ${{@link getDummiesDir}({@link project})}/${{@link GetNameForURL}({@link url})}
+   * - The `output` path will be affixed with a folder named after this
+   * {@link NugetRegistryInfo#url}, but will not include a subfolder for the
+   * {@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}.
    * @returns the full paths of all nupkg, symbols.nupkg, and snupkg files
    * created by the Pack target, as extracted from the dotnet process's STDOUT.
+   * If mixed with other nupkgs, filter for the {@link NugetProjectProperties#PackageId}
    */
   public async PackDummyPackage(
     opts: typeof NRI.PackPackagesOptionsType.t,
@@ -595,7 +607,7 @@ but the environment variable is empty or undefined.`)
    * to a folder name and appended to the ROOT as a subfolder. Do not use
    * wildcards in ROOT with this set to `true`!
    * @param usePerPackageIdSubfolder  If `true`, the
-   * {@link project}.{@link MSBuildProject#Properties Properties}.{@link NugetProjectProperties#PackageId PackageId}
+   * {@link project}'s {@link NugetProjectProperties#PackageId}
    * is appended to the ROOT as a subfolder. Do not use wildcards in
    * ROOT with this set to `true`!
    * @returns A `dotnet nuget push` command line formatted with the
