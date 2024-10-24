@@ -592,6 +592,10 @@ but the environment variable is empty or undefined.`)
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): string {
+    NRI.PushPackagesOptionsType.assert(opts)
+    type.boolean.assert(usePerSourceSubfolder)
+    type.boolean.assert(usePerPackageIdSubfolder)
+
     opts.root ??= `${cwd()}/publish`
     if (usePerSourceSubfolder === true)
       opts.root = joinPaths(opts.root, NugetRegistryInfo.GetNameForURL(this.url))
