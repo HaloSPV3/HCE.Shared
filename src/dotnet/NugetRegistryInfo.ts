@@ -523,6 +523,7 @@ but the environment variable is empty or undefined.`)
    * @returns a string[] containing the full file paths of all new packages i.e.
    * .nupkg, .symbols.nupkg, .snupkg
    */
+  // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
   private async _PackPackages(
     opts: typeof NRI.PackPackagesOptionsType.t,
     usePerSourceSubfolder = false,
@@ -679,6 +680,7 @@ but the environment variable is empty or undefined.`)
    * PackageId is appended to the ROOT as a subfolder. Do not use wildcards in
    * ROOT with this set to `true`!
    */
+  // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
   private async _PushPackages(
     opts: typeof NRI.PushPackagesOptionsType.t,
     usePerSourceSubfolder = false,
@@ -690,6 +692,57 @@ but the environment variable is empty or undefined.`)
       usePerSourceSubfolder,
       usePerPackageIdSubfolder,
     ))
+  }
+
+  /**
+   *
+   * Get a `dotnet nuget push` command for pushing one or more nupkg/snupkg
+   * files created by {@link GetPackCommand} or {@link _PackPackages}.\
+   * Like {@link PackDummyPackage}, the output/ROOT path will include a
+   * folder named after this NRI instance's {@link NugetRegistryInfo#url},
+   * but will not include a subfolder for the
+   * {@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}
+   *
+   * @example
+   * ```ts
+   * const packAndPushDummyCmd = [
+   *   nri.GetPackCommand(
+   *     NugetRegistryInfo.PackPackagesOptionsType.from({ root: '' }),
+   *     false,
+   *     false,
+   *   ),
+   *   nri.GetPushDummyPackageCommand(pushOpts, false, false),
+   * ].join(' && ')
+   * ```
+   *
+   * @public
+   * @param opts the ROOT arg and options for `dotnet nuget push`. The following
+   * fields are overwritten:
+   * - root: getDummiesDir(this.project)
+   * - skipDuplicates: true
+   * @returns {string} a `dotnet nuget push` command to push a dummy package
+   * (created by executing {@link PackDummyPackage}) to {@link url}
+   */
+  GetPushDummyCommand(opts: typeof NRI.PushPackagesOptionsType.t): string {
+    opts.root = getDummiesDir(this.project)
+    opts.skipDuplicate = true
+    return this.GetPushCommand(opts, true)
+  }
+
+  /**
+   * Call {@link GetPushDummyCommand} and immediately executes it.\
+   * @throws {Error} when the process exits with an error code indicating
+   * failure i.e. the command line is invalid, the process fails to start,
+   * the push fails, et cetera.
+   * @param opts the ROOT arg and options for `dotnet nuget push`. The following
+   * fields are overwritten:
+   * - root: getDummiesDir(this.project)
+   * - skipDuplicates: true
+   */
+  // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
+  private async _PushDummyPckages(opts: typeof NRI.PushPackagesOptionsType.t): Promise<void> {
+    const pushCmd: string = this.GetPushDummyCommand(opts)
+    /* const output = */ await execAsync(pushCmd)
   }
 
   // #endregion Push
