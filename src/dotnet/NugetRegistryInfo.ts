@@ -621,6 +621,11 @@ but the environment variable is empty or undefined.`)
       'push',
       `"${opts.root}"`,
     ]
+    /**
+     * If apiKey is an empty string, defer to the dotnet CLI's NuGet client
+     * ability to lookup API keys saved via `dotnet nuget add source` or NuGet config
+     * files.
+     */
     if ((opts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable)) !== undefined
       && opts.apiKey !== '')
       packCmdArr.push('--api-key', `"${opts.apiKey}"`)
