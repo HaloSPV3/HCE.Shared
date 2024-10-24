@@ -561,7 +561,7 @@ but the environment variable is empty or undefined.`)
     NRI.PackPackagesOptionsType.assert(opts)
 
     opts.output = getDummiesDir(this._project)
-
+    const packCmd = this.GetPackCommand(opts, true)
     /** e.g.
      * ```txt
      *  Determining projects to restore...
@@ -571,7 +571,7 @@ but the environment variable is empty or undefined.`)
      *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
      * ```
      */
-    const packOutput = await execAsync(`${this.GetPackCommand(opts, true, true)} -p:Version=0.0.1-DUMMY`)
+    const packOutput = await execAsync(`${packCmd} -p:Version=0.0.1-DUMMY`)
     return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
   }
 
