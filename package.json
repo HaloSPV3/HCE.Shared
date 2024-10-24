@@ -91,7 +91,7 @@
     "@types/tmp": "^0.2.6",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
-    "packemon": "^4.0.1",
+    "packemon": "^4.1.1",
     "prettier": "^3.2.5",
     "prettier-config-moon": "^1.1.2",
     "tmp": "^0.2.3",
