@@ -1,3 +1,4 @@
+import { type } from 'arktype'
 import { ok, strictEqual } from 'node:assert/strict'
 import { exec } from 'node:child_process'
 import { createHash } from 'node:crypto'
@@ -11,7 +12,6 @@ import { promisify } from 'node:util'
 import { dir, type DirResult, setGracefulCleanup } from 'tmp'
 import { getEnvVarValue } from '../envUtils.js'
 import type { MSBuildProject } from './MSBuildProject.js'
-import { type } from 'arktype'
 
 const execAsync = promisify(exec)
 const tmpDirNamespace = joinPaths(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
