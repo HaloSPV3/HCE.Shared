@@ -583,6 +583,9 @@ but the environment variable is empty or undefined.`)
    * should be present and ready to be pushed the default or specified Source.
    * The ROOT may also include wildcards e.g. `*.nupkg`, `**\\*.nupkg`
    * See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-push
+   *
+   * Specific to this API:
+   * If you want to use this API's default root value (\`${cwd()}/publish`), assign an empty string.
    */
   static readonly PushPackagesOptionsType = Object.freeze(type({
     apiKey: 'string',
