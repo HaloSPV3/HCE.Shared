@@ -587,6 +587,20 @@ but the environment variable is empty or undefined.`)
     root: 'string',
   }))
 
+  /**
+   * Create a `dotnet nuget push` command line from the given options and
+   * optional boolean parameters.
+   * @param opts See {@link PushPackagesOptionsType}
+   * @param usePerSourceSubfolder If `true`, the NuGet Source URL is formatted
+   * to a folder name and appended to the ROOT as a subfolder. Do not use
+   * wildcards in ROOT with this set to `true`!
+   * @param usePerPackageIdSubfolder  If `true`, the
+   * {@link project}.{@link MSBuildProject#Properties Properties}.{@link NugetProjectProperties#PackageId PackageId}
+   * is appended to the ROOT as a subfolder. Do not use wildcards in
+   * ROOT with this set to `true`!
+   * @returns A `dotnet nuget push` command line formatted with the
+   * appropriate arguments.
+   */
   GetPushCommand(
     opts: typeof NRI.PushPackagesOptionsType.t,
     usePerSourceSubfolder = false,
