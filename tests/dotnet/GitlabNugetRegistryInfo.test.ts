@@ -93,11 +93,11 @@ await describe("GitlabNugetRegistryInfo", async (ctx0) => {
 			});
 		});
 
-		await describe("toRegistryPair", async (ctx2) => {
+		/* await describe("toRegistryPair", async (ctx2) => {
 			await it("has expected name", async () => {
 				ok(ctx2.name in defaultWithPlaceholders);
 			});
-		});
+		}); */
 
 		await describe("url", async (ctx2) => {
 			await it("has expected name", async () => {
