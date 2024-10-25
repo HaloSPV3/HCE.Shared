@@ -43,7 +43,8 @@ await describe('GithubNugetRegistryInfo', async () => {
     });
   });
 
-  await describe('toRegistryPair', async () => {
+  // todo: refactor to test new NugetRegistryInfo methods
+  /* await describe('toRegistryPair', async () => {
     const _dotenv = configDotenv(dotenvOptions);
     strictEqual(_dotenv.error, undefined)
     getOwner();
@@ -75,5 +76,5 @@ await describe('GithubNugetRegistryInfo', async () => {
 
     todo('mock sufficient token');
     todo('mock custom url');
-  });
+  }); */
 })

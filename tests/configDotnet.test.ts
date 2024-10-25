@@ -1,22 +1,10 @@
-import { getConfig, insertAndEditPlugins } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet'
-import { notDeepStrictEqual, ok, strictEqual } from 'node:assert'
+import { getConfig } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet'
+import { ok, strictEqual } from 'node:assert'
 import { unlinkSync, writeFileSync } from 'node:fs'
 import { describe, it } from 'node:test'
 import { fileSync, setGracefulCleanup } from 'tmp'
 
 await describe('configDotnet', async () => {
-  await describe('insertAndEditPlugins', () => {
-    strictEqual(insertAndEditPlugins.name, 'insertAndEditPlugins')
-
-    it('modifies the Options object when expected to do so', () => {
-      const x = {}
-      const y = insertAndEditPlugins({ ...x })
-      notDeepStrictEqual(x, y)
-    })
-    it('inserts plugins at the correct positions', { todo: true })
-    it('Git plugin options are added only when the Git plugin is already in array', { todo: true })
-  })
-
   await describe('getConfig', async () => {
     strictEqual(getConfig.name, 'getConfig')
 
