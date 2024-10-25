@@ -2,8 +2,10 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"dependsOn": [
-				"npm: install"
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"\"install\""
 			],
 			"detail": "install dependencies from package",
 			"label": "npm install on open",
