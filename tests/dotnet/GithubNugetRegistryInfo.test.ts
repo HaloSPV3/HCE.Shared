@@ -1,13 +1,13 @@
-import { GithubNugetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo';
-import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils';
-import { type DotenvConfigOptions } from 'dotenv';
-import { notDeepStrictEqual, ok, strictEqual } from 'node:assert';
-import { existsSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { env } from 'node:process';
-import { describe, it } from 'node:test';
+import { GithubNugetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'
+import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
+import { type DotenvConfigOptions } from 'dotenv'
+import { notDeepStrictEqual, ok, strictEqual } from 'node:assert'
+import { existsSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { env } from 'node:process'
+import { describe, it } from 'node:test'
 
-const dotenvPath = join(dirname(dirname(import.meta.dirname)), '.env');
+const dotenvPath = join(dirname(dirname(import.meta.dirname)), '.env')
 if (!existsSync(dotenvPath))
   writeFileSync(dotenvPath, '')
 const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }
@@ -17,31 +17,31 @@ const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }
  * @returns the value of env.GITHUB_REPOSITORY_OWNER
  */
 function getOwner(): string {
-  return env.GITHUB_REPOSITORY_OWNER ??= "HaloSPV3";
+  return env.GITHUB_REPOSITORY_OWNER ??= 'HaloSPV3'
 }
 
 await describe('GithubNugetRegistryInfo', async () => {
   await describe('canPushPackagesToUrl', async () => {
     await it('returns true when GITHUB_TOKEN is valid and GITHUB_REPOSITORY_OWNER is defined', async (t) => {
       if (!getEnvVarValue('GITHUB_TOKEN'))
-        return t.skip('GITHUB_TOKEN is unavailable for testing');
+        return t.skip('GITHUB_TOKEN is unavailable for testing')
 
       if (getEnvVarValue('CI') && !(getEnvVarValue('GITHUB_ACTION')?.includes('release')))
         return t.skip()
 
-      getOwner();
+      getOwner()
       strictEqual(await new GithubNugetRegistryInfo().canPushPackagesToUrl, true)
     })
 
     await it('throws when GITHUB_TOKEN is invalid', async () => {
-      getOwner();
-      const tokenEnvVar = 'TOKEN_CANNOT_WRITE';
+      getOwner()
+      const tokenEnvVar = 'TOKEN_CANNOT_WRITE'
       getEnv(undefined, { TOKEN_CANNOT_WRITE: tokenEnvVar })
-      const result = await new GithubNugetRegistryInfo(tokenEnvVar).canPushPackagesToUrl.catch(reason => reason instanceof Error ? reason : new Error(String(reason)));
-      notDeepStrictEqual(result, true);
-      ok(result instanceof Error);
-    });
-  });
+      const result = await new GithubNugetRegistryInfo(tokenEnvVar).canPushPackagesToUrl.catch(reason => reason instanceof Error ? reason : new Error(String(reason)))
+      notDeepStrictEqual(result, true)
+      ok(result instanceof Error)
+    })
+  })
 
   // todo: refactor to test new NugetRegistryInfo methods
   /* await describe('toRegistryPair', async () => {
