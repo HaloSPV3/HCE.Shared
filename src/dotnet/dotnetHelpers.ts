@@ -1,19 +1,9 @@
 import { MSBuildProject } from './MSBuildProject.js'
-import type { NugetRegistryInfo } from './NugetRegistryInfo.js'
-
-/** args appended to "dotnet publish", joined by space */
-function appendCustomProperties(args: string[], proj: MSBuildProject, publishProperties: readonly string[] | string[]): void {
-  // convert to dictionary and filter for user-defined properties.
-  const dictionary = Object.entries(proj.Properties).filter(
-    p => !publishProperties.includes(p[0]),
-  )
-  if (dictionary.length > 0) {
-    /* format remaining properties as "-p:Property=Value" and append to args */
-    args.push(
-      ...dictionary.map(keyValuePair => `-p:${keyValuePair[0]}=${keyValuePair[1]}`),
-    )
-  }
-}
+import { NugetRegistryInfo } from './NugetRegistryInfo.js'
+import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js'
+import { listOwnGetters } from '../utils/reflection.js'
+import { NugetProjectProperties as NPP } from './NugetProjectProperties.js'
+import { cwd } from 'process'
 
 /**
  * Build a prepareCmd string from .NET projects.\
@@ -27,7 +17,9 @@ function appendCustomProperties(args: string[], proj: MSBuildProject, publishPro
  * @export
  * @param {string[] | MSBuildProject[]} projectsToPublish
  * @param {string[] | NugetRegistryInfo[] | undefined} projectsToPackAndPush
- *  Relative and/or full file paths of projects to pass to `dotnet pack`.
+ *  Relative and/or full file paths of projects to pass to `dotnet pack`. If
+ *  string[], only the default NuGet Source will be used. If GitHub, GitLab,
+ *  etc. are also desired, pass {@link NugetRegistryInfo}[]
  * @param {string[] } [dotnetNugetSignArgs=['./publish']]
  * Arguments appended to `dotnet nuget sign`. You may append an arbitrary
  * command by splitting it into arguments e.g.
@@ -40,14 +32,20 @@ export async function configurePrepareCmd(
   projectsToPackAndPush?: string[] | NugetRegistryInfo[],
   dotnetNugetSignArgs: string[] = ['./publish'],
 ): Promise<string> {
+  const evaluatedProjects: MSBuildProject[] = []
+
+  // append evaluated projects
+  projectsToPublish.filter(p => p instanceof MSBuildProject)
+    .forEach(p => evaluatedProjects.push(p))
+  projectsToPackAndPush?.filter(p => p instanceof NugetRegistryInfo)
+    .forEach(p => evaluatedProjects.push(p.project))
+
   return [
     await formatDotnetPublish(
-      projectsToPublish.map(p =>
-        typeof p === 'string'
-          ? p
-          : p.Properties.MSBuildProjectFullPath),
-      MSBuildProject.MatrixProperties),
-    formatDotnetPack(projectsToPackAndPush),
+      projectsToPublish,
+      MSBuildProject.MatrixProperties,
+    ),
+    formatDotnetPack(projectsToPackAndPush ?? []),
     formatDotnetNugetSign(dotnetNugetSignArgs),
     // remove no-op commands
   ].filter(v => v !== undefined)
@@ -65,69 +63,141 @@ export async function configurePrepareCmd(
       throw new Error(`Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] or MSBuildProject[] where length > 0.`)
 
     // each may have TargetFramework OR TargetFrameworks (plural)
-    const evaluatedProjects: MSBuildProject[] = await Promise.all(
-      projectsToPublish.map(async proj =>
-        proj instanceof MSBuildProject
-          ? proj
-          : await MSBuildProject.Evaluate({
+    const evaluatedPublishProjects: MSBuildProject[] = await Promise.all(
+      projectsToPublish.map(async (proj) => {
+        if (proj instanceof MSBuildProject)
+          return proj
+
+        // filter for projects whose full paths match the full path of the given string
+        const filteredProjects = evaluatedProjects.filter(p =>
+          p.Properties.MSBuildProjectFullPath === MSBPP.GetFullPath(proj),
+        )
+
+        // if no pre-existing MSBuildProject found, evaluate a new one and push
+        // it
+        if (filteredProjects.length === 0) {
+          const _proj = await MSBuildProject.Evaluate({
             FullName: proj,
             GetProperty: publishProperties,
             GetItem: [],
             GetTargetResult: [],
             Property: {},
-            Targets: ['Pack'],
-          }),
-      ))
+            Targets: ['Restore'],
+          })
+          evaluatedProjects.push(_proj)
+          return _proj
+        }
 
-    return evaluatedProjects.flatMap(async (proj) => {
-      const props = await proj.Properties
-      const args: string[] = [props.MSBuildProjectFullPath]
+        /*
+        todo: improve filtering to select "optimal" instance.
+          Which properties are most-needed?
+          For now, we just pray the project has a well-defined publish flow e.g.
+          @halospv3/hce.shared-config/dotnet/PublishAll.targets
+         */
+        return filteredProjects[0]
+      }),
+    )
 
-      appendCustomProperties(args, proj, publishProperties)
+    /** convert evaluatedPublishProjects to...strings? */
+    const converted = await Promise.all(
+      evaluatedPublishProjects.flatMap(async (proj: MSBuildProject): Promise<string[]> => {
+        // If the project imports PublishAll to publish for each TFM-RID
+        // permutation, return the appropriate command line.
+        if (proj.Targets.includes('PublishAll'))
+          return [`${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`]
 
-      const cmdPermutations: string[][] = [] // forEach, run dotnet [...args,...v]
+        // #region formatFrameworksAndRuntimes
+        const tfmRidPermutations: string[] = [] // forEach, run dotnet [proj.Properties.MSBuildProjectFullPath,...v]
+        const RIDs: string[] = proj.Properties.RuntimeIdentifiers.split(';')
+        const TFMs: string[] = proj.Properties.TargetFrameworks.split(';')
+        /*
+         * const spaceStr = ' '
+         * const splitEmpty = emptyStr.split(';')
+         * console.log(splitEmpty)
+         * // Expected output: Array [" "]
+         */
 
-      /** formatFrameworksAndRuntimes */
-      const RIDs: string[] = props.RuntimeIdentifiers.length > 0
-        ? props.RuntimeIdentifiers.split(';')
-        : []
-      const TFMs: string[] = props.TargetFrameworks.length > 0
-        ? props.TargetFrameworks.split(';')
-        : []
-      if (RIDs.length > 0) {
-        if (TFMs.length > 0) {
-          for (const RID of RIDs) {
-            for (const TFM of TFMs) {
-              cmdPermutations.push(['--runtime', RID, '--framework', TFM])
+        if (TFMs.length === 0 && RIDs.length === 0)
+          return [proj.Properties.MSBuildProjectFullPath] // return string[]
+
+        if (RIDs.length !== 0) {
+          if (TFMs.length !== 0) {
+            for (const RID of RIDs) {
+              for (const TFM of TFMs) {
+                tfmRidPermutations.push(`--runtime ${RID} --framework ${TFM}`)
+              }
+            }
+          }
+          else {
+            // assume singular TFM. No need to specify it.
+            for (const RID of RIDs) {
+              tfmRidPermutations.push(`--runtime ${RID}`)
             }
           }
         }
-        else {
-          // assume singular TFM. No need to specify it.
-          for (const RID of RIDs) {
-            cmdPermutations.push(['--runtime', RID])
+        else if (TFMs.length !== 0) {
+          for (const TFM of TFMs) {
+            tfmRidPermutations.push(`--framework ${TFM}`)
           }
         }
-      }
-      else if (TFMs.length > 0) {
-        for (const TFM of TFMs) {
-          cmdPermutations.push(['--framework', TFM])
-        }
-      }
 
-      return cmdPermutations.length > 0
-        ? cmdPermutations.map(permArgs => [...args, ...permArgs]) // string[][]
-        : [args] // string[][]
-    }).map(async args => `dotnet publish ${(await args).join(' ')}`)
-      .join(' && ')
+        return tfmRidPermutations.map((permArgs: string): string =>
+          [proj.Properties.MSBuildProjectFullPath, permArgs].join(' '),
+        )
+      }),
+    )
+
+    return converted.map((args: string[]): string =>
+      `dotnet publish ${args.join(' ')}`,
+    ).join(' && ')
   }
 
-  function formatDotnetPack(projectsToPackAndPush?: string[] | NugetRegistryInfo[]): string {
-    if (!projectsToPackAndPush)
-      return ''
-    return projectsToPackAndPush
-      .map(proj => `dotnet pack ${typeof proj === 'string' ? proj : proj.project.Properties.MSBuildProjectFullPath}`)
-      .join(' && ')
+  /**
+   * @param projectsToPackAndPush a string[] or {@link NugetRegistryInfo}[].
+   * If a string[], the string must be the platform-dependent (not file://),
+   * full path(s) to one or more projects with the .NET "Pack" MSBuild target.
+   * See {@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack}
+   * for command line usage.
+   * @returns one or more command line strings joined with ' && '.
+   * Each command line comprises the `dotnet pack` command, a project file path,
+   * and a hardcoded output path (`--output ${cwd()}/publish`)
+   * todo: get "namespaced output" pack command from the NugetRegistryInfo[]
+   * todo: require projectsToPackAndPush, never return undefined
+   */
+  async function formatDotnetPack(projectsToPackAndPush: string[] | NugetRegistryInfo[]): Promise<string | undefined> {
+    if (projectsToPackAndPush.length === 0)
+      return undefined
+    return await Promise.all(
+      projectsToPackAndPush.map(async (proj) => {
+        if (proj instanceof NugetRegistryInfo)
+          return proj
+
+        const msbp = await MSBuildProject.Evaluate({
+          FullName: proj,
+          GetItem: [],
+          GetProperty: [
+            ...MSBuildProject.MatrixProperties,
+            ...listOwnGetters(MSBPP.prototype),
+            ...listOwnGetters(NPP.prototype),
+          ],
+          GetTargetResult: [],
+          Property: {},
+          Targets: ['Restore', 'Pack'],
+        })
+
+        evaluatedProjects.push(msbp)
+
+        return new NugetRegistryInfo(
+          undefined,
+          undefined,
+          msbp,
+        )
+      }),
+    ).then((nriArray: NugetRegistryInfo[]): string => {
+      return nriArray.map((nri: NugetRegistryInfo): string =>
+        nri.GetPackCommand(NugetRegistryInfo.PackPackagesOptionsType.from({/** assume defaults/fallbacks */ })),
+      ).join(' && ')
+    })
   }
 
   /**
@@ -156,37 +226,28 @@ export async function configurePrepareCmd(
 }
 
 /**
- * todo - split into separate functions. Token verification should be in verifyConditionsCmd. Each package may be signed individually.
+ * todo: reorder parameters so registryInfos is first. Optional parameters should always follow required parameters.
+ * todo: split into separate functions. Token verification should be in verifyConditionsCmd. Each package may be signed individually.
  * TODO: completely rewrite
  * @param packageOutputPath
- * @param registries
+ * @param registryInfos
  * @param pushToGitHub
  * @returns
  */
 export async function configureDotnetNugetPush(
-  packageOutputPath = './publish',
-  registries: NugetRegistryPair[] = [nugetDefault],
-  pushToGitHub = true,
-  pushToGitLab = false,
+  registryInfos: NugetRegistryInfo[],
+  packageOutputPath = `${cwd()}/publish`,
 ): Promise<string> {
-  if (registries.some(registry => registry.url.trim() === ''))
+  if (registryInfos.some(registry => registry.url.trim() === ''))
     throw new Error('The URL for one of the provided NuGet registries was empty or whitespace.')
 
-  // if user did not specify a GitHub NuGet Registry, try determine default values and add the Source.
-  if (pushToGitHub && !registries.some(reg => reg.url.startsWith(GithubNugetRegistryInfo.NUGET_PKG_GITHUB_COM))) {
-    const ghPair = await new GithubNugetRegistryInfo().toRegistryPair()
-    if (ghPair) {
-      registries.push(ghPair)
-    }
-  }
-  if (pushToGitLab) {
-    const glPair = await new GitlabNugetRegistryInfo().toRegistryPair()
-    if (glPair) {
-      registries.push(glPair)
-    }
-  }
-
-  return registries
-    .map((registryPair): string => registryPair.toCommand(packageOutputPath))
+  return registryInfos
+    .map((nri): string =>
+      nri.GetPackCommand(
+        NugetRegistryInfo.PackPackagesOptionsType.from({ output: packageOutputPath }),
+        false,
+        false,
+      ),
+    )
     .join(' && ')
 }
