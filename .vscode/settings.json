@@ -96,5 +96,23 @@
 	"nodeTdd.buildOnCreate": true,
 	"nodeTdd.buildOnDelete": true,
 	"nodeTdd.reporter": "tap",
-	"sarif-viewer.connectToGithubCodeScanning": "off"
+	"sarif-viewer.connectToGithubCodeScanning": "off",
+	"gitCommitMessageEditor.intelliSense.completion.scopes": [
+		{
+			"scope": "dotnet",
+			"description": "Affects files \"./dotnet\" or \"./src/dotnet\" or affects our generic GitHub reusable workflows provided for assisting dotnet CI."
+		},
+		{
+			"scope": "vscode",
+			"description": "Affects files in \"./.vscode\"."
+		},
+		{
+			"scope": "deps",
+			"description": "Affects dependencies required at runtime."
+		},
+		{
+			"scope": "deps-dev",
+			"description": "Affects dependencies required in the dev environment or during build time."
+		}
+	]
 }
