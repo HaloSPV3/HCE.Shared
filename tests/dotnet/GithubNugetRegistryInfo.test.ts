@@ -1,11 +1,11 @@
 import { GithubNugetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo';
 import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils';
-import { configDotenv, type DotenvConfigOptions } from 'dotenv';
-import { deepStrictEqual, notDeepStrictEqual, ok, strictEqual } from 'node:assert';
+import { type DotenvConfigOptions } from 'dotenv';
+import { notDeepStrictEqual, ok, strictEqual } from 'node:assert';
 import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { env } from 'node:process';
-import { describe, it, todo } from 'node:test';
+import { describe, it } from 'node:test';
 
 const dotenvPath = join(dirname(dirname(import.meta.dirname)), '.env');
 if (!existsSync(dotenvPath))
