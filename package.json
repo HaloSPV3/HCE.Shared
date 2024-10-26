@@ -68,7 +68,7 @@
     "@types/semantic-release": "^20.0.6",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",
-    "arktype": "^2.0.0-rc.17",
+    "arktype": "^2.0.0-rc.21",
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "debug": "^4.3.4",
     "eslint-plugin-jsonc": "^2.15.1",
