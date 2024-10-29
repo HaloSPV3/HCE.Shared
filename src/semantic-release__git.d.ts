@@ -9,7 +9,7 @@ declare module '@semantic-release/git' {
   export interface Options {
     /**
      * Files to include in the release commit. Set to `false` to disable adding files to the release commit.
-     * @default ['CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json']
+     * @default ['CHANGELOG.md','package.json','package-lock.json','npm-shrinkwrap.json']
      * @description
      * Can be an Array or a single entry. Each entry can be either:
      * - a glob
@@ -75,15 +75,15 @@ declare module '@semantic-release/git' {
       }
     }
   ): void
-  async function prepare(
+  function prepare(
     pluginConfig: Options,
     context: {
-      env
+      env: unknown
       cwd: string
       branch: { name: string }
       options: SemanticReleaseOptions
-      lastRelease
-      nextRelease: { version, notes, gitTag }
+      lastRelease: unknown
+      nextRelease: { version: unknown, notes: unknown, gitTag: unknown }
       logger: { log(_0: string, _1: unknown | number): void }
     }
   ): Promise<void>
