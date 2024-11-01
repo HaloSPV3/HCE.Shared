@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path'
 import { env } from 'node:process'
 import { describe, it } from 'node:test'
 
-const dotenvPath = join(dirname(dirname(import.meta.dirname)), '.env')
+const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env')
 if (!existsSync(dotenvPath))
   writeFileSync(dotenvPath, '')
 const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }

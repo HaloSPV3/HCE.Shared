@@ -2,7 +2,7 @@ import { type } from 'arktype'
 import { exec } from 'node:child_process'
 import { type Dirent } from 'node:fs'
 import { readdir, realpath, stat } from 'node:fs/promises'
-import { dirname, isAbsolute, join, resolve } from 'node:path'
+import { dirname, isAbsolute, resolve } from 'node:path'
 import { promisify } from 'node:util'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
 import { getOwnPropertyDescriptors } from '../utils/reflection.js'
@@ -299,7 +299,7 @@ export class MSBuildProject {
       await toDirEntries(projectsToPackAndPush)
         .then(direntArr =>
           direntArr.map(async (dirent): Promise<MSBuildProject> => {
-            const fullPath = join(dirent.parentPath, dirent.name)
+            const fullPath = resolve(dirent.parentPath, dirent.name)
             const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath)
             // this might be too long for a command line. What was is on Windows?
             // 2^15 (32,768) character limit for command lines?

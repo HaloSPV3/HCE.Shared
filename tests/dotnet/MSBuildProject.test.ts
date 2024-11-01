@@ -36,8 +36,8 @@ await describe('MSBuildProject', async () => {
       deepStrictEqual(MSBP.Evaluate.name, c00.name)
     })
     await it('may return expected object (HCE.Shared.DeterministicNupkg)', async () => {
-      const deterministicNupkgProj = resolve(join(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'))
-      const pakDir = join(dirname(deterministicNupkgProj), 'packages')
+      const deterministicNupkgProj = resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj')
+      const pakDir = resolve(dirname(deterministicNupkgProj), 'packages')
       if (existsSync(pakDir) && readdirSync(pakDir).some(v => v.endsWith('.nupkg') || v.endsWith('.snupkg')))
         rmSync(pakDir, { recursive: true, force: true })
       const evalOpts: EvaluationOptions = new EvaluationOptions({
