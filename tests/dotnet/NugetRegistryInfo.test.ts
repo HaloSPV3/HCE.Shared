@@ -1,7 +1,6 @@
 import { nugetDefault } from '@halospv3/hce.shared-config/dotnet/dotnetHelpers'
-import { getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
-import { notDeepStrictEqual } from 'node:assert'
-import { deepStrictEqual, strictEqual } from 'node:assert/strict'
+import { getEnvVarValue } from '../../src/envUtils.js'
+import { deepStrictEqual, notDeepStrictEqual, strictEqual } from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { inspect } from 'node:util'
 import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
@@ -9,12 +8,12 @@ import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js'
 import { resolve } from 'node:path'
 import { isConstructor } from '../../src/utils/reflection.js'
 
-await it('is built', async () => {
+await it('is built', async () =>
   deepStrictEqual(
-    Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo')),
-    Object.entries(await import('../../src/dotnet/NugetRegistryInfo.js')),
-  )
-})
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'))),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/NugetRegistryInfo.js'))),
+  ),
+)
 
 await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is a class', async () => {

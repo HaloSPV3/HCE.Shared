@@ -1,16 +1,15 @@
-import { ok, strictEqual } from 'node:assert/strict'
+import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { MSBuildProjectProperties as MPP } from '../../src/dotnet/MSBuildProjectProperties.js'
 import { CaseInsensitiveMap } from './../../src/CaseInsensitiveMap.js'
-import { deepStrictEqual } from 'node:assert'
 import { tmpNameSync } from 'tmp'
 
-await it('is built', async () => {
+await it('is built', async () =>
   deepStrictEqual(
-    Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProjectProperties')),
-    Object.entries(await import('../../src/dotnet/MSBuildProjectProperties.js')),
-  )
-})
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProjectProperties'))),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/MSBuildProjectProperties.js'))),
+  ),
+)
 
 await describe('MSBuildProjectProperties', async (c0) => {
   const emptyMap = new CaseInsensitiveMap<string, string>()

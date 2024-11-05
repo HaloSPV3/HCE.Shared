@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 
-import { deepStrictEqual, notStrictEqual } from 'node:assert'
+import { deepStrictEqual, notStrictEqual } from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import { createRequire } from 'node:module'
 import { packemon } from '../package.json' with { type: 'json' }

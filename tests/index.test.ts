@@ -4,8 +4,15 @@ import {
   notStrictEqual,
   strictEqual,
 } from 'node:assert/strict'
-import { describe, test } from 'node:test'
+import { describe, it, test } from 'node:test'
 import type { Options } from 'semantic-release'
+
+await it('is built', async () =>
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/index'))),
+    JSON.stringify(Object.entries(await import('../src/index.js'))),
+  ),
+)
 
 const options: Options = HceSharedConfig
 

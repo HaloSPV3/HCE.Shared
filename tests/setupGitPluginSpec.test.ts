@@ -1,6 +1,13 @@
 import { setupGitPluginSpec } from '@halospv3/hce.shared-config/setupGitPluginSpec'
-import { deepStrictEqual, notDeepStrictEqual } from 'node:assert'
+import { deepStrictEqual, notDeepStrictEqual } from 'node:assert/strict'
 import { describe, it } from 'node:test'
+
+await it('is built', async () =>
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/setupGitPluginSpec'))),
+    JSON.stringify(Object.entries(await import('../src/setupGitPluginSpec.js'))),
+  ),
+)
 
 await describe('setupGitPluginSpec', async () => {
   await it('returns original array if it lacks Git PluginSpec', () => {

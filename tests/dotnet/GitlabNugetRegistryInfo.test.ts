@@ -1,7 +1,21 @@
+import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
+import { resolve } from 'node:path'
 import { describe, it, todo } from 'node:test'
-import { ok, strictEqual } from 'node:assert/strict'
-import { GitlabNugetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'
-import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
+import { GitlabNugetRegistryInfo } from '../../src/dotnet/GitlabNugetRegistryInfo.js'
+import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
+import { getEnv, getEnvVarValue } from '../../src/envUtils.js'
+
+await it('is built', async () => {
+  if (!getEnvVarValue('CI_JOB_TOKEN'))
+    process.env.CI_JOB_TOKEN = 'placeholder'
+  if (!getEnvVarValue('CI_PROJECT_ID'))
+    process.env.CI_PROJECT_ID = 'placeholder'
+
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'))),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/GitlabNugetRegistryInfo.js'))),
+  )
+})
 
 await describe('GitlabNugetRegistryInfo', async (ctx0) => {
   await it('has expected name', async () => {

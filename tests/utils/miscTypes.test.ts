@@ -1,7 +1,14 @@
 import { describe, it } from 'node:test'
 import { isOfType, tBooleanString, tEmptyOrBooleanString } from '../../src/utils/miscTypes.js'
 import * as miscTypes from '../../src/utils/miscTypes.js'
-import { deepStrictEqual } from 'node:assert'
+import { deepStrictEqual } from 'node:assert/strict'
+
+await it('is built', async () =>
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/utils/miscTypes'))),
+    JSON.stringify(Object.entries(await import('../../src/utils/miscTypes.js'))),
+  ),
+)
 
 await describe('isOfType', async (c00) => {
   await it('has expected name', () => {

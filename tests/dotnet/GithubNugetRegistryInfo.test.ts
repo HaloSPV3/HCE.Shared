@@ -20,6 +20,14 @@ function getOwner(): string {
   return env.GITHUB_REPOSITORY_OWNER ??= 'HaloSPV3'
 }
 
+await it('is built', async () => {
+  getOwner()
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'))),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/GithubNugetRegistryInfo.js'))),
+  )
+})
+
 await describe('GithubNugetRegistryInfo', async () => {
   await describe('canPushPackagesToUrl', async () => {
     await it('returns true when GITHUB_TOKEN is valid and GITHUB_REPOSITORY_OWNER is defined', async (t) => {

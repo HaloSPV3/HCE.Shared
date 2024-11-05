@@ -1,4 +1,4 @@
-import { deepStrictEqual, ok } from 'node:assert'
+import { deepStrictEqual, ok } from 'node:assert/strict'
 import { existsSync, readdirSync, rmSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { describe, it } from 'node:test'
@@ -7,12 +7,12 @@ import {
   MSBuildProject as MSBP,
 } from '../../src/dotnet/MSBuildProject.js'
 
-await it('is built', async () => {
+await it('is built', async () =>
   deepStrictEqual(
-    Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProject')),
-    Object.entries(await import('../../src/dotnet/MSBuildProject.js')),
-  )
-})
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProject'))),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/MSBuildProject.js'))),
+  ),
+)
 
 await describe('MSBuildProject', async () => {
   await describe('MatrixProperties', async (ctx1) => {

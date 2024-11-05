@@ -1,16 +1,16 @@
-import { deepStrictEqual, ok, strictEqual } from 'node:assert'
+import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { describe, it, todo } from 'node:test'
 import {
   configureDotnetNugetPush,
   configurePrepareCmd,
 } from '../../src/dotnet/dotnetHelpers.js'
 
-await it('is built', async () => {
+await it('is built', async () =>
   deepStrictEqual(
-    Object.entries(await import('@halospv3/hce.shared-config/dotnet/dotnetHelpers')),
-    Object.entries(await import('../../src/dotnet/dotnetHelpers.js')),
-  )
-})
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/dotnetHelpers'))),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/dotnetHelpers.js'))),
+  ),
+)
 
 await describe('dotnetHelpers', async () => {
   await todo('configurePrepareCmd', () => {

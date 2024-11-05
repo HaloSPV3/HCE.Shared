@@ -1,4 +1,4 @@
-import { deepStrictEqual, ok } from 'node:assert'
+import { deepStrictEqual, ok } from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import commitLintConventional from '@commitlint/config-conventional'
 import load from '@commitlint/load'
@@ -6,6 +6,13 @@ import { RuleConfigSeverity, type QualifiedRuleConfig } from '@commitlint/types'
 import rawConfig from '@halospv3/hce.shared-config/commitlintConfig'
 // @ts-expect-error ts(7016) Could not find a declaration file
 import createPreset from 'conventional-changelog-conventionalcommits'
+
+await it('is built', async () =>
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/commitlintConfig'))),
+    JSON.stringify(Object.entries(await import('../src/commitlintConfig.js'))),
+  ),
+)
 
 await describe('commitlintConfig', async () => {
   await describe('rawConfig', async () => {
