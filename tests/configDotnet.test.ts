@@ -1,8 +1,15 @@
 import { getConfig } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet'
-import { ok, strictEqual } from 'node:assert'
+import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { unlinkSync, writeFileSync } from 'node:fs'
 import { describe, it } from 'node:test'
 import { fileSync, setGracefulCleanup } from 'tmp'
+
+await it('is built', async () =>
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/semanticReleaseConfigDotnet'))),
+    JSON.stringify(Object.entries(await import('../src/semanticReleaseConfigDotnet.js'))),
+  ),
+)
 
 await describe('configDotnet', async () => {
   await describe('getConfig', async () => {

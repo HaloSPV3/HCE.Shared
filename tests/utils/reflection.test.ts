@@ -4,6 +4,13 @@ import { MSBuildProjectProperties } from '../../src/dotnet/MSBuildProjectPropert
 import { NugetProjectProperties } from '../../src/dotnet/NugetProjectProperties.js'
 import { filterForGetters, getFunctionPrototype, getOwnPropertyDescriptors, getPrototypes, isConstructor, listOwnGetters } from '../../src/utils/reflection.js'
 
+await it('is built', async () =>
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/utils/reflection'))),
+    JSON.stringify(Object.entries(await import('../../src/utils/reflection.js'))),
+  ),
+)
+
 const NPPInstanceOwnGetters: string[] = [
   'Authors',
   'BuildOutputTargetFolder',

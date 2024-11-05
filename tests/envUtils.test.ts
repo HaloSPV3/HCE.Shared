@@ -1,7 +1,14 @@
 import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
-import { strictEqual } from 'node:assert'
+import { deepStrictEqual, strictEqual } from 'node:assert/strict'
 import { env } from 'node:process'
 import { describe, it } from 'node:test'
+
+await it('is built', async () =>
+  deepStrictEqual(
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/envUtils'))),
+    JSON.stringify(Object.entries(await import('../src/envUtils.js'))),
+  ),
+)
 
 await describe('envUtils', async () => {
   await describe('getEnvVarValue', async () => {
