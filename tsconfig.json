@@ -6,6 +6,7 @@
         "outDir": "_tsout"
     },
     "include": [
+        "./.vscode/settings.json",
         "./*.cjs",
         "./*.js",
         "./*.mjs",
