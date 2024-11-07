@@ -4,8 +4,8 @@ import { describe, it, todo } from 'node:test'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/eslintConfig'))),
-    JSON.stringify(Object.entries(await import('../src/eslintConfig.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/eslintConfig')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../src/eslintConfig.js')), undefined, 2),
   ),
 )
 

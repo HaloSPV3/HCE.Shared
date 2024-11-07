@@ -1,7 +1,7 @@
 import { GithubNugetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'
 import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 import { type DotenvConfigOptions } from 'dotenv'
-import { notDeepStrictEqual, ok, strictEqual } from 'node:assert'
+import { deepStrictEqual, notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { existsSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { env } from 'node:process'
@@ -23,8 +23,8 @@ function getOwner(): string {
 await it('is built', async () => {
   getOwner()
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'))),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/GithubNugetRegistryInfo.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/GithubNugetRegistryInfo.js')), undefined, 2),
   )
 })
 

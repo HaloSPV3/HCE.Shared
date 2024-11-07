@@ -10,8 +10,8 @@ import { isConstructor } from '../../src/utils/reflection.js'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'))),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/NugetRegistryInfo.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/NugetRegistryInfo.js')), undefined, 2),
   ),
 )
 

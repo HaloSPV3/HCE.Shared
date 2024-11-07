@@ -5,8 +5,8 @@ import { deepStrictEqual } from 'node:assert/strict'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/utils/miscTypes'))),
-    JSON.stringify(Object.entries(await import('../../src/utils/miscTypes.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/utils/miscTypes')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/utils/miscTypes.js')), undefined, 2),
   ),
 )
 

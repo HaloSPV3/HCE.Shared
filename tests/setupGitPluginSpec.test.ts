@@ -4,8 +4,8 @@ import { describe, it } from 'node:test'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/setupGitPluginSpec'))),
-    JSON.stringify(Object.entries(await import('../src/setupGitPluginSpec.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/setupGitPluginSpec')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../src/setupGitPluginSpec.js')), undefined, 2),
   ),
 )
 
