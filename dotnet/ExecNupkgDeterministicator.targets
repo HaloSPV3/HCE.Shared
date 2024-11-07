@@ -49,10 +49,9 @@
     />
 
     <PropertyGroup>
-      <_missing>Kuinox.NupkgDeterministicator is unavailable. Run ONE of the following commands and try again:
-
+      <_missing>
+Kuinox.NupkgDeterministicator is unavailable. Run ONE of the following commands and try again:
 dotnet tool install -g Kuinox.NupkgDeterministicator
-
 dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       </_missing>
     </PropertyGroup>
