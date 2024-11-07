@@ -12,11 +12,15 @@
 		"typescriptreact"
 	],
 	"conventionalCommits.scopes": [
+		"deps-dev",
+		"deps",
 		"dotnet",
+		"dotnet/ExecNupkgDeterministicator",
+		"dotnet/samples/HCE.Shared.DeterministicNupkg",
+		"dotnet/samples/HCE.Shared.SignAfterPack",
+		"dotnet/SignAfterPack",
 		"node",
 		"vscode",
-		"deps",
-		"deps-dev"
 	],
 	"cSpell.words": [
 		"arktype",
@@ -103,6 +107,22 @@
 		{
 			"scope": "dotnet",
 			"description": "Affects files \"./dotnet\" or \"./src/dotnet\" or affects our generic GitHub reusable workflows provided for assisting dotnet CI."
+		},
+		{
+			"scope": "dotnet/ExecNupkgDeterministicator",
+			"description": "Affects the ExecNupkgDeterministicator target."
+		},
+		{
+			"scope": "dotnet/SignAfterPack",
+			"description": "Affects the SignAfterPack target."
+		},
+		{
+			"scope": "dotnet/samples/HCE.Shared.DeterministicNupkg",
+			"description": "Affects the HCE.Shared.DeterministicNupkg sample project."
+		},
+		{
+			"scope": "dotnet/samples/HCE.Shared.SignAfterPack",
+			"description": "Affects the SignAfterPack sample project."
 		},
 		{
 			"scope": "vscode",
