@@ -49,16 +49,6 @@ if (releaseRules instanceof String)
 if (releaseRules === undefined || typeof releaseRules === 'string')
 	throw TypeError("it's supposed to be a string[] now");
 
-// description: https://github.com/semantic-release/commit-analyzer#releaserules
-// defaults: https://github.com/semantic-release/commit-analyzer/blob/master/lib/default-release-rules.js
-releaseRules.push(
-	{
-		type: '(build|chore|fix)',
-		scope: 'deps',
-		release: 'patch',
-	}
-)
-commitAnalyzer[1].releaseRules = releaseRules;
 // @ts-expect-error Index signature in type 'readonly PluginSpec<any>[]' only permits reading. ts(2542)
 config.plugins[commitAnalyzerIndex] = commitAnalyzer;
 
