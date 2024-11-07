@@ -95,6 +95,7 @@
     "prettier": "^3.2.5",
     "prettier-config-moon": "^1.1.2",
     "tmp": "^0.2.3",
+    "ts-json-as-const": "^1.0.7",
     "tslib": "^2.6.2",
     "tsx": "^4.10.5",
     "typescript": "^5.5.4"
