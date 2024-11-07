@@ -6,8 +6,8 @@ import { tmpNameSync } from 'tmp'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProjectProperties'))),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/MSBuildProjectProperties.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProjectProperties')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/MSBuildProjectProperties.js')), undefined, 2),
   ),
 )
 

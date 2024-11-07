@@ -9,8 +9,8 @@ import createPreset from 'conventional-changelog-conventionalcommits'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/commitlintConfig'))),
-    JSON.stringify(Object.entries(await import('../src/commitlintConfig.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/commitlintConfig')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../src/commitlintConfig.js')), undefined, 2),
   ),
 )
 

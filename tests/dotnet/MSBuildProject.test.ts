@@ -9,8 +9,8 @@ import {
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProject'))),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/MSBuildProject.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProject')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/MSBuildProject.js')), undefined, 2),
   ),
 )
 

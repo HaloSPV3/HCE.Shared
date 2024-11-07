@@ -6,8 +6,8 @@ import { fileSync, setGracefulCleanup } from 'tmp'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/semanticReleaseConfigDotnet'))),
-    JSON.stringify(Object.entries(await import('../src/semanticReleaseConfigDotnet.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/semanticReleaseConfigDotnet')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../src/semanticReleaseConfigDotnet.js')), undefined, 2),
   ),
 )
 

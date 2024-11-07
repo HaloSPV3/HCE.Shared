@@ -12,8 +12,8 @@ await it('is built', async () => {
     process.env.CI_PROJECT_ID = 'placeholder'
 
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'))),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/GitlabNugetRegistryInfo.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/GitlabNugetRegistryInfo.js')), undefined, 2),
   )
 })
 

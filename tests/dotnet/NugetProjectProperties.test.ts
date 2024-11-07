@@ -5,8 +5,8 @@ import { NugetProjectProperties as NPP } from '../../src/dotnet/NugetProjectProp
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetProjectProperties'))),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/NugetProjectProperties.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetProjectProperties')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/NugetProjectProperties.js')), undefined, 2),
   ),
 )
 

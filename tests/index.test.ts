@@ -9,8 +9,8 @@ import type { Options } from 'semantic-release'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/index'))),
-    JSON.stringify(Object.entries(await import('../src/index.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/index')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../src/index.js')), undefined, 2),
   ),
 )
 

@@ -7,8 +7,8 @@ import {
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/dotnetHelpers'))),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/dotnetHelpers.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/dotnetHelpers')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/dotnetHelpers.js')), undefined, 2),
   ),
 )
 

@@ -5,8 +5,8 @@ import { describe, it } from 'node:test'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/envUtils'))),
-    JSON.stringify(Object.entries(await import('../src/envUtils.js'))),
+    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/envUtils')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../src/envUtils.js')), undefined, 2),
   ),
 )
 
