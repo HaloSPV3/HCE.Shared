@@ -10,6 +10,8 @@
 -->
 <Project>
   <PropertyGroup Condition=" '$(AssemblyName)' == '' ">
+    <AssemblyName>HCE.Shared.SignAfterPack</AssemblyName>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)samples\HCE.Shared.SignAfterPack\bin\Release\</PackageOutputPath>
     <PackageId>AssemblyName</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
     <SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
@@ -17,62 +19,83 @@
 
   <PropertyGroup Label="DotnetNugetSign">
     <!-- Directory where the signed package(s) should be saved. By default the original package is overwritten by the signed package. -->
-    <DotnetNugetSignOutput Condition=" '$(DotnetNugetSignOutput)' == ''"></DotnetNugetSignOutput>
+    <DotnetNugetSignOutput Condition=" '$(DotnetNugetSignOutput)' == '' "></DotnetNugetSignOutput>
     <!-- File path to the certificate to be used while signing the package. -->
-    <DotnetNugetSignCertificatePath Condition=" '$(DotnetNugetSignCertificatePath)' == ''"></DotnetNugetSignCertificatePath>
+    <DotnetNugetSignCertificatePath Condition=" '$(DotnetNugetSignCertificatePath)' == '' "></DotnetNugetSignCertificatePath>
     <!-- (default: "My") Name of the X.509 certificate store to use to search for the certificate. Defaults to "My", the X.509 certificate store for personal certificates. This option should be used when specifying the certificate via $(DotnetNugetSignCertificateSubjectName) or $(DotnetNugetSignCertificateFingerprint). 
         (values: ["AddressBook","AuthRoot","CertificateAuthority","Disallowed","My","Root","TrustedPeople","TrustedPublisher"])
     -->
-    <DotnetNugetSignCertificateStoreName Condition=" '$(DotnetNugetSignCertificateStoreName)' == ''"></DotnetNugetSignCertificateStoreName>
+    <DotnetNugetSignCertificateStoreName Condition=" '$(DotnetNugetSignCertificateStoreName)' == '' "></DotnetNugetSignCertificateStoreName>
     <!-- (default: "CurrentUser") Name of the X.509 certificate store to use to search for the certificate. Defaults to "CurrentUser", the X.509 certificate store used by the current user. This option should be used when specifying the certificate via $(DotnetNugetSignCertificateSubjectName) or $(DotnetNugetSignCertificateFingerprint). -->
-    <DotnetNugetSignCertificateStoreLocation Condition=" '$(DotnetNugetSignCertificateStoreLocation)' == ''"></DotnetNugetSignCertificateStoreLocation>
+    <DotnetNugetSignCertificateStoreLocation Condition=" '$(DotnetNugetSignCertificateStoreLocation)' == '' "></DotnetNugetSignCertificateStoreLocation>
     <!-- (required if DotnetNugetSignCertificatePath unspecified) Subject name of the certificate used to search a local certificate store for the certificate. The search is a case-insensitive string comparison using the supplied value, which will find all certificates with the subject name containing that string, regardless of other subject values. The certificate store can be specified by $(DotnetNugetSignCertificateStoreName) and $(DotnetNugetSignCertificateStoreLocation) options. -->
-    <DotnetNugetSignCertificateSubjectName Condition=" '$(DotnetNugetSignCertificateSubjectName)' == ''"></DotnetNugetSignCertificateSubjectName>
+    <DotnetNugetSignCertificateSubjectName Condition=" '$(DotnetNugetSignCertificateSubjectName)' == '' "></DotnetNugetSignCertificateSubjectName>
     <!-- (required if DotnetNugetSignCertificatePath unspecified) SHA-1 fingerprint of the certificate used to search a local certificate store for the certificate. The certificate store can be specified by $(DotnetNugetSignCertificateStoreName) and $(DotnetNugetSignCertificateStoreLocation) options. -->
-    <DotnetNugetSignCertificateFingerprint Condition=" '$(DotnetNugetSignCertificateFingerprint)' == ''"></DotnetNugetSignCertificateFingerprint>
+    <DotnetNugetSignCertificateFingerprint Condition=" '$(DotnetNugetSignCertificateFingerprint)' == '' "></DotnetNugetSignCertificateFingerprint>
     <!-- Password for the certificate, if needed. This option can be used to specify the password for the certificate. The command will throw an error message if certificate is password protected but password is not provided as input. -->
-    <DotnetNugetSignCertificatePassword Condition=" '$(DotnetNugetSignCertificatePassword)' == ''"></DotnetNugetSignCertificatePassword>
+    <DotnetNugetSignCertificatePassword Condition=" '$(DotnetNugetSignCertificatePassword)' == '' "></DotnetNugetSignCertificatePassword>
     <!-- (default: "SHA256") Hash algorithm to be used by the RFC 3161 timestamp server. Defaults to SHA256. -->
-    <DotnetNugetSignHashAlgorithm Condition=" '$(DotnetNugetSignHashAlgorithm)' == ''"></DotnetNugetSignHashAlgorithm>
+    <DotnetNugetSignHashAlgorithm Condition=" '$(DotnetNugetSignHashAlgorithm)' == '' "></DotnetNugetSignHashAlgorithm>
     <!-- URL to an RFC 3161 timestamping server. Signed packages should include a timestamp to make sure the signature remains valid when the signing certificate has expired. Else the sign operation will produce a warning. See NU3002 (https://learn.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu3002)
          (Noah Sherwin: for the sake of convenience, I have set the default value of this property to https://rfc3161.ai.moda/) -->
-    <DotnetNugetSignTimestamper Condition=" '$(DotnetNugetSignTimestamper)' == ''">https://rfc3161.ai.moda/</DotnetNugetSignTimestamper>
+    <DotnetNugetSignTimestamper Condition=" '$(DotnetNugetSignTimestamper)' == '' ">https://rfc3161.ai.moda/</DotnetNugetSignTimestamper>
     <!-- (default: "SHA256") Hash algorithm to be used by the RFC 3161 timestamp server. Defaults to SHA256. -->
-    <DotnetNugetSignTimestampHashAlgorithm Condition=" '$(DotnetNugetSignTimestampHashAlgorithm)' == ''"></DotnetNugetSignTimestampHashAlgorithm>
+    <DotnetNugetSignTimestampHashAlgorithm Condition=" '$(DotnetNugetSignTimestampHashAlgorithm)' == '' "></DotnetNugetSignTimestampHashAlgorithm>
     <!-- (default: false) Switch to indicate if the current signature should be overwritten. By default the command will fail if the package already has a signature. -->
-    <DotnetNugetSignOverwrite Condition=" '$(DotnetNugetSignOverwrite)' == ''"></DotnetNugetSignOverwrite>
+    <DotnetNugetSignOverwrite Condition=" '$(DotnetNugetSignOverwrite)' == '' "></DotnetNugetSignOverwrite>
   </PropertyGroup>
 
   <Target Name="SignAfterPack" AfterTargets="Pack">
     <PropertyGroup>
+    
       <_PackageFileName>$(PackageId).$(PackageVersion).nupkg</_PackageFileName>
       <_PackageFullPath>$([MSBuild]::NormalizePath($(PackageOutputPath), $(_PackageFileName)))</_PackageFullPath>
+      <_PackageFullPath>$([System.IO.Path]::GetRelativePath($(MSBuildProjectDirectory), $(_PackageFullPath)))</_PackageFullPath>
+
       <_SymbolPackageFileName>$(PackageId).$(PackageVersion).$(SymbolPackageFormat)</_SymbolPackageFileName>
       <_SymbolPackageFullPath>$([MSBuild]::NormalizePath($(PackageOutputPath), $(_SymbolPackageFileName)))</_SymbolPackageFullPath>
+      <_SymbolPackageFullPath>$([System.IO.Path]::GetRelativePath($(MSBuildProjectDirectory), $(_SymbolPackageFullPath)))</_SymbolPackageFullPath>
 
-      <!-- _argsDotnetNugetSign -->
-
-      <_argsDotnetNugetSignOutput Condition=" '$(DotnetNugetSignOutput)' != '' ">--output "$(DotnetNugetSignOutput)"</_argsDotnetNugetSignOutput>
-      <_argsDotnetNugetSignCertificatePath Condition=" '$(DotnetNugetSignCertificatePath)' != '' ">--certificate-path "$(DotnetNugetSignCertificatePath)"</_argsDotnetNugetSignCertificatePath>
-      <_argsDotnetNugetSignCertificateStoreName Condition=" '$(DotnetNugetSignCertificateStoreName)' != '' ">--certificate-store-name "$(DotnetNugetSignCertificateStoreName)"</_argsDotnetNugetSignCertificateStoreName>
-      <_argsDotnetNugetSignCertificateStoreLocation Condition=" '$(DotnetNugetSignCertificateStoreLocation)' != '' ">--certificate-store-location "$(DotnetNugetSignCertificateStoreLocation)"</_argsDotnetNugetSignCertificateStoreLocation>
-      <_argsDotnetNugetSignCertificateSubjectName Condition=" '$(DotnetNugetSignCertificateSubjectName)' != '' ">--certificate-subject-name "$(DotnetNugetSignCertificateSubjectName)"</_argsDotnetNugetSignCertificateSubjectName>
-      <_argsDotnetNugetSignCertificateFingerprint Condition=" '$(DotnetNugetSignCertificateFingerprint)' != '' ">--certificate-fingerprint "$(DotnetNugetSignCertificateFingerprint)"</_argsDotnetNugetSignCertificateFingerprint>
-      <_argsDotnetNugetSignCertificatePassword Condition=" '$(DotnetNugetSignCertificatePassword)' != '' ">--certificate-password "$(DotnetNugetSignCertificatePassword)"</_argsDotnetNugetSignCertificatePassword>
-      <_argsDotnetNugetSignHashAlgorithm Condition=" '$(DotnetNugetSignHashAlgorithm)' != '' ">--hash-algorithm "$(DotnetNugetSignHashAlgorithm)"</_argsDotnetNugetSignHashAlgorithm>
-      <_argsDotnetNugetSignTimestamper Condition=" '$(DotnetNugetSignTimestamper)' != '' ">--timestamper "$(DotnetNugetSignTimestamper)"</_argsDotnetNugetSignTimestamper>
-      <_argsDotnetNugetSignTimestampHashAlgorithm Condition=" '$(DotnetNugetSignTimestampHashAlgorithm)' != '' ">--timestamp-hash-algorithm "$(DotnetNugetSignTimestampHashAlgorithm)"</_argsDotnetNugetSignTimestampHashAlgorithm>
-      <_argsDotnetNugetSignOverwrite Condition=" '$(DotnetNugetSignOverwrite)' != '' ">--overwrite</_argsDotnetNugetSignOverwrite>
+      <!-- If a value contains a Space and is not enclosed by Double-Quotes, enclose it -->
+      <_space>$([MSBuild]::Escape(' '))</_space>
+      <_dquote>"</_dquote>
+      <_PackageFullPath Condition=" '$(_PackageFullPath.Contains($(_space)))' == 'true' AND '$(_PackageFullPath.StartsWith($(_dquote)))' == 'false' AND '$(_PackageFullPath.EndsWith($(_dquote)))' == 'false' ">"$(_PackageFullPath)"</_PackageFullPath>
+      <_SymbolPackageFullPath Condition=" '$(_SymbolPackageFullPath.Contains($(_space))' == 'true' AND '$(_SymbolPackageFullPath.StartsWith($(_dquote)))' == 'false' AND '$(_SymbolPackageFullPath.EndsWith($(_dquote)))' == 'false' ">"$(_SymbolPackageFullPath)"</_SymbolPackageFullPath>
+      <DotnetNugetSignOutput Condition=" '$(DotnetNugetSignOutput.Contains($(_space))' == 'true' AND '$(DotnetNugetSignOutput.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignOutput.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignOutput)</DotnetNugetSignOutput>
+      <DotnetNugetSignCertificatePath Condition=" '$(DotnetNugetSignCertificatePath.Contains($(_space))' == 'true' AND '$(DotnetNugetSignCertificatePath.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignCertificatePath.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignCertificatePath)"</DotnetNugetSignCertificatePath>
+      <DotnetNugetSignCertificateStoreName Condition=" '$(DotnetNugetSignCertificateStoreName.Contains($(_space))' == 'true' AND '$(DotnetNugetSignCertificateStoreName.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignCertificateStoreName.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignCertificateStoreName)"</DotnetNugetSignCertificateStoreName>
+      <DotnetNugetSignCertificateStoreLocation Condition=" '$(DotnetNugetSignCertificateStoreLocation.Contains($(_space))' == 'true' AND '$(DotnetNugetSignCertificateStoreLocation.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignCertificateStoreLocation.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignCertificateStoreLocation)"</DotnetNugetSignCertificateStoreLocation>
+      <DotnetNugetSignCertificateSubjectName Condition=" '$(DotnetNugetSignCertificateSubjectName.Contains($(_space))' == 'true' AND '$(DotnetNugetSignCertificateSubjectName.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignCertificateSubjectName.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignCertificateSubjectName)"</DotnetNugetSignCertificateSubjectName>
+      <DotnetNugetSignCertificateFingerprint Condition=" '$(DotnetNugetSignCertificateFingerprint.Contains($(_space))' == 'true' AND '$(DotnetNugetSignCertificateFingerprint.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignCertificateFingerprint.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignCertificateFingerprint)"</DotnetNugetSignCertificateFingerprint>
+      <DotnetNugetSignCertificatePassword Condition=" '$(DotnetNugetSignCertificatePassword.Contains($(_space))' == 'true' AND '$(DotnetNugetSignCertificatePassword.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignCertificatePassword.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignCertificatePassword)"</DotnetNugetSignCertificatePassword>
+      <DotnetNugetSignHashAlgorithm Condition=" '$(DotnetNugetSignHashAlgorithm.Contains($(_space))' == 'true' AND '$(DotnetNugetSignHashAlgorithm.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignHashAlgorithm.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignHashAlgorithm)"</DotnetNugetSignHashAlgorithm>
+      <DotnetNugetSignTimestamper Condition=" '$(DotnetNugetSignTimestamper.Contains($(_space))' == 'true' AND '$(DotnetNugetSignTimestamper.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignTimestamper.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignTimestamper)"</DotnetNugetSignTimestamper>
+      <DotnetNugetSignTimestampHashAlgorithm Condition=" '$(DotnetNugetSignTimestampHashAlgorithm.Contains($(_space))' == 'true' AND '$(DotnetNugetSignTimestampHashAlgorithm.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignTimestampHashAlgorithm.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignTimestampHashAlgorithm)"</DotnetNugetSignTimestampHashAlgorithm>
+      <DotnetNugetSignOverwrite Condition=" '$(DotnetNugetSignOverwrite.Contains($(_space))' == 'true' AND '$(DotnetNugetSignOverwrite.StartsWith($(_dquote))' == 'false' AND '$(DotnetNugetSignOverwrite.EndsWith($(_dquote))' == 'false' ">"$(DotnetNugetSignOverwrite)"</DotnetNugetSignOverwrite>
       
-      <_args>$(_argsDotnetNugetSignOutput)|$(_argsDotnetNugetSignCertificatePath)|$(_argsDotnetNugetSignCertificateStoreName)|$(_argsDotnetNugetSignCertificateStoreLocation)|$(_argsDotnetNugetSignCertificateSubjectName)|$(_argsDotnetNugetSignCertificateFingerprint)|$(_argsDotnetNugetSignCertificatePassword)|$(_argsDotnetNugetSignHashAlgorithm)|$(_argsDotnetNugetSignTimestamper)|$(_argsDotnetNugetSignTimestampHashAlgorithm)|$(_argsDotnetNugetSignOverwrite)"</_args>
+      <!-- _argsDotnetNugetSign -->
+      
+      <_argsDotnetNugetSignOutput Condition=" '$(DotnetNugetSignOutput)' != '' ">--output $(DotnetNugetSignOutput)</_argsDotnetNugetSignOutput>
+      <_argsDotnetNugetSignCertificatePath Condition=" '$(DotnetNugetSignCertificatePath)' != '' ">--certificate-path $(DotnetNugetSignCertificatePath.Trim())</_argsDotnetNugetSignCertificatePath>
+      <_argsDotnetNugetSignCertificateStoreName Condition=" '$(DotnetNugetSignCertificateStoreName)' != '' ">--certificate-store-name $(DotnetNugetSignCertificateStoreName)</_argsDotnetNugetSignCertificateStoreName>
+      <_argsDotnetNugetSignCertificateStoreLocation Condition=" '$(DotnetNugetSignCertificateStoreLocation)' != '' ">--certificate-store-location $(DotnetNugetSignCertificateStoreLocation)</_argsDotnetNugetSignCertificateStoreLocation>
+      <_argsDotnetNugetSignCertificateSubjectName Condition=" '$(DotnetNugetSignCertificateSubjectName)' != '' ">--certificate-subject-name $(DotnetNugetSignCertificateSubjectName)</_argsDotnetNugetSignCertificateSubjectName>
+      <_argsDotnetNugetSignCertificateFingerprint Condition=" '$(DotnetNugetSignCertificateFingerprint)' != '' ">--certificate-fingerprint $(DotnetNugetSignCertificateFingerprint)</_argsDotnetNugetSignCertificateFingerprint>
+      <_argsDotnetNugetSignCertificatePassword Condition=" '$(DotnetNugetSignCertificatePassword)' != '' ">--certificate-password $(DotnetNugetSignCertificatePassword)</_argsDotnetNugetSignCertificatePassword>
+      <_argsDotnetNugetSignHashAlgorithm Condition=" '$(DotnetNugetSignHashAlgorithm)' != '' ">--hash-algorithm $(DotnetNugetSignHashAlgorithm)</_argsDotnetNugetSignHashAlgorithm>
+      <_argsDotnetNugetSignTimestamper Condition=" '$(DotnetNugetSignTimestamper)' != '' ">--timestamper $(DotnetNugetSignTimestamper)</_argsDotnetNugetSignTimestamper>
+      <_argsDotnetNugetSignTimestampHashAlgorithm Condition=" '$(DotnetNugetSignTimestampHashAlgorithm)' != '' ">--timestamp-hash-algorithm $(DotnetNugetSignTimestampHashAlgorithm)</_argsDotnetNugetSignTimestampHashAlgorithm>
+      <_argsDotnetNugetSignOverwrite Condition=" '$(DotnetNugetSignOverwrite)' == 'true' ">--overwrite</_argsDotnetNugetSignOverwrite>
     </PropertyGroup>
 
     <ItemGroup>
-      <_PackageOutputs Include="$(_PackageFullPath);"/>
-      <_PackageOutputs Condition="'$(IncludeSymbols)' == 'true'" Include="$(_PackageFullPath);$(_SymbolPackageFullPath)"/>
+      <_args Include="$(_argsDotnetNugetSignOutput);$(_argsDotnetNugetSignCertificatePath)$(_argsDotnetNugetSignCertificateStoreName);$(_argsDotnetNugetSignCertificateStoreLocation);$(_argsDotnetNugetSignCertificateSubjectName);$(_argsDotnetNugetSignCertificateFingerprint);$(_argsDotnetNugetSignCertificatePassword);$(_argsDotnetNugetSignHashAlgorithm);$(_argsDotnetNugetSignTimestamper);$(_argsDotnetNugetSignTimestampHashAlgorithm);$(_argsDotnetNugetSignOverwrite)" />      <_PackageOutputs Include="$(_PackageFullPath)" />
+      <_PackageOutputs Condition=" '$(IncludeSymbols)' == 'true' " Include="$(_SymbolPackageFullPath)" />
     </ItemGroup>
 
-    <Exec Command="dotnet nuget sign &quot;@(_PackageOutputs, '&quot; &quot;')&quot; $(_args.replace('|', ' ').trim())"/>
+    <Exec Condition=" '$(_SignAfterPackVerbose)' == 'true' "
+      Command="echo dotnet nuget sign @(_PackageOutputs, ' ') @(_args, ' ')" />
+    <Exec Command="dotnet nuget sign @(_PackageOutputs, ' ') @(_args, ' ')" />
   </Target>
 
   <!-- 
