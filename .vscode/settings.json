@@ -20,6 +20,7 @@
 		"dotnet/samples/HCE.Shared.SignAfterPack",
 		"dotnet/SignAfterPack",
 		"node",
+		"TODO",
 		"vscode",
 	],
 	"cSpell.words": [
@@ -123,6 +124,10 @@
 		{
 			"scope": "dotnet/samples/HCE.Shared.SignAfterPack",
 			"description": "Affects the SignAfterPack sample project."
+		},
+		{
+			"scope": "TODO",
+			"description": "Affects TODO.md or any TODO comments."
 		},
 		{
 			"scope": "vscode",

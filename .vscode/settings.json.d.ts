@@ -11,6 +11,7 @@ interface Settings {
     'dotnet/samples/HCE.Shared.SignAfterPack',
     'dotnet/SignAfterPack',
     'node',
+    'TODO',
     'vscode',
   ]
   'cSpell.words': [
@@ -90,6 +91,10 @@ interface Settings {
     {
       scope: 'dotnet/samples/HCE.Shared.SignAfterPack'
       description: 'Affects the SignAfterPack sample project.'
+    },
+    {
+      scope: 'TODO',
+      description: 'Affects TODO.md or any TODO comments.'
     },
     { scope: 'vscode', description: 'Affects files in "./.vscode".' },
     { scope: 'deps', description: 'Affects dependencies required at runtime.' },
