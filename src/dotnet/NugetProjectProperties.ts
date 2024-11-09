@@ -86,6 +86,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
     /** filter out entries with undefined values; convert values to strings */
     consumables.forEach((key, value, map) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (value === undefined)
         map.delete(key)
       if (typeof value !== 'string')
