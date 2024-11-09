@@ -1,8 +1,18 @@
 interface Settings {
-  '[json]': {'files.insertFinalNewline': true},
-  '[jsonc]': {'files.insertFinalNewline': true},
-  'auto-close-tag.disableOnLanguage': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact'],
-  'conventionalCommits.scopes': ['dotnet', 'dotnet/SignAfterPack', 'node', 'vscode', 'deps', 'deps-dev'],
+  '[json]': { 'files.insertFinalNewline': true }
+  '[jsonc]': { 'files.insertFinalNewline': true }
+  'auto-close-tag.disableOnLanguage': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
+  'conventionalCommits.scopes': [
+    'deps-dev',
+    'deps',
+    'dotnet',
+    'dotnet/ExecNupkgDeterministicator',
+    'dotnet/samples/HCE.Shared.DeterministicNupkg',
+    'dotnet/samples/HCE.Shared.SignAfterPack',
+    'dotnet/SignAfterPack',
+    'node',
+    'vscode',
+  ]
   'cSpell.words': [
     'arktype',
     'conventionalcommits',
@@ -16,17 +26,17 @@ interface Settings {
     'packemon',
     'polyrepo',
     'tseslint',
-    'tsout'
-  ],
-  'editor.quickSuggestions': {strings: 'on'},
-  'files.readonlyInclude': {'_tsout/**': true, 'node_modules/**': true, 'cjs/**': true, 'mjs/**': true},
-  'nodejs-testing.include': ['./', './tests/', './tests/dotnet/', './tests/package.test.ts'],
-  'nodejs-testing.extensions': [{extensions: ['mts', 'cts', 'ts'], parameters: ['--import', 'tsx']}],
-  'nodeTdd.glob': '{src,test}/**/*.{js,ts,jsx,tsx,mts}',
-  'prettier.configPath': 'prettier.config.js',
-  'typescript.implementationsCodeLens.enabled': true,
-  'typescript.tsdk': 'node_modules\\typescript\\lib',
-  'yaml.format.singleQuote': true,
+    'tsout',
+  ]
+  'editor.quickSuggestions': { strings: 'on' }
+  'files.readonlyInclude': { '_tsout/**': true, 'node_modules/**': true, 'cjs/**': true, 'mjs/**': true }
+  'nodejs-testing.include': ['./', './tests/', './tests/dotnet/', './tests/package.test.ts']
+  'nodejs-testing.extensions': [{ extensions: ['mts', 'cts', 'ts'], parameters: ['--import', 'tsx'] }]
+  'nodeTdd.glob': '{src,test}/**/*.{js,ts,jsx,tsx,mts}'
+  'prettier.configPath': 'prettier.config.js'
+  'typescript.implementationsCodeLens.enabled': true
+  'typescript.tsdk': 'node_modules\\typescript\\lib'
+  'yaml.format.singleQuote': true
   'eslint.probe': [
     'javascript',
     'javascriptreact',
@@ -37,10 +47,10 @@ interface Settings {
     'markdown',
     'json',
     'jsonc',
-    'json5'
-  ],
-  'eslint.useFlatConfig': true,
-  'eslint.useESLintClass': true,
+    'json5',
+  ]
+  'eslint.useFlatConfig': true
+  'eslint.useESLintClass': true
   'eslint.validate': [
     'javascript',
     'javascriptreact',
@@ -48,48 +58,48 @@ interface Settings {
     'jsonc',
     'json5',
     'typescript',
-    'typescriptreact'
-  ],
-  'typescript.tsserver.experimental.enableProjectDiagnostics': true,
-  'typescript.tsserver.web.projectWideIntellisense.enabled': true,
-  'git.allowNoVerifyCommit': true,
-  'nodeTdd.showCoverage': true,
-  'markiscodecoverage.enableDecorations': true,
-  'nodeTdd.buildOnActivation': true,
-  'nodeTdd.buildOnCreate': true,
-  'nodeTdd.buildOnDelete': true,
-  'nodeTdd.reporter': 'tap',
-  'sarif-viewer.connectToGithubCodeScanning': 'off',
+    'typescriptreact',
+  ]
+  'typescript.tsserver.experimental.enableProjectDiagnostics': true
+  'typescript.tsserver.web.projectWideIntellisense.enabled': true
+  'git.allowNoVerifyCommit': true
+  'nodeTdd.showCoverage': true
+  'markiscodecoverage.enableDecorations': true
+  'nodeTdd.buildOnActivation': true
+  'nodeTdd.buildOnCreate': true
+  'nodeTdd.buildOnDelete': true
+  'nodeTdd.reporter': 'tap'
+  'sarif-viewer.connectToGithubCodeScanning': 'off'
   'gitCommitMessageEditor.intelliSense.completion.scopes': [
     {
-      scope: 'dotnet',
+      scope: 'dotnet'
       description: 'Affects files "./dotnet" or "./src/dotnet" or affects our generic GitHub reusable workflows provided for assisting dotnet CI.'
     },
     {
-      scope: 'dotnet/ExecNupkgDeterministicator',
+      scope: 'dotnet/ExecNupkgDeterministicator'
       description: 'Affects the ExecNupkgDeterministicator target.'
     },
     {
-      scope: 'dotnet/SignAfterPack',
+      scope: 'dotnet/SignAfterPack'
       description: 'Affects the SignAfterPack target.'
     },
     {
-      scope: 'dotnet/samples/HCE.Shared.DeterministicNupkg',
+      scope: 'dotnet/samples/HCE.Shared.DeterministicNupkg'
       description: 'Affects the HCE.Shared.DeterministicNupkg sample project.'
     },
     {
-      scope: 'dotnet/samples/HCE.Shared.SignAfterPack',
+      scope: 'dotnet/samples/HCE.Shared.SignAfterPack'
       description: 'Affects the SignAfterPack sample project.'
     },
-    {scope: 'vscode', description: 'Affects files in "./.vscode".'},
-    {scope: 'deps', description: 'Affects dependencies required at runtime.'},
+    { scope: 'vscode', description: 'Affects files in "./.vscode".' },
+    { scope: 'deps', description: 'Affects dependencies required at runtime.' },
     {
-      scope: 'deps-dev',
+      scope: 'deps-dev'
       description: 'Affects dependencies required in the dev environment or during build time.'
-    }
+    },
   ]
 }
 
-declare const Settings: Settings;
+declare const Settings: Settings
 
-export = Settings;
+export = Settings
