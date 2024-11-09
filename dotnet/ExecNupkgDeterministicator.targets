@@ -58,26 +58,77 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
 
     <!-- If NupkgDeterministicator not installed locally nor globally, Error -->
     <Error Condition=" '$(_ToolListLocalExitCode)' != '0' AND '$(_ToolListLocalExitCode)' != '0' "
-      Text="$(_missing)"/>
+      Text="$(_missing)" />
 
     <PropertyGroup>
       <_BaseCmd>NupkgDeterministicator</_BaseCmd>
       <_BaseCmd Condition=" '$(_ToolListLocalExitCode)' == '0' ">dotnet tool run $(_BaseCmd)</_BaseCmd>
     </PropertyGroup>
 
-    <Exec Command="$(_BaseCmd) $(_PackageFullPath)"/>
+    <!-- determinize the nupkg -->
     <Exec
-      Condition=" '$(IncludeSymbols)' == 'true' "
-      Command="$(_BaseCmd) $(_PackageSymbolsFullPath)"
+      Command="$(_BaseCmd) $(_PackageFullPath)"
+      ConsoleToMsBuild="true"
+      IgnoreExitCode="true"
+      StandardErrorImportance="Low"
+      StandardOutputImportance="Low"
+    ><Output 
+      TaskParameter="ConsoleOutput"
+      ItemName="_ConsoleOutput" />
+      <Output 
+      TaskParameter="ExitCode"
+      PropertyName="_ExitCode" />
+    </Exec>
+    
+    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' " 
+      Code="$(_ExitCode)"
+      Text="@(_ConsoleOutput, '\n')"
     />
 
+    <!-- if success and exit code 0... -->
     <Message
-      Text="Successfully determinized package '$(_PackageFullPath)'"
-      Importance="high"
+      Condition=" '$(_ExitCode)' == '0' "
+      Text="Determinized package '$(_PackageFullPath)'"
+      Importance="High"
     />
-    <Message Condition=" '$(IncludeSymbols)' == 'true' "
-      Text="Successfully determinized symbols package '$(_PackageSymbolsFullPath)'"
-      Importance="high"
+    <!-- else if success and exit code -532462766 (System.IO.IOException: Source and destination path must be different.) -->
+    <Message
+      Condition=" '$(_ExitCode)' == '-532462766' "
+      Text="Package up-to-date and deterministic ('$(_PackageFullPath)')"
+      Importance="Normal"
+    />
+
+    <!-- determinize the snupkg -->
+    <Exec
+      Command="$(_BaseCmd) $(_PackageSymbolsFullPath)"
+      Condition=" '$(IncludeSymbols)' == 'true' "
+      ConsoleToMsBuild="true"
+      IgnoreExitCode="true"
+      StandardErrorImportance="Low"
+      StandardOutputImportance="Low"
+    ><Output 
+      TaskParameter="ConsoleOutput"
+      ItemName="ConsoleOutput" />
+      <Output 
+      TaskParameter="ExitCode"
+      ItemName="ExitCode" />
+    </Exec>
+    
+    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' " 
+      Code="$(_ExitCode)"
+      Text="@(_ConsoleOutput, '\n')"
+    />
+
+    <!-- if success and exit code 0... -->
+    <Message Condition=" '$(IncludeSymbols)' == 'true' AND '$(_ExitCode)' == '0' "
+      Text="Determinized package '$(_PackageSymbolsFullPath)'"
+      Importance="High"
+    />
+    <!-- else if success and exit code -532462766 (System.IO.IOException: Source and destination path must be different.) -->
+    <Message
+      Condition=" '$(IncludeSymbols)' == 'true' AND '$(_ExitCode)' == '-532462766' "
+      Text="Package up-to-date and deterministic ('$(_PackageSymbolsFullPath)')"
+      Importance="Normal"
     />
   </Target>
 </Project>
