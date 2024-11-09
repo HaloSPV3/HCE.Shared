@@ -174,6 +174,7 @@ export class NugetRegistryInfo {
     })
     return pushResult
 
+    // todo: rewrite. We no longer use static nupkgs.
     /** returns the full path of the dummy package */
     async function getDummyNupkgAsync(): Promise<string> {
       // find package.json
