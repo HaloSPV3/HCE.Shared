@@ -13,7 +13,6 @@ export default config(
     languageOptions: {
       parserOptions: {
         sourceType: 'module',
-        // @ts-expect-error TS2322 Type '{ allowDefaultProjectForFiles: string[]; }' is not assignable to type 'boolean | undefined'.
         EXPERIMENTAL_useProjectService: {
           allowDefaultProjectForFiles: [
             './*.js',
