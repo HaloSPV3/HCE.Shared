@@ -129,6 +129,7 @@ export class SemanticReleaseConfigDotnet {
     const indicesOfBefore = beforePluginsIDs
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
+      .sort()
 
     for (const index of indicesOfBefore) {
       if (index <= indexOfLastAfter) {
