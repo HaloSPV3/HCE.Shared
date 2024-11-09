@@ -17,7 +17,7 @@ import debug from './debug.js'
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js'
 import { getEnvVarValue } from './envUtils.js'
 import { baseConfig } from './semanticReleaseConfig.js'
-import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js'
+import { NugetRegistryInfoOptions, NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js'
 import { MSBuildProject } from './dotnet/MSBuildProject.js'
 import { NugetProjectProperties } from './dotnet/NugetProjectProperties.js'
 import { listOwnGetters } from './utils/reflection.js'
@@ -175,11 +175,7 @@ export class SemanticReleaseConfigDotnet {
 
           this._evaluatedProjects.push(msbp)
 
-          return new NugetRegistryInfo(
-            undefined,
-            undefined,
-            msbp,
-          )
+          return new NugetRegistryInfo(NugetRegistryInfoOptions({ project: msbp }))
         }
         else return v
       }),

@@ -3,7 +3,10 @@ import { deepStrictEqual, notDeepStrictEqual, strictEqual } from 'node:assert/st
 import { describe, it } from 'node:test'
 import { inspect } from 'node:util'
 import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
-import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js'
+import {
+  NugetRegistryInfo as NRI,
+  NugetRegistryInfoOptions as NRIOpts,
+} from '../../src/dotnet/NugetRegistryInfo.js'
 import { resolve } from 'node:path'
 import { isConstructor } from '../../src/utils/reflection.js'
 
@@ -33,11 +36,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
       process.env.NUGET_TOKEN ??= predefinedToken ?? 'placeholder'
 
       strictEqual(
-        new NRI(
-          undefined,
-          undefined,
-          goodProject,
-        ).url,
+        new NRI(NRIOpts({ project: goodProject })).url,
         'https://api.nuget.org/v3/index.json',
       )
 
@@ -49,14 +48,18 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
     await it('assigns first argument to url', async () => {
       process.env.NUGET_TOKEN ??= 'placeholder'
-      strictEqual(new NRI('', undefined, goodProject).url, '')
+      strictEqual(new NRI(NRIOpts({ project: goodProject, url: '' })).url, '')
     })
 
     await describe('canPushPackagesToUrl', async () => {
       await it('rejects promise if token invalid', async () => {
         process.env.INVALID_TOKEN = 'placeholder'
-        const value = await new NRI('https://api.nuget.org/v3/index.json', ['INVALID_TOKEN'], goodProject)
-          .canPushPackagesToUrl
+        const value = await new NRI(
+          NRIOpts({
+            project: goodProject,
+            tokenEnvVars: ['INVALID_TOKEN'],
+          }),
+        ).canPushPackagesToUrl
           .catch(async reason =>
             reason instanceof Error ? reason : new Error(String(reason)))
         if (value === true)
