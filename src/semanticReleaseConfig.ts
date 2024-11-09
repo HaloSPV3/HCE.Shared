@@ -1,6 +1,6 @@
 import type { Options as SRExecOptions } from '@semantic-release/exec'
-import type { Options as GitOptions } from '@semantic-release/git'
-import type { Options as GithubOptions } from '@semantic-release/github'
+import type { Options as SRGitOptions } from '@semantic-release/git'
+import type { Options as SRGithubOptions } from '@semantic-release/github'
 import type { Options, PluginSpec } from 'semantic-release'
 import { DefaultOptions } from './setupGitPluginSpec.js'
 
@@ -56,7 +56,7 @@ export const baseConfig = {
     ['semantic-release-export-data', {}],
     ['@semantic-release/release-notes-generator', {}],
     ['@semantic-release/changelog', {}],
-    ['@semantic-release/git', DefaultOptions as GitOptions] satisfies PluginSpec<GitOptions>,
+    ['@semantic-release/git', DefaultOptions as SRGitOptions] satisfies PluginSpec<SRGitOptions>,
     // Arbitrary shell commands - https://github.com/semantic-release/exec
     // hint: set 'prepareCmd' to`dotnet publish`.
     //   Because this is sorted after @semantic-release / git, the new Git tag will
@@ -70,10 +70,15 @@ export const baseConfig = {
         assets: [{
           path: './publish/*',
         }],
-      } as GithubOptions,
-    ] satisfies PluginSpec<GithubOptions>,
-  ],
-} satisfies Options
+      } as SRGithubOptions,
+    ] satisfies PluginSpec<SRGithubOptions>,
+  ] as (
+    PluginSpec<unknown> |
+    PluginSpec<SRGitOptions> |
+    PluginSpec<SRExecOptions> |
+    PluginSpec<SRGithubOptions>
+  )[],
+} as const satisfies Options
 
 /// (OPTIONAL) update static Version strings before Git plugin
 // https://github.com/jpoehnelt/semantic-release-replace-plugin
