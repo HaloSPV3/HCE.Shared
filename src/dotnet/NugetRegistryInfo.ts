@@ -183,12 +183,14 @@ export class NugetRegistryInfo {
         throw new ReferenceError('failed to get @halospv3/hce.shared-config\'s package.json and its dirname')
       const dummyPkgPath: string = resolve(fileURLToPath(dirname(packageJson)), 'static', 'DUMMY.1.0.0.nupkg')
       // originally implemented by F1LT3R at https://gist.github.com/F1LT3R/2e4347a6609c3d0105afce68cd101561
-      const sha256 = (path: PathLike): Promise<string> => new Promise((resolve, reject) => {
+      const sha256 = (path: PathLike): Promise<string> => new Promise((promise_resolve, promise_reject) => {
         const hash = createHash('sha256')
         const rs = createReadStream(path)
-        rs.on('error', reject)
+        rs.on('error', promise_reject)
         rs.on('data', chunk => hash.update(chunk))
-        rs.on('end', () => resolve(hash.digest('hex').toUpperCase()))
+        rs.on('end', () => {
+          promise_resolve(hash.digest('hex').toUpperCase());
+        })
       })
 
       const expected = '65A383F09CFBE6928619C620057A17D01C5A37704C5FEF1C99C53BB6E1BB6BA2'
