@@ -1,4 +1,3 @@
-import { GithubNugetRegistryInfo } from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'
 import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 import { type DotenvConfigOptions } from 'dotenv'
 import { deepStrictEqual, notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict'
@@ -6,6 +5,14 @@ import { existsSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { env } from 'node:process'
 import { describe, it } from 'node:test'
+import { DeterministicNupkgCsproj } from './MSBuildProject.test.js'
+
+// GHNRI will throw if imported while GITHUB_REPOSITORY_OWNER is unset!
+getOwner()
+import {
+  GithubNugetRegistryInfo as GHNRI,
+  GithubNugetRegistryInfoOptions as GHNRIOpts,
+} from '../../src/dotnet/GithubNugetRegistryInfo.js'
 
 const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env')
 if (!existsSync(dotenvPath))
@@ -21,7 +28,6 @@ function getOwner(): string {
 }
 
 await it('is built', async () => {
-  getOwner()
   deepStrictEqual(
     JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo')), undefined, 2),
     JSON.stringify(Object.entries(await import('../../src/dotnet/GithubNugetRegistryInfo.js')), undefined, 2),
