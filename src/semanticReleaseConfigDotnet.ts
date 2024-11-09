@@ -113,7 +113,6 @@ export class SemanticReleaseConfigDotnet {
   get EvaluatedProjects(): MSBuildProject[] { return this._evaluatedProjects }
 
   async insertPlugin(afterPluginsIDs: string[], insertPluginIDs: string[], beforePluginsIDs: string[]) {
-    const errors: Error[] = []
     const pluginIDs = new Array(...this.options.plugins).map(v => typeof v === 'string' ? v : v[0])
 
     // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
@@ -131,6 +130,10 @@ export class SemanticReleaseConfigDotnet {
       .map(v => pluginIDs.indexOf(v))
       .sort()
 
+    // This for-of collects *all* sorting errors. The resulting AggregateError
+    // notifies the API user of *all* errors in the order rather than just the
+    // first error encountered.
+    const errors: Error[] = []
     for (const index of indicesOfBefore) {
       if (index <= indexOfLastAfter) {
         errors.push(
