@@ -9,6 +9,7 @@ interface Settings {
     'dotnet/ExecNupkgDeterministicator',
     'dotnet/samples/HCE.Shared.DeterministicNupkg',
     'dotnet/samples/HCE.Shared.SignAfterPack',
+    'dotnet.samples.README',
     'dotnet/SignAfterPack',
     'node',
     'TODO',
@@ -91,6 +92,10 @@ interface Settings {
     {
       scope: 'dotnet/samples/HCE.Shared.SignAfterPack'
       description: 'Affects the SignAfterPack sample project.'
+    },
+    {
+      scope: 'dotnet.samples.README',
+      description: 'Affects "./dotnet/samples/README.md".'
     },
     {
       scope: 'TODO',
