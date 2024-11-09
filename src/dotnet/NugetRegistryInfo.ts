@@ -746,7 +746,7 @@ but the environment variable is empty or undefined.`)
    * - skipDuplicates: true
    */
   // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
-  private async _PushDummyPckages(opts: typeof NRI.PushPackagesOptionsType.t): Promise<void> {
+  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.t): Promise<void> {
     const pushCmd: string = this.GetPushDummyCommand(opts)
     /* const output = */ await execAsync(pushCmd)
   }
