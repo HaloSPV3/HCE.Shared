@@ -7,6 +7,19 @@ import {
   MSBuildProject as MSBP,
 } from '../../src/dotnet/MSBuildProject.js'
 
+export const {
+  DeterministicNupkgCsproj: DeterministicNupkgCsproj,
+  SignAfterPackCsproj: SignAfterPackCsproj,
+} = await MSBP.PackableProjectsToMSBuildProjects([
+  resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
+  resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.SignAfterPack/HCE.Shared.SignAfterPack.csproj'),
+]).then((v: MSBP[]) => {
+  return Object.freeze({
+    DeterministicNupkgCsproj: Object.freeze(v[0]),
+    SignAfterPackCsproj: Object.freeze(v[1]),
+  })
+})
+
 await it('is built', async () =>
   deepStrictEqual(
     JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProject')), undefined, 2),
