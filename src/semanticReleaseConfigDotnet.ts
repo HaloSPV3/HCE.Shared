@@ -142,6 +142,15 @@ export class SemanticReleaseConfigDotnet {
     }
     if (errors.length > 0)
       throw new AggregateError(errors)
+
+    // insert plugin(s)
+    this.options.plugins.splice(
+      indexOfLastAfter + 1,
+      0,
+      ...insertPluginIDs.map(id =>
+        [id, {}] as [string, unknown],
+      ),
+    )
   }
 
   /**
