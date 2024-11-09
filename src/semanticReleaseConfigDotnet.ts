@@ -263,6 +263,45 @@ export class SemanticReleaseConfigDotnet {
     this.options.plugins.splice(indexOfLastPreceding + 1, 0, ...(insertPluginIDs.map(v => [v, {}] satisfies [string, unknown])))
   }
 
+  // todo: join result with dummy pack commands
+  protected async getTokenTestingCommands(): Promise<string> {
+    let promiseProjects
+    if (this.ProjectsToPackAndPush.every(nri => nri instanceof NugetRegistryInfo)) {
+      promiseProjects = this.ProjectsToPackAndPush.map(nri => nri.project)
+    }
+    else {
+      promiseProjects = await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush)
+    }
+
+    /** if a project is not in {@link EvaluatedProjects}, add it */
+    for (const project of promiseProjects) {
+      if (!this.EvaluatedProjects.includes(project))
+        this.EvaluatedProjects.push(project)
+    }
+
+    const regInfos = promiseProjects.map(p => new NugetRegistryInfo(NugetRegistryInfoOptions({ project: p })))
+    const nupkgPaths = await Promise.all(
+      regInfos.map(async nri =>
+        nri.PackDummyPackage({})
+          .then((nupkgs) => {
+            // this is a full file path.
+            const mainNupkg = nupkgs.find(nupkg => RegExp(/(?<!symbols)\.nupkg$/).test(nupkg))
+            if (mainNupkg !== undefined)
+              return { nri: nri, nupkgPath: mainNupkg } as const
+            throw new Error(
+              'None of the following dummy packages are non-symbol .nupkg files:\n'
+              + nupkgs.map(nupkg => `  - ${nupkg}`).join('\n')
+              + '\nIf you intended to push only symbol packages, check if a feature request already exists (https://github.com/HaloSPV3/HCE.Shared/issues?q=push+snupkg) and, if one does not exist, create one containing the keywords "push snupkg".',
+            )
+          }),
+      ),
+    )
+    const pushCommands = nupkgPaths.map(pair =>
+      pair.nri.GetPushDummyCommand({ root: pair.nupkgPath }),
+    )
+    return pushCommands.join(' && ')
+  }
+
   async toOptions(): Promise<Options> {
     return this.options
   }
