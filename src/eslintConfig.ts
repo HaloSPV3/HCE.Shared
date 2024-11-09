@@ -1,5 +1,5 @@
 import eslint from '@eslint/js'
-import { type TSESLint } from '@typescript-eslint/utils'
+import type { TSESLint } from '@typescript-eslint/utils'
 import jsonc from 'eslint-plugin-jsonc'
 import globals from 'globals/globals.json' with { type: 'json' }
 import tseslint from 'typescript-eslint'
