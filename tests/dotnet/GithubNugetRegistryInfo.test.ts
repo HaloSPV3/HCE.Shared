@@ -7,6 +7,13 @@ import { env } from 'node:process'
 import { describe, it } from 'node:test'
 import { DeterministicNupkgCsproj } from './MSBuildProject.test.js'
 
+const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env')
+if (!existsSync(dotenvPath))
+  writeFileSync(dotenvPath, '')
+// @ts-expect-error reference is commented out and awaiting refactoring
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }
+
 // GHNRI will throw if imported while GITHUB_REPOSITORY_OWNER is unset!
 getOwner()
 import {
@@ -14,17 +21,12 @@ import {
   GithubNugetRegistryInfoOptions as GHNRIOpts,
 } from '../../src/dotnet/GithubNugetRegistryInfo.js'
 
-const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env')
-if (!existsSync(dotenvPath))
-  writeFileSync(dotenvPath, '')
-const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }
-
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
  * @returns the value of env.GITHUB_REPOSITORY_OWNER
  */
 function getOwner(): string {
-  return env.GITHUB_REPOSITORY_OWNER ??= 'HaloSPV3'
+  return env.GITHUB_REPOSITORY_OWNER ??= (getEnvVarValue('GITHUB_REPOSITORY_OWNER ') ?? 'HaloSPV3')
 }
 
 await it('is built', async () => {
