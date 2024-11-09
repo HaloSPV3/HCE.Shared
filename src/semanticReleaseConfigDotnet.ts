@@ -267,3 +267,8 @@ export async function getConfig(projectsToPublish: string[] | MSBuildProject[], 
 
   return options
 }
+
+/**
+ * @module semanticReleaseConfigDotnet
+ * @export {SemanticReleaseConfigDotnet}
+ */
