@@ -17,11 +17,13 @@ import debug from './debug.js'
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js'
 import { getEnvVarValue } from './envUtils.js'
 import { baseConfig } from './semanticReleaseConfig.js'
-import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js'
+import { NugetRegistryInfoOptions, NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js'
 import { MSBuildProject } from './dotnet/MSBuildProject.js'
 import { NugetProjectProperties } from './dotnet/NugetProjectProperties.js'
 import { listOwnGetters } from './utils/reflection.js'
 import { MSBuildProjectProperties } from './dotnet/MSBuildProjectProperties.js'
+
+/** @module semanticReleaseConfigDotnet */
 
 type UnArray<T> = T extends (infer U)[] ? U : T
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
@@ -48,8 +50,8 @@ export class SemanticReleaseConfigDotnet {
    *   <Exec Command="dotnet nuget sign $(PackageOutputPath) [remaining args]" ConsoleToMsBuild="true" />
    * </Target>
    * ```
-   * OR pass the command lines to
-   * parameter {@link typeof_dotnetNugetSignArgs dotnetNugetSignArgs} of configurePrepareCmd.
+   * Alternatively, splice your signing commands into the publishCmd string,
+   * inserting them before `dotnet nuget push`.
    * If you sign different signatures depending on the NuGet registry,
    * splice your signing command (with "overwrite signature" enabled, if
    * desired) before the corresponding registry's `dotnet nuget push` command.
@@ -65,7 +67,7 @@ export class SemanticReleaseConfigDotnet {
    * If empty or unspecified, tries getting projects' semi-colon-separated
    * relative paths from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
    * Otherwise, no packages will be packed and pushed.
-   * If configured as recommended, `dotnet pack` will output the nupkg/snupk
+   * If configured as recommended, `dotnet pack` will output the nupkg/snupkg
    * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
    */
   constructor(
@@ -113,7 +115,6 @@ export class SemanticReleaseConfigDotnet {
   get EvaluatedProjects(): MSBuildProject[] { return this._evaluatedProjects }
 
   async insertPlugin(afterPluginsIDs: string[], insertPluginIDs: string[], beforePluginsIDs: string[]) {
-    const errors: Error[] = []
     const pluginIDs = new Array(...this.options.plugins).map(v => typeof v === 'string' ? v : v[0])
 
     // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
@@ -129,7 +130,12 @@ export class SemanticReleaseConfigDotnet {
     const indicesOfBefore = beforePluginsIDs
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
+      .sort()
 
+    // This for-of collects *all* sorting errors. The resulting AggregateError
+    // notifies the API user of *all* errors in the order rather than just the
+    // first error encountered.
+    const errors: Error[] = []
     for (const index of indicesOfBefore) {
       if (index <= indexOfLastAfter) {
         errors.push(
@@ -141,6 +147,15 @@ export class SemanticReleaseConfigDotnet {
     }
     if (errors.length > 0)
       throw new AggregateError(errors)
+
+    // insert plugin(s)
+    this.options.plugins.splice(
+      indexOfLastAfter + 1,
+      0,
+      ...insertPluginIDs.map(id =>
+        [id, {}] as [string, unknown],
+      ),
+    )
   }
 
   /**
@@ -175,11 +190,7 @@ export class SemanticReleaseConfigDotnet {
 
           this._evaluatedProjects.push(msbp)
 
-          return new NugetRegistryInfo(
-            undefined,
-            undefined,
-            msbp,
-          )
+          return new NugetRegistryInfo(NugetRegistryInfoOptions({ project: msbp }))
         }
         else return v
       }),
@@ -197,11 +208,100 @@ export class SemanticReleaseConfigDotnet {
     if (this._projectsToPackAndPush.length > 0) {
       const publishCmdAppendix = await configureDotnetNugetPush(this._projectsToPackAndPush)
       execOptions.publishCmd = (execOptions.publishCmd && execOptions.publishCmd.length > 0)
-        ? execOptions.publishCmd + ' && ' + publishCmdAppendix
+        ? `${execOptions.publishCmd} && ${publishCmdAppendix}`
         : publishCmdAppendix
     }
 
     // FINISHED execOptions.publishCmd
+  }
+
+  /**
+   * Insert a plugin into the plugins array.
+   *
+   * @deprecated EXPERIMENTAL: needs thorough tests implemented before use in production!
+   * @public
+   * @param {string[]} insertAfterPluginIDs Plugins which should appear BEFORE
+   * {@link insertPluginIDs}.
+   * @param {string[]} insertPluginIDs The plugin(s) to insert into the plugins array.
+   * @param {string[]} insertBeforePluginsIDs plugins which should appear AFTER the
+   * inserted plugin(s).
+   */
+  splicePlugin(insertAfterPluginIDs: string[], insertPluginIDs: string[], insertBeforePluginsIDs: string[]): void {
+    const errors: Error[] = []
+    const pluginIDs = new Array(...this.options.plugins).map(v => typeof v === 'string' ? v : v[0])
+
+    // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
+
+    const indexOfLastPreceding: number | undefined = insertAfterPluginIDs
+      .filter(v => pluginIDs.includes(v))
+      .map(v => pluginIDs.indexOf(v))
+      .sort()
+      .find((_v, i, obj) => i === (obj.length - 1))
+    if (!indexOfLastPreceding)
+      throw new ReferenceError('An attempt to get the last element of indexOfLastAfter returned undefined.')
+
+    const indicesOfBefore: number[] = insertBeforePluginsIDs
+      .filter(v => pluginIDs.includes(v))
+      .map(v => pluginIDs.indexOf(v))
+      .sort()
+
+    for (const index of indicesOfBefore) {
+      if (index <= indexOfLastPreceding) {
+        const formattedInsertIds: string = '[' + insertPluginIDs.map(v => `"${v}"`).join(', ') + ']'
+        const formattedAfterIds: string = '[' + insertAfterPluginIDs.map(v => `"${v}"`).join(', ') + ']'
+        const formattedBeforeIds: string = '[' + insertBeforePluginsIDs.map(v => `"${v}"`).join(', ') + ']'
+        errors.push(
+          new Error(
+            `insertPlugin was instructed to insert ${formattedInsertIds} after ${formattedAfterIds} and before ${formattedBeforeIds}, `
+            + `but ${pluginIDs[indexOfLastPreceding]} is ordered after ${pluginIDs[index]}!`,
+          ),
+        )
+      }
+    }
+
+    if (errors.length > 0)
+      throw new AggregateError(errors)
+
+    this.options.plugins.splice(indexOfLastPreceding + 1, 0, ...(insertPluginIDs.map(v => [v, {}] satisfies [string, unknown])))
+  }
+
+  // todo: join result with dummy pack commands
+  protected async getTokenTestingCommands(): Promise<string> {
+    let promiseProjects
+    if (this.ProjectsToPackAndPush.every(nri => nri instanceof NugetRegistryInfo)) {
+      promiseProjects = this.ProjectsToPackAndPush.map(nri => nri.project)
+    }
+    else {
+      promiseProjects = await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush)
+    }
+
+    /** if a project is not in {@link EvaluatedProjects}, add it */
+    for (const project of promiseProjects) {
+      if (!this.EvaluatedProjects.includes(project))
+        this.EvaluatedProjects.push(project)
+    }
+
+    const regInfos = promiseProjects.map(p => new NugetRegistryInfo(NugetRegistryInfoOptions({ project: p })))
+    const nupkgPaths = await Promise.all(
+      regInfos.map(async nri =>
+        nri.PackDummyPackage({})
+          .then((nupkgs) => {
+            // this is a full file path.
+            const mainNupkg = nupkgs.find(nupkg => RegExp(/(?<!symbols)\.nupkg$/).test(nupkg))
+            if (mainNupkg !== undefined)
+              return { nri: nri, nupkgPath: mainNupkg } as const
+            throw new Error(
+              'None of the following dummy packages are non-symbol .nupkg files:\n'
+              + nupkgs.map(nupkg => `  - ${nupkg}`).join('\n')
+              + '\nIf you intended to push only symbol packages, check if a feature request already exists (https://github.com/HaloSPV3/HCE.Shared/issues?q=push+snupkg) and, if one does not exist, create one containing the keywords "push snupkg".',
+            )
+          }),
+      ),
+    )
+    const pushCommands = nupkgPaths.map(pair =>
+      pair.nri.GetPushDummyCommand({ root: pair.nupkgPath }),
+    )
+    return pushCommands.join(' && ')
   }
 
   async toOptions(): Promise<Options> {
@@ -211,19 +311,22 @@ export class SemanticReleaseConfigDotnet {
 
 /**
  * Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet` publish, pack, and push.
- * @param projectsToPublish An array of dotnet projects' relative paths. If
- * empty or unspecified, tries getting projects' semi-colon-separated relative
- * paths from the `PROJECTS_TO_PUBLISH` environment variable. If configured as
- * recommended, the projects' publish outputs will be zipped to '$PWD/publish'
- * for use in the `publish` semantic-release step (typically, GitHub release).
- * @param projectsToPackAndPush An array of dotnet projects' relative paths. If
- * [], `dotnet pack` and `dotnet nuget push` will be left out of the exec
- * commands. If empty or unspecified, tries getting projects'
- * semi-colon-separated relative paths from the `PROJECTS_TO_PACK_AND_PUSH`
- * environment variable. If configured as recommended, `dotnet pack` will output
- * the nupkg/snupk files to `$PWD/publish` where they will be globbed by `dotnet
- * nuget push`.
- * @returns a semantic-release Options object, based on `@halospv3/hce.shared-config` (our base config), with the `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and `push` the specified projects.
+ * @param projectsToPublish An array of dotnet projects' relative paths.
+ * If empty or undefined, tries getting projects' semi-colon-separated relative
+ * paths from the `PROJECTS_TO_PUBLISH` environment variable.
+ * If configured as recommended, the projects' publish outputs will be zipped to
+ * '$PWD/publish' for use in the `publish` semantic-release step (typically,
+ * GitHub release).
+ * @param projectsToPackAndPush An array of dotnet projects' relative paths.
+ * If empty, `dotnet pack` and `dotnet nuget push` commands will not be configured.
+ * If undefined, tries getting projects' semi-colon-separated relative paths
+ * from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
+ * If configured as recommended, `dotnet pack` will output the nupkg/snupkg
+ * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
+ * @returns a semantic-release Options object, based on
+ * `@halospv3/hce.shared-config` (our base config), with the
+ * `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and
+ * `push` the specified projects.
  */
 export async function getConfig(projectsToPublish: string[] | MSBuildProject[], projectsToPackAndPush?: string[] | NugetRegistryInfo[]): Promise<Options> {
   if (debug.enabled) {
@@ -267,3 +370,5 @@ export async function getConfig(projectsToPublish: string[] | MSBuildProject[], 
 
   return options
 }
+
+/** @export {SemanticReleaseConfigDotnet} */

@@ -1,5 +1,5 @@
 import { MSBuildProject } from './MSBuildProject.js'
-import { NugetRegistryInfo } from './NugetRegistryInfo.js'
+import { NugetRegistryInfoOptions, NugetRegistryInfo } from './NugetRegistryInfo.js'
 import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js'
 import { listOwnGetters } from '../utils/reflection.js'
 import { NugetProjectProperties as NPP } from './NugetProjectProperties.js'
@@ -187,11 +187,7 @@ export async function configurePrepareCmd(
 
         evaluatedProjects.push(msbp)
 
-        return new NugetRegistryInfo(
-          undefined,
-          undefined,
-          msbp,
-        )
+        return new NugetRegistryInfo(NugetRegistryInfoOptions({ project: msbp }))
       }),
     ).then((nriArray: NugetRegistryInfo[]): string => {
       return nriArray.map((nri: NugetRegistryInfo): string =>

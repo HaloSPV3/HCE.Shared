@@ -83,8 +83,11 @@ export default {
 
 ##### Usage
 
-```js
+Basic, best-guess config
+
+```ts
 // releaserc.config.js
+// TODO: getConfig was removed. Update instructions!
 import { getConfig } from "@halospv3/hce.shared-config/semanticReleaseConfigDotnet"
 
 /* Caveat: semantic-release will version and release all specified projects under the same Git tags and GitHub releases.

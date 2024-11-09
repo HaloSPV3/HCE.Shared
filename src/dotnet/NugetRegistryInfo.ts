@@ -1,17 +1,17 @@
-import { type } from 'arktype'
+import { ArkErrors, type } from 'arktype'
 import { ok, strictEqual } from 'node:assert/strict'
 import { exec } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { createReadStream, existsSync, type PathLike } from 'node:fs'
 import { readFile, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join as joinPaths } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { cwd } from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { dir, type DirResult, setGracefulCleanup } from 'tmp'
 import { getEnvVarValue } from '../envUtils.js'
-import type { MSBuildProject } from './MSBuildProject.js'
+import { MSBuildProject } from './MSBuildProject.js'
 
 /* JSDoc Types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -21,6 +21,7 @@ import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet
 
 const execAsync = promisify(exec)
 const tmpDirNamespace = resolve(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
+const defaultNugetSource = 'https://api.nuget.org/v3/index.json'
 
 /**
  * Get HCE.Shared's temporary directory for .NET projects' dummy packages.
@@ -91,27 +92,27 @@ export class NugetRegistryInfo {
    * - Other EcmaScript modules can access the environment variable(s) and steal
    *   your key. Be aware of malicious dependencies!
    * @constructor
-   * @param {string} [url="https://api.nuget.org/v3/index.json"] A NuGet package
-   * registry's API URL. Default: https://api.nuget.org/v3/index.json
-   * @param {readonly string[]} [tokenEnvVars=NugetRegistryInfo.DefaultTokenEnvVars] The environment variables
-   * whose values are tokens with permission to push a package to the NuGet
-   * package registry. The array is iterated through until one token is found.
-   * If none of the environment variables are defined, this constructor will
-   * throw an {@link Error}.
-   * @param {MSBuildProject} project The project whose package(s) will be
+   * @param {ReturnType<typeof NRIOpts>} opts The return value of {@link NugetRegistryInfoOptions}
+   * @param {MSBuildProject} opts.project The project whose package(s) will be
    * pushed.\
    * - Its {@link NugetProjectProperties#PackageId} will be read.\
    * - Its {@link NugetProjectProperties#PackageVersion} will be overridden via CLI args when creating a dummy package. The real package's
    * `PackageVersion` will *not* be overridden.
+   * @param {readonly string[]} [opts.tokenEnvVars=NugetRegistryInfo.DefaultTokenEnvVars] The environment variables
+   * whose values are tokens with permission to push a package to the NuGet
+   * package registry. The array is iterated through until one token is found.
+   * If none of the environment variables are defined, this constructor will
+   * throw an {@link Error}.
+   * @param {string} [opts.url=defaultNugetSource]
    */
-  constructor(url = 'https://api.nuget.org/v3/index.json', tokenEnvVars: readonly string[] = NugetRegistryInfo.DefaultTokenEnvVars, project: MSBuildProject) {
-    this.url = url
-    /**
-     * May throw! Assign key of the first key-value pair to
-     * {@link resolvedEnvVariable}
-     */
-    this.resolvedEnvVariable = _GetTokenEnvVariables()[0][0]
-    this._project = project
+  constructor(opts: ReturnType<typeof NRIOpts>) {
+    if (opts instanceof ArkErrors)
+      throw opts.throw()
+    opts = NRIOpts.from(opts)
+
+    this._project = opts.project
+    this.resolvedEnvVariable = _GetTokenEnvVariables(opts.tokenEnvVars)[0][0]
+    this.url = opts.url
 
     /**
      * Get the environment variables as key-value pairs.
@@ -121,9 +122,7 @@ export class NugetRegistryInfo {
      * their values, filtered to only those whose values are not undefined.
      * @throws {Error} when none of the provided environment variables are defined.
      */
-    function _GetTokenEnvVariables() {
-      type.string.array().readonly().assert(tokenEnvVars)
-
+    function _GetTokenEnvVariables(tokenEnvVars: readonly string[]) {
       const definedTokens = Object.freeze(
         tokenEnvVars.map(
           // key-value tuple
@@ -174,6 +173,7 @@ export class NugetRegistryInfo {
     })
     return pushResult
 
+    // todo: rewrite. We no longer use static nupkgs.
     /** returns the full path of the dummy package */
     async function getDummyNupkgAsync(): Promise<string> {
       // find package.json
@@ -743,13 +743,89 @@ but the environment variable is empty or undefined.`)
    * - skipDuplicates: true
    */
   // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
-  private async _PushDummyPckages(opts: typeof NRI.PushPackagesOptionsType.t): Promise<void> {
+  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.t): Promise<void> {
     const pushCmd: string = this.GetPushDummyCommand(opts)
     /* const output = */ await execAsync(pushCmd)
   }
 
   // #endregion Push
+
+  /**
+   * !WARNING: this method requires the Nuget Source to be configured via `dotnet nuget add source` or `dotnet nuget update source`. If your publish pipeline only pushes to one NuGet Source and you're especially lazy, you can assign the API token to NUGET_TOKEN.
+   * @param packageId The ID of the NuGet package to query.
+   * @param nextVersion The nextVersion value generated by semantic-release's hidden ["Create Git tag" step](https://semantic-release.gitbook.io/semantic-release#:~:text=the%20last%20release.-,Create%20Git%20tag,-Create%20a%20Git).
+   * @todo utilize in custom plugin inserted at the beginning of `prepare`
+   */
+  static async isNextVersionAlreadyPublished(source: string, packageId: string, nextVersion: string): Promise<boolean> {
+    packageId
+    nextVersion
+
+    throw new Error('not yet implemented')
+  }
+
+  /**
+   * !WARNING: this method requires the NuGet Source to be configured via `dotnet nuget add source` or `dotnet nuget update source`. Some Sources (e.g. GitHub) require authentication for package queries.
+   * - For GitHub NuGet Registry authentication, see
+   * {@link https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-in-a-github-actions-workflow Authenticating in a GitHub Actions workflow}
+   * and/or
+   * {@link https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-with-a-personal-access-token Authenticating with a personal access token}.
+   * - For GitLab NuGet Registry authentication, see
+   * {@link https://docs.gitlab.com/ee/user/packages/nuget_repository/#add-a-source-with-the-net-cli Add a source with the .NET CLI}
+   * @param packageId The ID of the NuGet package to query.
+   * @param nextVersion The nextVersion value generated by semantic-release's hidden ["Create Git tag" step](https://semantic-release.gitbook.io/semantic-release#:~:text=the%20last%20release.-,Create%20Git%20tag,-Create%20a%20Git).
+   * @todo utilize in custom plugin inserted at the beginning of `prepare`
+   */
+  getIsNextVersionAlreadyPublishedCommand(): string {
+    return `node `
+  }
+
+  /* Copy https://github.com/joelharkes/nuget-push when we split off our dotnet
+  modules to a semantic-release plugin. */
+
+  /* If you want a deterministic nupkg, do so with a custom MSBuild target with
+  AfterTargets="Pack" to restore and execute the dotnet tool "Kuinox.NupkgDeterministicator" . */
 }
 
 // shorthand/alias for NugetRegistryInfo
 const NRI = NugetRegistryInfo
+
+/**
+ * The base type for {@link NugetRegistryInfoOptions} and related types. Extend
+ * this type while overriding member types via {@link NugetRegistryInfoOptionsBase.merge}
+ */
+export const NugetRegistryInfoOptionsBase = type({
+  /**
+   * The environment variables whose values are tokens with permission to push a
+   * package to the NuGet package registry. The array is iterated through until
+   * one token is found. If none of the environment variables are defined,
+   * {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
+   */
+  project: type.instanceOf(MSBuildProject),
+  /**
+   * The environment variables whose values are tokens with permission to push a
+   * package to the NuGet package registry.The array is iterated through until
+   * one token is found.If none of the environment variables are defined,
+   * {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
+   */
+  tokenEnvVars: type.string.array().readonly(),
+  /** A NuGet package registry's API endpoint URL. */
+  url: type.string,
+})
+const NRIOptsBase = NugetRegistryInfoOptionsBase
+
+/**
+ * The type of the parameter for {@link NugetRegistryInfo}'s constructor.
+ * url: A NuGet package registry's API endpoint URL.. Default: https://api.nuget.org/v3/index.json
+ */
+export const NugetRegistryInfoOptions = NRIOptsBase.merge({
+  /**
+   * Defaults to {@link NugetRegistryInfo.DefaultTokenEnvVars}
+   * @see NugetRegistryInfoOptionsBase.inferIn.tokenEnvVars
+   */
+  tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(() => NugetRegistryInfo.DefaultTokenEnvVars),
+  /**
+   * A NuGet package registry's API endpoint URL.
+   * @default 'https://api.nuget.org/v3/index.json' */
+  url: NRIOptsBase.get('url').default(() => defaultNugetSource),
+})
+const NRIOpts = NugetRegistryInfoOptions

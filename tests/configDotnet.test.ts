@@ -4,6 +4,8 @@ import { unlinkSync, writeFileSync } from 'node:fs'
 import { describe, it } from 'node:test'
 import { fileSync, setGracefulCleanup } from 'tmp'
 
+// todo: rename file to semanticReleaseConfigDotnet.test.ts
+
 await it('is built', async () =>
   deepStrictEqual(
     JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/semanticReleaseConfigDotnet')), undefined, 2),
@@ -38,7 +40,7 @@ await describe('configDotnet', async () => {
     await it('throws Error when projectsToPublish is an empty array.', async () => {
       let actual = undefined
       try {
-        actual = await getConfig([], false)
+        actual = await getConfig([])
       }
       catch (error) {
         actual = error as Error

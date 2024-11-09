@@ -1,36 +1,43 @@
 import { getEnvVarValue } from '../envUtils.js'
-import type { MSBuildProject } from './MSBuildProject.js'
-import { NugetRegistryInfo } from './NugetRegistryInfo.js'
+import {
+  NugetRegistryInfo as NRI,
+  NugetRegistryInfoOptionsBase as NRIOptsBase,
+} from './NugetRegistryInfo.js'
 
-export class GithubNugetRegistryInfo extends NugetRegistryInfo {
+const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
+const DefaultGithubTokenEnvVars = Object.freeze([
+  'GITHUB_TOKEN',
+  'GH_TOKEN',
+] as const)
+
+export class GithubNugetRegistryInfo extends NRI {
   static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
   static readonly DefaultGithubTokenEnvVars = Object.freeze([
     'GITHUB_TOKEN',
     'GH_TOKEN',
   ] as const)
 
-  constructor(
-    url: string = GithubNugetRegistryInfo.getNugetGitHubUrl(),
-    tokenEnvVars: readonly string[] = GithubNugetRegistryInfo.DefaultGithubTokenEnvVars,
-    dotnetProject: MSBuildProject,
-  ) {
-    super(url, tokenEnvVars, dotnetProject)
+  // GithubNugetRegistryInfo.CtorArgs(...) behaves differently than NugetRegistryInfo.CtorArgs(...)
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
+  constructor(opts: ReturnType<typeof GHNRIOpts>) {
+    super(opts)
   }
 
   /**
-     * Returns `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json` or throws if GITHUB_REPOSITORY_OWNER is not defined in {@link process.env} and {@link process.cwd() $CWD}/.env
-     *
-     * @export
-     * @throws {@link ReferenceError }
-     * Explain why this error is thrown.
-     *
-     * @returns {string} If GITHUB_REPOSITORY_OWNER is defined, returns the GitHub Package Repository URL endpoint for NuGet pushes (--source).
-     */
-  static getNugetGitHubUrl(): string {
+   * Returns `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json` or throws if GITHUB_REPOSITORY_OWNER is not defined in {@link process.env} and {@link process.cwd() $CWD}/.env
+   *
+   * @export
+   * @throws {@link ReferenceError }
+   * The environment variable GITHUB_REPOSITORY_OWNER must be set before calling this method!
+   *
+   * @returns {string?} If GITHUB_REPOSITORY_OWNER is defined, returns the GitHub Package Repository URL endpoint for NuGet pushes (--source).\
+   * Otherwise, returns `undefined`
+   */
+  static getNugetGitHubUrl(): string | undefined {
     const owner = GithubNugetRegistryInfo.getOwner()
     if (owner)
-      return `${GithubNugetRegistryInfo.NUGET_PKG_GITHUB_COM}/${owner}/index.json`
-    throw new ReferenceError('GITHUB_REPOSITORY_OWNER is undefined! Default NuGet source for GitHub is unavailable.')
+      return `${NUGET_PKG_GITHUB_COM}/${owner}/index.json`
+    else return owner
   }
 
   /** returns the value of GITHUB_REPOSITORY_OWNER */
@@ -38,3 +45,19 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
     return getEnvVarValue('GITHUB_REPOSITORY_OWNER')
   }
 }
+const GHNRI = GithubNugetRegistryInfo
+
+/**
+ * @remarks
+ * The default value of `url` is dependent on {@link GHNRI.getOwner} and will default to an empty string if the environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
+ */
+export const GithubNugetRegistryInfoOptions = NRIOptsBase.merge({
+  url: NRIOptsBase.in.get('url').default(() => GHNRI.getNugetGitHubUrl() ?? ''),
+  tokenEnvVars: NRIOptsBase.in.get('tokenEnvVars')
+    .default(
+      /* must be a function. A fixed-length array is NOT a primitive type! */
+      () => DefaultGithubTokenEnvVars,
+    ),
+})
+
+const GHNRIOpts = GithubNugetRegistryInfoOptions

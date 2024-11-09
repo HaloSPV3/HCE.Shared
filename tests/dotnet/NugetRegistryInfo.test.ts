@@ -1,12 +1,18 @@
-import { nugetDefault } from '@halospv3/hce.shared-config/dotnet/dotnetHelpers'
 import { getEnvVarValue } from '../../src/envUtils.js'
 import { deepStrictEqual, notDeepStrictEqual, strictEqual } from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { inspect } from 'node:util'
 import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
-import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js'
+import {
+  NugetRegistryInfo as NRI,
+  NugetRegistryInfoOptions as NRIOpts,
+} from '../../src/dotnet/NugetRegistryInfo.js'
 import { resolve } from 'node:path'
 import { isConstructor } from '../../src/utils/reflection.js'
+
+const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
+  resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
+]).then(v => v[0])
 
 await it('is built', async () =>
   deepStrictEqual(
@@ -31,11 +37,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
       process.env.NUGET_TOKEN ??= predefinedToken ?? 'placeholder'
 
       strictEqual(
-        new NRI(
-          undefined,
-          undefined,
-          MSBuildProject.prototype,
-        ).url,
+        new NRI(NRIOpts({ project: goodProject })).url,
         'https://api.nuget.org/v3/index.json',
       )
 
@@ -47,14 +49,18 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
     await it('assigns first argument to url', async () => {
       process.env.NUGET_TOKEN ??= 'placeholder'
-      strictEqual(new NRI('', undefined, MSBuildProject.prototype).url, '')
+      strictEqual(new NRI(NRIOpts({ project: goodProject, url: '' })).url, '')
     })
 
     await describe('canPushPackagesToUrl', async () => {
       await it('rejects promise if token invalid', async () => {
         process.env.INVALID_TOKEN = 'placeholder'
-        const value = await new NRI(nugetDefault.url, ['INVALID_TOKEN'], MSBuildProject.prototype)
-          .canPushPackagesToUrl
+        const value = await new NRI(
+          NRIOpts({
+            project: goodProject,
+            tokenEnvVars: ['INVALID_TOKEN'],
+          }),
+        ).canPushPackagesToUrl
           .catch(async reason =>
             reason instanceof Error ? reason : new Error(String(reason)))
         if (value === true)
@@ -67,10 +73,8 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         if (!predefinedToken)
           return t.skip('NUGET_TOKEN environment variable undefined')
 
-        const registryInfo = new NRI(
-          undefined,
-          undefined,
-          await MSBuildProject.Evaluate(
+        const registryInfo = new NRI(NRIOpts({
+          project: await MSBuildProject.Evaluate(
             {
               FullName: resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
               Property: {
@@ -82,6 +86,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
               GetTargetResult: [],
             },
           ),
+        }),
         )
 
         const canPush = await registryInfo.canPushPackagesToUrl.catch((reason) => {
@@ -110,33 +115,6 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     await it('can be a string', async () => {
       const x = { resolvedEnvVariable: '' } as NRI
       strictEqual(typeof x.resolvedEnvVariable, 'string')
-    })
-  })
-
-  await describe('toRegistryPair', async (ctx1) => {
-    await it('exists in NugetRegistryInfo prototype', async () => {
-      strictEqual(ctx1.name in NRI.prototype, true)
-    })
-
-    await it('is a function', async () => {
-      strictEqual(typeof NRI.prototype.toRegistryPair, 'function')
-    })
-
-    await it('returns Promise<NugetRegistryPair>', async () => {
-      const x = Promise.resolve({
-        tokenEnvVar: '',
-        url: '',
-        user: '',
-      }) as ReturnType<typeof NRI.prototype.toRegistryPair>
-
-      deepStrictEqual(
-        await x,
-        {
-          tokenEnvVar: '',
-          url: '',
-          user: '',
-        },
-      )
     })
   })
 

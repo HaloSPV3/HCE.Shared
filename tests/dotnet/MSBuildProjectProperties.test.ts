@@ -1,8 +1,8 @@
 import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { describe, it } from 'node:test'
+import { tmpNameSync } from 'tmp'
 import { MSBuildProjectProperties as MPP } from '../../src/dotnet/MSBuildProjectProperties.js'
 import { CaseInsensitiveMap } from './../../src/CaseInsensitiveMap.js'
-import { tmpNameSync } from 'tmp'
 
 await it('is built', async () =>
   deepStrictEqual(
@@ -15,14 +15,19 @@ await describe('MSBuildProjectProperties', async (c0) => {
   const emptyMap = new CaseInsensitiveMap<string, string>()
   const emptySample = new MPP('', emptyMap)
   await it('throws if given path does not resolve to an existing path', () => {
+    const tmpName = tmpNameSync()
+    let ctorHadThrown: boolean
     try {
-      const tmpName = tmpNameSync()
       new MPP(tmpName, emptyMap)
-      throw new Error(`MSBuildProjectProperties saw ${tmpName} and thought it existed when it shouldn't!`)
+      ctorHadThrown = false
     }
     catch {
+      ctorHadThrown = true
       // good!
     }
+
+    if (ctorHadThrown)
+      throw new Error(`MSBuildProjectProperties saw ${tmpName} and thought it existed when it shouldn't!`)
   })
   await it('does not throw if given path is empty string (defaults to CWD)', () => {
     strictEqual(emptySample.MSBuildProjectFullPath, process.cwd())

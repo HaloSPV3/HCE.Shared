@@ -1,7 +1,10 @@
 import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { resolve } from 'node:path'
 import { describe, it, todo } from 'node:test'
-import { GitlabNugetRegistryInfo } from '../../src/dotnet/GitlabNugetRegistryInfo.js'
+import {
+  GitlabNugetRegistryInfo as GLNRI,
+  GitlabNugetRegistryInfoOptions as GLNRIOpts,
+} from '../../src/dotnet/GitlabNugetRegistryInfo.js'
 import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
 import { getEnv, getEnvVarValue } from '../../src/envUtils.js'
 
@@ -17,9 +20,13 @@ await it('is built', async () => {
   )
 })
 
+const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
+  resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
+]).then(v => v[0])
+
 await describe('GitlabNugetRegistryInfo', async (ctx0) => {
   await it('has expected name', async () => {
-    strictEqual(GitlabNugetRegistryInfo.name, ctx0.name)
+    strictEqual(GLNRI.name, ctx0.name)
   })
 
   await describe('an instance of GitlabNugetRegistryInfo', async (ctx1) => {
@@ -29,15 +36,15 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       process.env.CI_JOB_TOKEN = 'placeholder'
     if (!getEnvVarValue('CI_PROJECT_ID'))
       process.env.CI_PROJECT_ID = 'placeholder'
-    const defaultWithPlaceholders = new GitlabNugetRegistryInfo()
+    const defaultWithPlaceholders = new GLNRI(GLNRIOpts({ project: goodProject }))
 
     await it('defaults to project-level endpoint', async () => {
       if (!getEnvVarValue('CI_PROJECT_ID'))
         process.env.CI_PROJECT_ID = 'placeholder'
       if (!getEnvVarValue('CI_JOB_TOKEN'))
         process.env.CI_JOB_TOKEN = 'placeholder'
-      const expected = `${GitlabNugetRegistryInfo.CI_API_V4_URL}/projects/${GitlabNugetRegistryInfo.projectId}/packages/nuget/index.json`
-      strictEqual(new GitlabNugetRegistryInfo().url, expected)
+      const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId}/packages/nuget/index.json`
+      strictEqual(new GLNRI(GLNRIOpts({})).url, expected)
     })
 
     await it('can be configured to use group-level endpoint', async () => {
@@ -45,9 +52,9 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         process.env.CI_PROJECT_NAMESPACE_ID = 'placeholder'
       if (!getEnvVarValue('CI_JOB_TOKEN'))
         process.env.CI_JOB_TOKEN = 'placeholder'
-      const expected = `${GitlabNugetRegistryInfo.CI_API_V4_URL}/groups/${GitlabNugetRegistryInfo.ownerId}/-/packages/nuget/index.json`
+      const expected = `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId}/-/packages/nuget/index.json`
       strictEqual(
-        new GitlabNugetRegistryInfo(undefined, undefined, undefined, true).url,
+        new GLNRI(GLNRIOpts({ url: 'group' })).url,
         expected,
       )
     })
@@ -60,9 +67,9 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       if (getEnvVarValue('CI_JOB_TOKEN') || getEnvVarValue('GL_TOKEN') || getEnvVarValue('GITLAB_TOKEN'))
         return t.skip('one or more tokens (CI_JOB_TOKEN, GL_TOKEN, GITLAB_TOKEN) is defined in .env file')
 
-      let value: GitlabNugetRegistryInfo | Error
+      let value: GLNRI | Error
       try {
-        value = new GitlabNugetRegistryInfo()
+        value = new GLNRI(GLNRIOpts({ project: goodProject }))
       }
       catch (err) {
         value = err instanceof Error ? err : new Error(String(err))
@@ -79,9 +86,9 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     })
 
     await it('throws when custom values and no token available', async () => {
-      let value: GitlabNugetRegistryInfo | Error
+      let value: GLNRI | Error
       try {
-        value = new GitlabNugetRegistryInfo(undefined, 'UNDEFINED_TOKEN', ['ANOTHER_UNDEFINED_TOKEN'])
+        value = new GLNRI(GLNRIOpts({ tokenEnvVars: ['UNDEFINED_TOKEN', 'ANOTHER_UNDEFINED_TOKEN'] }))
       }
       catch (err) {
         value = err instanceof Error ? err : new Error(String(err))
@@ -133,12 +140,12 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     const expectedValue = 'https://gitlab.com/api/v4'
 
     await it('has expected name', async () => {
-      ok(ctx1.name in GitlabNugetRegistryInfo)
+      ok(ctx1.name in GLNRI)
     })
 
     await it('has the correct default value if the environment variable is undefined', async () => {
       delete process.env.CI_API_V4_URL
-      strictEqual(GitlabNugetRegistryInfo.CI_API_V4_URL, expectedValue)
+      strictEqual(GLNRI.CI_API_V4_URL, expectedValue)
     })
 
     // await it("has the correct value the value is provided by the environment variable")
@@ -146,68 +153,68 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
 
   await describe('groupUrl', async (ctx1) => {
     await it('has expected name', async () => {
-      ok(ctx1.name in GitlabNugetRegistryInfo)
+      ok(ctx1.name in GLNRI)
     })
 
     await it('returns the expected url when CI_PROJECT_NAMESPACE_ID is defined', async () => {
       process.env.CI_PROJECT_NAMESPACE_ID = 'placeholder'
       strictEqual(
-        GitlabNugetRegistryInfo.groupUrl,
-        `${GitlabNugetRegistryInfo.CI_API_V4_URL}/groups/${GitlabNugetRegistryInfo.ownerId}/-/packages/nuget/index.json`,
+        GLNRI.groupUrl,
+        `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId}/-/packages/nuget/index.json`,
       )
     })
   })
 
   await describe('projectUrl', async (ctx1) => {
     await it('has expected name', async () => {
-      ok(ctx1.name in GitlabNugetRegistryInfo)
+      ok(ctx1.name in GLNRI)
     })
 
     await it('returns the expected url when CI_PROJECT_ID is defined', async () => {
       if (!getEnvVarValue('CI_PROJECT_ID'))
         process.env.CI_PROJECT_ID = 'placeholder'
       strictEqual(
-        GitlabNugetRegistryInfo.projectUrl,
-        `${GitlabNugetRegistryInfo.CI_API_V4_URL}/projects/${GitlabNugetRegistryInfo.projectId}/packages/nuget/index.json`,
+        GLNRI.projectUrl,
+        `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId}/packages/nuget/index.json`,
       )
     })
   })
 
   await describe('ownerId', async (ctx1) => {
     await it('has expected name', async () => {
-      ok(ctx1.name in GitlabNugetRegistryInfo)
+      ok(ctx1.name in GLNRI)
     })
 
     await it('returns undefined if CI_PROJECT_NAMESPACE_ID is undefined', async (t) => {
       delete process.env.CI_PROJECT_NAMESPACE_ID
       if (getEnvVarValue('CI_PROJECT_NAMESPACE_ID'))
         return t.skip('This test requires CI_PROJECT_NAMESPACE_ID be undefined. It is defined in .env file and so it is too annoying to work around.')
-      strictEqual(GitlabNugetRegistryInfo.ownerId, undefined)
+      strictEqual(GLNRI.ownerId, undefined)
     })
 
     await it('returns string if CI_PROJECT_NAMESPACE_ID is defined', async () => {
       if (!getEnvVarValue('CI_PROJECT_NAMESPACE_ID'))
         process.env.CI_PROJECT_NAMESPACE_ID = 'placeholder'
-      strictEqual(GitlabNugetRegistryInfo.ownerId, process.env.CI_PROJECT_NAMESPACE_ID)
+      strictEqual(GLNRI.ownerId, process.env.CI_PROJECT_NAMESPACE_ID)
     })
   })
 
   await describe('projectId', async (ctx1) => {
     await it('has expected name', async () => {
-      ok(ctx1.name in GitlabNugetRegistryInfo)
+      ok(ctx1.name in GLNRI)
     })
 
     await it('returns undefined if CI_PROJECT_ID is undefined', async (t) => {
       delete process.env.CI_PROJECT_ID
       if (getEnvVarValue('CI_PROJECT_ID'))
         return t.skip('This test requires CI_PROJECT_ID be undefined. It is defined in .env file and so it is too annoying to work around.')
-      strictEqual(GitlabNugetRegistryInfo.projectId, undefined)
+      strictEqual(GLNRI.projectId, undefined)
     })
 
     await it('returns string if CI_PROJECT_ID is defined', async () => {
       if (!getEnvVarValue('CI_PROJECT_ID'))
         process.env.CI_PROJECT_ID = 'placeholder'
-      strictEqual(GitlabNugetRegistryInfo.projectId, process.env.CI_PROJECT_ID)
+      strictEqual(GLNRI.projectId, process.env.CI_PROJECT_ID)
     })
   })
 })

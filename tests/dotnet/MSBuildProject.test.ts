@@ -1,11 +1,24 @@
 import { deepStrictEqual, ok } from 'node:assert/strict'
 import { existsSync, readdirSync, rmSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { describe, it } from 'node:test'
 import {
   EvaluationOptions,
   MSBuildProject as MSBP,
 } from '../../src/dotnet/MSBuildProject.js'
+
+export const {
+  DeterministicNupkgCsproj: DeterministicNupkgCsproj,
+  SignAfterPackCsproj: SignAfterPackCsproj,
+} = await MSBP.PackableProjectsToMSBuildProjects([
+  resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
+  resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.SignAfterPack/HCE.Shared.SignAfterPack.csproj'),
+]).then((v: MSBP[]) => {
+  return Object.freeze({
+    DeterministicNupkgCsproj: Object.freeze(v[0]),
+    SignAfterPackCsproj: Object.freeze(v[1]),
+  })
+})
 
 await it('is built', async () =>
   deepStrictEqual(

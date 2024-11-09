@@ -4,6 +4,8 @@ import { type } from 'arktype'
 import { isOfType, tBooleanString, type BooleanString, tEmptyOrBooleanString, type EmptyOrBooleanString } from '../utils/miscTypes.js'
 import { listOwnGetters } from '../utils/reflection.js'
 
+/** @module */
+
 /**
  * A readonly record of a .csproj or .fsproj with NuGet configuration properties in
  * addition to those specified by {@link MSBuildProjectProperties}. This record

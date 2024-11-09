@@ -2,7 +2,14 @@ import { deepStrictEqual } from 'node:assert/strict'
 import { describe, it, skip } from 'node:test'
 import { MSBuildProjectProperties } from '../../src/dotnet/MSBuildProjectProperties.js'
 import { NugetProjectProperties } from '../../src/dotnet/NugetProjectProperties.js'
-import { filterForGetters, getFunctionPrototype, getOwnPropertyDescriptors, getPrototypes, isConstructor, listOwnGetters } from '../../src/utils/reflection.js'
+import {
+  filterForGetters,
+  getFunctionPrototype,
+  getOwnPropertyDescriptors,
+  getPrototypes,
+  isConstructor,
+  listOwnGetters,
+} from '../../src/utils/reflection.js'
 
 await it('is built', async () =>
   deepStrictEqual(

@@ -243,7 +243,12 @@ export class MSBuildProject {
     const cmdLine = ['dotnet', 'msbuild', `"${options.FullName}"`, property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
     const stdOutErr = await execAsync(cmdLine)
       .catch((reason) => {
-        throw new Error((reason as Error).stack ?? reason, { cause: reason })
+        if (reason instanceof Error) {
+          if ('stderr' in reason)
+            reason.message = `${reason.stderr}\n${reason.message}`
+          throw reason
+        }
+        else throw new Error(`The following command failed:\n"${cmdLine}"`, { cause: reason })
       })
     const evaluation = new MSBuildEvaluationOutput(
       stdOutErr.stdout.startsWith('{')
