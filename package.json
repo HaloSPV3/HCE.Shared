@@ -45,7 +45,7 @@
     "semantic-release": "npx semantic-release",
     "pretest": "npm run build",
     "test": "tsx --test ./tests/**/*.test.ts",
-    "type": "npx ts-json-as-const ./.vscode/settings.json && tsc --build",
+    "type": "ts-json-as-const ./.vscode/settings.json && eslint --fix ./.vscode/settings.json.d.ts && tsc --build",
     "validate": "packemon validate",
     "watch": "packemon watch"
   },
