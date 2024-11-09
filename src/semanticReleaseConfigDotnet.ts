@@ -309,19 +309,22 @@ export class SemanticReleaseConfigDotnet {
 
 /**
  * Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet` publish, pack, and push.
- * @param projectsToPublish An array of dotnet projects' relative paths. If
- * empty or unspecified, tries getting projects' semi-colon-separated relative
- * paths from the `PROJECTS_TO_PUBLISH` environment variable. If configured as
- * recommended, the projects' publish outputs will be zipped to '$PWD/publish'
- * for use in the `publish` semantic-release step (typically, GitHub release).
- * @param projectsToPackAndPush An array of dotnet projects' relative paths. If
- * [], `dotnet pack` and `dotnet nuget push` will be left out of the exec
- * commands. If empty or unspecified, tries getting projects'
- * semi-colon-separated relative paths from the `PROJECTS_TO_PACK_AND_PUSH`
- * environment variable. If configured as recommended, `dotnet pack` will output
- * the nupkg/snupk files to `$PWD/publish` where they will be globbed by `dotnet
- * nuget push`.
- * @returns a semantic-release Options object, based on `@halospv3/hce.shared-config` (our base config), with the `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and `push` the specified projects.
+ * @param projectsToPublish An array of dotnet projects' relative paths.
+ * If empty, tries getting projects' semi-colon-separated relative
+ * paths from the `PROJECTS_TO_PUBLISH` environment variable.
+ * If configured as recommended, the projects' publish outputs will be zipped to
+ * '$PWD/publish' for use in the `publish` semantic-release step (typically,
+ * GitHub release).
+ * @param projectsToPackAndPush An array of dotnet projects' relative paths.
+ * If empty, `dotnet pack` and `dotnet nuget push` commands will not be configured.
+ * If undefined, tries getting projects' semi-colon-separated relative paths
+ * from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
+ * If configured as recommended, `dotnet pack` will output the nupkg/snupkg
+ * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
+ * @returns a semantic-release Options object, based on
+ * `@halospv3/hce.shared-config` (our base config), with the
+ * `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and
+ * `push` the specified projects.
  */
 export async function getConfig(projectsToPublish: string[] | MSBuildProject[], projectsToPackAndPush?: string[] | NugetRegistryInfo[]): Promise<Options> {
   if (debug.enabled) {
