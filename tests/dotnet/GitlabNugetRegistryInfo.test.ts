@@ -1,9 +1,11 @@
 import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
-import { resolve } from 'node:path'
 import { describe, it, todo } from 'node:test'
-import { GitlabNugetRegistryInfo } from '../../src/dotnet/GitlabNugetRegistryInfo.js'
-import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
+import {
+  GitlabNugetRegistryInfo,
+  GitlabNugetRegistryInfoOptions as GLNRIOpts,
+} from '../../src/dotnet/GitlabNugetRegistryInfo.js'
 import { getEnv, getEnvVarValue } from '../../src/envUtils.js'
+import { DeterministicNupkgCsproj } from './MSBuildProject.test.js'
 
 await it('is built', async () => {
   if (!getEnvVarValue('CI_JOB_TOKEN'))
@@ -29,7 +31,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       process.env.CI_JOB_TOKEN = 'placeholder'
     if (!getEnvVarValue('CI_PROJECT_ID'))
       process.env.CI_PROJECT_ID = 'placeholder'
-    const defaultWithPlaceholders = new GitlabNugetRegistryInfo()
+    const defaultWithPlaceholders = new GitlabNugetRegistryInfo(GLNRIOpts.from({ project: DeterministicNupkgCsproj }))
 
     await it('defaults to project-level endpoint', async () => {
       if (!getEnvVarValue('CI_PROJECT_ID'))
@@ -37,7 +39,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       if (!getEnvVarValue('CI_JOB_TOKEN'))
         process.env.CI_JOB_TOKEN = 'placeholder'
       const expected = `${GitlabNugetRegistryInfo.CI_API_V4_URL}/projects/${GitlabNugetRegistryInfo.projectId}/packages/nuget/index.json`
-      strictEqual(new GitlabNugetRegistryInfo().url, expected)
+      strictEqual(new GitlabNugetRegistryInfo(GLNRIOpts.from({ project: DeterministicNupkgCsproj })).url, expected)
     })
 
     await it('can be configured to use group-level endpoint', async () => {
@@ -47,7 +49,10 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         process.env.CI_JOB_TOKEN = 'placeholder'
       const expected = `${GitlabNugetRegistryInfo.CI_API_V4_URL}/groups/${GitlabNugetRegistryInfo.ownerId}/-/packages/nuget/index.json`
       strictEqual(
-        new GitlabNugetRegistryInfo(undefined, undefined, undefined, true).url,
+        new GitlabNugetRegistryInfo(GLNRIOpts.from({
+          project: DeterministicNupkgCsproj,
+          url: 'group',
+        })).url,
         expected,
       )
     })
@@ -62,7 +67,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
 
       let value: GitlabNugetRegistryInfo | Error
       try {
-        value = new GitlabNugetRegistryInfo()
+        value = new GitlabNugetRegistryInfo(GLNRIOpts.from({ project: DeterministicNupkgCsproj }))
       }
       catch (err) {
         value = err instanceof Error ? err : new Error(String(err))
@@ -81,7 +86,13 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     await it('throws when custom values and no token available', async () => {
       let value: GitlabNugetRegistryInfo | Error
       try {
-        value = new GitlabNugetRegistryInfo(undefined, 'UNDEFINED_TOKEN', ['ANOTHER_UNDEFINED_TOKEN'])
+        value = new GitlabNugetRegistryInfo(GLNRIOpts.from({
+          project: DeterministicNupkgCsproj,
+          tokenEnvVars: [
+            'UNDEFINED_TOKEN',
+            'ANOTHER_UNDEFINED_TOKEN',
+          ],
+        }))
       }
       catch (err) {
         value = err instanceof Error ? err : new Error(String(err))
