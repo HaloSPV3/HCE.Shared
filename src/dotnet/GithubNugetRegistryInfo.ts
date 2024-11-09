@@ -1,6 +1,14 @@
 import { getEnvVarValue } from '../envUtils.js'
-import type { MSBuildProject } from './MSBuildProject.js'
-import { NugetRegistryInfo } from './NugetRegistryInfo.js'
+import {
+  NugetRegistryInfo,
+  NugetRegistryInfoOptionsBase as NRIOptsBase,
+} from './NugetRegistryInfo.js'
+
+const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
+const DefaultGithubTokenEnvVars = Object.freeze([
+  'GITHUB_TOKEN',
+  'GH_TOKEN',
+] as const)
 
 export class GithubNugetRegistryInfo extends NugetRegistryInfo {
   static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
@@ -9,12 +17,8 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
     'GH_TOKEN',
   ] as const)
 
-  constructor(
-    url: string = GithubNugetRegistryInfo.getNugetGitHubUrl(),
-    tokenEnvVars: readonly string[] = GithubNugetRegistryInfo.DefaultGithubTokenEnvVars,
-    dotnetProject: MSBuildProject,
-  ) {
-    super(url, tokenEnvVars, dotnetProject)
+  constructor(opts: typeof GHNRIOpts.inferIn) {
+    super(GHNRIOpts.from(opts))
   }
 
   /**
@@ -38,3 +42,19 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
     return getEnvVarValue('GITHUB_REPOSITORY_OWNER')
   }
 }
+const GHNRI = GithubNugetRegistryInfo
+
+/**
+ * @remarks
+ * The default value of `url` is dependent on {@link GHNRI.getOwner} and will default to an empty string if the environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
+ */
+export const GithubNugetRegistryInfoOptions = NRIOptsBase.merge({
+  url: NRIOptsBase.in.get('url').default(() => GHNRI.getNugetGitHubUrl() ?? ''),
+  tokenEnvVars: NRIOptsBase.in.get('tokenEnvVars')
+    .default(
+      /* must be a function. A fixed-length array is NOT a primitive type! */
+      () => DefaultGithubTokenEnvVars,
+    ),
+})
+
+const GHNRIOpts = GithubNugetRegistryInfoOptions
