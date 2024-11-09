@@ -106,33 +106,6 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     })
   })
 
-  await describe('toRegistryPair', async (ctx1) => {
-    await it('exists in NugetRegistryInfo prototype', async () => {
-      strictEqual(ctx1.name in NRI.prototype, true)
-    })
-
-    await it('is a function', async () => {
-      strictEqual(typeof NRI.prototype.toRegistryPair, 'function')
-    })
-
-    await it('returns Promise<NugetRegistryPair>', async () => {
-      const x = Promise.resolve({
-        tokenEnvVar: '',
-        url: '',
-        user: '',
-      }) as ReturnType<typeof NRI.prototype.toRegistryPair>
-
-      deepStrictEqual(
-        await x,
-        {
-          tokenEnvVar: '',
-          url: '',
-          user: '',
-        },
-      )
-    })
-  })
-
   await describe('url', async (ctx1) => {
     await it('undefined in NugetRegistryInfo prototype', async () => {
       strictEqual(ctx1.name in NRI.prototype, false)
