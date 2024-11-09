@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
-import { isOfType, tBooleanString, tEmptyOrBooleanString } from '../../src/utils/miscTypes.js'
+import { tBooleanString, tEmptyOrBooleanString } from '../../src/utils/miscTypes.js'
 import * as miscTypes from '../../src/utils/miscTypes.js'
-import { deepStrictEqual } from 'node:assert/strict'
+import { deepStrictEqual, ok } from 'node:assert/strict'
 
 await it('is built', async () =>
   deepStrictEqual(
@@ -9,18 +9,6 @@ await it('is built', async () =>
     JSON.stringify(Object.entries(await import('../../src/utils/miscTypes.js')), undefined, 2),
   ),
 )
-
-await describe('isOfType', async (c00) => {
-  await it('has expected name', () => {
-    deepStrictEqual(isOfType.name, c00.name)
-  })
-  await it('returns true when type.assert(obj) does not throw', () => {
-    isOfType('true', tBooleanString)
-  })
-  await it('returns false when type.assert(obj) throws', () => {
-    isOfType(true, tBooleanString)
-  })
-})
 
 await describe('tBooleanString', async (c00) => {
   await it('has expected name', () => {
@@ -36,10 +24,10 @@ await describe('tBooleanString', async (c00) => {
     tBooleanString.assert('false')
   })
   await it('does not match boolean True', () => {
-    !isOfType(true, tBooleanString)
+    ok(!tBooleanString.assert(true))
   })
   await it('does not match boolean False', () => {
-    !isOfType(false, tBooleanString)
+    ok(!tBooleanString.allows(false))
   })
 })
 
@@ -57,9 +45,9 @@ await describe('tEmptyOrBooleanString', async (c00) => {
     tEmptyOrBooleanString.assert('')
   })
   await it('does not match boolean True', () => {
-    !isOfType(true, tEmptyOrBooleanString)
+    ok(!tEmptyOrBooleanString.allows(true))
   })
   await it('does not match boolean False', () => {
-    !isOfType(false, tEmptyOrBooleanString)
+    ok(!tEmptyOrBooleanString.allows(false))
   })
 })
