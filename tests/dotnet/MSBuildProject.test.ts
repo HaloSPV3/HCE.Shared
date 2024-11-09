@@ -1,6 +1,6 @@
 import { deepStrictEqual, ok } from 'node:assert/strict'
 import { existsSync, readdirSync, rmSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { describe, it } from 'node:test'
 import {
   EvaluationOptions,
