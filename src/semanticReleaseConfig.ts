@@ -5,15 +5,14 @@ import type { Options, PluginSpec } from 'semantic-release'
 import { DefaultOptions } from './setupGitPluginSpec.js'
 
 /**
- * @type { PluginSpec[] }
  * @satisfies { readonly PluginSpec[] }
  */
-export const defaultPlugins = [
+export const defaultPlugins = Object.freeze([
   '@semantic-release/commit-analyzer',
   '@semantic-release/release-notes-generator',
   '@semantic-release/npm',
   '@semantic-release/github',
-] satisfies readonly PluginSpec[]
+] as const) satisfies readonly PluginSpec[]
 
 /**
  * The base configuration for various Semantic Release scenarios.
