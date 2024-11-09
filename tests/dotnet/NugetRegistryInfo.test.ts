@@ -1,4 +1,3 @@
-import { nugetDefault } from '@halospv3/hce.shared-config/dotnet/dotnetHelpers'
 import { getEnvVarValue } from '../../src/envUtils.js'
 import { deepStrictEqual, notDeepStrictEqual, strictEqual } from 'node:assert/strict'
 import { describe, it } from 'node:test'
@@ -26,6 +25,9 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
   await describe('an instance of NugetRegistryInfo...', async () => {
     const predefinedToken = getEnvVarValue('NUGET_TOKEN')
+    const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
+      resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
+    ]).then(v => v[0]);
 
     await it('defaults url to expected value', async () => {
       process.env.NUGET_TOKEN ??= predefinedToken ?? 'placeholder'
@@ -34,7 +36,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         new NRI(
           undefined,
           undefined,
-          MSBuildProject.prototype,
+          goodProject,
         ).url,
         'https://api.nuget.org/v3/index.json',
       )
@@ -47,13 +49,13 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
     await it('assigns first argument to url', async () => {
       process.env.NUGET_TOKEN ??= 'placeholder'
-      strictEqual(new NRI('', undefined, MSBuildProject.prototype).url, '')
+      strictEqual(new NRI('', undefined, goodProject).url, '')
     })
 
     await describe('canPushPackagesToUrl', async () => {
       await it('rejects promise if token invalid', async () => {
         process.env.INVALID_TOKEN = 'placeholder'
-        const value = await new NRI(nugetDefault.url, ['INVALID_TOKEN'], MSBuildProject.prototype)
+        const value = await new NRI('https://api.nuget.org/v3/index.json', ['INVALID_TOKEN'], goodProject)
           .canPushPackagesToUrl
           .catch(async reason =>
             reason instanceof Error ? reason : new Error(String(reason)))
@@ -67,23 +69,11 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         if (!predefinedToken)
           return t.skip('NUGET_TOKEN environment variable undefined')
 
-        const registryInfo = new NRI(
-          undefined,
-          undefined,
-          await MSBuildProject.Evaluate(
-            {
-              FullName: resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
-              Property: {
-                Version: '0.0.1-DUMMY',
-              },
-              GetItem: [],
-              GetProperty: [],
-              Targets: ['Pack'],
-              GetTargetResult: [],
-            },
-          ),
-        )
+        const registryInfo = new NRI(NRIOpts({
+          project: goodProject,
+        }));
 
+        // todo: override Version/PackageVersion via CLI args in `canPushPackagesToUrl` call chain.
         const canPush = await registryInfo.canPushPackagesToUrl.catch((reason) => {
           return (reason instanceof Error)
             ? reason
