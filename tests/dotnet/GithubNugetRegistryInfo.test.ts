@@ -3,7 +3,7 @@ import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 import { type DotenvConfigOptions } from 'dotenv'
 import { deepStrictEqual, notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { existsSync, writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { env } from 'node:process'
 import { describe, it } from 'node:test'
 
