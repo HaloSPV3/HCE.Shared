@@ -206,7 +206,7 @@ export class SemanticReleaseConfigDotnet {
     if (this._projectsToPackAndPush.length > 0) {
       const publishCmdAppendix = await configureDotnetNugetPush(this._projectsToPackAndPush)
       execOptions.publishCmd = (execOptions.publishCmd && execOptions.publishCmd.length > 0)
-        ? execOptions.publishCmd + ' && ' + publishCmdAppendix
+        ? `${execOptions.publishCmd} && ${publishCmdAppendix}`
         : publishCmdAppendix
     }
 
