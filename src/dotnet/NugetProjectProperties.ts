@@ -479,3 +479,5 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 }
 
 const NPP = NugetProjectProperties
+
+/** @module NugetProjectProperties */
