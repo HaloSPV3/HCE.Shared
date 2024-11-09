@@ -217,7 +217,7 @@ export class NugetRegistryInfo {
               err instanceof Error ? err : new Error(String(err)),
               reason instanceof Error ? reason : new Error(String(reason)),
             ],
-            'Multiple errors occurred while locating and verifying DUMMY.1.0.0.nupkg. The stored nupkg\'s hash did not match the stored hash. The nupkg was regenerated, deterministic-ated, and re-hashed, but the hashes still didn\'t match!',
+            'Multiple errors occurred while locating and verifying DUMMY.1.0.0.nupkg. The stored nupkg\'s hash did not match the stored hash. The nupkg was regenerated, determinized, and re-hashed, but the hashes still didn\'t match!',
           )
         })
       }
