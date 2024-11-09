@@ -48,8 +48,8 @@ export class SemanticReleaseConfigDotnet {
    *   <Exec Command="dotnet nuget sign $(PackageOutputPath) [remaining args]" ConsoleToMsBuild="true" />
    * </Target>
    * ```
-   * OR pass the command lines to
-   * parameter {@link typeof_dotnetNugetSignArgs dotnetNugetSignArgs} of configurePrepareCmd.
+   * Alternatively, splice your signing commands into the publishCmd string,
+   * inserting them before `dotnet nuget push`.
    * If you sign different signatures depending on the NuGet registry,
    * splice your signing command (with "overwrite signature" enabled, if
    * desired) before the corresponding registry's `dotnet nuget push` command.
@@ -65,7 +65,7 @@ export class SemanticReleaseConfigDotnet {
    * If empty or unspecified, tries getting projects' semi-colon-separated
    * relative paths from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
    * Otherwise, no packages will be packed and pushed.
-   * If configured as recommended, `dotnet pack` will output the nupkg/snupk
+   * If configured as recommended, `dotnet pack` will output the nupkg/snupkg
    * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
    */
   constructor(
