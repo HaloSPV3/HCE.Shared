@@ -4,6 +4,7 @@ import { type Dirent } from 'node:fs'
 import { readdir, realpath, stat } from 'node:fs/promises'
 import { dirname, isAbsolute, resolve } from 'node:path'
 import { promisify } from 'node:util'
+import { isNativeError } from 'node:util/types'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
 import { getOwnPropertyDescriptors } from '../utils/reflection.js'
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
@@ -242,8 +243,13 @@ export class MSBuildProject {
     const getTargetResult = options.GetTargetResult.length === 0 ? '' : `"-getTargetResult:${options.GetTargetResult.join()}"`
     const cmdLine = ['dotnet', 'msbuild', `"${options.FullName}"`, property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
     const stdOutErr = await execAsync(cmdLine)
-      .catch((reason) => {
-        throw new Error((reason as Error).stack ?? reason, { cause: reason })
+      .catch((reason: unknown) => {
+        if (isNativeError(reason)) {
+          if ('stderr' in reason)
+            reason.message = `${String(reason.stderr)}\n${reason.message}`
+          throw reason
+        }
+        else throw new Error(`The following command failed:\n"${cmdLine}"`, { cause: reason })
       })
     const evaluation = new MSBuildEvaluationOutput(
       stdOutErr.stdout.startsWith('{')
