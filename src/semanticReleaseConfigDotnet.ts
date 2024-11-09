@@ -213,6 +213,56 @@ export class SemanticReleaseConfigDotnet {
     // FINISHED execOptions.publishCmd
   }
 
+  /**
+   * Insert a plugin into the plugins array.
+   *
+   * @deprecated EXPERIMENTAL: needs thorough tests implemented before use in production!
+   * @public
+   * @param {string[]} insertAfterPluginIDs Plugins which should appear BEFORE
+   * {@link insertPluginIDs}.
+   * @param {string[]} insertPluginIDs The plugin(s) to insert into the plugins array.
+   * @param {string[]} insertBeforePluginsIDs plugins which should appear AFTER the
+   * inserted plugin(s).
+   */
+  splicePlugin(insertAfterPluginIDs: string[], insertPluginIDs: string[], insertBeforePluginsIDs: string[]): void {
+    const errors: Error[] = []
+    const pluginIDs = new Array(...this.options.plugins).map(v => typeof v === 'string' ? v : v[0])
+
+    // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
+
+    const indexOfLastPreceding: number | undefined = insertAfterPluginIDs
+      .filter(v => pluginIDs.includes(v))
+      .map(v => pluginIDs.indexOf(v))
+      .sort()
+      .find((_v, i, obj) => i === (obj.length - 1))
+    if (!indexOfLastPreceding)
+      throw new ReferenceError('An attempt to get the last element of indexOfLastAfter returned undefined.')
+
+    const indicesOfBefore: number[] = insertBeforePluginsIDs
+      .filter(v => pluginIDs.includes(v))
+      .map(v => pluginIDs.indexOf(v))
+      .sort()
+
+    for (const index of indicesOfBefore) {
+      if (index <= indexOfLastPreceding) {
+        const formattedInsertIds: string = '[' + insertPluginIDs.map(v => `"${v}"`).join(', ') + ']'
+        const formattedAfterIds: string = '[' + insertAfterPluginIDs.map(v => `"${v}"`).join(', ') + ']'
+        const formattedBeforeIds: string = '[' + insertBeforePluginsIDs.map(v => `"${v}"`).join(', ') + ']'
+        errors.push(
+          new Error(
+            `insertPlugin was instructed to insert ${formattedInsertIds} after ${formattedAfterIds} and before ${formattedBeforeIds}, `
+            + `but ${pluginIDs[indexOfLastPreceding]} is ordered after ${pluginIDs[index]}!`,
+          ),
+        )
+      }
+    }
+
+    if (errors.length > 0)
+      throw new AggregateError(errors)
+
+    this.options.plugins.splice(indexOfLastPreceding + 1, 0, ...(insertPluginIDs.map(v => [v, {}] satisfies [string, unknown])))
+  }
+
   async toOptions(): Promise<Options> {
     return this.options
   }
