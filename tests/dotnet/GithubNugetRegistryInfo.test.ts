@@ -1,4 +1,4 @@
-import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
+import { getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 import { type DotenvConfigOptions } from 'dotenv'
 import { deepStrictEqual, notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { existsSync, writeFileSync } from 'node:fs'
@@ -46,14 +46,22 @@ await describe('GithubNugetRegistryInfo', async () => {
         return t.skip()
 
       getOwner()
-      strictEqual(await new GithubNugetRegistryInfo().canPushPackagesToUrl, true)
+      strictEqual(await new GHNRI(GHNRIOpts.from({ project: DeterministicNupkgCsproj })).canPushPackagesToUrl, true)
     })
 
     await it('throws when GITHUB_TOKEN is invalid', async () => {
       getOwner()
-      const tokenEnvVar = 'TOKEN_CANNOT_WRITE'
-      getEnv(undefined, { TOKEN_CANNOT_WRITE: tokenEnvVar })
-      const result = await new GithubNugetRegistryInfo(tokenEnvVar).canPushPackagesToUrl.catch(reason => reason instanceof Error ? reason : new Error(String(reason)))
+      const tokenEnvVars = ['TOKEN_CANNOT_WRITE']
+      process.env['TOKEN_CANNOT_WRITE'] = tokenEnvVars[0]
+      const result = await new GHNRI(
+        GHNRIOpts.from({
+          project: DeterministicNupkgCsproj,
+          tokenEnvVars: tokenEnvVars,
+        }),
+      ).canPushPackagesToUrl.catch(
+        reason =>
+          reason instanceof Error ? reason : new Error(String(reason)),
+      )
       notDeepStrictEqual(result, true)
       ok(result instanceof Error)
     })
