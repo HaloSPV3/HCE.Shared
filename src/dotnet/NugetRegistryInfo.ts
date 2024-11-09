@@ -165,7 +165,7 @@ export class NugetRegistryInfo {
     const dummyNupkgPath = await getDummyNupkgAsync()
     const pushResult = await execAsync(`dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key ${tokenValue} --skip-duplicate`,
       { encoding: 'utf8' },
-    ).catch((reason) => {
+    ).catch((reason: unknown) => {
       throw reason instanceof Error && 'stdout' in reason && typeof reason.stdout === 'string'
         ? new Error(`Command failed: dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key *** --skip-duplicate"\n${reason.stdout.replace('\r', '').replace('\n\n\n', '').split('\nUsage: dotnet nuget push [arguments] [options]')[0].trimEnd()}`)
         : reason instanceof Error
