@@ -20,7 +20,7 @@
 		"dotnet/samples/HCE.Shared.SignAfterPack",
 		"dotnet/SignAfterPack",
 		"node",
-		"vscode",
+		"vscode"
 	],
 	"cSpell.words": [
 		"arktype",
