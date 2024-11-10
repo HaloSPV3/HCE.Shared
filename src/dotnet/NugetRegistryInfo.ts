@@ -1,4 +1,4 @@
-import { ArkErrors, type } from 'arktype'
+import { type } from 'arktype'
 import { ok, strictEqual } from 'node:assert/strict'
 import { exec } from 'node:child_process'
 import { createHash } from 'node:crypto'
@@ -106,7 +106,7 @@ export class NugetRegistryInfo {
    * @param {string} [opts.url=defaultNugetSource]
    */
   constructor(opts: ReturnType<typeof NRIOpts>) {
-    if (opts instanceof ArkErrors)
+    if (opts instanceof type.errors)
       throw opts.throw()
     opts = NRIOpts.from(opts)
 
