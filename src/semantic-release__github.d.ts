@@ -127,12 +127,12 @@ declare module '@semantic-release/github' {
     draftRelease?: boolean
     /**
      * A {@link https://lodash.com/docs#template Lodash template} to customize the github release's name
-     * @default '<%= nextverison.name %>'
+     * @default '<%= nextRelease.name %>'
      */
     releaseNameTemplate?: string
     /**
      * A {@link https://lodash.com/docs#template Lodash template} to customize the github release's body
-     * @default '<%= nextverison.notes %>'
+     * @default '<%= nextRelease.notes %>'
      */
     releaseBodyTemplate?: string
     /**
