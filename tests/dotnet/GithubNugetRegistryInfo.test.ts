@@ -42,7 +42,7 @@ await describe('GithubNugetRegistryInfo', async () => {
       if (!getEnvVarValue('GITHUB_TOKEN'))
         return t.skip('GITHUB_TOKEN is unavailable for testing')
 
-      if (getEnvVarValue('CI') && !(getEnvVarValue('GITHUB_ACTION')?.includes('release')))
+      if (getEnvVarValue('CI') && !getEnvVarValue('GITHUB_ACTION')?.includes('release'))
         return t.skip()
 
       getOwner()

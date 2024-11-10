@@ -78,7 +78,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
         // todo: override Version/PackageVersion via CLI args in `canPushPackagesToUrl` call chain.
         const canPush = await registryInfo.canPushPackagesToUrl.catch((reason) => {
-          return (reason instanceof Error)
+          return reason instanceof Error
             ? reason
             : new Error(inspect(reason, { depth: Infinity }))
         })

@@ -8,7 +8,7 @@ import _debug from '../debug.js'
  */
 export function listOwnGetters(instanceOrPrototype: object): string[] {
   // if prototype in instance, then it's not an instance. Assign prototype.
-  const prototype: object | null = ('prototype' in instanceOrPrototype && typeof instanceOrPrototype.prototype === 'object' && instanceOrPrototype.prototype !== null)
+  const prototype: object | null = 'prototype' in instanceOrPrototype && typeof instanceOrPrototype.prototype === 'object' && instanceOrPrototype.prototype !== null
     ? instanceOrPrototype.prototype
     : Reflect.getPrototypeOf(instanceOrPrototype)
   const descriptors = Object.getOwnPropertyDescriptors(prototype)
@@ -162,10 +162,10 @@ export function getPrototypes(classDef: ConstructorLike<unknown>) {
      * superclass.
      */
     if (
-      (null !== (parent = Reflect.getPrototypeOf(current)))
-      && isConstructor(parent)
-      && '' !== parent.name
-      && parent !== undefined)
+      null !== (parent = Reflect.getPrototypeOf(current))
+        && isConstructor(parent)
+        && '' !== parent.name
+        && parent !== undefined)
       current = parent
     else { break }
   }

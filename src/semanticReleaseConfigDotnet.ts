@@ -121,7 +121,7 @@ export class SemanticReleaseConfigDotnet {
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
       .sort()
-      .find((_v, i, obj) => i === (obj.length - 1))
+      .find((_v, i, obj) => i === obj.length - 1)
     if (!indexOfLastAfter)
       throw new ReferenceError('An attempt to get the last element of an array returned undefined.')
 
@@ -205,7 +205,7 @@ export class SemanticReleaseConfigDotnet {
     // STARTING execOptions.publishCmd
     if (this._projectsToPackAndPush.length > 0) {
       const publishCmdAppendix = await configureDotnetNugetPush(this._projectsToPackAndPush)
-      execOptions.publishCmd = (execOptions.publishCmd && execOptions.publishCmd.length > 0)
+      execOptions.publishCmd = execOptions.publishCmd && execOptions.publishCmd.length > 0
         ? `${execOptions.publishCmd} && ${publishCmdAppendix}`
         : publishCmdAppendix
     }
@@ -234,7 +234,7 @@ export class SemanticReleaseConfigDotnet {
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
       .sort()
-      .find((_v, i, obj) => i === (obj.length - 1))
+      .find((_v, i, obj) => i === obj.length - 1)
     if (!indexOfLastPreceding)
       throw new ReferenceError('An attempt to get the last element of indexOfLastAfter returned undefined.')
 
@@ -260,7 +260,7 @@ export class SemanticReleaseConfigDotnet {
     if (errors.length > 0)
       throw new AggregateError(errors)
 
-    this.options.plugins.splice(indexOfLastPreceding + 1, 0, ...(insertPluginIDs.map(v => [v, {}] satisfies [string, unknown])))
+    this.options.plugins.splice(indexOfLastPreceding + 1, 0, ...insertPluginIDs.map(v => [v, {}] satisfies [string, unknown]))
   }
 
   // todo: join result with dummy pack commands
@@ -353,7 +353,7 @@ export async function getConfig(projectsToPublish: string[] | MSBuildProject[], 
     throw new Error(
       [
         'getConfig cannot continue. One or more errors occurred.',
-        ...(errors.map(v => v.stack)),
+        ...errors.map(v => v.stack),
       ].join('\n'),
     )
   }

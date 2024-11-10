@@ -114,7 +114,11 @@ await describe('package.json', async () => {
 
   // #region Arrays
   const packemonArray = (Array.isArray(packemon) ? packemon : [packemon]) as PackemonPackageConfig[]
-  const packemonMjs = packemonArray.find(v => v.format === 'mjs' || true === v.format?.includes('mjs') || (v.format === undefined && v.platform === 'node'))
+  const packemonMjs = packemonArray.find(v =>
+    v.format === 'mjs'
+    || true === v.format?.includes('mjs')
+    // eslint-disable-next-line @stylistic/no-extra-parens
+    || (v.format === undefined && v.platform === 'node'))
   const results: Result[] = []
   if (packemonMjs?.inputs) {
     results.push(
