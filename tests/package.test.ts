@@ -39,15 +39,16 @@ interface PackemonPackageConfig {
   inputs?: InputMap
   namespace?: string
   platform?: Platform | Platform[]
-  support?: |
-  // Latest version
-  'current' |
-  // Next/future version
-  'experimental' |
-  // Unsupported version
-  'legacy' |
-  // Oldest version still supported
-  'stable'
+  support?: (
+    // Latest version
+    'current' |
+    // Next/future version
+    'experimental' |
+    // Unsupported version
+    'legacy' |
+    // Oldest version still supported
+    'stable'
+  )
 }
 
 // #endregion PackemonTypes
