@@ -5,18 +5,21 @@ import eslintConfig from '@halospv3/hce.shared-config/eslintConfig'
 import stylistic from '@stylistic/eslint-plugin'
 import { config } from 'typescript-eslint'
 
+const stylisticConfig = stylistic.configs['recommended-flat']
+stylisticConfig.ignores ??= []
+stylisticConfig.ignores.push('**/*.json')
+stylisticConfig.rules ??= {}
+stylisticConfig.rules['@stylistic/no-extra-parens'] = 'error'
+
 export default config(
   ...eslintConfig,
-  Object.assign(stylistic.configs['recommended-flat'], { ignores: ['**/*.json'] }),
-  { rules: { '@stylistic/no-extra-parens': 'error' } },
+  stylisticConfig,
   {
     languageOptions: {
       parserOptions: {
-        sourceType: 'module',
-        EXPERIMENTAL_useProjectService: {
-          allowDefaultProjectForFiles: [
-            './*.js',
-          ],
+        projectService: {
+          allowDefaultProject: ['./*.js'],
+          loadTypeScriptPlugins: true,
         },
       },
     },

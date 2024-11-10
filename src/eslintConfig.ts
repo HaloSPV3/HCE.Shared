@@ -24,7 +24,7 @@ const globalIgnores: TSESLint.FlatConfig.Config = {
   ],
 }
 
-export const _configArray: tseslint.ConfigWithExtends[] = tseslint.config(
+export const _configArray: tseslint.ConfigWithExtends[] = [
   {
     name: 'flat/recommended-with-json - https://github.com/ota-meshi/eslint-plugin-jsonc',
     extends: jsonc.configs['flat/recommended-with-json'],
@@ -70,18 +70,15 @@ export const _configArray: tseslint.ConfigWithExtends[] = tseslint.config(
     ignores: globalIgnores.ignores,
     languageOptions: {
       parserOptions: {
-        project: true,
-        EXPERIMENTAL_useProjectService: {
-          allowDefaultProjectForFiles: [
-            './*.js',
-          ],
-          maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 32,
+        projectService: {
+          allowDefaultProject: ['./*.js'],
+          loadTypeScriptPlugins: true,
         },
       },
       globals: globals.node,
     },
   },
   globalIgnores,
-)
+] satisfies tseslint.ConfigWithExtends[]
 
-export default _configArray
+export default tseslint.config(..._configArray)
