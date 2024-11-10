@@ -12,6 +12,10 @@ declare module '@semantic-release/commit-analyzer' {
     preset?: string
     config?: string
     parserOpts?: AnyRecord
+    /**
+     * Can be a string only if the string is a path to a modules whose default export provides {@link RuleObject}[].
+     * See https://github.com/semantic-release/commit-analyzer?tab=readme-ov-file#external-package--file
+     */
     releaseRules?: string | RuleObject[]
     presetConfig?: AnyRecord
   }
