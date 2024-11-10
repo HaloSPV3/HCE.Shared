@@ -90,7 +90,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         )
 
         const canPush = await registryInfo.canPushPackagesToUrl.catch((reason) => {
-          return (reason instanceof Error)
+          return reason instanceof Error
             ? reason
             : new Error(inspect(reason, { depth: Infinity }))
         })

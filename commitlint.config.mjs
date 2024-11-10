@@ -6,6 +6,7 @@ import vscodeSettingsJson from './.vscode/settings.json' assert { type: 'json' }
 // Remember to update the d.ts! This should be part of TypeScript, but is blocked by https://github.com/microsoft/TypeScript/issues/32063
 const gitCommitMessageEditorScopes = Object.freeze(
   /** @type {VscodeSettings['gitCommitMessageEditor.intelliSense.completion.scopes']} */
+  // eslint-disable-next-line @stylistic/no-extra-parens
   (vscodeSettingsJson['gitCommitMessageEditor.intelliSense.completion.scopes']),
 )
 
@@ -16,6 +17,7 @@ export default {
     'scope-enum': Object.freeze([
       RuleConfigSeverity.Error,
       /** @type {RuleConfigCondition} */
+      // eslint-disable-next-line @stylistic/no-extra-parens
       ('always'),
       gitCommitMessageEditorScopes.map(entry => entry.scope),
     ]),
