@@ -20,6 +20,8 @@ declare module '@semantic-release/commit-analyzer' {
     presetConfig?: AnyRecord
   }
 
+  export type Options = CommitAnalyzerConfig
+
   /**
    * Determine the type of release to create based on a list of commits.
    *
