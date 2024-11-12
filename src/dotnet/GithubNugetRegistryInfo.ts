@@ -25,11 +25,7 @@ export class GithubNugetRegistryInfo extends NRI {
 
   /**
    * Returns `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json` or throws if GITHUB_REPOSITORY_OWNER is not defined in {@link process.env} and {@link process.cwd() $CWD}/.env
-   *
-   * @export
-   * @throws {@link ReferenceError }
-   * The environment variable GITHUB_REPOSITORY_OWNER must be set before calling this method!
-   *
+   * @public @static
    * @returns {string?} If GITHUB_REPOSITORY_OWNER is defined, returns the GitHub Package Repository URL endpoint for NuGet pushes (--source).\
    * Otherwise, returns `undefined`
    */
