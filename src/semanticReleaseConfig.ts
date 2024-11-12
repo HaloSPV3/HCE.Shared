@@ -3,6 +3,7 @@ import type { Options as SRGitOptions } from '@semantic-release/git'
 import type { Options as SRGithubOptions } from '@semantic-release/github'
 import type { Options, PluginSpec } from 'semantic-release'
 import { DefaultOptions } from './setupGitPluginSpec.js'
+import type { DeepWritable } from 'ts-essentials'
 
 /**
  * @satisfies { readonly PluginSpec[] }
@@ -14,6 +15,45 @@ export const defaultPlugins = Object.freeze([
   '@semantic-release/github',
 ] as const) satisfies readonly PluginSpec[]
 
+// define as const for string literals in type, then...
+/** @see baseConfig */
+const _baseConfig = {
+  /** @see https://semantic-release.gitbook.io/semantic-release/usage/plugins#plugin-options-configuration */
+  preset: 'conventionalcommits',
+  branches: [
+    'main',
+    {
+      name: 'develop',
+      channel: 'develop',
+      prerelease: true,
+    },
+  ],
+  plugins: [
+    ['@semantic-release/commit-analyzer' as const, {}] satisfies PluginSpec<unknown>,
+    ['semantic-release-export-data' as const, {}] satisfies PluginSpec<unknown>,
+    ['@semantic-release/release-notes-generator' as const, {}] satisfies PluginSpec<unknown>,
+    ['@semantic-release/changelog' as const, {}] satisfies PluginSpec<unknown>,
+    ['@semantic-release/git' as const, DefaultOptions] as const satisfies PluginSpec<SRGitOptions>,
+    // Arbitrary shell commands - https://github.com/semantic-release/exec
+    // hint: set 'prepareCmd' to`dotnet publish`.
+    //   Because this is sorted after @semantic-release / git, the new Git tag will
+    //   be visible to dotnet(and GitVersion).Dotnet artifacts will be
+    //   versioned accordingly.
+    // Plugins' Steps: https://github.com/semantic-release/semantic-release/blob/master/docs/extending/plugins-list.md
+    ['@semantic-release/exec' as const, {}] satisfies PluginSpec<SRExecOptions>,
+    [
+      '@semantic-release/github' as const,
+      {
+        addReleases: 'bottom',
+        assets: [{
+          path: './publish/*',
+        }],
+      } as const,
+    ] as const satisfies PluginSpec<SRGithubOptions>,
+  ] as const,
+} as const satisfies Options
+
+// ...assign with deep mutability
 /**
  * The base configuration for various Semantic Release scenarios.
  * - Prefers preset "conventionalcommits"
@@ -37,49 +77,9 @@ export const defaultPlugins = Object.freeze([
  *   - `@semantic-release/github`
  *     - uploads all files from `./publish/*`. This is non-recursive.
  *     - adds a list of links to related release pages (e.g. the release's page on npmjs.com)
- *
  * @satisfies {Options}
  */
-export const baseConfig = {
-  /** @see https://semantic-release.gitbook.io/semantic-release/usage/plugins#plugin-options-configuration */
-  preset: 'conventionalcommits',
-  branches: [
-    'main',
-    {
-      name: 'develop',
-      channel: 'develop',
-      prerelease: true,
-    },
-  ],
-  plugins: [
-    ['@semantic-release/commit-analyzer', {}],
-    ['semantic-release-export-data', {}],
-    ['@semantic-release/release-notes-generator', {}],
-    ['@semantic-release/changelog', {}],
-    ['@semantic-release/git', DefaultOptions as SRGitOptions] satisfies PluginSpec<SRGitOptions>,
-    // Arbitrary shell commands - https://github.com/semantic-release/exec
-    // hint: set 'prepareCmd' to`dotnet publish`.
-    //   Because this is sorted after @semantic-release / git, the new Git tag will
-    //   be visible to dotnet(and GitVersion).Dotnet artifacts will be
-    //   versioned accordingly.
-    // Plugins' Steps: https://github.com/semantic-release/semantic-release/blob/master/docs/extending/plugins-list.md
-    ['@semantic-release/exec', {} as SRExecOptions] satisfies PluginSpec<SRExecOptions>,
-    ['@semantic-release/github',
-      {
-        addReleases: 'bottom',
-        assets: [{
-          path: './publish/*',
-        }],
-      } as SRGithubOptions,
-    ] satisfies PluginSpec<SRGithubOptions>,
-  ] as (
-    PluginSpec<unknown> |
-    PluginSpec<SRGitOptions> |
-    PluginSpec<SRExecOptions> |
-    PluginSpec<SRGithubOptions>
-  )[],
-} as const satisfies Options
-
+export const baseConfig = _baseConfig as DeepWritable<typeof _baseConfig>
 /// (OPTIONAL) update static Version strings before Git plugin
 // https://github.com/jpoehnelt/semantic-release-replace-plugin
 // https://github.com/droidsolutions/semantic-release-update-file
