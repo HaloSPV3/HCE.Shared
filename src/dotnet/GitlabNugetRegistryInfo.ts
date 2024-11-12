@@ -34,7 +34,7 @@ export const GitlabNugetRegistryInfoOptions = NRIOpts.and({
   }
   return obj
 })
-const GLNRIOpts = GitlabNugetRegistryInfoOptions
+type GLNRIOpts = typeof GitlabNugetRegistryInfoOptions
 
 // https://docs.gitlab.com/ee/user/packages/nuget_repository/
 export class GitlabNugetRegistryInfo extends NRI {
@@ -54,7 +54,7 @@ export class GitlabNugetRegistryInfo extends NRI {
    * @param opts The return value of {@link GLNRIOpts}
    */
   // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-  constructor(opts: ReturnType<typeof GLNRIOpts>) {
+  constructor(opts: ReturnType<GLNRIOpts>) {
     super(opts)
   }
 
