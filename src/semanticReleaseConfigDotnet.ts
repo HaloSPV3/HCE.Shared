@@ -25,7 +25,8 @@ import { MSBuildProjectProperties } from './dotnet/MSBuildProjectProperties.js'
 
 type UnArray<T> = T extends (infer U)[] ? U : T
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
-  plugins: (UnArray<typeof baseConfig.plugins> | [string, SRExecOptions])[]
+  plugins: (UnArray<typeof baseConfig.plugins> | [string, unknown]
+  )[]
 };
 
 /**
