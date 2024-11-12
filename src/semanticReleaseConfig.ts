@@ -1,9 +1,22 @@
+import type { Options as SRCommitAnalyzerOptions } from '@semantic-release/commit-analyzer'
 import type { Options as SRExecOptions } from '@semantic-release/exec'
 import type { Options as SRGitOptions } from '@semantic-release/git'
 import type { Options as SRGithubOptions } from '@semantic-release/github'
 import type { Options, PluginSpec } from 'semantic-release'
 import { DefaultOptions } from './setupGitPluginSpec.js'
 import type { DeepWritable } from 'ts-essentials'
+
+/**
+ * A two-type PluginSpec to tie a plugin's name to its Options type. This is
+ * intended for use by plugins to associate their Options type with their plugin
+ * name, but will anyone ever use this?
+ * @augments PluginSpec<T>
+ */
+export type PluginSpecTuple<P extends string, T> = P | [P, T]
+export type PluginSpecSRCommitAnalyzer = PluginSpecTuple<'@semantic-release/commit-analyzer', SRCommitAnalyzerOptions>
+export type PluginSpecSRExec = PluginSpecTuple<'@semantic-release/exec', SRExecOptions>
+export type PluginSpecSRGit = PluginSpecTuple<'@semantic-release/git', SRGitOptions>
+export type PluginSpecSRGithub = PluginSpecTuple<'@semantic-release/github', SRGithubOptions>
 
 /**
  * @satisfies { readonly PluginSpec[] }
@@ -33,14 +46,14 @@ const _baseConfig = {
     ['semantic-release-export-data' as const, {}] satisfies PluginSpec<unknown>,
     ['@semantic-release/release-notes-generator' as const, {}] satisfies PluginSpec<unknown>,
     ['@semantic-release/changelog' as const, {}] satisfies PluginSpec<unknown>,
-    ['@semantic-release/git' as const, DefaultOptions] as const satisfies PluginSpec<SRGitOptions>,
+    ['@semantic-release/git' as const, DefaultOptions] as const satisfies PluginSpecSRGit,
     // Arbitrary shell commands - https://github.com/semantic-release/exec
     // hint: set 'prepareCmd' to`dotnet publish`.
     //   Because this is sorted after @semantic-release / git, the new Git tag will
     //   be visible to dotnet(and GitVersion).Dotnet artifacts will be
     //   versioned accordingly.
     // Plugins' Steps: https://github.com/semantic-release/semantic-release/blob/master/docs/extending/plugins-list.md
-    ['@semantic-release/exec' as const, {}] satisfies PluginSpec<SRExecOptions>,
+    ['@semantic-release/exec' as const, {}] satisfies PluginSpecSRExec,
     [
       '@semantic-release/github' as const,
       {
@@ -49,7 +62,7 @@ const _baseConfig = {
           path: './publish/*',
         }],
       } as const,
-    ] as const satisfies PluginSpec<SRGithubOptions>,
+    ] as const satisfies PluginSpecSRGithub,
   ] as const,
 } as const satisfies Options
 
