@@ -2,11 +2,15 @@ import type { AssetEntry, Options as GitOptions } from '@semantic-release/git'
 import type { PluginSpec } from 'semantic-release'
 
 export const GitPluginId = '@semantic-release/git'
-/** As specified at https://github.com/semantic-release/git#options */
+/**
+ * As specified at https://github.com/semantic-release/git#options
+ * To use, assign or create an object with the same (but mutable) properties and deeply-copy to the object
+ * @satisfies GitOptions
+ */
 export const DefaultOptions = {
   assets: ['README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json'],
   message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
-} satisfies GitOptions
+} as const satisfies GitOptions
 
 function gitAssetsToArray(assets: AssetEntry | AssetEntry[] | false | undefined) {
   if (assets === undefined || assets === false) return []
