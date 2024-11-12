@@ -74,7 +74,7 @@ export class SemanticReleaseConfigDotnet {
   ) {
     this.options = baseConfig
     /* normalize PluginSpecs to tuples */
-    this.options.plugins.map(pluginSpec => typeof pluginSpec === 'string'
+    this.options.plugins = this.options.plugins.map(pluginSpec => typeof pluginSpec === 'string'
       ? [pluginSpec, {}]
       : pluginSpec,
     )
