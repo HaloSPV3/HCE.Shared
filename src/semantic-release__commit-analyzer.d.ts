@@ -27,7 +27,7 @@ declare module '@semantic-release/commit-analyzer' {
    *
    * @param {Object} pluginConfig The plugin configuration.
    * @param {String} pluginConfig.preset conventional-changelog preset ('angular', 'atom', 'codemirror', 'ember', 'eslint', 'express', 'jquery', 'jscs', 'jshint')
-   * @param {String} pluginConfig.config Requireable npm package with a custom conventional-changelog preset
+   * @param {String} pluginConfig.config Require-able npm package with a custom conventional-changelog preset
    * @param {String|Array} pluginConfig.releaseRules A `String` to load an external module or an `Array` of rules.
    * @param {Object} pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
    * @param {Object} context The semantic-release context.
