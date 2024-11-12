@@ -42,7 +42,7 @@ const _baseConfig = {
     },
   ],
   plugins: [
-    ['@semantic-release/commit-analyzer' as const, {}] satisfies PluginSpec<unknown>,
+    ['@semantic-release/commit-analyzer' as const, {}] satisfies PluginSpecSRCommitAnalyzer,
     ['semantic-release-export-data' as const, {}] satisfies PluginSpec<unknown>,
     ['@semantic-release/release-notes-generator' as const, {}] satisfies PluginSpec<unknown>,
     ['@semantic-release/changelog' as const, {}] satisfies PluginSpec<unknown>,
