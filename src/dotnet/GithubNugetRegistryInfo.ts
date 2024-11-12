@@ -36,25 +36,21 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
    * Otherwise, returns `undefined`
    */
   static getNugetGitHubUrl(): string | undefined {
-    const owner = GithubNugetRegistryInfo.getOwner()
-    if (owner)
-      return `${NUGET_PKG_GITHUB_COM}/${owner}/index.json`
-    else return owner
-  }
-
-  /** returns the value of GITHUB_REPOSITORY_OWNER */
-  static getOwner(): string | undefined {
-    return getEnvVarValue('GITHUB_REPOSITORY_OWNER')
+    const owner = getEnvVarValue('GITHUB_REPOSITORY_OWNER')
+    return owner !== undefined
+      ? `${NUGET_PKG_GITHUB_COM}/${owner}/index.json`
+      : undefined
   }
 }
 const GHNRI = GithubNugetRegistryInfo
 
 /**
  * @remarks
- * The default value of `url` is dependent on {@link GHNRI.getOwner} and will default to an empty string if the environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
+ * The default value of `url` is dependent on {@link GHNRI.getNugetGitHubUrl} and will default to an empty string if the environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
  */
 export const GithubNugetRegistryInfoOptions = NRIOptsBase.merge({
-  url: NRIOptsBase.in.get('url').default(() => GHNRI.getNugetGitHubUrl() ?? ''),
+  url: NRIOptsBase.in.get('url')
+    .default(() => GHNRI.getNugetGitHubUrl() ?? ''),
   tokenEnvVars: NRIOptsBase.in.get('tokenEnvVars')
     .default(
       /* must be a function. A fixed-length array is NOT a primitive type! */
