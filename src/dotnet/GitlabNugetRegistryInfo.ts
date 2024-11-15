@@ -5,37 +5,6 @@ import {
   NugetRegistryInfoOptionsBase as NRIOptsBase,
 } from './NugetRegistryInfo.js'
 
-/**
- * The Arktype definition for {@link GitlabNugetRegistryInfo}'s constructor parameter. Construct an object of this type by calling {@link GLNRIOpts.from}
- * @static @override @readonly
- * @param {typeof GLNRIOpts.inferIn} data
- * @param {typeof NRIOptsBase.t.project} data.project See {@link NRIOptsBase.t.project}
- * @param {typeof GLNRIOpts.inferIn.tokenEnvVars} [data.tokenEnvVars=DefaultGitlabTokenEnvVars] Defaults to {@link DefaultGitlabTokenEnvVars}. See {@link NRIOpts.t.tokenEnvVars}
- * @param {typeof GLNRIOpts.inferIn.url} data.url The GitLab Nuget API URL to push packages to -OR- a keyword such as "group" or "project" used to determine URL. See {@link GLNRI.projectUrl}, {@link GLNRI.groupUrl}
- */
-export const GitlabNugetRegistryInfoOptions = NRIOpts.and({
-  tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(() => GLNRI.DefaultGitlabTokenEnvVars),
-  url: NRIOptsBase.get('url').or('"group" | "project"').default('project'),
-}).pipe((obj) => {
-  switch (obj.url) {
-    case 'group':
-      if (GLNRI.groupUrl === undefined)
-        throw new Error('The group-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_NAMESPACE_ID) were undefined.')
-      obj.url = GLNRI.groupUrl
-      break
-    /* fall to default */
-    case 'project':
-      if (GLNRI.projectUrl === undefined)
-        throw new Error('The project-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_ID) were undefined.')
-      obj.url = GLNRI.projectUrl
-      break
-    default:
-      break
-  }
-  return obj
-})
-type GLNRIOpts = typeof GitlabNugetRegistryInfoOptions
-
 // https://docs.gitlab.com/ee/user/packages/nuget_repository/
 export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
   /** The GitLab API v4 root URL.  */
@@ -79,5 +48,35 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
       : undefined
   }
 }
-
 const GLNRI = GitlabNugetRegistryInfo
+
+/**
+ * The Arktype definition for {@link GitlabNugetRegistryInfo}'s constructor parameter. Construct an object of this type by calling {@link GLNRIOpts.from}
+ * @static @override @readonly
+ * @param {typeof GLNRIOpts.inferIn} data
+ * @param {typeof NRIOptsBase.t.project} data.project See {@link NRIOptsBase.t.project}
+ * @param {typeof GLNRIOpts.inferIn.tokenEnvVars} [data.tokenEnvVars=DefaultGitlabTokenEnvVars] Defaults to {@link DefaultGitlabTokenEnvVars}. See {@link NRIOpts.t.tokenEnvVars}
+ * @param {typeof GLNRIOpts.inferIn.url} data.url The GitLab Nuget API URL to push packages to -OR- a keyword such as "group" or "project" used to determine URL. See {@link GLNRI.projectUrl}, {@link GLNRI.groupUrl}
+ */
+export const GitlabNugetRegistryInfoOptions = NRIOpts.and({
+  tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(() => GLNRI.DefaultGitlabTokenEnvVars),
+  url: NRIOptsBase.get('url').or('"group" | "project"').default('project'),
+}).pipe((obj) => {
+  switch (obj.url) {
+    case 'group':
+      if (GLNRI.groupUrl === undefined)
+        throw new Error('The group-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_NAMESPACE_ID) were undefined.')
+      obj.url = GLNRI.groupUrl
+      break
+    /* fall to default */
+    case 'project':
+      if (GLNRI.projectUrl === undefined)
+        throw new Error('The project-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_ID) were undefined.')
+      obj.url = GLNRI.projectUrl
+      break
+    default:
+      break
+  }
+  return obj
+})
+type GLNRIOpts = typeof GitlabNugetRegistryInfoOptions
