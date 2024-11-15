@@ -24,7 +24,7 @@ await describe('tBooleanString', async (c00) => {
     tBooleanString.assert('false')
   })
   await it('does not match boolean True', () => {
-    ok(!tBooleanString.assert(true))
+    ok(!tBooleanString.allows(true))
   })
   await it('does not match boolean False', () => {
     ok(!tBooleanString.allows(false))
