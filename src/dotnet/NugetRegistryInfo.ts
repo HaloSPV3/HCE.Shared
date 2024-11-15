@@ -783,6 +783,8 @@ but the environment variable is empty or undefined.`)
    * @todo utilize in custom plugin inserted at the beginning of `prepare`
    */
   static async IsNextVersionAlreadyPublished(source: string, packageId: string, nextVersion: string): Promise<boolean> {
+    if (nextVersion === '')
+      throw new Error('The value of nextVersion is empty')
     return await execAsync(`dotnet package search --format JSON --exact-match --source ${source} --prerelease ${packageId}`)
       .then(stdPair => stdPair.stdout)
       .then(json => this._ParseNugetSearchReturn(json))
