@@ -14,9 +14,21 @@ await it('is built', async () =>
 await describe('MSBuildProjectProperties', async (c0) => {
   const emptyMap = new CaseInsensitiveMap<string, string>()
   const emptySample = new MPP('', emptyMap)
-  await it('throws if path does not exist', () => {
+  await it('throws if path does not exist', async () => {
+    // does not create file
     const tmpName = tmpNameSync()
-    new MPP(tmpName, emptyMap)
+    let ctorHadThrown: boolean
+    try {
+      new MPP(tmpName, emptyMap)
+      ctorHadThrown = false
+    }
+    catch {
+      ctorHadThrown = true
+      // good!
+    }
+
+    if (!ctorHadThrown)
+      throw new Error(`MSBuildProjectProperties saw ${tmpName} and thought it existed when it shouldn't!`)
   })
   await it('does not throw if given path is empty string (defaults to CWD)', () => {
     strictEqual(emptySample.MSBuildProjectFullPath, process.cwd())
