@@ -1,11 +1,11 @@
 import eslintConfig from '@halospv3/hce.shared-config/eslintConfig'
 import { deepStrictEqual, ok } from 'node:assert/strict'
 import { describe, it, todo } from 'node:test'
-await it('is built', async () => {
-  // todo: fix circular references
-  const built = await import('@halospv3/hce.shared-config/eslintConfig')
-  const source = await import('../src/eslintConfig.js')
+import { inspect } from 'node:util'
 
+await it('is built', async () => {
+  const built = inspect(await import('@halospv3/hce.shared-config/eslintConfig'), false, Infinity)
+  const source = inspect(await import('../src/eslintConfig.js'), false, Infinity)
   deepStrictEqual(built, source)
 })
 
