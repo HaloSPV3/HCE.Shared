@@ -7,11 +7,11 @@
     <IncludeSymbols>true</IncludeSymbols>
     <PackageOutputPath>packages</PackageOutputPath>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.0.1-DUMMY</Version>
   </PropertyGroup>
 
-  <!-- 
+  <!--
   Executes Kuinox.NupkgDeterministicator after Pack to make the nupkg
   (and symbols package, if applicable) deterministic.
   See the targets file for its usage -->
