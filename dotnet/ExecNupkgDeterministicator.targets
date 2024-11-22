@@ -72,15 +72,15 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       IgnoreExitCode="true"
       StandardErrorImportance="Low"
       StandardOutputImportance="Low"
-    ><Output 
+    ><Output
       TaskParameter="ConsoleOutput"
       ItemName="_ConsoleOutput" />
-      <Output 
+      <Output
       TaskParameter="ExitCode"
       PropertyName="_ExitCode" />
     </Exec>
-    
-    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' " 
+
+    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' "
       Code="$(_ExitCode)"
       Text="@(_ConsoleOutput, '\n')"
     />
@@ -106,15 +106,15 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       IgnoreExitCode="true"
       StandardErrorImportance="Low"
       StandardOutputImportance="Low"
-    ><Output 
+    ><Output
       TaskParameter="ConsoleOutput"
       ItemName="ConsoleOutput" />
-      <Output 
+      <Output
       TaskParameter="ExitCode"
       ItemName="ExitCode" />
     </Exec>
-    
-    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' " 
+
+    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' "
       Code="$(_ExitCode)"
       Text="@(_ConsoleOutput, '\n')"
     />
