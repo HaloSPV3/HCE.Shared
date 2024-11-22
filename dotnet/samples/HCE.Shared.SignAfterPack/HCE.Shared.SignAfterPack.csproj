@@ -8,10 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- This is a throwaway certificate used only for test-signing this project's nupkg. 
+    <!-- This is a throwaway certificate used only for test-signing this project's nupkg.
     Never `git add *.pfx` nor `git add` a password. -->
     <DotnetNugetSignCertificatePassword>0</DotnetNugetSignCertificatePassword>
     <DotnetNugetSignCertificatePath>./sampleCert.samplepfx</DotnetNugetSignCertificatePath>
+    <DotnetNugetSignOverwrite>true</DotnetNugetSignOverwrite>
   </PropertyGroup>
   <Import Project="../../SignAfterPack.targets" />
 </Project>
