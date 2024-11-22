@@ -8,18 +8,69 @@ import {
   NugetRegistryInfoOptions as NRIOpts,
 } from '../../src/dotnet/NugetRegistryInfo.js'
 import { resolve } from 'node:path'
-import { isConstructor } from '../../src/utils/reflection.js'
+import { getOwnPropertyDescriptors, isConstructor } from '../../src/utils/reflection.js'
+import { type } from 'arktype'
 
 const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
   resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
 ]).then(v => v[0])
 
-await it('is built', async () =>
-  deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo')), undefined, 2),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/NugetRegistryInfo.js')), undefined, 2),
-  ),
-)
+await describe('is built', async () => {
+  const built = await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo')
+  const source = await import('../../src/dotnet/NugetRegistryInfo.js')
+  await it('has expected keys', () =>
+    deepStrictEqual(Object.keys(built), Object.keys(source)),
+  )
+  await describe('NugetRegistryInfo', async () => {
+    await it('serializes to JSON as expected', () => {
+      const builtJson = JSON.stringify(built.NugetRegistryInfo)
+      const sourceJson = JSON.stringify(source.NugetRegistryInfo)
+      deepStrictEqual(builtJson, sourceJson)
+    })
+    await it('has expected static, instance, and recursed super properties', () => {
+      const builtProps = JSON.stringify(getOwnPropertyDescriptors(built.NugetRegistryInfo, true, true))
+      const sourceProps = JSON.stringify(getOwnPropertyDescriptors(source.NugetRegistryInfo, true, true))
+      deepStrictEqual(builtProps, sourceProps)
+    })
+    await it('has expected instance type', () => {
+      const builtInstance = type.instanceOf(built.NugetRegistryInfo).toJSON().toString()
+      const sourceInstance = type.instanceOf(source.NugetRegistryInfo).toJSON().toString()
+      deepStrictEqual(builtInstance, sourceInstance)
+    })
+  })
+  await describe('NugetRegistryInfoOptions', async () => {
+    await it('serializes to JSON as expected', () =>
+      deepStrictEqual(
+        built.NugetRegistryInfoOptions.toJSON().toString(),
+        source.NugetRegistryInfoOptions.toJSON().toString(),
+      ),
+    )
+  })
+  await describe('NugetRegistryInfoOptionsBase', async () =>
+    await it('serializes to JSON as expected', () =>
+      deepStrictEqual(
+        built.NugetRegistryInfoOptionsBase.toJSON().toString(),
+        source.NugetRegistryInfoOptionsBase.toJSON().toString(),
+      ),
+    ),
+  )
+  await describe('getGithubOutput', async () =>
+    await it('serializes to JSON as expected', () =>
+      deepStrictEqual(
+        JSON.stringify(built.getGithubOutput),
+        JSON.stringify(source.getGithubOutput),
+      ),
+    ),
+  )
+  await describe('getGithubOutputSync', async () =>
+    await it('serializes to JSON as expected', () =>
+      deepStrictEqual(
+        JSON.stringify(built.getGithubOutputSync),
+        JSON.stringify(source.getGithubOutputSync),
+      ),
+    ),
+  )
+})
 
 await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is a class', async () => {
