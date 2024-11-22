@@ -21,18 +21,10 @@ await describe('configDotnet', async () => {
       process.env.GITHUB_REPOSITORY_OWNER = 'HaloSPV3'
       process.env.SKIP_TOKEN = 'true'
       setGracefulCleanup()
-      const tmpProj = fileSync({ postfix: '.csproj', discardDescriptor: true })
+      const tmpProj = fileSync({ dir: 'configDotnet', name: 'configDotnet', postfix: '.csproj', discardDescriptor: true })
       writeFileSync(tmpProj.name, '<Project> <PropertyGroup> <TargetFramework>net6.0</TargetFramework> <RuntimeIdentifier>win7-x86</RuntimeIdentifier> </PropertyGroup> </Project>')
-      let actual = undefined
-      try {
-        actual = await getConfig([tmpProj.name], [tmpProj.name])
-      }
-      catch (err) {
-        actual = err instanceof Error ? err : new Error(String(err))
-      }
-      finally {
-        unlinkSync(tmpProj.name)
-      }
+      const actual = await getConfig([tmpProj.name], [tmpProj.name])
+        .catch(err => err instanceof Error ? err : new Error(String(err)))
 
       ok(!(actual instanceof Error), '`actual` should not be an Error.\n' + actual.stack)
     })
