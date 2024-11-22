@@ -54,6 +54,7 @@ await describe('MSBuildProject', async () => {
         projTargets: [
           'AddDepsJsonAndRuntimeConfigToCopyItemsForReferencingProjects',
           'AddDepsJsonAndRuntimeConfigToPublishItemsForReferencingProjects',
+          'AddGlobalAnalyzerConfigForPackage_MicrosoftCodeAnalysisCSharpCodeStyle',
           'AddImplicitDefineConstants',
           'AddRuntimeConfigFileToBuiltProjectOutputGroupOutput',
           'AddSourceRevisionToInformationalVersion',
@@ -123,6 +124,7 @@ await describe('MSBuildProject', async () => {
           'ComputeIntermediateSatelliteAssemblies',
           'ComputeRefAssembliesToPublish',
           'ComputeResolvedFilesToPublishList',
+          'ComputeRunArguments',
           'ContentFilesProjectOutputGroup',
           'CopyAdditionalFiles',
           'CopyFilesToOutputDirectory',
@@ -311,7 +313,7 @@ await describe('MSBuildProject', async () => {
         evaluation: {
           Items: {},
           Properties: {
-            TargetFramework: 'netstandard1.0',
+            TargetFramework: 'netstandard2.0',
             TargetFrameworks: '',
             RuntimeIdentifier: '',
             RuntimeIdentifiers: '',
