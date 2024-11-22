@@ -65,6 +65,8 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       <_BaseCmd Condition=" '$(_ToolListLocalExitCode)' == '0' ">dotnet tool run $(_BaseCmd)</_BaseCmd>
     </PropertyGroup>
 
+    <Exec Command="dotnet tool restore" />
+
     <!-- determinize the nupkg -->
     <Exec
       Command="$(_BaseCmd) $(_PackageFullPath)"
