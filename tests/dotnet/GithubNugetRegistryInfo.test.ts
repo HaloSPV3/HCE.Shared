@@ -5,7 +5,7 @@ import { existsSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { env } from 'node:process'
 import { describe, it } from 'node:test'
-import { DeterministicNupkgCsproj } from './MSBuildProject.test.js'
+import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js'
 
 const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env')
 if (!existsSync(dotenvPath))
