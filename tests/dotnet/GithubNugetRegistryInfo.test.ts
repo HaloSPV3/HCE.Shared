@@ -5,7 +5,7 @@ import { existsSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { env } from 'node:process'
 import { describe, it } from 'node:test'
-import { DeterministicNupkgCsproj } from './MSBuildProject.test.js'
+import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js'
 
 // GHNRI will throw if imported while GITHUB_REPOSITORY_OWNER is unset!
 getOwner()
