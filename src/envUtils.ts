@@ -21,11 +21,11 @@ export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.P
  * @param envVar
  * @returns
  */
-export function getEnvVarValue(envVar: string): string | undefined {
+export function getEnvVarValue(envVar: string, options?: Parameters<typeof loadDotenv>[0]): string | undefined {
   let value = env[envVar]
   if (!value) {
     try {
-      loadDotenv()
+      loadDotenv(options)
     }
     catch (err) {
       console.error(String(err))
