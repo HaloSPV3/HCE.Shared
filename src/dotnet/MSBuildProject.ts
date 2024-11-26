@@ -8,6 +8,7 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
 import { getOwnPropertyDescriptors } from '../utils/reflection.js'
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
 import { NugetProjectProperties } from './NugetProjectProperties.js'
+import { warn } from 'node:console'
 
 const execAsync = promisify(exec)
 
@@ -230,6 +231,13 @@ export class MSBuildProject {
    * MSBuildProject's constructor fails.
    */
   public static async Evaluate(options: EvaluationOptions): Promise<MSBuildProject> {
+    if (
+      options.GetProperty.length === 0
+      && options.GetItem.length === 0
+      && options.GetTargetResult.length === 0
+    ) {
+      throw new Error('No MSBuild Property, Item, or TargetResult queries were provided.')
+    }
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName)
     const _pairs = Object.entries(options.Property)
@@ -250,6 +258,10 @@ export class MSBuildProject {
         }
         else throw new Error(`The following command failed:\n"${cmdLine}"`, { cause: reason })
       })
+    if (stdOutErr.stdout.startsWith('MSBuild version')) {
+      warn(stdOutErr.stdout)
+      throw new Error('dotnet msbuild was expected to output JSON, but output its version header instead.')
+    }
     const evaluation = new MSBuildEvaluationOutput(
       stdOutErr.stdout.startsWith('{')
         ? JSON.parse(stdOutErr.stdout)
