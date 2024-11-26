@@ -227,6 +227,13 @@ export class MSBuildProject {
    * MSBuildProject's constructor fails.
    */
   public static async Evaluate(options: EvaluationOptions): Promise<MSBuildProject> {
+    if (
+      options.GetProperty.length === 0
+      && options.GetItem.length === 0
+      && options.GetTargetResult.length === 0
+    ) {
+      throw new Error('No MSBuild Property, Item, or TargetResult queries were provided.')
+    }
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName)
     const _pairs = Object.entries(options.Property)
