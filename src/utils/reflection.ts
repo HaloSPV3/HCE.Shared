@@ -5,6 +5,7 @@ import _debug from '../debug.js'
  * given prototype or prototype of the given object.
  * @param instanceOrPrototype An instantiated object or a prototype.
  * @returns An array of names of getters that were not inherited from a parent class.
+ * @since 3.0.0
  */
 export function listOwnGetters(instanceOrPrototype: object): string[] {
   // if prototype in instance, then it's not an instance. Assign prototype.
@@ -27,6 +28,7 @@ type GetterDescriptor = PropertyDescriptor & Required<Pick<PropertyDescriptor, '
  * Converts a descriptors object to an array, filters the array for getters, and returns the getters array.
  * @param descriptors An object like the return value of Object.getOwnPropertyDescriptors
  * @returns An array of getters' key-Descriptor pairs
+ * @since 3.0.0
  */
 export function filterForGetters<T>(descriptors: ReturnType<typeof Object.getOwnPropertyDescriptors<T>>) {
   return Object.entries(
@@ -52,6 +54,7 @@ type ConstructorLike<T> = IClass | (abstract new (...args: Args) => T) | (new (.
  * @param recurse If true, recurse through super classes (as defined by extends) and return their properties.
  * @returns An array of PropertyDescriptor objects.
  * todo: refactor!: change instanceProps to flag enum (instanceProps, staticProps, allProps)
+ * @since 3.0.0
  */
 export function getOwnPropertyDescriptors(classDef: ConstructorLike<unknown>, instanceProps: boolean, recurse: boolean): ReturnType<typeof Object.getOwnPropertyDescriptors>[] {
   let currentNameDesc: ReturnType<typeof Reflect.getOwnPropertyDescriptor>
@@ -150,6 +153,7 @@ export function getOwnPropertyDescriptors(classDef: ConstructorLike<unknown>, in
 /**
  * Iterate through the class and its base classes until an anonymous function is reached.
  * Returns all class instance prototypes--excluding the anonymous function--in descending order, with index 0 being the prototype of {@link classDef}
+ * @since 3.0.0
  */
 export function getPrototypes(classDef: ConstructorLike<unknown>) {
   // instance prototypes
@@ -187,6 +191,7 @@ export function getPrototypes(classDef: ConstructorLike<unknown>) {
  * If obj is a function (or class), return obj.prototype. Else, return undefined.
  * @param obj
  * @returns
+ * @since 3.0.0
  */
 export function getFunctionPrototype(obj: unknown): object | undefined {
   try {
@@ -209,6 +214,7 @@ export function getFunctionPrototype(obj: unknown): object | undefined {
  * used with the `new` keyword.
  * @param obj
  * @returns
+ * @since 3.0.0
  */
 export function isConstructor<T>(obj: T, ...args: Args): obj is T & ConstructorLike<T> {
   if (typeof obj !== 'function')
