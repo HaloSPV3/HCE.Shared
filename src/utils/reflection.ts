@@ -163,9 +163,10 @@ export function getPrototypes(classDef: ConstructorLike<unknown>) {
      */
     if (
       null !== (parent = Reflect.getPrototypeOf(current))
-        && isConstructor(parent)
-        && '' !== parent.name
-        && parent !== undefined)
+      // eslint-disable-next-line @stylistic/indent-binary-ops
+      && isConstructor(parent)
+      && '' !== parent.name
+      && parent !== undefined)
       current = parent
     else { break }
   }
