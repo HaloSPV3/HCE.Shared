@@ -1,6 +1,6 @@
 import { getConfig } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet'
 import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
-import { unlinkSync, writeFileSync } from 'node:fs'
+import { writeFileSync } from 'node:fs'
 import { describe, it } from 'node:test'
 import { fileSync, setGracefulCleanup } from 'tmp'
 
