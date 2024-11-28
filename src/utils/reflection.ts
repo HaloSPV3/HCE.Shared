@@ -20,16 +20,22 @@ export function listOwnGetters(instanceOrPrototype: object): string[] {
   return names
 }
 
+type ExceptProto<T> = T extends '__proto__' ? never : Exclude<T, '__proto__'>
+type GetterDescriptor = PropertyDescriptor & Required<Pick<PropertyDescriptor, 'get'>>
+
 /**
  * Converts a descriptors object to an array, filters the array for getters, and returns the getters array.
  * @param descriptors An object like the return value of Object.getOwnPropertyDescriptors
  * @returns An array of getters' key-Descriptor pairs
  */
-export function filterForGetters(descriptors: ReturnType<typeof Object.getOwnPropertyDescriptors>): [string, PropertyDescriptor][] {
+export function filterForGetters<T>(descriptors: ReturnType<typeof Object.getOwnPropertyDescriptors<T>>) {
   return Object.entries(
     descriptors,
   ).filter(
-    e => typeof e[1].get === 'function' && e[0] !== '__proto__',
+    (e): e is [
+      ExceptProto<Extract<keyof typeof descriptors, string>>,
+      GetterDescriptor,
+    ] => e[0] !== '__proto__' && typeof e[1].get === 'function',
   )
 }
 
