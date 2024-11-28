@@ -16,6 +16,7 @@ interface Settings {
   'cSpell.words': [
     'arktype',
     'conventionalcommits',
+    'determinize',
     'GHNRI',
     'GHPR',
     'GLNRI',
