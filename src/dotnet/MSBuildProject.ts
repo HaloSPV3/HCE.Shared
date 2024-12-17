@@ -174,6 +174,9 @@ export class EvaluationOptions {
 }
 
 export class MSBuildProject {
+  /**
+   * Properties for multi-targeting `dotnet publish` outputs. These are included in {@link import('./NugetProjectProperties.ts').GetNPPGetterNames} when param `recurse` is `true`
+   */
   public static readonly MatrixProperties: readonly string[] = Object.freeze([
     'TargetFramework',
     'TargetFrameworks',
