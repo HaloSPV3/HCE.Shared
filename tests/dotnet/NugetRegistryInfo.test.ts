@@ -80,7 +80,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>
           reason instanceof Error
             ? reason
-            : new Error(inspect(reason, { depth: Infinity })),
+            : new Error(inspect(reason, { depth: 3 })),
         )
 
         deepStrictEqual(canPush, true)
