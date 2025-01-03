@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.js'
+import { MSBuildProject as MSBP } from '@halospv3/hce.shared-config/dotnet/MSBuildProject'
 
 export const {
   DeterministicNupkgCsproj,
