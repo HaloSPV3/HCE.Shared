@@ -5,7 +5,8 @@ import {
   GitlabNugetRegistryInfoOptions as GLNRIOpts,
 } from '@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'
 import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
-import { DeterministicNupkgCsproj } from './MSBuildProject.test.js'
+
+import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js'
 
 await describe('GitlabNugetRegistryInfo', async (ctx0) => {
   await it('has expected name', async () => {
