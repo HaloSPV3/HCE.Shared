@@ -6,9 +6,8 @@ import { dirname, isAbsolute, resolve } from 'node:path'
 import { promisify } from 'node:util'
 import { isNativeError } from 'node:util/types'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
-import { getOwnPropertyDescriptors } from '../utils/reflection.js'
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
-import { NugetProjectProperties } from './NugetProjectProperties.js'
+import { NugetProjectProperties, GetNPPGetterNames } from './NugetProjectProperties.js'
 
 const execAsync = promisify(exec)
 
@@ -307,17 +306,9 @@ export class MSBuildProject {
           direntArr.map(async (dirent): Promise<MSBuildProject> => {
             const fullPath = resolve(dirent.parentPath, dirent.name)
             const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath)
-            // this might be too long for a command line. What was is on Windows?
+            // this might be too long for a command line. What was it on Windows?
             // 2^15 (32,768) character limit for command lines?
-            const getProperties = getOwnPropertyDescriptors(
-              NugetProjectProperties, true, true,
-            ).map(
-              o => Object.entries(o),
-            ).flat().filter(// if predicate is true, e is a getter
-              e => typeof e[1].get === 'function' && e[0] !== '__proto__',
-            ).map(// return the getter's name (the MSBuild property name)
-              v => v[0],
-            )
+            const getProperties = GetNPPGetterNames(true, true)
             return await this.Evaluate(
               new EvaluationOptions({
                 FullName: fullPath,
