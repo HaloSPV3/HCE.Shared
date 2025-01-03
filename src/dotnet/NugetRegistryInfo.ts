@@ -90,7 +90,7 @@ function getDummiesDir(project?: MSBuildProject): string {
 }
 
 export class NugetRegistryInfo {
-  #canPushPackagesToUrl: Promise<true> | undefined = undefined
+  private _canPushPackagesToUrl: Promise<true> | undefined = undefined
   private readonly _resolvedEnvVariable: string
   private readonly _url: string
 
@@ -412,15 +412,15 @@ export class NugetRegistryInfo {
    * @remarks Semantic Release Step: Beginning of `prepare`
    */
   public get canPushPackagesToUrl(): Promise<true> {
-    if (this.#canPushPackagesToUrl !== undefined)
-      return this.#canPushPackagesToUrl
+    if (this._canPushPackagesToUrl !== undefined)
+      return this._canPushPackagesToUrl
 
     const tokenValue = NRI._GetTokenValue(this.resolvedEnvVariable)
 
     if (tokenValue.startsWith('github_pat_')) {
       const errMsg = `The value of the token in ${this.resolvedEnvVariable} begins with 'github_pat_', indicating it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`
       const err = new Error(errMsg)
-      return this.#canPushPackagesToUrl = Promise.reject(err)
+      return this._canPushPackagesToUrl = Promise.reject(err)
     }
 
     const finalResult = NugetRegistryInfo.pushDummyAsync(this.url, tokenValue)
@@ -429,7 +429,7 @@ export class NugetRegistryInfo {
         return true as const
       })
 
-    return this.#canPushPackagesToUrl = finalResult
+    return this._canPushPackagesToUrl = finalResult
   }
 
   /**
