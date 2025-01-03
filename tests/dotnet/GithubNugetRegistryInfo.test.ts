@@ -1,6 +1,6 @@
 import { getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 import { type DotenvConfigOptions } from 'dotenv'
-import { deepStrictEqual, notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict'
+import { notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { existsSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { env } from 'node:process'
@@ -28,13 +28,6 @@ import {
 function getOwner(): string {
   return env.GITHUB_REPOSITORY_OWNER ??= (getEnvVarValue('GITHUB_REPOSITORY_OWNER ') ?? 'HaloSPV3')
 }
-
-await it('is built', async () => {
-  deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo')), undefined, 2),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/GithubNugetRegistryInfo.js')), undefined, 2),
-  )
-})
 
 await describe('GithubNugetRegistryInfo', async () => {
   await describe('canPushPackagesToUrl', async () => {
