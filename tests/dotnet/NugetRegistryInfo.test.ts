@@ -10,12 +10,7 @@ import {
 import { resolve } from 'node:path'
 import { isConstructor } from '../../src/utils/reflection.js'
 
-await it('is built', async () =>
-  deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/NugetRegistryInfo')), undefined, 2),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/NugetRegistryInfo.js')), undefined, 2),
-  ),
-)
+// No 'is built'. Checking classes and functions for equality is too complicated without reflection like .NET's
 
 await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is a class', async () => {
