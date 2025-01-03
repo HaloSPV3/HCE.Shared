@@ -2,12 +2,10 @@ import { getEnvVarValue } from '../../src/envUtils.js'
 import { deepStrictEqual, notDeepStrictEqual, strictEqual } from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { inspect } from 'node:util'
-import { MSBuildProject } from '@halospv3/hce.shared-config/dotnet/MSBuildProject'
 import {
   NugetRegistryInfo as NRI,
   NugetRegistryInfoOptions as NRIOpts,
 } from '@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'
-import { resolve } from 'node:path'
 import { isConstructor } from '@halospv3/hce.shared-config/utils/reflection'
 
 // No 'is built'. Checking classes and functions for equality is too complicated without reflection like .NET's
@@ -104,10 +102,6 @@ await describe('NugetRegistryInfo', async (ctx0) => {
       strictEqual(ctx1.name in NRI.prototype, false)
       strictEqual(NRI.prototype.url, undefined)
     })
-
-    // This does not work. It is "any" with a value of "undefined"
-    // await it("is a string", async () => {
-    //     strictEqual(typeof NugetRegistryInfo.prototype.url, "string")
-    // })
+    await todo('is a string')
   })
 })
