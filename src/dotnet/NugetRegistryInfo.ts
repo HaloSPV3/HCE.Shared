@@ -91,6 +91,8 @@ function getDummiesDir(project?: MSBuildProject): string {
 
 export class NugetRegistryInfo {
   #canPushPackagesToUrl: Promise<true> | undefined = undefined
+  private readonly _resolvedEnvVariable: string
+  private readonly _url: string
 
   public static readonly DefaultTokenEnvVars: readonly ['NUGET_TOKEN'] = Object.freeze(
     ['NUGET_TOKEN'] as const,
@@ -163,8 +165,8 @@ export class NugetRegistryInfo {
     opts = NRIOpts.from(opts)
 
     this._project = opts.project
-    this.resolvedEnvVariable = _GetTokenEnvVariables(opts.tokenEnvVars)[0][0]
-    this.url = opts.url
+    this._resolvedEnvVariable = _GetTokenEnvVariables(opts.tokenEnvVars)[0][0]
+    this._url = opts.url
 
     /**
      * Get the environment variables as key-value pairs.
@@ -436,8 +438,8 @@ export class NugetRegistryInfo {
    * @readonly
    * @type {string}
    */
-  readonly resolvedEnvVariable: string
-  readonly url: string
+  get resolvedEnvVariable() { return this._resolvedEnvVariable }
+  get url() { return this._url }
 
   /**
    * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
