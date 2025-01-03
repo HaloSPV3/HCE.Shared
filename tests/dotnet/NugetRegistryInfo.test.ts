@@ -103,18 +103,22 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     })
   })
 
-  await describe('resolvedEnvVariable', async () => {
-    await it('can be a string', async () => {
-      const x = { resolvedEnvVariable: '' } as NRI
-      strictEqual(typeof x.resolvedEnvVariable, 'string')
+  await describe('resolvedEnvVariable', async (ctx1) => {
+    await it('exists in NugetRegistryInfo prototype', () => {
+      strictEqual(ctx1.name in NRI.prototype, true)
     })
+    await todo('is a string')
   })
 
   await describe('url', async (ctx1) => {
-    await it('undefined in NugetRegistryInfo prototype', async () => {
-      strictEqual(ctx1.name in NRI.prototype, false)
-      strictEqual(NRI.prototype.url, undefined)
+    await it('exists in NugetRegistryInfo prototype', async () => {
+      strictEqual(ctx1.name in NRI.prototype, true)
     })
+    await todo('is a string')
+
+    // is string?
+    // const getter = getOwnPropertyDescriptors(NRI, true, false).flatMap(v => v['url']).at(0)
+    // strictEqual(typeof getter?.get., 'string')
 
     // This does not work. It is "any" with a value of "undefined"
     // await it("is a string", async () => {
