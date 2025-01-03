@@ -12,7 +12,7 @@ getOwner()
 import {
   GithubNugetRegistryInfo as GHNRI,
   GithubNugetRegistryInfoOptions as GHNRIOpts,
-} from '../../src/dotnet/GithubNugetRegistryInfo.js'
+} from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'
 
 const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env')
 if (!existsSync(dotenvPath))
