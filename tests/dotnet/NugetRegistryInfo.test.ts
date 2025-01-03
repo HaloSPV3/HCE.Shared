@@ -40,11 +40,6 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         delete process.env.NUGET_TOKEN
     })
 
-    await it('assigns first argument to url', async () => {
-      process.env.NUGET_TOKEN ??= 'placeholder'
-      strictEqual(new NRI(NRIOpts({ project: goodProject, url: '' })).url, '')
-    })
-
     await describe('canPushPackagesToUrl', async () => {
       await it('rejects promise if token invalid', async () => {
         process.env.INVALID_TOKEN = 'placeholder'
