@@ -91,6 +91,7 @@ function getDummiesDir(project?: MSBuildProject): string {
 
 export class NugetRegistryInfo {
   private _canPushPackagesToUrl: Promise<true> | undefined = undefined
+  private readonly _project: MSBuildProject
   private readonly _resolvedEnvVariable: string
   private readonly _url: string
 
@@ -194,7 +195,6 @@ export class NugetRegistryInfo {
     }
   }
 
-  private readonly _project: MSBuildProject
   public get project(): MSBuildProject { return this._project }
 
   /**
