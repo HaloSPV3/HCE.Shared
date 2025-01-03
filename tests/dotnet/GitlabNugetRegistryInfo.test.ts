@@ -4,9 +4,9 @@ import { describe, it, todo } from 'node:test'
 import {
   GitlabNugetRegistryInfo as GLNRI,
   GitlabNugetRegistryInfoOptions as GLNRIOpts,
-} from '../../src/dotnet/GitlabNugetRegistryInfo.js'
-import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
-import { getEnv, getEnvVarValue } from '../../src/envUtils.js'
+} from '@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'
+import { MSBuildProject } from '@halospv3/hce.shared-config/dotnet/MSBuildProject'
+import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 
 const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
   resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
