@@ -2,7 +2,7 @@ import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
 import { type } from 'arktype'
 import { tBooleanString, type BooleanString, tEmptyOrBooleanString, type EmptyOrBooleanString } from '../utils/miscTypes.js'
-import { listOwnGetters } from '../utils/reflection.js'
+import { filterForGetters, getOwnPropertyDescriptors, listOwnGetters } from '../utils/reflection.js'
 
 /**
  * A readonly record of a .csproj or .fsproj with NuGet configuration properties in
@@ -480,5 +480,38 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 }
 
 const NPP = NugetProjectProperties
+
+type Nullable<T> = T | null
+
+const _nppGetterNames = {
+  instanceProps: null as Nullable<readonly string[]>,
+  instancePropsRecursive: null as Nullable<readonly string[]>,
+  staticProps: null as Nullable<readonly string[]>,
+  staticPropsRecursive: null as Nullable<readonly string[]>,
+}
+
+export function GetNPPGetterNames(instanceProps: boolean, recurse: boolean) {
+  if (instanceProps) {
+    return recurse
+      ? _nppGetterNames.instancePropsRecursive ??= _createCache()
+      : _nppGetterNames.instanceProps ??= _createCache()
+  }
+
+  if (recurse)
+    return _nppGetterNames.staticPropsRecursive ??= _createCache()
+  return _nppGetterNames.staticProps ??= _createCache()
+
+  function _createCache() {
+    return Object.freeze(
+      getOwnPropertyDescriptors<typeof NPP>(
+        NugetProjectProperties, instanceProps, recurse,
+      ).flatMap(
+        o =>
+          filterForGetters(o)
+            .map(e => e[0]),
+      ),
+    )
+  }
+}
 
 /** @module NugetProjectProperties */
