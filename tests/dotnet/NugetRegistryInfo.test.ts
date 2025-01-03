@@ -5,6 +5,9 @@ import { inspect } from 'node:util'
 import {
   NugetRegistryInfo as NRI,
   NugetRegistryInfoOptions as NRIOpts,
+  NugetRegistryInfoOptionsBase as NRIOptsBase,
+  getGithubOutput,
+  getGithubOutputSync,
 } from '@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'
 import { isConstructor } from '@halospv3/hce.shared-config/utils/reflection'
 
@@ -19,6 +22,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     deepStrictEqual(NRI.name, ctx0.name)
   })
 
+  // memory leak...but why?
   await describe('an instance of NugetRegistryInfo...', async () => {
     const predefinedToken = getEnvVarValue('NUGET_TOKEN')
     const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js')
@@ -104,4 +108,81 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     })
     await todo('is a string')
   })
+})
+
+await describe('NRIOptsBase', async () => {
+  await it('has expected props', async () => {
+    strictEqual(
+      JSON.stringify(NRIOptsBase.props, undefined, 2),
+      `[
+  {
+    "key": "project",
+    "value": "$ark.MSBuildProject"
+  },
+  {
+    "key": "tokenEnvVars",
+    "value": {
+      "sequence": "string",
+      "proto": "Array"
+    }
+  },
+  {
+    "key": "url",
+    "value": "string"
+  }
+]`,
+    )
+  })
+  await it('has expected props (In)', async () => {
+    strictEqual(
+      JSON.stringify(NRIOptsBase.in.props, undefined, 2),
+      `[
+  {
+    "key": "project",
+    "value": "$ark.MSBuildProject"
+  },
+  {
+    "key": "tokenEnvVars",
+    "value": {
+      "sequence": "string",
+      "proto": "Array"
+    }
+  },
+  {
+    "key": "url",
+    "value": "string"
+  }
+]`,
+    )
+  })
+  await it('has expected props (Out)', async () => {
+    strictEqual(
+      JSON.stringify(NRIOptsBase.out.props, undefined, 2),
+      `[
+  {
+    "key": "project",
+    "value": "$ark.MSBuildProject"
+  },
+  {
+    "key": "tokenEnvVars",
+    "value": {
+      "sequence": "string",
+      "proto": "Array"
+    }
+  },
+  {
+    "key": "url",
+    "value": "string"
+  }
+]`,
+    )
+  })
+})
+
+await describe('getGithubOutput', async (ctx0) => {
+  await it('has expected name', () => strictEqual(getGithubOutput.name, ctx0.name))
+})
+
+await describe('getGithubOutputSync', async (ctx0) => {
+  await it('has expected name', () => strictEqual(getGithubOutputSync.name, ctx0.name))
 })
