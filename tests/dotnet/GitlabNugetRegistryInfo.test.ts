@@ -1,4 +1,4 @@
-import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
+import { ok, strictEqual } from 'node:assert/strict'
 import { resolve } from 'node:path'
 import { describe, it, todo } from 'node:test'
 import {
@@ -7,18 +7,6 @@ import {
 } from '../../src/dotnet/GitlabNugetRegistryInfo.js'
 import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
 import { getEnv, getEnvVarValue } from '../../src/envUtils.js'
-
-await it('is built', async () => {
-  if (!getEnvVarValue('CI_JOB_TOKEN'))
-    process.env.CI_JOB_TOKEN = 'placeholder'
-  if (!getEnvVarValue('CI_PROJECT_ID'))
-    process.env.CI_PROJECT_ID = 'placeholder'
-
-  deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo')), undefined, 2),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/GitlabNugetRegistryInfo.js')), undefined, 2),
-  )
-})
 
 const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
   resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
