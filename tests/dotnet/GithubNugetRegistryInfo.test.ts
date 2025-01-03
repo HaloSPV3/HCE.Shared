@@ -19,7 +19,7 @@ getOwner()
 import {
   GithubNugetRegistryInfo as GHNRI,
   GithubNugetRegistryInfoOptions as GHNRIOpts,
-} from '../../src/dotnet/GithubNugetRegistryInfo.js'
+} from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'
 
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
