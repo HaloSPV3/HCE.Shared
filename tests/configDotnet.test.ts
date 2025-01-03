@@ -1,8 +1,8 @@
 import { getConfig } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet'
 import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
-import { writeFileSync } from 'node:fs'
+import { writeFile } from 'node:fs/promises'
 import { describe, it } from 'node:test'
-import { fileSync, setGracefulCleanup } from 'tmp'
+import { dirSync, fileSync, setGracefulCleanup } from 'tmp'
 
 // todo: rename file to semanticReleaseConfigDotnet.test.ts
 
@@ -21,10 +21,14 @@ await describe('configDotnet', async () => {
       process.env.GITHUB_REPOSITORY_OWNER = 'HaloSPV3'
       process.env.SKIP_TOKEN = 'true'
       setGracefulCleanup()
-      const tmpProj = fileSync({ dir: 'configDotnet', name: 'configDotnet', postfix: '.csproj', discardDescriptor: true })
-      writeFileSync(tmpProj.name, '<Project> <PropertyGroup> <TargetFramework>net6.0</TargetFramework> <RuntimeIdentifier>win7-x86</RuntimeIdentifier> </PropertyGroup> </Project>')
-      const actual = await getConfig([tmpProj.name], [tmpProj.name])
-        .catch(err => err instanceof Error ? err : new Error(String(err)))
+      const tmpProjDir = dirSync({ name: 'configDotnet' })
+      const tmpProj = fileSync({ dir: tmpProjDir.name, name: 'configDotnet', postfix: '.csproj', discardDescriptor: true })
+      const actual = await writeFile(
+        tmpProj.name,
+        '<Project> <PropertyGroup> <TargetFramework>net6.0</TargetFramework> <RuntimeIdentifier>win7-x86</RuntimeIdentifier> </PropertyGroup> </Project>',
+      ).then(async () =>
+        await getConfig([tmpProj.name], [tmpProj.name]),
+      ).catch(err => err instanceof Error ? err : new Error(String(err)))
 
       ok(!(actual instanceof Error), '`actual` should not be an Error.\n' + actual.stack)
     })
