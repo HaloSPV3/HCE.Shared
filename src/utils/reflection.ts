@@ -1,7 +1,7 @@
 import _debug from '../debug.js'
 
 /**
- * Returns the names of the non-static, not-inherited getters derived from the
+ * Returns the names of the instantiated, noninherited getters derived from the
  * given prototype or prototype of the given object.
  * @param instanceOrPrototype An instantiated object or a prototype.
  * @returns An array of names of getters that were not inherited from a parent class.
