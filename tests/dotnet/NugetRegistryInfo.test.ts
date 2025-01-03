@@ -23,15 +23,13 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 
   await describe('an instance of NugetRegistryInfo...', async () => {
     const predefinedToken = getEnvVarValue('NUGET_TOKEN')
-    const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
-      resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
-    ]).then(v => v[0]);
+    const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js')
 
     await it('defaults url to expected value', async () => {
       process.env.NUGET_TOKEN ??= predefinedToken ?? 'placeholder'
 
       strictEqual(
-        new NRI(NRIOpts({ project: goodProject })).url,
+        new NRI(NRIOpts({ project: DeterministicNupkgCsproj })).url,
         'https://api.nuget.org/v3/index.json',
       )
 
@@ -51,7 +49,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
         process.env.INVALID_TOKEN = 'placeholder'
         const value = await new NRI(
           NRIOpts({
-            project: goodProject,
+            project: DeterministicNupkgCsproj,
             tokenEnvVars: ['INVALID_TOKEN'],
           }),
         ).canPushPackagesToUrl
@@ -68,7 +66,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
           return t.skip('NUGET_TOKEN environment variable undefined')
 
         const registryInfo = new NRI(NRIOpts({
-          project: goodProject,
+          project: DeterministicNupkgCsproj,
         }))
 
         // todo: override Version/PackageVersion via CLI args in `canPushPackagesToUrl` call chain.
