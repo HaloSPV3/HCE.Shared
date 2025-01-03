@@ -4,7 +4,6 @@ import { MSBuildProjectProperties } from '../../src/dotnet/MSBuildProjectPropert
 import { NugetProjectProperties } from '../../src/dotnet/NugetProjectProperties.js'
 import {
   filterForGetters,
-  getFunctionPrototype,
   getOwnPropertyDescriptors,
   getPrototypes,
   isConstructor,
@@ -86,33 +85,6 @@ await describe('filterForGetters', async (c00) => {
         }),
       ).map(v => v[0]).sort(),
       ['var0'],
-    )
-  })
-})
-
-await describe('getFunctionPrototype', async (c00) => {
-  await it('has expected name', () => {
-    deepStrictEqual(
-      getFunctionPrototype.name,
-      c00.name,
-    )
-  })
-  await it('can return its own prototype', () => {
-    deepStrictEqual(
-      getFunctionPrototype(getFunctionPrototype),
-      getFunctionPrototype.prototype,
-    )
-  })
-  await it('can return the prototype of NugetProjectProperties', () => {
-    deepStrictEqual(
-      getFunctionPrototype(NugetProjectProperties),
-      NugetProjectProperties.prototype,
-    )
-  })
-  await it('returns undefined when the argument does not have a prototype', () => {
-    deepStrictEqual(
-      getFunctionPrototype({}),
-      undefined,
     )
   })
 })
@@ -294,7 +266,7 @@ await describe('isConstructor', async (c00) => {
       c00.name,
     )
   })
-  await it('returns true for a ConstructorLike arg', () => {
+  await it('returns true for a ClassLike arg', () => {
     deepStrictEqual(
       isConstructor(NugetProjectProperties),
       true,
