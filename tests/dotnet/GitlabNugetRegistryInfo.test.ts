@@ -3,8 +3,8 @@ import { describe, it, todo } from 'node:test'
 import {
   GitlabNugetRegistryInfo,
   GitlabNugetRegistryInfoOptions as GLNRIOpts,
-} from '../../src/dotnet/GitlabNugetRegistryInfo.js'
-import { getEnv, getEnvVarValue } from '../../src/envUtils.js'
+} from '@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'
+import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 import { DeterministicNupkgCsproj } from './MSBuildProject.test.js'
 
 await describe('GitlabNugetRegistryInfo', async (ctx0) => {
