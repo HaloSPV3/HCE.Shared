@@ -2,17 +2,6 @@ interface Settings {
   '[json]': { 'files.insertFinalNewline': true }
   '[jsonc]': { 'files.insertFinalNewline': true }
   'auto-close-tag.disableOnLanguage': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
-  'conventionalCommits.scopes': [
-    'deps-dev',
-    'deps',
-    'dotnet',
-    'dotnet/ExecNupkgDeterministicator',
-    'dotnet/samples/HCE.Shared.DeterministicNupkg',
-    'dotnet/samples/HCE.Shared.SignAfterPack',
-    'dotnet/SignAfterPack',
-    'node',
-    'vscode',
-  ]
   'cSpell.words': [
     'arktype',
     'conventionalcommits',
@@ -71,6 +60,17 @@ interface Settings {
   'nodeTdd.buildOnDelete': true
   'nodeTdd.reporter': 'tap'
   'sarif-viewer.connectToGithubCodeScanning': 'off'
+  'conventionalCommits.scopes': [
+    'deps-dev',
+    'deps',
+    'dotnet',
+    'dotnet/ExecNupkgDeterministicator',
+    'dotnet/samples/HCE.Shared.DeterministicNupkg',
+    'dotnet/samples/HCE.Shared.SignAfterPack',
+    'dotnet/SignAfterPack',
+    'node',
+    'vscode',
+  ]
   'gitCommitMessageEditor.intelliSense.completion.scopes': [
     {
       scope: 'dotnet'
