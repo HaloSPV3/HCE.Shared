@@ -1,6 +1,6 @@
 import { getEnvVarValue } from '../../src/envUtils.js'
 import { deepStrictEqual, notDeepStrictEqual, strictEqual } from 'node:assert/strict'
-import { describe, it } from 'node:test'
+import { describe, it, todo } from 'node:test'
 import { inspect } from 'node:util'
 import { MSBuildProject } from '@halospv3/hce.shared-config/dotnet/MSBuildProject'
 import {
