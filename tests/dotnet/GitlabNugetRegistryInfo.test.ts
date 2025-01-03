@@ -1,16 +1,12 @@
 import { ok, strictEqual } from 'node:assert/strict'
-import { resolve } from 'node:path'
 import { describe, it, todo } from 'node:test'
 import {
   GitlabNugetRegistryInfo as GLNRI,
   GitlabNugetRegistryInfoOptions as GLNRIOpts,
 } from '@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'
-import { MSBuildProject } from '@halospv3/hce.shared-config/dotnet/MSBuildProject'
 import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 
-const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
-  resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
-]).then(v => v[0])
+const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js')
 
 await describe('GitlabNugetRegistryInfo', async (ctx0) => {
   await it('has expected name', async () => {
@@ -24,7 +20,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       process.env.CI_JOB_TOKEN = 'placeholder'
     if (!getEnvVarValue('CI_PROJECT_ID'))
       process.env.CI_PROJECT_ID = 'placeholder'
-    const defaultWithPlaceholders = new GLNRI(GLNRIOpts({ project: goodProject }))
+    const defaultWithPlaceholders = new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj }))
 
     await it('defaults to project-level endpoint', async () => {
       if (!getEnvVarValue('CI_PROJECT_ID'))
@@ -57,7 +53,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
 
       let value: GLNRI | Error
       try {
-        value = new GLNRI(GLNRIOpts({ project: goodProject }))
+        value = new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj }))
       }
       catch (err) {
         value = err instanceof Error ? err : new Error(String(err))
