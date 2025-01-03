@@ -10,7 +10,7 @@ import {
 import { resolve } from 'node:path'
 import { getOwnPropertyDescriptors, isConstructor } from '../../src/utils/reflection.js'
 import { type } from 'arktype'
-import { GetNPPGetterNames } from '../../mjs/dotnet/NugetProjectProperties.js'
+import { GetNPPGetterNames } from '@halospv3/hce.shared-config/dotnet/NugetProjectProperties'
 
 // No 'is built'. Checking classes and functions for equality is too complicated without reflection like .NET's
 
