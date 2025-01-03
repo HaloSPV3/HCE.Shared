@@ -8,8 +8,7 @@ import {
   NugetRegistryInfoOptions as NRIOpts,
 } from '@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'
 import { resolve } from 'node:path'
-import { getOwnPropertyDescriptors, isConstructor } from '@halospv3/hce.shared-config/utils/reflection'
-import { type } from 'arktype'
+import { isConstructor } from '@halospv3/hce.shared-config/utils/reflection'
 import { GetNPPGetterNames } from '@halospv3/hce.shared-config/dotnet/NugetProjectProperties'
 
 // No 'is built'. Checking classes and functions for equality is too complicated without reflection like .NET's
@@ -111,14 +110,5 @@ await describe('NugetRegistryInfo', async (ctx0) => {
       strictEqual(ctx1.name in NRI.prototype, true)
     })
     await todo('is a string')
-
-    // is string?
-    // const getter = getOwnPropertyDescriptors(NRI, true, false).flatMap(v => v['url']).at(0)
-    // strictEqual(typeof getter?.get., 'string')
-
-    // This does not work. It is "any" with a value of "undefined"
-    // await it("is a string", async () => {
-    //     strictEqual(typeof NugetRegistryInfo.prototype.url, "string")
-    // })
   })
 })
