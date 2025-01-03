@@ -1,5 +1,3 @@
-import _debug from '../debug.js'
-
 /**
  * Returns the names of the instantiated, noninherited getters derived from the
  * given prototype or prototype of the given object.
@@ -42,10 +40,8 @@ export function filterForGetters<T>(descriptors: ReturnType<typeof Object.getOwn
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Args = readonly any[]
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type IClass = abstract new (...args: Args[]) => any
-type ConstructorLike<T> = IClass | (abstract new (...args: Args) => T) | (new (...args: Args) => T)
+export type ClassLike<T extends abstract new (...args: ConstructorParameters<T>) => InstanceType<T> = abstract new (...args: readonly any[] | any[]) => unknown>
+  = abstract new (...args: ConstructorParameters<T>) => InstanceType<T>
 
 /**
  * Get the property descriptors of the class or constructor similar to {@link Object.getOwnPropertyDescriptors}, but with more options--including recursion.
@@ -56,116 +52,72 @@ type ConstructorLike<T> = IClass | (abstract new (...args: Args) => T) | (new (.
  * todo: refactor!: change instanceProps to flag enum (instanceProps, staticProps, allProps)
  * @since 3.0.0
  */
-export function getOwnPropertyDescriptors(classDef: ConstructorLike<unknown>, instanceProps: boolean, recurse: boolean): ReturnType<typeof Object.getOwnPropertyDescriptors>[] {
+export function getOwnPropertyDescriptors<T extends ClassLike<T>>(classDef: T, instanceProps: boolean, recurse: boolean): ReturnType<typeof Object.getOwnPropertyDescriptors>[] {
+  if (!recurse) return [Object.getOwnPropertyDescriptors(instanceProps ? classDef.prototype : classDef)]
+
   let currentNameDesc: ReturnType<typeof Reflect.getOwnPropertyDescriptor>
-  let current = classDef
-  let parent: object | null
+  let current: ClassLike<T> | ClassLike = classDef
+  let parent: ClassLike | object | null = null
   const descriptors: ReturnType<typeof Object.getOwnPropertyDescriptors>[] = []
 
-  // variables for debugging
-  let nameInCurrent: boolean | undefined = undefined
-  let currentNameIsString: boolean | undefined = undefined
-  let currentNameDescIsNotUndefined: boolean | undefined = undefined
-  let currentNameDescIsNotWritable: boolean | undefined = undefined
-  let currentNameDescIsNotEnumerable: boolean | undefined = undefined
-  let currentNameIsNotEmpty: boolean | undefined = undefined
-  let parentIsNotNull: boolean | undefined = undefined
-  let parentIsConstructor: boolean | undefined = undefined
+  /** conditions:
+   * - {@link current.name} exists
+   * - typeof current.name} === 'string'
+   * - {@link current.name} is readonly and non-enumerable
+   * - {@link current.name} !== ''
+   * - {@link parent} is not null
+   * - {@link parent} is a constructor function (or class definition)
+   */
+  function shouldLoop() {
+    return 'name' in current
+      && 'string' === typeof current.name
+      && undefined !== (currentNameDesc = Reflect.getOwnPropertyDescriptor(current, 'name'))
+      && false === (currentNameDesc.writable || currentNameDesc.enumerable)
+      && '' !== current.name
+  }
 
+  // checking instanceProps outside of the `while` adds code redundancy, but slightly improves performance.
   if (instanceProps) {
-    if (!recurse) {
+    while (shouldLoop()) {
       descriptors.push(Object.getOwnPropertyDescriptors(current.prototype))
-      return descriptors
-    }
-
-    /* conditions:
-     * - current.name exists
-     * - typeof current.name === 'string'
-     * - current.name is readonly and non-enumerable
-     * - current.name !== ''
-     * - parent is not null
-     * - parent is a constructor function (or class definition)
-     */
-    while (
-      (nameInCurrent = 'name' in current)
-      && (currentNameIsString = typeof current.name === 'string')
-      && (currentNameDescIsNotUndefined = (currentNameDesc = Reflect.getOwnPropertyDescriptor(current, 'name')) !== undefined)
-      && (currentNameDescIsNotWritable = currentNameDesc.writable === false)
-      && (currentNameDescIsNotEnumerable = currentNameDesc.enumerable === false)
-      && (currentNameIsNotEmpty = current.name !== '')) {
-      descriptors.push(Object.getOwnPropertyDescriptors(current.prototype))
-      if (
-        (parentIsNotNull = (parent = Reflect.getPrototypeOf(current)) !== null)
-        && (parentIsConstructor = isConstructor(parent))) {
+      if (null !== (parent = Reflect.getPrototypeOf(current)) && isConstructor(parent)) {
         current = parent
       }
       else {
-        if (_debug.enabled) {
-          const message = `${nameInCurrent},
-        ${currentNameIsString},
-        ${currentNameDescIsNotUndefined},
-        ${currentNameDescIsNotWritable},
-        ${currentNameDescIsNotEnumerable},
-        ${currentNameIsNotEmpty},
-        ${parentIsNotNull},
-        ${parentIsConstructor}`
-          _debug.log(message)
-        }
         break
       }
     }
-    return descriptors
   }
-  /* else !instanceProps */
-  if (!recurse)
-    return [Object.getOwnPropertyDescriptors(classDef)]
-  while (
-    (nameInCurrent = 'name' in current)
-    && (currentNameIsString = typeof current.name === 'string')
-    && (currentNameDescIsNotUndefined = (currentNameDesc = Reflect.getOwnPropertyDescriptor(current, 'name')) !== undefined)
-    && (currentNameDescIsNotWritable = currentNameDesc.writable === false)
-    && (currentNameDescIsNotEnumerable = currentNameDesc.enumerable === false)
-    && (currentNameIsNotEmpty = current.name !== '')) {
-    descriptors.push(Object.getOwnPropertyDescriptors(current))
-    if (
-      (parentIsNotNull = (parent = Reflect.getPrototypeOf(current)) !== null)
-      && (parentIsConstructor = isConstructor(parent))) {
-      current = parent
-    }
-    else {
-      if (_debug.enabled) {
-        const message = `${nameInCurrent},
-        ${currentNameIsString},
-        ${currentNameDescIsNotUndefined},
-        ${currentNameDescIsNotWritable},
-        ${currentNameDescIsNotEnumerable},
-        ${currentNameIsNotEmpty},
-        ${parentIsNotNull},
-        ${parentIsConstructor}`
-        _debug.log(message)
+  else /* !instanceProps */ {
+    while (shouldLoop()) {
+      descriptors.push(Object.getOwnPropertyDescriptors(instanceProps ? current : current.prototype)) // this is the only different to instanceProps' loop
+      if (null !== (parent = Reflect.getPrototypeOf(current)) && isConstructor(parent)) {
+        current = parent
       }
-      break
+      else {
+        break
+      }
     }
   }
+
   return descriptors
 }
 
 /**
  * Iterate through the class and its base classes until an anonymous function is reached.
  * Returns all class instance prototypes--excluding the anonymous function--in descending order, with index 0 being the prototype of {@link classDef}
+ *
+ * This may work with non-class objects, but support for
  * @since 3.0.0
  */
-export function getPrototypes(classDef: ConstructorLike<unknown>) {
+export function getPrototypes<T extends ClassLike<T>>(classDef: ClassLike<T> | object) {
   // instance prototypes
-  const prototypes = []
-  let current: ConstructorLike<unknown> = classDef
-  let parent: object | null
-  let prototypeOfCurrent
-  while (
-    undefined !== (prototypeOfCurrent = getFunctionPrototype(current))
-  ) {
+  const prototypes: object[] = []
+  let current: ClassLike<T> | ClassLike | object = classDef
+  let parent: ClassLike | object | null
+  while (undefined != (parent = Reflect.getPrototypeOf(current))) {
     // assume current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
-    prototypes.push(prototypeOfCurrent)
+    prototypes.push(parent)
     /*
      * Assign the super class to current.
      * If the argument is a class, Object.getPrototypeOf method returns the
@@ -173,11 +125,15 @@ export function getPrototypes(classDef: ConstructorLike<unknown>) {
      */
     if (
       null !== (parent = Reflect.getPrototypeOf(current))
+      // && isConstructor(parent)
       // eslint-disable-next-line @stylistic/indent-binary-ops
-      && isConstructor(parent)
+      && 'name' in parent
+      && typeof parent.name === 'string'
       && '' !== parent.name
-      && parent !== undefined)
+      && parent !== undefined
+    ) {
       current = parent
+    }
     else { break }
   }
   return prototypes
@@ -185,23 +141,6 @@ export function getPrototypes(classDef: ConstructorLike<unknown>) {
     assuming current is NugetProjectProperties...
     Reflect.getPrototypeOf(current).name is 'MSBuildProjectProperties'
    */
-}
-
-/**
- * If obj is a function (or class), return obj.prototype. Else, return undefined.
- * @param obj
- * @returns
- * @since 3.0.0
- */
-export function getFunctionPrototype(obj: unknown): object | undefined {
-  try {
-    if (typeof obj === 'function')
-      return obj.prototype
-    return undefined
-  }
-  catch {
-    return undefined
-  }
 }
 
 /**
@@ -215,18 +154,51 @@ export function getFunctionPrototype(obj: unknown): object | undefined {
  * @param obj
  * @returns
  * @since 3.0.0
+ * @remarks Only works when targeting ES6/ES2015 or later. If your project or a dependent project is compiled to <= ES5/CJS, this function will always return `false`; classes and constructors were introduced in ES6/ES2015.
+ * @see https://stackoverflow.com/a/49510834
  */
-export function isConstructor<T>(obj: T, ...args: Args): obj is T & ConstructorLike<T> {
+export function isConstructor(obj: unknown): obj is ClassLike {
+  // try 0
   if (typeof obj !== 'function')
     return false
-  try {
-    const _retVal0 = Reflect.construct<Args, T>(obj as new (...args: Args) => T, args ?? Object.freeze([]) as Readonly<Args>)
-    const retVal1 = new (obj as new (...args: Args) => T)()
-    return _retVal0 !== undefined && retVal1 !== undefined
-  }
-  catch (e) {
-    if (e instanceof TypeError && e.name === 'TypeError' && e.message.endsWith(' is not a constructor'))
-      return false
+
+  // try 1
+  // statically-defined class
+  if (/^class\s/.test(obj.toString()))
     return true
+
+  function descriptorMatchesConditions(pd: PropertyDescriptor | undefined, obj: { readonly name: string }) {
+    if (pd === undefined)
+      return false
+    return pd.value === obj.name
+      && pd.writable === false
+      && pd.enumerable === false
+      && pd.configurable === true
+  }
+
+  /* Method 2
+   * > class class_ {}; function func(){}
+   * undefined
+   * > class_.prototype.constructor.name === class_.name
+   * true
+   * > func.prototype?.constructor?.name === func.name
+   * false
+   */
+  if (
+    typeof obj.prototype.constructor === 'function'
+    && descriptorMatchesConditions(Object.getOwnPropertyDescriptor(obj.prototype.constructor, 'name'), obj)
+  ) {
+    return true
+  }
+
+  // Method 3
+  // isConstructable (See https://stackoverflow.com/a/49510834)
+  try {
+    // @ts-expect-error ts(2351): Type 'Function' has no construct signatures.
+    new new Proxy(obj, { construct: () => ({}) })()
+    return true
+  }
+  catch {
+    return false
   }
 }
