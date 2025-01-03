@@ -10,6 +10,7 @@ import {
 import { resolve } from 'node:path'
 import { getOwnPropertyDescriptors, isConstructor } from '../../src/utils/reflection.js'
 import { type } from 'arktype'
+import { GetNPPGetterNames } from '../../mjs/dotnet/NugetProjectProperties.js'
 
 const goodProject = await MSBuildProject.PackableProjectsToMSBuildProjects([
   resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
@@ -132,13 +133,12 @@ await describe('NugetRegistryInfo', async (ctx0) => {
                 Version: '0.0.1-DUMMY',
               },
               GetItem: [],
-              GetProperty: [],
+              GetProperty: GetNPPGetterNames(true, true),
               Targets: ['Pack'],
               GetTargetResult: [],
             },
           ),
-        }),
-        )
+        }))
 
         const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>
           reason instanceof Error
