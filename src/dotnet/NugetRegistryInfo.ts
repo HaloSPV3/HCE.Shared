@@ -159,13 +159,13 @@ export class NugetRegistryInfo {
    */
   constructor(opts: ReturnType<typeof NRIOpts>) {
     opts = NRIOpts.assert(opts)
-    this._url = opts.url
+    this._project = opts.project
     /**
      * May throw! Assign key of the first key-value pair to
      * {@link resolvedEnvVariable}
-     */
+    */
     this._resolvedEnvVariable = _GetTokenEnvVariables(opts.tokenEnvVars)[0]?.[0];
-    this._project = opts.project
+    this._url = opts.url
 
     /**
      * Get the environment variables as key-value pairs.
