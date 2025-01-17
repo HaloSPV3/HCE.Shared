@@ -22,7 +22,6 @@ interface Settings {
   'files.readonlyInclude': { '_tsout/**': true, 'node_modules/**': true, 'cjs/**': true, 'mjs/**': true }
   'nodejs-testing.include': ['./', './tests/', './tests/dotnet/', './tests/package.test.ts']
   'nodejs-testing.extensions': [{ extensions: ['mts', 'cts', 'ts'], parameters: ['--import', 'tsx'] }]
-  'nodeTdd.glob': '{src,test}/**/*.{js,ts,jsx,tsx,mts}'
   'prettier.configPath': 'prettier.config.js'
   'typescript.implementationsCodeLens.enabled': true
   'typescript.tsdk': 'node_modules\\typescript\\lib'
@@ -53,22 +52,20 @@ interface Settings {
   'typescript.tsserver.experimental.enableProjectDiagnostics': true
   'typescript.tsserver.web.projectWideIntellisense.enabled': true
   'git.allowNoVerifyCommit': true
-  'nodeTdd.showCoverage': true
   'markiscodecoverage.enableDecorations': true
-  'nodeTdd.buildOnActivation': true
-  'nodeTdd.buildOnCreate': true
-  'nodeTdd.buildOnDelete': true
-  'nodeTdd.reporter': 'tap'
   'sarif-viewer.connectToGithubCodeScanning': 'off'
   'conventionalCommits.scopes': [
     'deps-dev',
     'deps',
     'dotnet',
-    'dotnet/ExecNupkgDeterministicator',
-    'dotnet/samples/HCE.Shared.DeterministicNupkg',
-    'dotnet/samples/HCE.Shared.SignAfterPack',
-    'dotnet/SignAfterPack',
+    'dotnet.ExecNupkgDeterministicator',
+    'dotnet.samples.HCE.Shared.DeterministicNupkg',
+    'dotnet.samples.HCE.Shared.SignAfterPack',
+    'dotnet.SignAfterPack',
     'node',
+    'utils',
+    'utils.miscTypes',
+    'utils.reflection',
     'vscode',
   ]
   'gitCommitMessageEditor.intelliSense.completion.scopes': [
@@ -77,19 +74,19 @@ interface Settings {
       description: 'Affects files "./dotnet" or "./src/dotnet" or affects our generic GitHub reusable workflows provided for assisting dotnet CI.'
     },
     {
-      scope: 'dotnet/ExecNupkgDeterministicator'
+      scope: 'dotnet.ExecNupkgDeterministicator'
       description: 'Affects the ExecNupkgDeterministicator target.'
     },
     {
-      scope: 'dotnet/SignAfterPack'
+      scope: 'dotnet.SignAfterPack'
       description: 'Affects the SignAfterPack target.'
     },
     {
-      scope: 'dotnet/samples/HCE.Shared.DeterministicNupkg'
+      scope: 'dotnet.samples.HCE.Shared.DeterministicNupkg'
       description: 'Affects the HCE.Shared.DeterministicNupkg sample project.'
     },
     {
-      scope: 'dotnet/samples/HCE.Shared.SignAfterPack'
+      scope: 'dotnet.samples.HCE.Shared.SignAfterPack'
       description: 'Affects the SignAfterPack sample project.'
     },
     { scope: 'vscode', description: 'Affects files in "./.vscode".' },
@@ -98,6 +95,9 @@ interface Settings {
       scope: 'deps-dev'
       description: 'Affects dependencies required in the dev environment or during build time.'
     },
+    { scope: 'utils', description: 'src/utils/*' },
+    { scope: 'utils.miscTypes', description: 'src/utils/miscTypes.ts' },
+    { scope: 'utils.reflection', description: 'src/utils/reflection.ts' },
   ]
 }
 
