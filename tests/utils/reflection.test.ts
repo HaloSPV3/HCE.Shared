@@ -206,9 +206,9 @@ await describe('getOwnPropertyDescriptors', async (c00) => {
   await it('can be used to list all own and inherited static methods of a class', () => {
     const propNames = getOwnPropertyDescriptors(
       NugetProjectProperties, false, true,
-    ).map(
+    ).flatMap(
       o => Object.entries(o),
-    ).flat().filter(
+    ).filter(
       e => typeof e[1].value === 'function',
     ).map(
       v => v[0],
