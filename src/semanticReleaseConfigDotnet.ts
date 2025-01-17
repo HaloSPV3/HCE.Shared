@@ -320,7 +320,7 @@ export class SemanticReleaseConfigDotnet {
  * If empty, `dotnet pack` and `dotnet nuget push` commands will not be configured.
  * If undefined, tries getting projects' semi-colon-separated relative paths
  * from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
- * If configured as recommended, `dotnet pack` will output the nupkg/snupkg
+ * With the recommended configuration, `dotnet pack` will write the nupkg/snupkg
  * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
  * @returns a semantic-release Options object, based on
  * `@halospv3/hce.shared-config` (our base config), with the
