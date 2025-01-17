@@ -22,7 +22,7 @@ await describe('configDotnet', async () => {
       process.env.SKIP_TOKEN = 'true'
       setGracefulCleanup()
       const tmpProjDir = dirSync({ name: 'configDotnet' })
-      const tmpProj = fileSync({ dir: tmpProjDir.name, name: 'configDotnet', postfix: '.csproj', discardDescriptor: true })
+      const tmpProj = fileSync({ dir: tmpProjDir.name, name: 'configDotnet.csproj', discardDescriptor: true })
       const actual = await writeFile(
         tmpProj.name,
         '<Project> <PropertyGroup> <TargetFramework>net6.0</TargetFramework> <RuntimeIdentifier>win7-x86</RuntimeIdentifier> </PropertyGroup> </Project>',
