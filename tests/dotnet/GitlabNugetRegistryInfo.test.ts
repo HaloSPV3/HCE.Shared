@@ -84,6 +84,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         value = err instanceof Error ? err : new Error(String(err))
       }
       ok(value instanceof Error)
+      ok(value.message.includes('no tokens were defined'))
     })
 
     await describe('canPushPackagesToUrl', async (ctx2) => {
