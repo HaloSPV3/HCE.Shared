@@ -17,6 +17,7 @@ await describe('configDotnet', async () => {
   await describe('getConfig', async () => {
     strictEqual(getConfig.name, 'getConfig')
 
+    // todo: make separate tests for string vs. MSBuildProject params
     await it('does not throw when projectToPackAndPush contains at least one item', async () => {
       process.env.GITHUB_REPOSITORY_OWNER = 'HaloSPV3'
       process.env.SKIP_TOKEN = 'true'
