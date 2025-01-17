@@ -80,6 +80,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
           ),
         }))
 
+        // todo: refactor canPushPackagesToUrl away from static dummy
         const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>
           reason instanceof Error
             ? reason
