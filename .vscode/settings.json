@@ -55,7 +55,6 @@
 			]
 		}
 	],
-	"nodeTdd.glob": "{src,test}/**/*.{js,ts,jsx,tsx,mts}",
 	"prettier.configPath": "prettier.config.js",
 	"typescript.implementationsCodeLens.enabled": true,
 	"typescript.tsdk": "node_modules\\typescript\\lib",
@@ -86,12 +85,7 @@
 	"typescript.tsserver.experimental.enableProjectDiagnostics": true,
 	"typescript.tsserver.web.projectWideIntellisense.enabled": true,
 	"git.allowNoVerifyCommit": true,
-	"nodeTdd.showCoverage": true,
 	"markiscodecoverage.enableDecorations": true,
-	"nodeTdd.buildOnActivation": true,
-	"nodeTdd.buildOnCreate": true,
-	"nodeTdd.buildOnDelete": true,
-	"nodeTdd.reporter": "tap",
 	"sarif-viewer.connectToGithubCodeScanning": "off",
 	"conventionalCommits.scopes": [
 		"deps-dev",
