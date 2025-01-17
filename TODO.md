@@ -2,6 +2,11 @@ TODO.md
 
 refactor(dotnet): re-order constructors' optional parameters; rename arg 'dotnetProject'
 
+# depcheck
+
+- verify all deps are satisfied
+- remove unused deps
+
 # MSBuildProject
 - src/dotnet/dotnetHelpers.ts:32
 - src/dotnet/dotnetHelpers.ts:39
