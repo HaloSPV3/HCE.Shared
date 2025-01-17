@@ -38,7 +38,7 @@ Both are accomplished by the following:
 
 Repeat for every given PackageId, per each NuGet source. Each PackageId will need one auth token per Source.
 
-If no errors occur, proceed with the rest of the release procedure. 
+If no errors occur, proceed with the rest of the release procedure.
 
 # Per-lang SonarLint
 
