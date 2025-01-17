@@ -4,12 +4,16 @@ import { tmpNameSync } from 'tmp'
 import { MSBuildProjectProperties as MPP } from '../../src/dotnet/MSBuildProjectProperties.js'
 import { CaseInsensitiveMap } from './../../src/CaseInsensitiveMap.js'
 
-await it('is built', async () =>
-  deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProjectProperties')), undefined, 2),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/MSBuildProjectProperties.js')), undefined, 2),
-  ),
-)
+await it('is built', async () => {
+  const build = await import('@halospv3/hce.shared-config/dotnet/MSBuildProjectProperties')
+  const source = await import('../../src/dotnet/MSBuildProjectProperties.js')
+  const buildEntries = Object.entries(build)
+  const sourceEntries = Object.entries(source)
+  return deepStrictEqual(
+    JSON.stringify(buildEntries, undefined, 2),
+    JSON.stringify(sourceEntries, undefined, 2),
+  )
+})
 
 await describe('MSBuildProjectProperties', async (c0) => {
   const emptyMap = new CaseInsensitiveMap<string, string>()
