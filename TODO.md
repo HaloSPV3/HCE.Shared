@@ -32,7 +32,8 @@ So, I have to jerry rig effectively equivalent functionality out of existing NuG
 
 Both are accomplished by the following:
 - grab the new version during Prepare
-- copy our pre-made, lightweight v0.0.1-DUMMY dummy package. Overwrite its PackageID with the real ID.
+- ~~copy our pre-made, lightweight v0.0.1-DUMMY dummy package. Overwrite its PackageID with the real ID.~~
+- Invoke `dotnet pack proj/Path -p:Version=0.0.1-DUMMY`
 - query the NuGet source (i.e. package registry/server) for the package ID and check the existing package versions for the "new version" we want to publish.
 - `dotnet nuget push ./publish/${PackageId}.0.0.1-DUMMY.nupkg -source NugetSourceName --api-key private_token --skip duplicate`. That last part tells the Source it's okay if the dummy package already exists. The only error we would get is if the token lacks permission.
 
