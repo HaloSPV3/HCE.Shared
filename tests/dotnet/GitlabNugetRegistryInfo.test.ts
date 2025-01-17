@@ -28,7 +28,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       if (!getEnvVarValue('CI_JOB_TOKEN'))
         process.env.CI_JOB_TOKEN = 'placeholder'
       const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId}/packages/nuget/index.json`
-      strictEqual(new GLNRI(GLNRIOpts({})).url, expected)
+      strictEqual(new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj })).url, expected)
     })
 
     await it('can be configured to use group-level endpoint', async () => {
@@ -38,7 +38,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         process.env.CI_JOB_TOKEN = 'placeholder'
       const expected = `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId}/-/packages/nuget/index.json`
       strictEqual(
-        new GLNRI(GLNRIOpts({ url: 'group' })).url,
+        new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj, url: 'group' })).url,
         expected,
       )
     })
@@ -72,7 +72,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     await it('throws when custom values and no token available', async () => {
       let value: GLNRI | Error
       try {
-        value = new GLNRI(GLNRIOpts({ tokenEnvVars: ['UNDEFINED_TOKEN', 'ANOTHER_UNDEFINED_TOKEN'] }))
+        value = new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj, tokenEnvVars: ['UNDEFINED_TOKEN', 'ANOTHER_UNDEFINED_TOKEN'] }))
       }
       catch (err) {
         value = err instanceof Error ? err : new Error(String(err))
