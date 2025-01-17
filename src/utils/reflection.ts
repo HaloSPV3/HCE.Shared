@@ -90,7 +90,7 @@ export function getOwnPropertyDescriptors<T extends ClassLike<T>>(classDef: T, i
   }
   else /* !instanceProps */ {
     while (shouldLoop()) {
-      descriptors.push(Object.getOwnPropertyDescriptors(instanceProps ? current : current.prototype)) // this is the only different to instanceProps' loop
+      descriptors.push(Object.getOwnPropertyDescriptors(current)) // this is the only different to instanceProps' loop
       if (null !== (parent = Reflect.getPrototypeOf(current)) && isConstructor(parent)) {
         current = parent
       }
