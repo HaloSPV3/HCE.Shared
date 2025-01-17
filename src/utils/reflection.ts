@@ -158,11 +158,11 @@ export function getPrototypes<T extends ClassLike<T>>(classDef: ClassLike<T> | o
  * @see https://stackoverflow.com/a/49510834
  */
 export function isConstructor(obj: unknown): obj is ClassLike {
-  // try 0
+  // Method 0 - filter
   if (typeof obj !== 'function')
     return false
 
-  // try 1
+  // Method 1
   // statically-defined class
   if (/^class\s/.test(obj.toString()))
     return true
