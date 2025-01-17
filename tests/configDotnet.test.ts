@@ -1,8 +1,7 @@
 import { getConfig } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet'
 import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
-import { writeFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
 import { describe, it } from 'node:test'
-import { dirSync, fileSync, setGracefulCleanup } from 'tmp'
 
 // todo: rename file to semanticReleaseConfigDotnet.test.ts
 
@@ -21,15 +20,9 @@ await describe('configDotnet', async () => {
     await it('does not throw when projectToPackAndPush contains at least one item', async () => {
       process.env.GITHUB_REPOSITORY_OWNER = 'HaloSPV3'
       process.env.SKIP_TOKEN = 'true'
-      setGracefulCleanup()
-      const tmpProjDir = dirSync({ name: 'configDotnet' })
-      const tmpProj = fileSync({ dir: tmpProjDir.name, name: 'configDotnet.csproj', discardDescriptor: true })
-      const actual = await writeFile(
-        tmpProj.name,
-        '<Project Sdk="Microsoft.NET.Sdk"> <PropertyGroup> <TargetFramework>net6.0</TargetFramework> <RuntimeIdentifier>win7-x86</RuntimeIdentifier> </PropertyGroup> </Project>',
-      ).then(async () =>
-        await getConfig([tmpProj.name], [tmpProj.name]),
-      ).catch(err => err instanceof Error ? err : new Error(String(err)))
+      const DeterministicNupkgCsprojPath = resolve(import.meta.dirname, '../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj')
+      const actual = await getConfig([DeterministicNupkgCsprojPath])
+        .catch(v => v instanceof Error ? v : new Error(String(v)))
 
       ok(!(actual instanceof Error), '`actual` should not be an Error.\n' + actual.stack)
     })
