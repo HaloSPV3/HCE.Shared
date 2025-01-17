@@ -63,6 +63,7 @@ interface Settings {
     'dotnet.samples.HCE.Shared.SignAfterPack',
     'dotnet.SignAfterPack',
     'node',
+    'packemon',
     'utils',
     'utils.miscTypes',
     'utils.reflection',
@@ -98,6 +99,10 @@ interface Settings {
     { scope: 'utils', description: 'src/utils/*' },
     { scope: 'utils.miscTypes', description: 'src/utils/miscTypes.ts' },
     { scope: 'utils.reflection', description: 'src/utils/reflection.ts' },
+    {
+      scope: 'packemon'
+      description: 'Packemon\'s configurations: package.json#packemon, packemon.config.ts'
+    },
   ]
 }
 
