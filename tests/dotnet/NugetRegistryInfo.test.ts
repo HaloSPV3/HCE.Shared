@@ -71,7 +71,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
           project: DeterministicNupkgCsproj,
         }))
 
-        // todo: override Version/PackageVersion via CLI args in `canPushPackagesToUrl` call chain.
+        // todo: refactor canPushPackagesToUrl away from static dummy
         const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>
           reason instanceof Error
             ? reason
