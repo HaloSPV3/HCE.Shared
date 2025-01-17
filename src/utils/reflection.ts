@@ -185,7 +185,7 @@ export function isConstructor(obj: unknown): obj is ClassLike {
    * false
    */
   if (
-    typeof obj.prototype.constructor === 'function'
+    typeof obj.prototype?.constructor === 'function'
     && descriptorMatchesConditions(Object.getOwnPropertyDescriptor(obj.prototype.constructor, 'name'), obj)
   ) {
     return true
