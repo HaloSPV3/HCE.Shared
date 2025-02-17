@@ -46,7 +46,7 @@
     "test": "tsx --test ./tests/**/*.test.ts",
     "type": "tsc --build",
     "validate": "packemon validate",
-    "watch": "packemon watch"
+    "watch": "packemon watch --loadConfigs"
   },
   "dependencies": {
     "@commitlint/cli": "^19.8.1",
