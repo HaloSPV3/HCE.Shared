@@ -47,7 +47,7 @@
     "test": "tsx --test ./tests/**/*.test.ts",
     "type": "ts-json-as-const ./.vscode/settings.json && eslint --fix ./.vscode/settings.json.d.ts && tsc --build",
     "validate": "packemon validate",
-    "watch": "packemon watch"
+    "watch": "packemon watch --loadConfigs"
   },
   "dependencies": {
     "@commitlint/cli": "^19.5.0",
