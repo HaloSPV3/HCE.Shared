@@ -41,7 +41,7 @@
     "pack": "packemon pack --addExports --addFiles --declaration --loadConfigs && npm run validate",
     "prepare": "husky",
     "presemantic-release": "npm run pack && npm run check",
-    "semantic-release": "npx semantic-release",
+    "semantic-release": "semantic-release",
     "pretest": "npm run build",
     "test": "tsx --test ./tests/**/*.test.ts",
     "type": "tsc --build",
