@@ -191,14 +191,18 @@ export function isConstructor(obj: unknown): obj is ClassLike {
     return true
   }
 
+  // Short-circuit
+  // Method 3 catches exceptions when !isConstructor. When debugging, that's annoying.
+  return false
+
   // Method 3
   // isConstructable (See https://stackoverflow.com/a/49510834)
-  try {
-    // @ts-expect-error ts(2351): Type 'Function' has no construct signatures.
-    new new Proxy(obj, { construct: () => ({}) })()
-    return true
-  }
-  catch {
-    return false
-  }
+  // try {
+  //   // @ts-expect-error ts(2351): Type 'Function' has no construct signatures.
+  //   new new Proxy(obj, { construct: () => ({}) })()
+  //   return true
+  // }
+  // catch {
+  //   return false
+  // }
 }
