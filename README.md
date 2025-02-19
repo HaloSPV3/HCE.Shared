@@ -21,7 +21,7 @@ WARNING! Defining a property will _overwrite_ the previous value. Arrays and
 objects are _not_ merged. You can...
 
 - Assign to certain top-level variables (e.g. `options.preset`) to avoid
-  modifying the plugins array. Caveat: only *some* plugins read these properties.
+  modifying the plugins array. Caveat: only _some_ plugins read these properties.
 - Write your config in MJS; It is recommended you use
   [deepmerge](https://www.npmjs.com/package/deepmerge) to recursively merge
   objects and arrays instead of using `extends`. Doing so will allow your IDE to
