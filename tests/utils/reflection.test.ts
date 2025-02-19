@@ -302,6 +302,10 @@ await describe('isConstructor', async (c00) => {
       true,
     )
     deepStrictEqual(
+      isConstructor(String),
+      true,
+    )
+    deepStrictEqual(
       isConstructor(Function),
       true,
     )
