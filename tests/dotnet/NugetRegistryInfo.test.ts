@@ -2,16 +2,16 @@ import { getEnvVarValue } from '../../src/envUtils.js'
 import { deepStrictEqual, notDeepStrictEqual, strictEqual } from 'node:assert/strict'
 import { describe, it, todo } from 'node:test'
 import { inspect } from 'node:util'
-import { MSBuildProject } from '@halospv3/hce.shared-config/dotnet/MSBuildProject'
+import { MSBuildProject } from '../../src/dotnet/MSBuildProject.js'
 import {
   NugetRegistryInfo as NRI,
   NugetRegistryInfoOptionsBase as NRIOptsBase,
   getGithubOutput,
   getGithubOutputSync,
-} from '@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'
+} from '../../src/dotnet/NugetRegistryInfo.js'
 import { resolve } from 'node:path'
-import { isConstructor } from '@halospv3/hce.shared-config/utils/reflection'
-import { GetNPPGetterNames } from '@halospv3/hce.shared-config/dotnet/NugetProjectProperties'
+import { isConstructor } from '../../src/utils/reflection.js'
+import { GetNPPGetterNames } from '../../src/dotnet/NugetProjectProperties.js'
 
 // No 'is built'. Checking classes and functions for equality is too complicated without reflection like .NET's
 
