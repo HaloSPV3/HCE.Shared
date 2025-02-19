@@ -74,6 +74,7 @@ export default {
   production.
 >
 > Differences to the base config:
+>
 > - Utilizes `@semantic-release/exec` for shell commands.
 >   - Executes `dotnet publish` and `dotnet pack` upon the configured projects during the `prepare` step.
 >   - (WIP) Executes `dotnet nuget sign` during `prepare` upon the `dotnet pack` outputs if `projectsToPackAndPush` is not set to `false` (default: `[]`).
