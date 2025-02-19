@@ -216,6 +216,7 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 ```
 
 These may evaluate to the following:
+
 | Property     | Evaluated Value|
 | ------------ | -------------- |
 |`RepoRootDir` | `c:\Repos\HaloSPV3\HCE.Shared\` |
