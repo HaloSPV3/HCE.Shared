@@ -122,6 +122,7 @@ export default await getConfig(projectsToPublish, projectsToPackAndPush)
 
 Using `extends` is NOT recommended, but I won't stop you.
 Your projects' paths must be assigned to environment variables. See [Dotnet Config](#dotnet-config).
+
 ```js
 // releaserc.config.js (if {"type": "module"} in package.json)
 export default {
@@ -183,6 +184,7 @@ module.exports = {
   }
 }
 ```
+
 or
 
 ```ts
@@ -193,6 +195,7 @@ export default commitlintConfig;
 ```
 
 Then...
+
 ```sh
 npx husky
 npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
@@ -257,6 +260,7 @@ packages.
 You can...
 
 ...define it yourself
+
 ```xml
 <Project>
   <PropertyGroup>
@@ -266,6 +270,7 @@ You can...
 ```
 
 ...import HCE.Shared.props
+
 ```xml
 <Project>
   <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.props">
@@ -273,6 +278,7 @@ You can...
 ```
 
 ...import HCE.Shared.Targets (which imports HCE.Shared.props)
+
 ```xml
 <Project>
   <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.props">
@@ -287,6 +293,7 @@ If you want to use this information in other Semantic Release steps, you'll need
 `semantic-release-export-data`.
 
 Run the following to preview the version:
+
 ```sh
 npx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"
 ```
