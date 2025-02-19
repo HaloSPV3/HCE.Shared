@@ -422,6 +422,11 @@ but the environment variable is empty or undefined.`)
      *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
      * ```
      */
+
+    //  The process cannot access the file
+    //  'C:\Repos\HaloSPV3\hce.shared-config\dotnet\samples\HCE.Shared.DeterministicNupkg\packages\HCE.Shared.DeterministicNupkg.0.0.1-DUMMY.nupkg'
+    //  because it is being used by another process.
+    // https://duckduckgo.com/?q=windows+log+file+operations+for+a+given+filename&atb=v459-1&ia=web
     const packOutput = await execAsync(`${packCmd} -p:Version=0.0.1-DUMMY`)
     return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
   }
@@ -585,7 +590,7 @@ but the environment variable is empty or undefined.`)
   }
 
   /**
-   * Call {@link GetPushDummyCommand} and immediately executes it.\
+   * Call {@link GetPushDummyCommand} and immediately execute it.
    * @throws {Error} when the process exits with an error code indicating
    * failure i.e. the command line is invalid, the process fails to start,
    * the push fails, et cetera.
