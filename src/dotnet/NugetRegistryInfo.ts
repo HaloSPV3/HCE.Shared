@@ -221,12 +221,11 @@ export class NugetRegistryInfo {
 
     // temporary swap-out
 
-    this._PackPackages(NRI.PackPackagesOptionsType.from({}))
-
-    const finalResult = this._PushDummyPackages(NRI.PushPackagesOptionsType.from({
-      apiKey: getEnvVarValue(this.resolvedEnvVariable),
-      root: getDummiesDir(this.project),
-    }))
+    const finalResult = this._PackPackages({})
+      .then(async () => await this._PushDummyPackages({
+        apiKey: getEnvVarValue(this.resolvedEnvVariable),
+        root: getDummiesDir(this.project),
+      }))
       .then(async (execAsyncReturn) => {
         ok(execAsyncReturn)
         return true as const
