@@ -24,8 +24,7 @@
     "CHANGELOG.md",
     "dotnet/**/*",
     "mjs/**/*",
-    "src/**/*",
-    "static/**/*"
+    "src/**/*"
   ],
   "main": "./mjs/index.mjs",
   "infra": "polyrepo",

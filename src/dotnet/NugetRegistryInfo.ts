@@ -210,8 +210,10 @@ export class NugetRegistryInfo {
    *   - The URL does not exist or a connection could not be established
    * @type {Promise<true>}
    * @remarks Semantic Release Step: Beginning of `prepare`
+   * @deprecated
    */
-  public get canPushPackagesToUrl(): Promise<true> {
+  // @ts-expect-error ts(6133): 'canPushPackagesToUrl' is declared but its value is never read.
+  private get canPushPackagesToUrl(): Promise<true> {
     if (this._canPushPackagesToUrl !== undefined)
       return this._canPushPackagesToUrl
 
@@ -223,14 +225,16 @@ export class NugetRegistryInfo {
       return this._canPushPackagesToUrl = Promise.reject(err)
     }
 
-    return this._canPushPackagesToUrl = new Promise<true>(_resolve => _resolve(
-      this.PackDummyPackage({})
-        .then(async () => await this._PushDummyPackages({ root: '' }))
-        .then((execAsyncReturn) => {
-          ok(execAsyncReturn)
-          return true as const
-        }),
-    ))
+    return this._canPushPackagesToUrl = this.PackDummyPackage({})
+      .then(async () => await this._PushDummyPackages({
+        // todo: This is redundant. Make copy of PushPackagesOptionsType with readonly `root` for use by `_PushDummyPackages`, `GetPushDummyCommand`
+        root: getDummiesDir(this.project),
+        apiKey: getEnvVarValue(this.resolvedEnvVariable),
+      }))
+      .then<true>((execAsyncReturn) => {
+        ok(execAsyncReturn)
+        return true as const
+      })
   }
 
   /**
@@ -378,7 +382,6 @@ but the environment variable is empty or undefined.`)
    * @returns a string[] containing the full file paths of all new packages i.e.
    * .nupkg, .symbols.nupkg, .snupkg
    */
-  // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
   private async _PackPackages(
     opts: typeof NRI.PackPackagesOptionsType.t,
     usePerSourceSubfolder = false,
