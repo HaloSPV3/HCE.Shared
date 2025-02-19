@@ -154,7 +154,7 @@ module.exports = {
 
 ---
 
-**Notable Plugin Properties**
+#### Notable Plugin Properties
 
 - [`@semantic-release/commit-analyzer`](https://github.com/semantic-release/commit-analyzer#options)
   - preset (set to `conventionalcommits`)
