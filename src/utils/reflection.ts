@@ -167,15 +167,6 @@ export function isConstructor(obj: unknown): obj is ClassLike {
   if (/^class\s/.test(obj.toString()))
     return true
 
-  function descriptorMatchesConditions(pd: PropertyDescriptor | undefined, obj: { readonly name: string }) {
-    if (pd === undefined)
-      return false
-    return pd.value === obj.name
-      && pd.writable === false
-      && pd.enumerable === false
-      && pd.configurable === true
-  }
-
   /* Method 2
    * > class class_ {}; function func(){}
    * undefined
@@ -184,11 +175,14 @@ export function isConstructor(obj: unknown): obj is ClassLike {
    * > func.prototype?.constructor?.name === func.name
    * false
    */
-  if (
-    typeof obj.prototype?.constructor === 'function'
-    && descriptorMatchesConditions(Object.getOwnPropertyDescriptor(obj.prototype.constructor, 'name'), obj)
-  ) {
-    return true
+  if (typeof obj.prototype?.constructor === 'function') {
+    const _ctor = Reflect.getOwnPropertyDescriptor(obj.prototype, 'constructor')
+    const _name = Reflect.getOwnPropertyDescriptor(obj.prototype.constructor, 'name')
+    // short-circuit if `obj.prototype.constructor` is a function, but not a constructor. Return false.
+    return _ctor?.value === obj
+      && _name?.writable === false
+      && _name.enumerable === false
+      && _name.configurable === true
   }
 
   // Short-circuit
