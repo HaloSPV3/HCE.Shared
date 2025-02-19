@@ -52,16 +52,16 @@ export default hceSharedConfig;
 ```js
 // releaserc.config.js
 export default {
-	extends: ["@halospv3/hce.shared-config"]
+  extends: ["@halospv3/hce.shared-config"]
 }
 ```
 
 ```json
 // package.json
 {
-	"release": {
-		"extends": ["@halospv3/hce.shared-config"]
-	}
+  "release": {
+    "extends": ["@halospv3/hce.shared-config"]
+  }
 }
 ```
 
@@ -96,16 +96,16 @@ import { getConfig } from "@halospv3/hce.shared-config/semanticReleaseConfigDotn
  * To version and release them separately, use [https://github.com/pmowrer/semantic-release-monorepo](semantic-release-monorepo).
  */
 
-/* `prepareCmd` will contain command lines to publish 
+/* `prepareCmd` will contain command lines to publish
  * both Library and Sample to your GitHub release.
  * Their `TargetFrameworks` and `RuntimeIdentifiers`
- * properties will be evaluated and a command line 
- * will be added for each unique combination, 
+ * properties will be evaluated and a command line
+ * will be added for each unique combination,
  * _regardless of compatibility and intended combinations_.
  */
 const projectsToPublish = [
-	"./Library/Library.csproj",
-	"./Sample/Sample.csproj"
+  "./Library/Library.csproj",
+  "./Sample/Sample.csproj"
 ];
 /*
  * `prepareCmd` will also contain `dotnet pack` and
@@ -126,14 +126,14 @@ Your projects' paths must be assigned to environment variables. See [Dotnet Conf
 ```js
 // releaserc.config.js (if {"type": "module"} in package.json)
 export default {
-	extends: ["@halospv3/hce.shared-config"]
+  extends: ["@halospv3/hce.shared-config"]
 }
 ```
 
 ```js
 // releaserc.config.js (if {"type": "commonjs"} in package.json)
 module.exports = {
-	extends: ["@halospv3/hce.shared-config"]
+  extends: ["@halospv3/hce.shared-config"]
 }
 ```
 
@@ -143,12 +143,12 @@ module.exports = {
 // package.json
 // `npm install --save-dev cross-env`
 {
-	"scripts":{
-		"release":"cross-env PROJECTS_TO_PUBLISH=\"./Library/Library.csproj;./Sample/Sample.csproj\" semantic-release"
-	},
-	"release": {
-		"extends": ["@halospv3/hce.shared-config/semanticReleaseConfigDotnet"]
-	}
+  "scripts":{
+    "release":"cross-env PROJECTS_TO_PUBLISH=\"./Library/Library.csproj;./Sample/Sample.csproj\" semantic-release"
+  },
+  "release": {
+    "extends": ["@halospv3/hce.shared-config/semanticReleaseConfigDotnet"]
+  }
 }
 ```
 
@@ -157,31 +157,31 @@ module.exports = {
 **Notable Plugin Properties**
 
 - [`@semantic-release/commit-analyzer`](https://github.com/semantic-release/commit-analyzer#options)
-	- preset (set to `conventionalcommits`)
-	- parserOpts
-	- releaseRules
+  - preset (set to `conventionalcommits`)
+  - parserOpts
+  - releaseRules
 - [`@semantic-release/release-notes-generator`](https://github.com/semantic-release/release-notes-generator#options)
-	- preset (set to `conventionalcommits`)
-	- parserOpts
-	- writerOpts
+  - preset (set to `conventionalcommits`)
+  - parserOpts
+  - writerOpts
 - [`@semantic-release/changelog`](https://github.com/semantic-release/changelog#options)
-	- changelogFile (default: `'CHANGELOG.md'`)
+  - changelogFile (default: `'CHANGELOG.md'`)
 - [`@semantic-release/git`](https://github.com/semantic-release/git#options)
-	- assets (default: `['README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json']`)
+  - assets (default: `['README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json']`)
 - `@semantic-release/exec`
-	- prepareCmd
+  - prepareCmd
 - [`@semantic-release/github`](https://github.com/semantic-release/github#options)
-	- assets
-	- draftRelease (default: false)
+  - assets
+  - draftRelease (default: false)
 
 ### 3. Set Up CommitLint
 
 ```json
 // package.json
 {
-	"commitlint": {
-		"extends": ["@halospv3/hce.shared-config/commitlintConfig"]
-	}
+  "commitlint": {
+    "extends": ["@halospv3/hce.shared-config/commitlintConfig"]
+  }
 }
 ```
 or
@@ -203,13 +203,13 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 
 ```xml
 <Project>
-	<Import Project="$(HCESharedDir)/dotnet/HCE.Shared.targets"/>
+  <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.targets"/>
 
-	<PropertyGroup>
-		<RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
-		<HCESharedDir Condition="'$(HCESharedDir)' == ''">$(RepoRoot)node_modules/@halospv3/hce.shared-config/</HCESharedDir>
-		<!--<GitVersion_Path Condition="'$(GitVersion_Path)' == ''">Path/To/Your/GitVersion.yml</GitVersion_Path>-->
-	</PropertyGroup>
+  <PropertyGroup>
+    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
+    <HCESharedDir Condition="'$(HCESharedDir)' == ''">$(RepoRoot)node_modules/@halospv3/hce.shared-config/</HCESharedDir>
+    <!--<GitVersion_Path Condition="'$(GitVersion_Path)' == ''">Path/To/Your/GitVersion.yml</GitVersion_Path>-->
+  </PropertyGroup>
 </Project>
 ```
 
@@ -229,15 +229,15 @@ conditional property group to the props file:
 
 ```xml, diff
 <Project>
-	<PropertyGroup>
-		...
-	</PropertyGroup>
+  <PropertyGroup>
+    ...
+  </PropertyGroup>
 
-	<PropertyGroup Condition=" '$(CI)' == 'true' ">
-		<Configuration>Release</Configuration>
-		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-		<Deterministic>true</Deterministic>
-	</PropertyGroup>
+  <PropertyGroup Condition=" '$(CI)' == 'true' ">
+    <Configuration>Release</Configuration>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
 </Project>
 ```
 
@@ -260,23 +260,23 @@ You can...
 ...define it yourself
 ```xml
 <Project>
-	<PropertyGroup>
-		<GitVersion_Path>$(ProjectRootDir)/node_modules/@halospv3/hce.shared-config/dotnet/GitVersion.yml</GitVersion_Path>
-	</PropertyGroup>
+  <PropertyGroup>
+    <GitVersion_Path>$(ProjectRootDir)/node_modules/@halospv3/hce.shared-config/dotnet/GitVersion.yml</GitVersion_Path>
+  </PropertyGroup>
 </Project>
 ```
 
 ...import HCE.Shared.props
 ```xml
 <Project>
-	<Import Project="$(HCESharedDir)/dotnet/HCE.Shared.props">
+  <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.props">
 </Project>
 ```
 
 ...import HCE.Shared.Targets (which imports HCE.Shared.props)
 ```xml
 <Project>
-	<Import Project="$(HCESharedDir)/dotnet/HCE.Shared.props">
+  <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.props">
 </Project>
 ```
 
@@ -303,7 +303,7 @@ Add the following to `package.json`:
 
 ```json
 {
-	"private": true,
+  "private": true,
 }
 ```
 
@@ -315,13 +315,13 @@ See callable workflows such as [dotnet-ci](./.github/workflows/dotnet-ci.yml)
 
 ```yml
 jobs:
-	release:
-		steps:
-		- uses: actions/checkout@v3
-		- name: dotnet build/publish; copy release artifacts to './publish/'
-			uses: ./node_modules/@halospv3/hce.shared/dotnet/.github/workflows/dotnet-release.yml
-				with:
-					projects:
-					- src/lib/lib.csproj
-					- src/lib-sample/sample.csproj
+  release:
+    steps:
+    - uses: actions/checkout@v3
+    - name: dotnet build/publish; copy release artifacts to './publish/'
+      uses: ./node_modules/@halospv3/hce.shared/dotnet/.github/workflows/dotnet-release.yml
+        with:
+          projects:
+          - src/lib/lib.csproj
+          - src/lib-sample/sample.csproj
 ```
