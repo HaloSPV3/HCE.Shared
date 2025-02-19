@@ -25,73 +25,6 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     deepStrictEqual(NRI.name, ctx0.name)
   })
 
-  // memory leak...but why?
-  await describe('an instance of NugetRegistryInfo...', async () => {
-    const predefinedToken = getEnvVarValue('NUGET_TOKEN')
-    const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js')
-
-    await it('defaults url to expected value', async () => {
-      process.env.NUGET_TOKEN ??= predefinedToken ?? 'placeholder'
-
-      strictEqual(
-        new NRI(NRIOpts({ project: DeterministicNupkgCsproj })).url,
-        'https://api.nuget.org/v3/index.json',
-      )
-
-      if (predefinedToken)
-        process.env.NUGET_TOKEN = predefinedToken
-      else
-        delete process.env.NUGET_TOKEN
-    })
-
-    await describe('canPushPackagesToUrl', async () => {
-      await it('rejects promise if token invalid', async () => {
-        process.env.INVALID_TOKEN = 'placeholder'
-        const value = await new NRI(
-          NRIOpts({
-            project: DeterministicNupkgCsproj,
-            tokenEnvVars: ['INVALID_TOKEN'],
-          }),
-        ).canPushPackagesToUrl
-          .catch(async reason =>
-            reason instanceof Error ? reason : new Error(String(reason)))
-        if (value === true)
-          return notDeepStrictEqual(value, true)
-        strictEqual('message' in value, true)
-        strictEqual('name' in value, true)
-      })
-
-      await it('resolves when token is defined, valid, and can push packages to url', async (t) => {
-        if (!predefinedToken)
-          return t.skip('NUGET_TOKEN environment variable undefined')
-
-        const registryInfo = new NRI(NRIOpts({
-          project: await MSBuildProject.Evaluate(
-            {
-              FullName: resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
-              Property: {
-                Version: '0.0.1-DUMMY',
-              },
-              GetItem: [],
-              GetProperty: GetNPPGetterNames(true, true),
-              Targets: ['Pack'],
-              GetTargetResult: [],
-            },
-          ),
-        }))
-
-        // todo: refactor canPushPackagesToUrl away from static dummy
-        const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>
-          reason instanceof Error
-            ? reason
-            : new Error(inspect(reason, { depth: 3 })),
-        )
-
-        deepStrictEqual(canPush, true)
-      })
-    })
-  })
-
   await describe('canPushPackagesToUrl', (ctx1) => {
     it('exists in NugetRegistryInfo prototype', async () => {
       strictEqual(ctx1.name in NRI.prototype, true)
@@ -115,6 +48,74 @@ await describe('NugetRegistryInfo', async (ctx0) => {
       strictEqual(ctx1.name in NRI.prototype, true)
     })
     await todo('is a string')
+  })
+})
+
+// memory leak...but why?
+await describe('InstanceOf NugetRegistryInfo', async () => {
+  const predefinedToken = getEnvVarValue('NUGET_TOKEN')
+  const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js')
+
+  await it('defaults url to expected value', async () => {
+    process.env.NUGET_TOKEN ??= predefinedToken ?? 'placeholder'
+
+    strictEqual(
+      new NRI(NRIOpts({ project: DeterministicNupkgCsproj })).url,
+      'https://api.nuget.org/v3/index.json',
+    )
+
+    if (predefinedToken)
+      process.env.NUGET_TOKEN = predefinedToken
+    else
+      delete process.env.NUGET_TOKEN
+  })
+
+  // connor4312.nodejs-testing for VSCode dislikes nested Describe
+  await it('canPushPackagesToUrl', async () => {
+    await it('rejects promise if token invalid', async () => {
+      process.env.INVALID_TOKEN = 'placeholder'
+      const value = await new NRI(
+        NRIOpts({
+          project: DeterministicNupkgCsproj,
+          tokenEnvVars: ['INVALID_TOKEN'],
+        }),
+      ).canPushPackagesToUrl
+        .catch(async reason =>
+          reason instanceof Error ? reason : new Error(String(reason)))
+      if (value === true)
+        return notDeepStrictEqual(value, true)
+      strictEqual('message' in value, true)
+      strictEqual('name' in value, true)
+    })
+
+    await it('resolves when token is defined, valid, and can push packages to url', async (t) => {
+      if (!predefinedToken)
+        return t.skip('NUGET_TOKEN environment variable undefined')
+
+      const registryInfo = new NRI(NRIOpts({
+        project: await MSBuildProject.Evaluate(
+          {
+            FullName: resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
+            Property: {
+              Version: '0.0.1-DUMMY',
+            },
+            GetItem: [],
+            GetProperty: GetNPPGetterNames(true, true),
+            Targets: ['Pack'],
+            GetTargetResult: [],
+          },
+        ),
+      }))
+
+      // todo: refactor canPushPackagesToUrl away from static dummy
+      const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>
+        reason instanceof Error
+          ? reason
+          : new Error(inspect(reason, { depth: 3 })),
+      )
+
+      deepStrictEqual(canPush, true)
+    })
   })
 })
 
