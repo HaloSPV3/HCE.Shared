@@ -144,7 +144,7 @@ export class NugetRegistryInfo {
    * - Other EcmaScript modules can access the environment variable(s) and steal
    *   your key. Be aware of malicious dependencies!
    * @constructor
-   * @param {ReturnType<typeof NRIOpts>} opts The return value of {@link NugetRegistryInfoOptions}
+   * @param {typeof NRIOpts['inferIn']} opts The input type of {@link NugetRegistryInfoOptions.from}
    * @param {MSBuildProject} opts.project The project whose package(s) will be
    * pushed.\
    * - Its {@link NugetProjectProperties#PackageId} will be read.\
@@ -157,14 +157,11 @@ export class NugetRegistryInfo {
    * throw an {@link Error}.
    * @param {string} [opts.url=defaultNugetSource]
    */
-  constructor(opts: ReturnType<typeof NRIOpts>) {
-    if (opts instanceof type.errors)
-      throw opts.throw()
-    opts = NRIOpts.from(opts)
-
-    this._project = opts.project
-    this._resolvedEnvVariable = _GetTokenEnvVariables(opts.tokenEnvVars)[0][0]
-    this._url = opts.url
+  constructor(opts: typeof NRIOpts['inferIn']) {
+    const validOpts = NRIOpts.from(opts)
+    this._project = validOpts.project
+    this._resolvedEnvVariable = _GetTokenEnvVariables(validOpts.tokenEnvVars)[0][0]
+    this._url = validOpts.url
 
     /**
      * Get the environment variables as key-value pairs.

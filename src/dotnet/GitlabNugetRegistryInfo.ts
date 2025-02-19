@@ -20,11 +20,10 @@ export class GitlabNugetRegistryInfo extends NRI {
   /**
    * Creates an instance of GitlabNugetRegistryInfo.
    * @constructor
-   * @param opts The return value of {@link GLNRIOpts}
+   * @param opts The input type of {@link GLNRIOpts.from}
    */
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-  constructor(opts: ReturnType<GLNRIOpts>) {
-    super(opts)
+  constructor(opts: typeof GLNRIOpts['inferIn']) {
+    super(GLNRIOpts.from(opts))
   }
 
   /**
@@ -81,4 +80,5 @@ export const GitlabNugetRegistryInfoOptions = NRIOpts.merge({
   }
   return obj
 })
-type GLNRIOpts = typeof GitlabNugetRegistryInfoOptions
+
+const GLNRIOpts = GitlabNugetRegistryInfoOptions

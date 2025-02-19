@@ -5,7 +5,6 @@ import { inspect } from 'node:util'
 import { MSBuildProject } from '@halospv3/hce.shared-config/dotnet/MSBuildProject'
 import {
   NugetRegistryInfo as NRI,
-  NugetRegistryInfoOptions as NRIOpts,
   NugetRegistryInfoOptionsBase as NRIOptsBase,
   getGithubOutput,
   getGithubOutputSync,
@@ -60,7 +59,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
     process.env.NUGET_TOKEN ??= predefinedToken ?? 'placeholder'
 
     strictEqual(
-      new NRI(NRIOpts({ project: DeterministicNupkgCsproj })).url,
+      new NRI({ project: DeterministicNupkgCsproj }).url,
       'https://api.nuget.org/v3/index.json',
     )
 
@@ -74,12 +73,10 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
   await it('canPushPackagesToUrl', async () => {
     await it('rejects promise if token invalid', async () => {
       process.env.INVALID_TOKEN = 'placeholder'
-      const value = await new NRI(
-        NRIOpts({
-          project: DeterministicNupkgCsproj,
-          tokenEnvVars: ['INVALID_TOKEN'],
-        }),
-      ).canPushPackagesToUrl
+      const value = await new NRI({
+        project: DeterministicNupkgCsproj,
+        tokenEnvVars: ['INVALID_TOKEN'],
+      }).canPushPackagesToUrl
         .catch(async reason =>
           reason instanceof Error ? reason : new Error(String(reason)))
       if (value === true)
@@ -92,7 +89,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       if (!predefinedToken)
         return t.skip('NUGET_TOKEN environment variable undefined')
 
-      const registryInfo = new NRI(NRIOpts({
+      const registryInfo = new NRI({
         project: await MSBuildProject.Evaluate(
           {
             FullName: resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj'),
@@ -105,7 +102,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
             GetTargetResult: [],
           },
         ),
-      }))
+      })
 
       // todo: refactor canPushPackagesToUrl away from static dummy
       const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>

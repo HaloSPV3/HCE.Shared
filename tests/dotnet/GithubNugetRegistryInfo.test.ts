@@ -9,10 +9,7 @@ import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js'
 
 // GHNRI will throw if imported while GITHUB_REPOSITORY_OWNER is unset!
 getOwner()
-import {
-  GithubNugetRegistryInfo as GHNRI,
-  GithubNugetRegistryInfoOptions as GHNRIOpts,
-} from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'
+import { GithubNugetRegistryInfo as GHNRI } from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'
 
 const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env')
 if (!existsSync(dotenvPath))
@@ -40,19 +37,17 @@ await describe('GithubNugetRegistryInfo', async () => {
         return t.skip()
 
       getOwner()
-      strictEqual(await new GHNRI(GHNRIOpts({ project: DeterministicNupkgCsproj })).canPushPackagesToUrl, true)
+      strictEqual(await new GHNRI({ project: DeterministicNupkgCsproj }).canPushPackagesToUrl, true)
     })
 
     await it('throws when GITHUB_TOKEN is invalid', async () => {
       getOwner()
       const tokenEnvVars = ['TOKEN_CANNOT_WRITE']
       getEnv(undefined, { TOKEN_CANNOT_WRITE: tokenEnvVars[0] })
-      const result = await new GHNRI(
-        GHNRIOpts({
-          project: DeterministicNupkgCsproj,
-          tokenEnvVars: tokenEnvVars,
-        }),
-      ).canPushPackagesToUrl.catch(
+      const result = await new GHNRI({
+        project: DeterministicNupkgCsproj,
+        tokenEnvVars: tokenEnvVars,
+      }).canPushPackagesToUrl.catch(
         reason =>
           reason instanceof Error ? reason : new Error(String(reason)),
       )

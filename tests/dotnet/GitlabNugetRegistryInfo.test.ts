@@ -1,9 +1,6 @@
 import { ok, strictEqual } from 'node:assert/strict'
 import { describe, it, todo } from 'node:test'
-import {
-  GitlabNugetRegistryInfo as GLNRI,
-  GitlabNugetRegistryInfoOptions as GLNRIOpts,
-} from '@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'
+import { GitlabNugetRegistryInfo as GLNRI } from '@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'
 import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
 
 const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js')
@@ -20,7 +17,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       process.env.CI_JOB_TOKEN = 'placeholder'
     if (!getEnvVarValue('CI_PROJECT_ID'))
       process.env.CI_PROJECT_ID = 'placeholder'
-    const defaultWithPlaceholders = new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj }))
+    const defaultWithPlaceholders = new GLNRI({ project: DeterministicNupkgCsproj })
 
     await it('defaults to project-level endpoint', async () => {
       if (!getEnvVarValue('CI_PROJECT_ID'))
@@ -28,7 +25,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       if (!getEnvVarValue('CI_JOB_TOKEN'))
         process.env.CI_JOB_TOKEN = 'placeholder'
       const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId}/packages/nuget/index.json`
-      strictEqual(new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj })).url, expected)
+      strictEqual(new GLNRI({ project: DeterministicNupkgCsproj }).url, expected)
     })
 
     await it('can be configured to use group-level endpoint', async () => {
@@ -38,7 +35,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         process.env.CI_JOB_TOKEN = 'placeholder'
       const expected = `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId}/-/packages/nuget/index.json`
       strictEqual(
-        new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj, url: 'group' })).url,
+        new GLNRI({ project: DeterministicNupkgCsproj, url: 'group' }).url,
         expected,
       )
     })
@@ -53,7 +50,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
 
       let value: GLNRI | Error
       try {
-        value = new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj }))
+        value = new GLNRI({ project: DeterministicNupkgCsproj })
       }
       catch (err) {
         value = err instanceof Error ? err : new Error(String(err))
@@ -72,7 +69,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     await it('throws when custom values and no token available', async () => {
       let value: GLNRI | Error
       try {
-        value = new GLNRI(GLNRIOpts({ project: DeterministicNupkgCsproj, tokenEnvVars: ['UNDEFINED_TOKEN', 'ANOTHER_UNDEFINED_TOKEN'] }))
+        value = new GLNRI({ project: DeterministicNupkgCsproj, tokenEnvVars: ['UNDEFINED_TOKEN', 'ANOTHER_UNDEFINED_TOKEN'] })
       }
       catch (err) {
         value = err instanceof Error ? err : new Error(String(err))

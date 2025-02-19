@@ -18,9 +18,12 @@ export class GithubNugetRegistryInfo extends NRI {
   ] as const)
 
   // GithubNugetRegistryInfo.CtorArgs(...) behaves differently than NugetRegistryInfo.CtorArgs(...)
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-  constructor(opts: ReturnType<GHNRIOpts>) {
-    super(opts)
+  /**
+   * Creates an instance of GithubNugetRegistryInfo.
+   * @param opts The input type of {@link GHNRIOpts.from}
+   */
+  constructor(opts: typeof GHNRIOpts['inferIn']) {
+    super(GHNRIOpts.from(opts))
   }
 
   /**
@@ -51,4 +54,4 @@ export const GithubNugetRegistryInfoOptions = NRIOptsBase.merge({
       () => DefaultGithubTokenEnvVars,
     ),
 })
-type GHNRIOpts = typeof GithubNugetRegistryInfoOptions
+const GHNRIOpts = GithubNugetRegistryInfoOptions
