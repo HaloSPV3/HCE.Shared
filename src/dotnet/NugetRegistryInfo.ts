@@ -298,7 +298,7 @@ but the environment variable is empty or undefined.`)
    * When pushing the package(s), you only need to supply the main .nupkg's path
    * or its directory to the dotnet CLI—by default, it will also push the
    * symbols package, if present.
-   * @param {typeof NRI.PackPackagesOptionsType.t} opts Options passed to
+   * @param {typeof NRI.PackPackagesOptionsType.inferIn} opts Options passed to
    * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. The
    * {@link PackPackagesOptionsType.t.output} path is modified according to the
    * {@link usePerSourceSubfolder} and {@link usePerPackageIdSubfolder} arguments.
@@ -306,59 +306,59 @@ but the environment variable is empty or undefined.`)
    * -o "${outDir}"` where outDir may be `${cwd()}/publish/${NugetRegistryInfo.GetNameForURL(this.url)}/${this._project.Properties.PackageId}`
    */
   GetPackCommand(
-    opts: typeof NRI.PackPackagesOptionsType.t,
+    opts: typeof NRI.PackPackagesOptionsType.inferIn,
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): string {
-    NRI.PackPackagesOptionsType.assert(opts)
+    const validOpts = NRI.PackPackagesOptionsType.from(opts)
     type.boolean.assert(usePerSourceSubfolder)
     type.boolean.assert(usePerPackageIdSubfolder)
 
-    opts.output ??= `${cwd()}/publish`
+    validOpts.output ??= `${cwd()}/publish`
     if (usePerSourceSubfolder === true)
-      opts.output = resolve(opts.output, NugetRegistryInfo.GetNameForURL(this.url))
+      validOpts.output = resolve(validOpts.output, NugetRegistryInfo.GetNameForURL(this.url))
     if (usePerPackageIdSubfolder)
-      opts.output = resolve(opts.output, this._project.Properties.PackageId)
+      validOpts.output = resolve(validOpts.output, this._project.Properties.PackageId)
 
     const packCmdArr: string[] = [
       'dotnet',
       'pack',
       `"${this._project.Properties.MSBuildProjectFullPath}"`,
       '-o',
-      `"${opts.output}"`,
+      `"${validOpts.output}"`,
     ]
-    if (opts.artifactsPath !== undefined)
-      packCmdArr.push('--artifactsPath', `"${opts.artifactsPath}"`)
-    if (opts.configuration !== undefined)
-      packCmdArr.push('--configuration', opts.configuration)
-    if (opts.disableBuildServers === true)
+    if (validOpts.artifactsPath !== undefined)
+      packCmdArr.push('--artifactsPath', `"${validOpts.artifactsPath}"`)
+    if (validOpts.configuration !== undefined)
+      packCmdArr.push('--configuration', validOpts.configuration)
+    if (validOpts.disableBuildServers === true)
       packCmdArr.push('--disable-build-servers')
-    if (opts.force === true)
+    if (validOpts.force === true)
       packCmdArr.push('--force')
-    if (opts.includeSource === true)
+    if (validOpts.includeSource === true)
       packCmdArr.push('--include-source')
-    if (opts.includeSymbols === true)
+    if (validOpts.includeSymbols === true)
       packCmdArr.push('--include-symbols')
-    if (opts.interactive === true)
+    if (validOpts.interactive === true)
       packCmdArr.push('--interactive')
-    if (opts.noBuild === true)
+    if (validOpts.noBuild === true)
       packCmdArr.push('--no-build')
-    if (opts.noLogo === true)
+    if (validOpts.noLogo === true)
       packCmdArr.push('--nologo')
-    if (opts.noRestore === true)
+    if (validOpts.noRestore === true)
       packCmdArr.push('--no-restore')
-    if (opts.runtime !== undefined)
-      packCmdArr.push('--runtime', opts.runtime)
-    if (opts.serviceable === true)
+    if (validOpts.runtime !== undefined)
+      packCmdArr.push('--runtime', validOpts.runtime)
+    if (validOpts.serviceable === true)
       packCmdArr.push('--serviceable')
-    if (opts.terminalLogger !== undefined)
-      packCmdArr.push('--tl', opts.terminalLogger)
-    if (opts.useCurrentRuntime === true)
+    if (validOpts.terminalLogger !== undefined)
+      packCmdArr.push('--tl', validOpts.terminalLogger)
+    if (validOpts.useCurrentRuntime === true)
       packCmdArr.push('--use-current-runtime')
-    if (opts.verbosity !== undefined)
-      packCmdArr.push('--verbosity', opts.verbosity)
-    if (opts.versionSuffix !== undefined)
-      packCmdArr.push('--version-suffix', opts.versionSuffix)
+    if (validOpts.verbosity !== undefined)
+      packCmdArr.push('--verbosity', validOpts.verbosity)
+    if (validOpts.versionSuffix !== undefined)
+      packCmdArr.push('--version-suffix', validOpts.versionSuffix)
 
     return packCmdArr.join(' ')
   }
@@ -385,14 +385,10 @@ but the environment variable is empty or undefined.`)
    * .nupkg, .symbols.nupkg, .snupkg
    */
   private async _PackPackages(
-    opts: typeof NRI.PackPackagesOptionsType.t,
+    opts: typeof NRI.PackPackagesOptionsType.inferIn,
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): Promise<string[]> {
-    NRI.PackPackagesOptionsType.assert(opts)
-    type.boolean.assert(usePerSourceSubfolder)
-    type.boolean.assert(usePerPackageIdSubfolder)
-
     const packOutput = await execAsync(this.GetPackCommand(
       opts,
       usePerSourceSubfolder,
@@ -404,7 +400,7 @@ but the environment variable is empty or undefined.`)
   /**
    * Create a dummy package for the current {@link project} by executing a
    * command line like \``dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this._project)}/${GetNameForURL(this.url)}`\`
-   * @param {typeof NRI.PackPackagesOptionsType.t} opts Options passed to
+   * @param {typeof NRI.PackPackagesOptionsType.inferIn} opts Options passed to
    * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument.
    * - The `output` field is ignored and overwritten. It is replaced with
    *   ${{@link getDummiesDir}({@link project})}/${{@link GetNameForURL}({@link url})}
@@ -416,12 +412,12 @@ but the environment variable is empty or undefined.`)
    * If mixed with other nupkgs, filter for the {@link NugetProjectProperties#PackageId}
    */
   public async PackDummyPackage(
-    opts: typeof NRI.PackPackagesOptionsType.t,
+    opts: typeof NRI.PackPackagesOptionsType.inferIn,
   ): Promise<string[]> {
-    NRI.PackPackagesOptionsType.assert(opts)
+    const validOpts = NRI.PackPackagesOptionsType.from(opts)
 
-    opts.output = getDummiesDir(this._project)
-    const packCmd: string = this.GetPackCommand(opts, true)
+    validOpts.output = getDummiesDir(this._project)
+    const packCmd: string = this.GetPackCommand(validOpts, true)
     /** e.g.
      * ```txt
      *  Determining projects to restore...
@@ -478,53 +474,54 @@ but the environment variable is empty or undefined.`)
    * appropriate arguments.
    */
   GetPushCommand(
-    opts: typeof NRI.PushPackagesOptionsType.t,
+    opts: typeof NRI.PushPackagesOptionsType.inferIn,
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): string {
-    NRI.PushPackagesOptionsType.assert(opts)
+    const validOpts = NRI.PushPackagesOptionsType.assert(opts)
     type.boolean.assert(usePerSourceSubfolder)
     type.boolean.assert(usePerPackageIdSubfolder)
 
-    opts.root ??= `${cwd()}/publish`
+    validOpts.root ??= `${cwd()}/publish`
     if (usePerSourceSubfolder === true)
-      opts.root = resolve(opts.root, NugetRegistryInfo.GetNameForURL(this.url))
+      validOpts.root = resolve(validOpts.root, NugetRegistryInfo.GetNameForURL(this.url))
     if (usePerPackageIdSubfolder)
-      opts.root = resolve(opts.root, this._project.Properties.PackageId)
+      validOpts.root = resolve(validOpts.root, this._project.Properties.PackageId)
 
     const packCmdArr: string[] = [
       'dotnet',
+      'nuget',
       'push',
-      `"${opts.root}"`,
+      `"${validOpts.root}"`,
     ]
     /**
      * If apiKey is an empty string, defer to the dotnet CLI's NuGet client
      * ability to lookup API keys saved via `dotnet nuget add source` or NuGet config
      * files.
      */
-    if ((opts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable)) !== undefined
-      && opts.apiKey !== '')
-      packCmdArr.push('--api-key', `"${opts.apiKey}"`)
-    if (opts.disableBuffering === true)
+    if ((validOpts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable)) !== undefined
+      && validOpts.apiKey !== '')
+      packCmdArr.push('--api-key', `"${validOpts.apiKey}"`)
+    if (validOpts.disableBuffering === true)
       packCmdArr.push('--disable-buffering')
-    if (opts.forceEnglishOutput === true)
+    if (validOpts.forceEnglishOutput === true)
       packCmdArr.push('--force-english-output')
-    if (opts.interactive === true)
+    if (validOpts.interactive === true)
       packCmdArr.push('--interactive')
-    if (opts.noServiceEndpoint === true)
+    if (validOpts.noServiceEndpoint === true)
       packCmdArr.push('--no-service-endpoint')
-    if (opts.noSymbols === true)
+    if (validOpts.noSymbols === true)
       packCmdArr.push('--no-symbols')
-    if (opts.skipDuplicate === true)
+    if (validOpts.skipDuplicate === true)
       packCmdArr.push('--skip-duplicate')
-    if ((opts.source ??= this.url) !== undefined)
-      packCmdArr.push('--source', opts.source)
-    if (opts.symbolApiKey !== undefined)
-      packCmdArr.push('--symbol-api-key', opts.symbolApiKey)
-    if (opts.symbolSource !== undefined)
-      packCmdArr.push('--symbol-source', opts.symbolSource)
-    if (opts.timeout !== undefined)
-      packCmdArr.push('--timeout', opts.timeout.toString())
+    if ((validOpts.source ??= this.url) !== undefined)
+      packCmdArr.push('--source', validOpts.source)
+    if (validOpts.symbolApiKey !== undefined)
+      packCmdArr.push('--symbol-api-key', validOpts.symbolApiKey)
+    if (validOpts.symbolSource !== undefined)
+      packCmdArr.push('--symbol-source', validOpts.symbolSource)
+    if (validOpts.timeout !== undefined)
+      packCmdArr.push('--timeout', validOpts.timeout.toString())
 
     return packCmdArr.join(' ')
   }
@@ -545,7 +542,7 @@ but the environment variable is empty or undefined.`)
    */
   // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
   private async _PushPackages(
-    opts: typeof NRI.PushPackagesOptionsType.t,
+    opts: typeof NRI.PushPackagesOptionsType.inferIn,
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ) {
@@ -586,7 +583,7 @@ but the environment variable is empty or undefined.`)
    * @returns {string} a `dotnet nuget push` command to push a dummy package
    * (created by executing {@link PackDummyPackage}) to {@link url}
    */
-  GetPushDummyCommand(opts: typeof NRI.PushPackagesOptionsType.t): string {
+  GetPushDummyCommand(opts: typeof NRI.PushPackagesOptionsType.inferIn): string {
     opts.root = getDummiesDir(this.project)
     opts.skipDuplicate = true
     return this.GetPushCommand(opts, true)
@@ -602,7 +599,7 @@ but the environment variable is empty or undefined.`)
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
    */
-  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.t): Promise<{ stdout: string, stderr: string }> {
+  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.inferIn): Promise<{ stdout: string, stderr: string }> {
     const pushCmd: string = this.GetPushDummyCommand(opts)
     return await execAsync(pushCmd)
   }
