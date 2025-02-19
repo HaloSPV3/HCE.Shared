@@ -17,7 +17,7 @@ import debug from './debug.js'
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/dotnetHelpers.js'
 import { getEnvVarValue } from './envUtils.js'
 import { baseConfig } from './semanticReleaseConfig.js'
-import { NugetRegistryInfoOptions, NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js'
+import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js'
 import { MSBuildProject } from './dotnet/MSBuildProject.js'
 import { NugetProjectProperties } from './dotnet/NugetProjectProperties.js'
 import { listOwnGetters } from './utils/reflection.js'
@@ -188,7 +188,7 @@ export class SemanticReleaseConfigDotnet {
 
           this._evaluatedProjects.push(msbp)
 
-          return new NugetRegistryInfo(NugetRegistryInfoOptions({ project: msbp }))
+          return new NugetRegistryInfo({ project: msbp })
         }
         else return v
       }),
@@ -279,7 +279,7 @@ export class SemanticReleaseConfigDotnet {
         this.EvaluatedProjects.push(project)
     }
 
-    const regInfos = promiseProjects.map(p => new NugetRegistryInfo(NugetRegistryInfoOptions({ project: p })))
+    const regInfos = promiseProjects.map(p => new NugetRegistryInfo({ project: p }))
     const nupkgPaths = await Promise.all(
       regInfos.map(async nri =>
         nri.PackDummyPackage({})

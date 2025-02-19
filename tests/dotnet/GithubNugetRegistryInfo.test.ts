@@ -16,6 +16,7 @@ const dotenvOptions: DotenvConfigOptions = { path: dotenvPath }
 
 // GHNRI will throw if imported while GITHUB_REPOSITORY_OWNER is unset!
 getOwner()
+// todo: dynamic import
 import {
   GithubNugetRegistryInfo as GHNRI,
   GithubNugetRegistryInfoOptions as GHNRIOpts,

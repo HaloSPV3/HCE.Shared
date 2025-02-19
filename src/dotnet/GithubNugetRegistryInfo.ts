@@ -17,8 +17,13 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
     'GH_TOKEN',
   ] as const)
 
-  constructor(opts: GHNRIOpts["inferIn"]) {
-    super(GithubNugetRegistryInfoOptions.from(opts))
+  // GithubNugetRegistryInfo.CtorArgs(...) behaves differently than NugetRegistryInfo.CtorArgs(...)
+  /**
+   * Creates an instance of GithubNugetRegistryInfo.
+   * @param opts The input type of {@link GHNRIOpts.from}
+   */
+  constructor(opts: typeof GHNRIOpts['inferIn']) {
+    super(GHNRIOpts.from(opts))
   }
 
   /**
@@ -56,4 +61,4 @@ export const GithubNugetRegistryInfoOptions = NRIOptsBase.merge({
       () => DefaultGithubTokenEnvVars,
     ),
 })
-type GHNRIOpts = typeof GithubNugetRegistryInfoOptions
+const GHNRIOpts = GithubNugetRegistryInfoOptions
