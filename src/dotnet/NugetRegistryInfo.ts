@@ -594,7 +594,7 @@ but the environment variable is empty or undefined.`)
   }
 
   /**
-   * Call {@link GetPushDummyCommand} and immediately executes it.\
+   * Call {@link GetPushDummyCommand} and immediately execute it.
    * @throws {Error} when the process exits with an error code indicating
    * failure i.e. the command line is invalid, the process fails to start,
    * the push fails, et cetera.
