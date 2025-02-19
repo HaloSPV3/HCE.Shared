@@ -38,7 +38,7 @@ objects are _not_ merged. You can...
 > - Configures [`@semantic-release/git`](https://github.com/semantic-release/git) to add README.md and CHANGELOG.md in a release commit if they have changes. Uses GitHub job's token to commit.
 > - Configures [`@semantic-release/github`](https://github.com/semantic-release/github) to release all files found in `$PWD/publish`.
 
-##### Usage
+##### Base Config - Usage
 
 ```js
 // releaserc.config.js
@@ -81,7 +81,7 @@ export default {
 >   - (WIP) Executes `dotnet nuget sign` during `prepare` upon the `dotnet pack` outputs if `projectsToPackAndPush` is not set to `false` (default: `[]`).
 >   - Executes `dotnet nuget push` during the `publish` step.
 
-##### Usage
+##### Dotnet Config - Usage
 
 TODO: add "non-best-guess" config example
 
