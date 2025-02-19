@@ -104,20 +104,28 @@ export function getOwnPropertyDescriptors<T extends ClassLike<T>>(classDef: T, i
 }
 
 /**
- * Iterate through the class and its base classes until an anonymous function is reached.
- * Returns all class instance prototypes--excluding the anonymous function--in descending order, with index 0 being the prototype of {@link classDef}
- *
- * This may work with non-class objects, but support for
+ * Iterate through the class and its base/super classes until an anonymous function is reached. This is the default superclass all classes extend.
+ * @param classDef Any class type. This or its prototype are included in the return value.
+ * @param [returnType='classes'] Default: 'classes'; Determines return type. If 'classInstances', the return type is an array of the classes' `.prototype`. Else, the classes themselves are returned.
+ * @returns `returnType extends 'classInstances' ? ClassLike<T>[] : ClassLike<T>[].map(c => c.prototype)`
+ * Excludes default superclasses e.g. anonymous functions, native code.
  * @since 3.0.0
  */
-export function getPrototypes<T extends ClassLike<T>>(classDef: ClassLike<T> | object) {
-  // instance prototypes
-  const prototypes: object[] = []
+export function getPrototypes<T extends ClassLike<T>>(classDef: ClassLike<T> | object, returnType: 'classes' | 'classInstances' = 'classes'):
+  typeof returnType extends 'classInstances' ? ClassLike<T>[] : ClassLike<T>['prototype'][]
+// eslint-disable-next-line @stylistic/brace-style
+{
+  // class definitions or their respective .prototype; exclude default superclasses.
+  const returnValue: object[] = []
   let current: ClassLike<T> | ClassLike | object = classDef
   let parent: ClassLike | object | null
+
   while (undefined != (parent = Reflect.getPrototypeOf(current))) {
-    // assume current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
-    prototypes.push(parent)
+    // current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
+    if (isConstructor(current))
+      returnValue.push(returnType === 'classInstances' ? current.prototype : current)
+    else break
+
     /*
      * Assign the super class to current.
      * If the argument is a class, Object.getPrototypeOf method returns the
@@ -136,7 +144,7 @@ export function getPrototypes<T extends ClassLike<T>>(classDef: ClassLike<T> | o
     }
     else { break }
   }
-  return prototypes
+  return returnValue
   /*
     assuming current is NugetProjectProperties...
     Reflect.getPrototypeOf(current).name is 'MSBuildProjectProperties'
