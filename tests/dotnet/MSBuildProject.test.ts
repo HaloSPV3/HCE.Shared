@@ -56,6 +56,7 @@ await describe('MSBuildProject', async () => {
           'AddDepsJsonAndRuntimeConfigToPublishItemsForReferencingProjects',
           'AddGlobalAnalyzerConfigForPackage_MicrosoftCodeAnalysisCSharpCodeStyle',
           'AddImplicitDefineConstants',
+          'AddPrunePackageReferences',
           'AddRuntimeConfigFileToBuiltProjectOutputGroupOutput',
           'AddSourceRevisionToInformationalVersion',
           'AddTransitiveFrameworkReferences',
@@ -106,6 +107,7 @@ await describe('MSBuildProject', async () => {
           'CollectNuGetAuditSuppressions',
           'CollectPackageDownloads',
           'CollectPackageReferences',
+          'CollectPrunePackageReferences',
           'CollectReferencedNuGetPackages',
           'CollectResolvedSDKReferencesDesignTime',
           'CollectSDKReferencesDesignTime',
@@ -321,6 +323,9 @@ await describe('MSBuildProject', async () => {
         },
       })
 
+      deepStrictEqual(actual.Items, expected.Items)
+      deepStrictEqual(actual.Properties, expected.Properties)
+      deepStrictEqual(actual.Targets, expected.Targets)
       deepStrictEqual(actual, expected)
     })
   })
