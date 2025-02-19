@@ -221,7 +221,7 @@ export class NugetRegistryInfo {
 
     // temporary swap-out
 
-    const finalResult = this._PackPackages({})
+    const finalResult = this.PackDummyPackage({})
       .then(async () => await this._PushDummyPackages({
         apiKey: getEnvVarValue(this.resolvedEnvVariable),
         root: getDummiesDir(this.project),
