@@ -710,7 +710,9 @@ export const NugetRegistryInfoOptionsBase = type({
    * one token is found. If none of the environment variables are defined,
    * {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
    */
-  project: type.instanceOf(MSBuildProject),
+  project: type.instanceOf(MSBuildProject).or(
+    type.instanceOf(MSBuildProject).readonly(),
+  ),
   /**
    * The environment variables whose values are tokens with permission to push a
    * package to the NuGet package registry.The array is iterated through until
