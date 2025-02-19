@@ -247,14 +247,36 @@ await describe('getPrototypes', async (c00) => {
       getPrototypes.name,
     )
   })
-  await it('returns expected prototypes', () => {
+
+  await it('return expected classes', () => {
+    const actualNpp = getPrototypes(NugetProjectProperties)
+    const expectedNpp = [NugetProjectProperties, MSBuildProjectProperties]
     deepStrictEqual(
-      getPrototypes(NugetProjectProperties),
-      [NugetProjectProperties.prototype, MSBuildProjectProperties.prototype],
+      actualNpp,
+      expectedNpp,
     )
+
+    const actualMpp = getPrototypes(MSBuildProjectProperties)
+    const expectedMpp = [MSBuildProjectProperties]
     deepStrictEqual(
-      getPrototypes(MSBuildProjectProperties),
-      [MSBuildProjectProperties.prototype],
+      actualMpp,
+      expectedMpp,
+    )
+  })
+
+  await it('returns expected instance prototypes', () => {
+    const actualNpp = getPrototypes(NugetProjectProperties, 'classInstances')
+    const expectedNpp = [NugetProjectProperties.prototype, MSBuildProjectProperties.prototype]
+    deepStrictEqual(
+      actualNpp,
+      expectedNpp,
+    )
+
+    const actualMpp = getPrototypes(MSBuildProjectProperties, 'classInstances')
+    const expectedMpp = [MSBuildProjectProperties.prototype]
+    deepStrictEqual(
+      actualMpp,
+      expectedMpp,
     )
   })
 })
