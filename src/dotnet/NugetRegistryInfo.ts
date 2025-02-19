@@ -6,7 +6,7 @@ import { exec } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { resolve } from 'node:path'
+import { join, sep } from 'node:path'
 import { cwd, env } from 'node:process'
 import { promisify } from 'node:util'
 import { getEnvVarValue } from '../envUtils.js'
@@ -19,7 +19,7 @@ import type { NugetProjectProperties } from './NugetProjectProperties.js'
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 const execAsync = promisify(exec)
-const tmpDirNamespace = resolve(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
+const tmpDirNamespace = join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json'
 
 /**
@@ -28,7 +28,7 @@ const defaultNugetSource = 'https://api.nuget.org/v3/index.json'
  */
 export async function getGithubOutput() {
   if (env.GITHUB_OUTPUT === undefined || !existsSync(env.GITHUB_OUTPUT)) {
-    const githubOutputPath = resolve(tmpdir(), 'GITHUB_OUTPUT')
+    const githubOutputPath = join(tmpdir(), 'GITHUB_OUTPUT')
     if (!existsSync(githubOutputPath))
       await writeFile(githubOutputPath, '')
     env.GITHUB_OUTPUT = githubOutputPath
@@ -53,7 +53,7 @@ export async function getGithubOutput() {
  */
 export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed'] {
   if (env.GITHUB_OUTPUT === undefined || !existsSync(env.GITHUB_OUTPUT)) {
-    const githubOutputPath = resolve(tmpdir(), 'GITHUB_OUTPUT')
+    const githubOutputPath = join(tmpdir(), 'GITHUB_OUTPUT')
     if (!existsSync(githubOutputPath))
       writeFile(githubOutputPath, '')
     env.GITHUB_OUTPUT = githubOutputPath
@@ -82,8 +82,8 @@ export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed']
  */
 function getDummiesDir(project?: MSBuildProject): string {
   return project !== undefined
-    ? resolve(tmpDirNamespace, project.Properties.PackageId)
-    : tmpDirNamespace
+    ? join(tmpDirNamespace, project.Properties.PackageId, sep)
+    : join(tmpDirNamespace, sep)
 }
 
 export class NugetRegistryInfo {
@@ -311,9 +311,9 @@ but the environment variable is empty or undefined.`)
 
     validOpts.output ??= `${cwd()}/publish`
     if (usePerSourceSubfolder === true)
-      validOpts.output = resolve(validOpts.output, NugetRegistryInfo.GetNameForURL(this.url))
+      validOpts.output = join(validOpts.output, NugetRegistryInfo.GetNameForURL(this.url))
     if (usePerPackageIdSubfolder)
-      validOpts.output = resolve(validOpts.output, this._project.Properties.PackageId)
+      validOpts.output = join(validOpts.output, this._project.Properties.PackageId)
 
     const packCmdArr: string[] = [
       'dotnet',
@@ -484,9 +484,9 @@ but the environment variable is empty or undefined.`)
 
     validOpts.root ??= `${cwd()}/publish`
     if (usePerSourceSubfolder === true)
-      validOpts.root = resolve(validOpts.root, NugetRegistryInfo.GetNameForURL(this.url))
+      validOpts.root = join(validOpts.root, NugetRegistryInfo.GetNameForURL(this.url))
     if (usePerPackageIdSubfolder)
-      validOpts.root = resolve(validOpts.root, this._project.Properties.PackageId)
+      validOpts.root = join(validOpts.root, this._project.Properties.PackageId)
 
     const packCmdArr: string[] = [
       'dotnet',
@@ -677,7 +677,7 @@ but the environment variable is empty or undefined.`)
     // if GITHUB_OUTPUT unset or its file does not exist, create it. ''
     getGithubOutputSync()
     // The script will run
-    return `node ${resolve(import.meta.dirname, './IsNextVersionAlreadyPublished.cli.js')} --packageId ${this._project.Properties.PackageId} --url ${this.url}`
+    return `node ${join(import.meta.dirname, './IsNextVersionAlreadyPublished.cli.js')} --packageId ${this._project.Properties.PackageId} --url ${this.url}`
   }
 
   /* Copy https://github.com/joelharkes/nuget-push when we split off our dotnet
