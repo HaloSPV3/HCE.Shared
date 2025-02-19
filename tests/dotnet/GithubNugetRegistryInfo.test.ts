@@ -1,5 +1,4 @@
-import { getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
-import { type DotenvConfigOptions } from 'dotenv'
+import { getEnvVarValue } from '../../src/envUtils.js'
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict'
 import { existsSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
@@ -20,7 +19,7 @@ getOwner()
 import {
   GithubNugetRegistryInfo as GHNRI,
   GithubNugetRegistryInfoOptions as GHNRIOpts,
-} from '@halospv3/hce.shared-config/dotnet/GithubNugetRegistryInfo'
+} from '../../src/dotnet/GithubNugetRegistryInfo.js'
 
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".

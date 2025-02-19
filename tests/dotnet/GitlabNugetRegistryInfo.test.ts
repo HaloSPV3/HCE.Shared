@@ -1,7 +1,7 @@
 import { ok, strictEqual } from 'node:assert/strict'
 import { describe, it, todo } from 'node:test'
-import { GitlabNugetRegistryInfo as GLNRI } from '@halospv3/hce.shared-config/dotnet/GitlabNugetRegistryInfo'
-import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils'
+import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.js'
+import { getEnv, getEnvVarValue } from '../../src/envUtils.js'
 
 import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js'
 

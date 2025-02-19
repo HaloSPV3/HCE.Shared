@@ -7,8 +7,8 @@ import {
   NugetRegistryInfoOptionsBase as NRIOptsBase,
   getGithubOutput,
   getGithubOutputSync,
-} from '@halospv3/hce.shared-config/dotnet/NugetRegistryInfo'
-import { isConstructor } from '@halospv3/hce.shared-config/utils/reflection'
+} from '../../src/dotnet/NugetRegistryInfo.js'
+import { isConstructor } from '../../src/utils/reflection.js'
 
 // No 'is built'. Checking classes and functions for equality is too complicated without reflection like .NET's
 
