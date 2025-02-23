@@ -99,6 +99,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
           reason.message = reason.message.concat(
             '\nSTDERR:\n',
             `  ${reason.stderr.replaceAll('\n', '\n  ')}`,
+            reason.stack ?? ''
           );
         }
 
