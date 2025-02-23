@@ -67,7 +67,6 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       delete process.env.NUGET_TOKEN
   })
 
-  // connor4312.nodejs-testing for VSCode dislikes nested Describe
   await it('canPushPackagesToUrl', async () => {
     await it('rejects promise if token invalid', async () => {
       process.env.INVALID_TOKEN = 'placeholder'
