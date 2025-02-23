@@ -221,8 +221,6 @@ export class NugetRegistryInfo {
       return this._canPushPackagesToUrl = Promise.reject(err)
     }
 
-    // temporary swap-out
-
     const finalResult = this.PackDummyPackage({})
       .then(async () => await this._PushDummyPackages({
         apiKey: getEnvVarValue(this.resolvedEnvVariable),
