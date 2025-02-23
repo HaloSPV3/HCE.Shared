@@ -230,7 +230,7 @@ export class NugetRegistryInfo {
     return this._canPushPackagesToUrl = this.PackDummyPackage({})
       .then(async () => await this._PushDummyPackages({
         // todo: This is redundant. Make copy of PushPackagesOptionsType with readonly `root` for use by `_PushDummyPackages`, `GetPushDummyCommand`
-        root: getDummiesDir(this.project),
+        root: getDummiesDir(this._project),
         apiKey: getEnvVarValue(this.resolvedEnvVariable),
       }))
       .then<true>((execAsyncReturn) => {
