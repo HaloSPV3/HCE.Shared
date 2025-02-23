@@ -106,7 +106,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       // todo: refactor canPushPackagesToUrl away from static dummy
       const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>
         reason instanceof Error
-          ? reason
+          ? (reason.stack && (reason.message = reason.stack), reason)
           : new Error(inspect(reason, { depth: 3 })),
       )
 
