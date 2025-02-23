@@ -20,12 +20,12 @@
     "!.husky/",
     "!.vscode/",
     "!_tsout/",
+    "!dotnet/samples/",
     "!tests/",
     "CHANGELOG.md",
     "dotnet/**/*",
     "mjs/**/*",
-    "src/**/*",
-    "!dotnet/samples/"
+    "src/**/*"
   ],
   "main": "./mjs/index.mjs",
   "infra": "polyrepo",
