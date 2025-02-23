@@ -123,7 +123,9 @@ export class NugetRegistryInfo {
    */
   static GetNameForURL(url: string) {
     const _url = new URL(url)
-    return `${_url.hostname}_${_url.pathname.replace('/', '_')}`
+    if (_url.pathname.endsWith('/index.json'))
+      _url.pathname = _url.pathname.substring(0, _url.pathname.length - '/index.json'.length)
+    return `${_url.hostname}${_url.pathname}`.replaceAll('/', '_')
   }
 
   /**
