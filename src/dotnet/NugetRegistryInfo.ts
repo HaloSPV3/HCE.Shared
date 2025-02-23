@@ -316,9 +316,9 @@ but the environment variable is empty or undefined.`)
 
     validOpts.output ??= `${cwd()}/publish`
     if (usePerSourceSubfolder === true)
-      validOpts.output = node_path.join(validOpts.output, NugetRegistryInfo.GetNameForURL(this.url))
+      validOpts.output = node_path.join(validOpts.output, NugetRegistryInfo.GetNameForURL(this.url), node_path.sep)
     if (usePerPackageIdSubfolder)
-      validOpts.output = node_path.join(validOpts.output, this._project.Properties.PackageId)
+      validOpts.output = node_path.join(validOpts.output, this._project.Properties.PackageId, node_path.sep)
 
     const packCmdArr: string[] = [
       'dotnet',
@@ -487,9 +487,9 @@ but the environment variable is empty or undefined.`)
 
     validOpts.root ??= `${cwd()}/publish`
     if (usePerSourceSubfolder === true)
-      validOpts.root = node_path.join(validOpts.root, NugetRegistryInfo.GetNameForURL(this.url))
+      validOpts.root = node_path.join(validOpts.root, NugetRegistryInfo.GetNameForURL(this.url), node_path.sep)
     if (usePerPackageIdSubfolder)
-      validOpts.root = node_path.join(validOpts.root, this._project.Properties.PackageId)
+      validOpts.root = node_path.join(validOpts.root, this._project.Properties.PackageId, node_path.sep)
 
     const packCmdArr: string[] = [
       'dotnet',
