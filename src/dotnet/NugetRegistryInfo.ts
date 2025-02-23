@@ -224,7 +224,7 @@ export class NugetRegistryInfo {
     const finalResult = this.PackDummyPackage({})
       .then(async () => await this._PushDummyPackages({
         apiKey: getEnvVarValue(this.resolvedEnvVariable),
-        root: getDummiesDir(this.project),
+        root: getDummiesDir(this._project),
       }))
       .then(async (execAsyncReturn) => {
         ok(execAsyncReturn)
