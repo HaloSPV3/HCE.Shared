@@ -30,7 +30,7 @@ await describe('GithubNugetRegistryInfo', async () => {
         return t.skip()
 
       getOwner()
-      strictEqual(await new GHNRI({ project: DeterministicNupkgCsproj }).canPushPackagesToUrl, true)
+      strictEqual(await new GHNRI({ project: DeterministicNupkgCsproj })['canPushPackagesToUrl'], true)
     })
 
     await it('throws when GITHUB_TOKEN is invalid', async () => {
@@ -40,7 +40,7 @@ await describe('GithubNugetRegistryInfo', async () => {
       const result = await new GHNRI({
         project: DeterministicNupkgCsproj,
         tokenEnvVars: tokenEnvVars,
-      }).canPushPackagesToUrl.catch(
+      })['canPushPackagesToUrl'].catch(
         reason =>
           reason instanceof Error ? reason : new Error(String(reason)),
       )
