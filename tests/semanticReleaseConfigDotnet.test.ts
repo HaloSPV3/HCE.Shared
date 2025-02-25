@@ -26,7 +26,8 @@ await describe('getConfig', async () => {
     process.env.GITHUB_REPOSITORY_OWNER = 'HaloSPV3'
     process.env.SKIP_TOKEN = 'true'
     const DeterministicNupkgCsprojPath = join(import.meta.dirname, '../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj')
-    const actual = await getConfig([DeterministicNupkgCsprojPath])
+    // this test must pass two args here
+    const actual = await getConfig([DeterministicNupkgCsprojPath], [DeterministicNupkgCsprojPath])
       .catch((v: unknown) => v instanceof Error ? v : new Error(String(v)))
 
     ok(!(actual instanceof Error), '`actual` should not be an Error.\n' + actual.stack)
