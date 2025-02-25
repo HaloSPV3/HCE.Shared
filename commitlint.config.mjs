@@ -1,7 +1,8 @@
-import { tsImport } from 'tsx/esm/api'
 import { RuleConfigSeverity } from '@commitlint/types'
-import vscodeSettingsJson from './.vscode/settings.json' with { type: 'json' }
+import { deepStrictEqual } from 'assert'
 import { join } from 'path'
+import { tsImport } from 'tsx/esm/api'
+import vscodeSettingsJson from './.vscode/settings.json' with { type: 'json' }
 
 /** @type {typeof import('./src/commitlintConfig.js').default} */
 const commitlintConfig = await tsImport('./src/commitlintConfig.ts', join(import.meta.dirname, 'src'))
@@ -13,6 +14,11 @@ const gitCommitMessageEditorScopes = Object.freeze(
   /** @type {VscodeSettings['gitCommitMessageEditor.intelliSense.completion.scopes']} */
   // eslint-disable-next-line @stylistic/no-extra-parens
   (vscodeSettingsJson['gitCommitMessageEditor.intelliSense.completion.scopes']),
+)
+
+deepStrictEqual(
+  gitCommitMessageEditorScopes.map(def => def.scope),
+  vscodeSettingsJson['conventionalCommits.scopes'],
 )
 
 /** @type {import('@commitlint/types').UserConfig} */
