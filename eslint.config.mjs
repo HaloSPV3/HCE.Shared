@@ -1,8 +1,13 @@
 // import { default as moon } from "eslint-config-moon";
 // import { default as moonNode } from "eslint-config-moon/node";
-import eslintConfig from '@halospv3/hce.shared-config/eslintConfig'
 import stylistic from '@stylistic/eslint-plugin'
+import { join } from 'path'
+import { tsImport } from 'tsx/esm/api'
 import { config } from 'typescript-eslint'
+
+/** @type {typeof import('./src/eslintConfig.js').default} */
+const eslintConfig = await tsImport('./src/eslintConfig.ts', join(import.meta.dirname, 'src'))
+  .then(module => 'default' in module ? module.default : module)
 
 const stylisticConfig = stylistic.configs['recommended-flat']
 stylisticConfig.ignores ??= []
