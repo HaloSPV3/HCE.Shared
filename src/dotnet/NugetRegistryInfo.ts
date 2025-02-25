@@ -209,6 +209,7 @@ export class NugetRegistryInfo {
    * @remarks Semantic Release Step: Beginning of `prepare`
    * @deprecated
    */
+  // @ts-expect-error 'canPushPackagesToUrl' is declared but its value is never read. ts(6133)
   private get canPushPackagesToUrl(): Promise<true> {
     if (this._canPushPackagesToUrl !== undefined)
       return this._canPushPackagesToUrl
