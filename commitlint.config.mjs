@@ -6,6 +6,7 @@ import vscodeSettingsJson from './.vscode/settings.json' with { type: 'json' }
 
 /** @type {typeof import('./src/commitlintConfig.js').default} */
 const commitlintConfig = await tsImport('./src/commitlintConfig.ts', join(import.meta.dirname, 'src'))
+  .then(module => 'default' in module ? module.default : module)
 
 /** @typedef {import('./.vscode/settings.json.d.ts')} VscodeSettings */
 /** @typedef {import('@commitlint/types').RuleConfigCondition} RuleConfigCondition */
