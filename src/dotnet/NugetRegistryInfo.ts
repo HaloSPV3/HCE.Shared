@@ -599,9 +599,24 @@ but the environment variable is empty or undefined.`)
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
    */
-  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.inferIn): Promise<{ stdout: string, stderr: string }> {
+  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.inferIn): Promise<ReturnType<typeof execAsync>> {
     const pushCmd: string = this.GetPushDummyCommand(opts)
     return await execAsync(pushCmd)
+      .catch((err) => {
+        if (!(err instanceof Error))
+          throw new Error(String(err))
+        if ('stderr' in err && typeof err.stderr === 'string'
+          && 'stdout' in err && typeof err.stdout === 'string'
+        ) {
+          err.message = err.message.concat(
+            '\nSTDERR:\n',
+            `  ${err.stderr.replaceAll('\n', '\n  ')}`,
+            '\nSTDOUT:\n',
+            `  ${err.stdout.replaceAll('\n', '\n  ')}`,
+          )
+        }
+        throw err
+      })
   }
 
   // #endregion Push
