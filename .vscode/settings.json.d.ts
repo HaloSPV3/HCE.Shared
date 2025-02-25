@@ -62,7 +62,6 @@ interface Settings {
     'dotnet.samples.HCE.Shared.DeterministicNupkg',
     'dotnet.samples.HCE.Shared.SignAfterPack',
     'dotnet.SignAfterPack',
-    'node',
     'packemon',
     'utils',
     'utils.miscTypes',
