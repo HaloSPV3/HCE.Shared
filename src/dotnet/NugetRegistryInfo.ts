@@ -384,6 +384,7 @@ but the environment variable is empty or undefined.`)
    * @returns a string[] containing the full file paths of all new packages i.e.
    * .nupkg, .symbols.nupkg, .snupkg
    */
+  // @ts-expect-error Todo: publicize to dismiss this "unused" error.
   private async _PackPackages(
     opts: typeof NRI.PackPackagesOptionsType.inferIn,
     usePerSourceSubfolder = false,
@@ -543,7 +544,7 @@ but the environment variable is empty or undefined.`)
    * PackageId is appended to the ROOT as a subfolder. Do not use wildcards in
    * ROOT with this set to `true`!
    */
-  // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
+  // @ts-expect-error Todo: publicize to dismiss this "unused" error.
   private async _PushPackages(
     opts: typeof NRI.PushPackagesOptionsType.inferIn,
     usePerSourceSubfolder = false,
