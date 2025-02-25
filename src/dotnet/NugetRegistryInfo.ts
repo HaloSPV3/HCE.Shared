@@ -481,7 +481,7 @@ but the environment variable is empty or undefined.`)
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): string {
-    const validOpts = NRI.PushPackagesOptionsType.assert(opts)
+    const validOpts = NRI.PushPackagesOptionsType.from(opts)
     type.boolean.assert(usePerSourceSubfolder)
     type.boolean.assert(usePerPackageIdSubfolder)
 
