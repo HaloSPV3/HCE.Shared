@@ -57,29 +57,26 @@ interface Settings {
   'conventionalCommits.scopes': [
     'deps-dev',
     'deps',
-    'dotnet',
     'dotnet.ExecNupkgDeterministicator',
     'dotnet.samples.HCE.Shared.DeterministicNupkg',
     'dotnet.samples.HCE.Shared.SignAfterPack',
     'dotnet.SignAfterPack',
+    'dotnet',
     'packemon',
-    'utils',
     'utils.miscTypes',
     'utils.reflection',
+    'utils',
     'vscode',
   ]
   'gitCommitMessageEditor.intelliSense.completion.scopes': [
     {
-      scope: 'dotnet'
-      description: 'Affects files "./dotnet" or "./src/dotnet" or affects our generic GitHub reusable workflows provided for assisting dotnet CI.'
+      scope: 'deps-dev'
+      description: 'Affects dependencies required in the dev environment or during build time.'
     },
+    { scope: 'deps', description: 'Affects dependencies required at runtime.' },
     {
       scope: 'dotnet.ExecNupkgDeterministicator'
       description: 'Affects the ExecNupkgDeterministicator target.'
-    },
-    {
-      scope: 'dotnet.SignAfterPack'
-      description: 'Affects the SignAfterPack target.'
     },
     {
       scope: 'dotnet.samples.HCE.Shared.DeterministicNupkg'
@@ -89,19 +86,22 @@ interface Settings {
       scope: 'dotnet.samples.HCE.Shared.SignAfterPack'
       description: 'Affects the SignAfterPack sample project.'
     },
-    { scope: 'vscode', description: 'Affects files in "./.vscode".' },
-    { scope: 'deps', description: 'Affects dependencies required at runtime.' },
     {
-      scope: 'deps-dev'
-      description: 'Affects dependencies required in the dev environment or during build time.'
+      scope: 'dotnet.SignAfterPack'
+      description: 'Affects the SignAfterPack target.'
     },
-    { scope: 'utils', description: 'src/utils/*' },
-    { scope: 'utils.miscTypes', description: 'src/utils/miscTypes.ts' },
-    { scope: 'utils.reflection', description: 'src/utils/reflection.ts' },
+    {
+      scope: 'dotnet'
+      description: 'Affects files "./dotnet" or "./src/dotnet" or affects our generic GitHub reusable workflows provided for assisting dotnet CI.'
+    },
     {
       scope: 'packemon'
       description: 'Packemon\'s configurations: package.json#packemon, packemon.config.ts'
     },
+    { scope: 'utils.miscTypes', description: 'src/utils/miscTypes.ts' },
+    { scope: 'utils.reflection', description: 'src/utils/reflection.ts' },
+    { scope: 'utils', description: 'src/utils/*' },
+    { scope: 'vscode', description: 'Affects files in "./.vscode".' },
   ]
 }
 
