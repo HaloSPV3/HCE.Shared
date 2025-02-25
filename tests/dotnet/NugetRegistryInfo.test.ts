@@ -27,7 +27,8 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     })
 
     await it('returns Promise<true>', async () => {
-      const x = await (Promise.resolve(true) as typeof NRI.prototype.canPushPackagesToUrl)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const x = await (Promise.resolve(true) as typeof NRI.prototype['canPushPackagesToUrl'])
       strictEqual(x, true)
     })
   })
@@ -73,9 +74,12 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       const value = await new NRI({
         project: DeterministicNupkgCsproj,
         tokenEnvVars: ['INVALID_TOKEN'],
-      }).canPushPackagesToUrl
-        .catch(async reason =>
-          reason instanceof Error ? reason : new Error(String(reason)))
+      })['canPushPackagesToUrl']
+        .catch(reason =>
+          reason instanceof Error
+            ? reason
+            : new Error(String(reason)),
+        )
       if (value === true)
         return notDeepStrictEqual(value, true)
       strictEqual('message' in value, true)
@@ -91,7 +95,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
         }))
 
       // todo: refactor canPushPackagesToUrl away from static dummy
-      const canPush = await registryInfo.canPushPackagesToUrl.catch(reason =>
+      const canPush = await registryInfo['canPushPackagesToUrl'].catch(reason =>
         reason instanceof Error
           ? reason
           : new Error(inspect(reason, { depth: 3 })),
