@@ -55,6 +55,7 @@ interface Settings {
   'markiscodecoverage.enableDecorations': true
   'sarif-viewer.connectToGithubCodeScanning': 'off'
   'conventionalCommits.scopes': [
+    'commitlintConfig',
     'deps-dev',
     'deps',
     'dotnet.ExecNupkgDeterministicator',
@@ -70,6 +71,10 @@ interface Settings {
     'vscode',
   ]
   'gitCommitMessageEditor.intelliSense.completion.scopes': [
+    {
+      scope: 'commitlintConfig'
+      description: 'src/commitlintConfig.ts or its test(s)'
+    },
     {
       scope: 'deps-dev'
       description: 'Affects dependencies required in the dev environment or during build time.'
