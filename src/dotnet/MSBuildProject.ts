@@ -1,15 +1,12 @@
 import { type } from 'arktype'
-import { exec } from 'node:child_process'
+import { warn } from 'node:console'
 import { type Dirent } from 'node:fs'
 import { readdir, realpath, stat } from 'node:fs/promises'
 import { dirname, isAbsolute, resolve } from 'node:path'
-import { promisify } from 'node:util'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
+import { execAsync } from '../utils/execAsync.js'
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
-import { NugetProjectProperties, GetNPPGetterNames } from './NugetProjectProperties.js'
-import { warn } from 'node:console'
-
-const execAsync = promisify(exec)
+import { GetNPPGetterNames, NugetProjectProperties } from './NugetProjectProperties.js'
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
@@ -216,13 +213,13 @@ export class MSBuildProject {
   readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][]
 
   static async GetTargets(projectPath: string, includeNonPublic = false): Promise<string[]> {
-    return execAsync(`dotnet msbuild ${projectPath} -targets`,
-    ).then((v) => {
-      const targets = v.stdout.split('\n').filter((v, index) => v !== '' && index !== 0).map(v => v.replace('\r', '')).sort()
-      if (includeNonPublic)
-        return targets
-      return targets.filter(v => !v.startsWith('_'))
-    })
+    return execAsync(`dotnet msbuild ${projectPath} -targets`, true)
+      .then((v) => {
+        const targets = v.stdout.split('\n').filter((v, index) => v !== '' && index !== 0).map(v => v.replace('\r', '')).sort()
+        if (includeNonPublic)
+          return targets
+        return targets.filter(v => !v.startsWith('_'))
+      })
   }
 
   /**
@@ -252,15 +249,8 @@ export class MSBuildProject {
     const getProperty = options.GetProperty.length === 0 ? '' : `"-getProperty:${options.GetProperty.join()}"`
     const getTargetResult = options.GetTargetResult.length === 0 ? '' : `"-getTargetResult:${options.GetTargetResult.join()}"`
     const cmdLine = ['dotnet', 'msbuild', `"${options.FullName}"`, property, target, getItem, getProperty, getTargetResult].filter(v => v !== '').join(' ')
-    const stdOutErr = await execAsync(cmdLine)
-      .catch((reason) => {
-        if (reason instanceof Error) {
-          if ('stderr' in reason)
-            reason.message = `${reason.stderr}\n${reason.message}`
-          throw reason
-        }
-        else throw new Error(`The following command failed:\n"${cmdLine}"`, { cause: reason })
-      })
+    // may throw
+    const stdOutErr = await execAsync(cmdLine, true)
     if (stdOutErr.stdout.startsWith('MSBuild version')) {
       warn(stdOutErr.stdout)
       throw new Error('dotnet msbuild was expected to output JSON, but output its version header instead.')

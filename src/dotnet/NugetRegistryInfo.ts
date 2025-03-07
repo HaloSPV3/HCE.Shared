@@ -2,14 +2,13 @@ import { type } from 'arktype'
 import { detectFile, detectFileSync } from 'chardet'
 import { configDotenv } from 'dotenv'
 import { ok } from 'node:assert/strict'
-import { exec } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, sep } from 'node:path'
 import { cwd, env } from 'node:process'
-import { promisify } from 'node:util'
 import { getEnvVarValue } from '../envUtils.js'
+import { execAsync } from '../utils/execAsync.js'
 import { MSBuildProject } from './MSBuildProject.js'
 
 /* JSDoc Types */
@@ -18,7 +17,6 @@ import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet
 import type { NugetProjectProperties } from './NugetProjectProperties.js'
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-const execAsync = promisify(exec)
 const tmpDirNamespace = join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json'
 
@@ -227,7 +225,7 @@ export class NugetRegistryInfo {
         apiKey: getEnvVarValue(this.resolvedEnvVariable),
         root: getDummiesDir(this._project),
       }))
-      .then(async (execAsyncReturn) => {
+      .then((execAsyncReturn) => {
         ok(execAsyncReturn)
         return true as const
       })
@@ -386,11 +384,14 @@ but the environment variable is empty or undefined.`)
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): Promise<string[]> {
-    const packOutput = await execAsync(this.GetPackCommand(
-      opts,
-      usePerSourceSubfolder,
-      usePerPackageIdSubfolder,
-    ))
+    const packOutput = await execAsync(
+      this.GetPackCommand(
+        opts,
+        usePerSourceSubfolder,
+        usePerPackageIdSubfolder,
+      ),
+      true,
+    )
     return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
   }
 
@@ -429,7 +430,7 @@ but the environment variable is empty or undefined.`)
     //  'C:\Repos\HaloSPV3\hce.shared-config\dotnet\samples\HCE.Shared.DeterministicNupkg\packages\HCE.Shared.DeterministicNupkg.0.0.1-DUMMY.nupkg'
     //  because it is being used by another process.
     // https://duckduckgo.com/?q=windows+log+file+operations+for+a+given+filename&atb=v459-1&ia=web
-    const packOutput = await execAsync(`${packCmd} -p:Version=0.0.1-DUMMY`)
+    const packOutput = await execAsync(`${packCmd} -p:Version=0.0.1-DUMMY`, true)
     return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
   }
 
@@ -549,11 +550,14 @@ but the environment variable is empty or undefined.`)
     usePerPackageIdSubfolder = false,
   ) {
     // const pushOutput =
-    await execAsync(this.GetPushCommand(
-      opts,
-      usePerSourceSubfolder,
-      usePerPackageIdSubfolder,
-    ))
+    await execAsync(
+      this.GetPushCommand(
+        opts,
+        usePerSourceSubfolder,
+        usePerPackageIdSubfolder,
+      ),
+      true,
+    )
   }
 
   /**
@@ -603,22 +607,7 @@ but the environment variable is empty or undefined.`)
    */
   private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.inferIn): Promise<ReturnType<typeof execAsync>> {
     const pushCmd: string = this.GetPushDummyCommand(opts)
-    return await execAsync(pushCmd)
-      .catch((err) => {
-        if (!(err instanceof Error))
-          throw new Error(String(err))
-        if ('stderr' in err && typeof err.stderr === 'string'
-          && 'stdout' in err && typeof err.stdout === 'string'
-        ) {
-          err.message = err.message.concat(
-            '\nSTDERR:\n',
-            `  ${err.stderr.replaceAll('\n', '\n  ')}`,
-            '\nSTDOUT:\n',
-            `  ${err.stdout.replaceAll('\n', '\n  ')}`,
-          )
-        }
-        throw err
-      })
+    return await execAsync(pushCmd, true)
   }
 
   // #endregion Push
@@ -658,7 +647,7 @@ but the environment variable is empty or undefined.`)
   static async IsNextVersionAlreadyPublished(source: string, packageId: string, nextVersion: string): Promise<boolean> {
     if (nextVersion === '')
       throw new Error('The value of nextVersion is empty')
-    return await execAsync(`dotnet package search --format JSON --exact-match --source ${source} --prerelease ${packageId}`)
+    return await execAsync(`dotnet package search --format JSON --exact-match --source ${source} --prerelease ${packageId}`, true)
       .then(stdPair => stdPair.stdout)
       .then(json => this._ParseNugetSearchReturn(json))
       .then((errsOrObj) => {

@@ -63,6 +63,7 @@ interface Settings {
     'dotnet.SignAfterPack',
     'dotnet',
     'packemon',
+    'utils.execAsync',
     'utils.miscTypes',
     'utils.reflection',
     'utils',
@@ -98,6 +99,7 @@ interface Settings {
       scope: 'packemon'
       description: 'Packemon\'s configurations: package.json#packemon, packemon.config.ts'
     },
+    { scope: 'utils.execAsync', description: 'src/utils/execAsync.ts' },
     { scope: 'utils.miscTypes', description: 'src/utils/miscTypes.ts' },
     { scope: 'utils.reflection', description: 'src/utils/reflection.ts' },
     { scope: 'utils', description: 'src/utils/*' },

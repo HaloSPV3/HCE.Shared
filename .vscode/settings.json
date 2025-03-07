@@ -96,6 +96,7 @@
 		"dotnet.SignAfterPack",
 		"dotnet",
 		"packemon",
+		"utils.execAsync",
 		"utils.miscTypes",
 		"utils.reflection",
 		"utils",
@@ -133,6 +134,10 @@
 		{
 			"scope": "packemon",
 			"description": "Packemon's configurations: package.json#packemon, packemon.config.ts"
+		},
+		{
+			"scope": "utils.execAsync",
+			"description": "src/utils/execAsync.ts"
 		},
 		{
 			"scope": "utils.miscTypes",
