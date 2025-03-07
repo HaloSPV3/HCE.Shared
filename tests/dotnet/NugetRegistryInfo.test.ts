@@ -75,7 +75,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
         project: DeterministicNupkgCsproj,
         tokenEnvVars: ['INVALID_TOKEN'],
       })['canPushPackagesToUrl']
-        .catch(reason =>
+        .catch((reason: unknown) =>
           reason instanceof Error
             ? reason
             : new Error(String(reason)),

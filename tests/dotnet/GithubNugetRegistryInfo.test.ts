@@ -47,13 +47,11 @@ await describe('GithubNugetRegistryInfo', async () => {
       getOwner()
       const tokenEnvVars = ['TOKEN_CANNOT_WRITE']
       process.env['TOKEN_CANNOT_WRITE'] = tokenEnvVars[0]
-      const result = await new GHNRI(
-        GHNRIOpts.from({
-          project: DeterministicNupkgCsproj,
-          tokenEnvVars: tokenEnvVars,
-        }),
-      )['canPushPackagesToUrl'].catch(
-        reason =>
+      const result = await new GHNRI({
+        project: DeterministicNupkgCsproj,
+        tokenEnvVars: tokenEnvVars,
+      })['canPushPackagesToUrl'].catch(
+        (reason: unknown) =>
           reason instanceof Error ? reason : new Error(String(reason)),
       )
       notDeepStrictEqual(result, true)
