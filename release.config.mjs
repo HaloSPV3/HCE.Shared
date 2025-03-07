@@ -15,11 +15,18 @@
  * When 'plugins' is set, only commit-analyzer is added if missing.
  */
 
-import hceSharedConfig from '@halospv3/hce.shared-config'
+import { tsImport } from 'tsx/esm/api'
 import { type } from 'arktype'
 import { ok } from 'node:assert/strict'
+import { join } from 'node:path'
 import { env } from 'node:process'
 import { inspect } from 'node:util'
+
+/**
+ * @type {typeof import('./src/index.js').default}
+ */
+const hceSharedConfig = await tsImport('./src/index.ts', join(import.meta.dirname, 'src'))
+  .then(module => 'default' in module ? module.default : module)
 
 /**
  * {@link hceSharedConfig} customized for this project's release pipeline
