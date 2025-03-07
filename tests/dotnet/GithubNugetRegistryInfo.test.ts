@@ -41,7 +41,7 @@ await describe('GithubNugetRegistryInfo', async () => {
         project: DeterministicNupkgCsproj,
         tokenEnvVars: tokenEnvVars,
       })['canPushPackagesToUrl'].catch(
-        reason =>
+        (reason: unknown) =>
           reason instanceof Error ? reason : new Error(String(reason)),
       )
       notDeepStrictEqual(result, true)
