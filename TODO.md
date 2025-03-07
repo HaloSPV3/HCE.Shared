@@ -8,6 +8,7 @@ refactor(dotnet): re-order constructors' optional parameters; rename arg 'dotnet
 - remove unused deps
 
 # MSBuildProject
+
 - src/dotnet/dotnetHelpers.ts:32
 - src/dotnet/dotnetHelpers.ts:39
 - src/dotnet/dotnetHelpers.ts:58
@@ -22,15 +23,16 @@ refactor(dotnet): re-order constructors' optional parameters; rename arg 'dotnet
 
 # nuget rework
 
-- refactor canPushPackagesToUrl away from static dummy
-
+- [x] refactor canPushPackagesToUrl away from static dummy
 
 but it doesn't have --dry-run and the request for it has been open for three years with no progress.
 So, I have to jerry rig effectively equivalent functionality out of existing NuGet features and it has been extremely draining.
+
 - If the authorization token DOES NOT have permission to push new versions/packages for the given package ID, fail the release.
 - If the package ID already has the new version listed, fail the release.
 
 Both are accomplished by the following:
+
 - grab the new version during Prepare
 - ~~copy our pre-made, lightweight v0.0.1-DUMMY dummy package. Overwrite its PackageID with the real ID.~~
 - Invoke `dotnet pack proj/Path -p:Version=0.0.1-DUMMY`
