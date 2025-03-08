@@ -77,8 +77,11 @@ const _configArray: tseslint.ConfigWithExtends[] = [
       },
       globals: globals.node,
     },
+    rules: {
+      '@stylistic/ts/semi': ['error', 'always']
+    },
   },
   globalIgnores,
 ] satisfies tseslint.ConfigWithExtends[]
 
-export default tseslint.config(..._configArray)
+export default tseslint.config(..._configArray) as ReturnType<typeof tseslint.config>
