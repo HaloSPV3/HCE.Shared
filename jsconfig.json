@@ -9,5 +9,13 @@
     "./*.cjs",
     "./*.js",
     "./*.mjs"
+  ],
+  "references": [
+    {
+      "path": "./tests/tsconfig.json"
+    },
+    {
+      "path": "./src/tsconfig.json"
+    }
   ]
 }
