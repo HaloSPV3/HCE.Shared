@@ -85,7 +85,6 @@
     "@babel/core": "^7.26.0",
     "@babel/eslint-parser": "^7.25.9",
     "@eslint/config-inspector": "^1.0.2",
-    "@eslint/eslintrc": "^3.3.0",
     "@tsconfig/node-lts": "^20.1.2",
     "@types/babel__core": "^7.20.5",
     "@types/debug": "^4.1.12",
