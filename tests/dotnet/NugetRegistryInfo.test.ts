@@ -80,15 +80,13 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
             ? reason
             : new Error(String(reason)),
         )
-      if (value === true)
-        return notDeepStrictEqual(value, true)
+      if (value === true) return notDeepStrictEqual(value, true)
       strictEqual('message' in value, true)
       strictEqual('name' in value, true)
     })
 
     await it('resolves when token is defined, valid, and can push packages to url', async (t) => {
-      if (!predefinedToken)
-        return t.skip('NUGET_TOKEN environment variable undefined')
+      if (!predefinedToken) return t.skip('NUGET_TOKEN environment variable undefined')
 
       const registryInfo = new NRI(({
         project: DeterministicNupkgCsproj,
