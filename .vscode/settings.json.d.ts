@@ -73,7 +73,7 @@ interface Settings {
   'gitCommitMessageEditor.intelliSense.completion.scopes': [
     {
       scope: 'commitlintConfig'
-      description: 'src/commitlintConfig.ts or its test(s)'
+      description: 'Affects "src/commitlintConfig.ts" or its tests.'
     },
     {
       scope: 'deps-dev'
@@ -81,38 +81,47 @@ interface Settings {
     },
     { scope: 'deps', description: 'Affects dependencies required at runtime.' },
     {
-      scope: 'dotnet.ExecNupkgDeterministicator'
-      description: 'Affects the ExecNupkgDeterministicator target.'
+      scope: 'dotnet.END'
+      description: 'Affects "dotnet/ExecNupkgDeterministicator.targets".'
     },
     {
       scope: 'dotnet.MSBP'
       description: 'Affects "src/dotnet/MSBuildProject.ts" or its tests (including "tests/dotnet/MSBuildProject.projects.ts").'
     },
     {
-      scope: 'dotnet.samples.HCE.Shared.DeterministicNupkg'
+      scope: 'dotnet.samples.DN'
       description: 'Affects the HCE.Shared.DeterministicNupkg sample project.'
     },
     {
-      scope: 'dotnet.samples.HCE.Shared.SignAfterPack'
+      scope: 'dotnet.samples.SAP'
       description: 'Affects the SignAfterPack sample project.'
     },
     {
-      scope: 'dotnet.SignAfterPack'
-      description: 'Affects the SignAfterPack target.'
+      scope: 'dotnet.SAP'
+      description: 'Affects "dotnet/SignAfterPack.targets" or its tests.'
     },
     {
       scope: 'dotnet'
-      description: 'Affects files "./dotnet" or "./src/dotnet" or affects our generic GitHub reusable workflows provided for assisting dotnet CI.'
+      description: 'Affects files in "dotnet/" or "src/dotnet/" not included in other scopes -OR- affects our generic GitHub reusable workflows provided for assisting dotnet CI.'
     },
     {
       scope: 'packemon'
-      description: 'Packemon\'s configurations: package.json#packemon, packemon.config.ts'
+      description: 'Affects Packemon\'s configurations: "package.json#packemon", "packemon.config.ts"'
     },
-    { scope: 'utils.execAsync', description: 'src/utils/execAsync.ts' },
-    { scope: 'utils.miscTypes', description: 'src/utils/miscTypes.ts' },
-    { scope: 'utils.reflection', description: 'src/utils/reflection.ts' },
-    { scope: 'utils', description: 'src/utils/*' },
-    { scope: 'vscode', description: 'Affects files in "./.vscode".' },
+    {
+      scope: 'utils.execAsync'
+      description: 'Affects "src/utils/execAsync.ts" or its tests.'
+    },
+    {
+      scope: 'utils.miscTypes'
+      description: 'Affects "src/utils/miscTypes.ts" or its tests.'
+    },
+    {
+      scope: 'utils.reflection'
+      description: 'Affects "src/utils/reflection.ts" or its tests.'
+    },
+    { scope: 'utils', description: 'Affects "src/utils/*" or its tests.' },
+    { scope: 'vscode', description: 'Affects ".vscode/".' },
   ]
 }
 
