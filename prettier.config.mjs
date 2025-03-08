@@ -338,7 +338,7 @@ const T_Config = type({
   }).array(),
 }).and(T_Options)
 
-const pcm = T_Config.assert(importPCM())
+const pcm = T_Config.from(importPCM())
 
 /**
  * @typedef {import('prettier').Config} Config
