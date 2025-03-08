@@ -55,9 +55,9 @@ const _configArray: tseslint.ConfigWithExtends[] = [
   {
     name: 'TSJS',
     extends: [
-      eslint.configs.recommended as TSESLint.FlatConfig.Config,
-      ...tseslint.configs.strict,
-      ...tseslint.configs.stylistic,
+      eslint.configs.recommended satisfies TSESLint.FlatConfig.Config,
+      ...tseslint.configs.strictTypeChecked,
+      ...tseslint.configs.stylisticTypeChecked,
     ],
     files: [
       '**/*.ts',
