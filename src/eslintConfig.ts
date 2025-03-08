@@ -24,7 +24,7 @@ const globalIgnores: TSESLint.FlatConfig.Config = {
   ],
 }
 
-export const _configArray: tseslint.ConfigWithExtends[] = [
+const _configArray: tseslint.ConfigWithExtends[] = [
   {
     name: 'flat/recommended-with-json - https://github.com/ota-meshi/eslint-plugin-jsonc',
     extends: jsonc.configs['flat/recommended-with-json'],
