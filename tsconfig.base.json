@@ -1,5 +1,27 @@
 {
-    "$schema": "https://json.schemastore.org/tsconfig",
+    "$schema": "https://json.schemastore.org/tsconfig#",
+    "//": {
+        "Typescript Node.js Target Mapping": "https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping",
+        "Node.js ECMAScript Mapping": "https://node.green/",
+        "vscode-versions": "https://github.com/ewanharris/vscode-versions",
+        "Recommended TSConfig Bases": "https://github.com/tsconfig/bases?tab=readme-ov-file#table-of-tsconfigs",
+        "Available/Latest GitHub Runner Images": "https://github.com/actions/runner-images/tree/main?tab=readme-ov-file#available-images",
+        "Node.js versions in GitHub Runner Images": {
+            "Ubuntu 2404 - Node.js version(s)": {
+                "installed": "https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#language-and-runtime",
+                "cached": "https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#nodejs"
+            },
+            "macOS 14": {
+                "installed": "https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#language-and-runtime",
+                "cached": "https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md#nodejs"
+            },
+            "Windows Server 2022": {
+                "!note!": "[Windows 19 and 22] Node.js version 16 will be removed from Windows images on 2025-05-05. See https://github.com/actions/runner-images/issues/11710",
+                "installed": "https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md#language-and-runtime",
+                "cached": "https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md#nodejs"
+            }
+        }
+    },
     "compileOnSave": true,
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
