@@ -3,12 +3,12 @@ import { describe, it, todo } from 'node:test'
 import {
   configureDotnetNugetPush,
   configurePrepareCmd,
-} from '../../src/dotnet/dotnetHelpers.js'
+} from '../../src/dotnet/helpers.js'
 
 await it('is built', async () =>
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/dotnetHelpers')), undefined, 2),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/dotnetHelpers.js')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../mjs/dotnet/helpers.js')), undefined, 2),
+    JSON.stringify(Object.entries(await import('../../src/dotnet/helpers.js')), undefined, 2),
   ),
 )
 

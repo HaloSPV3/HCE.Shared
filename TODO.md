@@ -9,11 +9,11 @@ refactor(dotnet): re-order constructors' optional parameters; rename arg 'dotnet
 
 # MSBuildProject
 
-- src/dotnet/dotnetHelpers.ts:32
-- src/dotnet/dotnetHelpers.ts:39
-- src/dotnet/dotnetHelpers.ts:58
-- src/dotnet/dotnetHelpers.ts:61
-- src/dotnet/dotnetHelpers.ts:123
+- src/dotnet/helpers.ts:32
+- src/dotnet/helpers.ts:39
+- src/dotnet/helpers.ts:58
+- src/dotnet/helpers.ts:61
+- src/dotnet/helpers.ts:123
 - src/dotnet/GithubNugetRegistryInfo.ts:12
 - src/dotnet/GitlabNugetRegistryInfo.ts:30
 - src/dotnet/GitlabNugetRegistryInfo.ts:44

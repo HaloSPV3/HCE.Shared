@@ -81,6 +81,10 @@ interface Settings {
     },
     { scope: 'deps', description: 'Affects dependencies required at runtime.' },
     {
+      scope: 'dotnet.helpers'
+      description: 'Affects "src/dotnet/helpers.ts" or its tests.'
+    },
+    {
       scope: 'dotnet.END'
       description: 'Affects "dotnet/ExecNupkgDeterministicator.targets".'
     },
