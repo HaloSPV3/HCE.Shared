@@ -77,9 +77,6 @@ const _configArray: tseslint.ConfigWithExtends[] = [
       },
       globals: globals.node,
     },
-    rules: {
-      '@stylistic/ts/semi': ['error', 'always']
-    },
   },
   globalIgnores,
 ] satisfies tseslint.ConfigWithExtends[]
