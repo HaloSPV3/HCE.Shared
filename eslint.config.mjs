@@ -1,4 +1,5 @@
 import stylistic from '@stylistic/eslint-plugin'
+import stylisticTs from '@stylistic/eslint-plugin-ts'
 import { join } from 'path'
 import { tsImport } from 'tsx/esm/api'
 import { config } from 'typescript-eslint'
@@ -17,6 +18,13 @@ export default config(
   ...eslintConfig,
   stylisticConfig,
   {
+    ...stylisticTs.configs.all,
+    rules: {
+      '@stylistic/ts/indent': 'off',
+      '@stylistic/ts/quotes': ['error', 'single'],
+    },
+  },
+  {
     languageOptions: {
       parserOptions: {
         projectService: {
@@ -32,5 +40,8 @@ export default config(
       '*.mjs',
       'packemon.config.ts',
     ],
+    rules: {
+      '@stylistic/semi': ['error', 'always'],
+    },
   },
 )
