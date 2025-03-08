@@ -11,7 +11,7 @@ const stylisticConfig = stylistic.configs['recommended-flat']
 stylisticConfig.ignores ??= []
 stylisticConfig.ignores.push('**/*.json')
 stylisticConfig.rules ??= {}
-stylisticConfig.rules['@stylistic/no-extra-parens'] = 'error'
+stylisticConfig.rules['@stylistic/no-extra-parens'] = 'warn'
 
 export default config(
   ...eslintConfig,
