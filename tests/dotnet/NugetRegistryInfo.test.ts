@@ -90,16 +90,23 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       if (!predefinedToken)
         return t.skip('NUGET_TOKEN environment variable undefined')
 
-        const registryInfo = new NRI(({
-          project: DeterministicNupkgCsproj,
-        }))
+      const registryInfo = new NRI(({
+        project: DeterministicNupkgCsproj,
+      }))
 
       // todo: refactor canPushPackagesToUrl away from static dummy
-      const canPush = await registryInfo['canPushPackagesToUrl'].catch(reason =>
-        reason instanceof Error
-          ? reason
-          : new Error(inspect(reason, { depth: 3 })),
-      )
+      const canPush = await registryInfo['canPushPackagesToUrl'].catch((reason: unknown) => {
+        if (!(reason instanceof Error))
+          return new Error(inspect(reason, { depth: 3 }));
+        else if ('stderr' in reason && typeof reason.stderr === 'string') {
+          reason.message = reason.message.concat(
+            '\nSTDERR:\n',
+            `  ${reason.stderr.replaceAll('\n', '\n  ')}`,
+          );
+        }
+
+        return reason
+      })
 
       deepStrictEqual(canPush, true)
     })
