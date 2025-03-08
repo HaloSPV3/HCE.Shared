@@ -42,5 +42,10 @@
         "resolveJsonModule": true,
         "sourceMap": true,
         "verbatimModuleSyntax": true
-    }
+    },
+    "exclude": [
+        "**/node_modules",
+        "**/tsconfig.json",
+        "**/tsconfig.*.json"
+    ]
 }
