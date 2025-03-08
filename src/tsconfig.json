@@ -1,8 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../_tsout/src",
-    "target": "ES2022"
+    "outDir": "../_tsout/src"
   },
   "include": [
     "./**/*"
