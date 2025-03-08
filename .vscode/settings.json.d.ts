@@ -54,22 +54,6 @@ interface Settings {
   'git.allowNoVerifyCommit': true
   'markiscodecoverage.enableDecorations': true
   'sarif-viewer.connectToGithubCodeScanning': 'off'
-  'conventionalCommits.scopes': [
-    'commitlintConfig',
-    'deps-dev',
-    'deps',
-    'dotnet.ExecNupkgDeterministicator',
-    'dotnet.samples.HCE.Shared.DeterministicNupkg',
-    'dotnet.samples.HCE.Shared.SignAfterPack',
-    'dotnet.SignAfterPack',
-    'dotnet',
-    'packemon',
-    'utils.execAsync',
-    'utils.miscTypes',
-    'utils.reflection',
-    'utils',
-    'vscode',
-  ]
   'gitCommitMessageEditor.intelliSense.completion.scopes': [
     {
       scope: 'commitlintConfig'
@@ -89,8 +73,32 @@ interface Settings {
       description: 'Affects "dotnet/ExecNupkgDeterministicator.targets".'
     },
     {
+      scope: 'dotnet.GHNRI'
+      description: 'Affects "src/dotnet/GithubNugetRegistryInfo.ts" or its tests.'
+    },
+    {
+      scope: 'dotnet.GLNRI'
+      description: 'Affects "src/dotnet/GitlabNugetRegistryInfo.ts" or its tests.'
+    },
+    {
+      scope: 'dotnet.INVAP'
+      description: 'Affects "src//dotnet/IsNextVersionAlreadyPublish.cli.ts" or its tests.'
+    },
+    {
       scope: 'dotnet.MSBP'
       description: 'Affects "src/dotnet/MSBuildProject.ts" or its tests (including "tests/dotnet/MSBuildProject.projects.ts").'
+    },
+    {
+      scope: 'dotnet.MSBPP'
+      description: 'Affects "src/dotnet/MSBuildProjectProperties.ts" or its tests.'
+    },
+    {
+      scope: 'dotnet.NPP'
+      description: 'Affects "src/dotnet/NugetProjectProperties.ts" or its tests.'
+    },
+    {
+      scope: 'dotnet.NRI'
+      description: 'Affects "src/dotnet/RegistryInfo.ts" or its tests.'
     },
     {
       scope: 'dotnet.samples.DN'
