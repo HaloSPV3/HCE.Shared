@@ -4,9 +4,12 @@ import { join } from 'path'
 import { tsImport } from 'tsx/esm/api'
 import { config } from 'typescript-eslint'
 
-/** @type {typeof import('./src/eslintConfig.js').default} */
+/**
+ * @typedef {typeof import('./src/eslintConfig.js').default} FlatConfigArray
+ * @type {FlatConfigArray} */
 const eslintConfig = await tsImport('./src/eslintConfig.ts', join(import.meta.dirname, 'src'))
-  .then(module => 'default' in module ? module.default : module)
+  // eslint-disable-next-line @stylistic/no-extra-parens
+  .then((/** @type {FlatConfigArray} */module) => 'default' in module ? /** @type {FlatConfigArray} */(module.default) : module)
 
 const stylisticConfig = stylistic.configs['recommended-flat']
 stylisticConfig.ignores ??= []
