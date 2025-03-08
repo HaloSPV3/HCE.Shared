@@ -216,9 +216,9 @@ export class MSBuildProject {
     return execAsync(`dotnet msbuild ${projectPath} -targets`, true)
       .then((v) => {
         const targets = v.stdout.split('\n').filter((v, index) => v !== '' && index !== 0).map(v => v.replace('\r', '')).sort()
-        if (includeNonPublic)
-          return targets
-        return targets.filter(v => !v.startsWith('_'))
+        return includeNonPublic
+          ? targets
+          : targets.filter(v => !v.startsWith('_'))
       })
   }
 

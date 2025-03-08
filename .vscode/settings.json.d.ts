@@ -85,6 +85,10 @@ interface Settings {
       description: 'Affects the ExecNupkgDeterministicator target.'
     },
     {
+      scope: 'dotnet.MSBP'
+      description: 'Affects "src/dotnet/MSBuildProject.ts" or its tests (including "tests/dotnet/MSBuildProject.projects.ts").'
+    },
+    {
       scope: 'dotnet.samples.HCE.Shared.DeterministicNupkg'
       description: 'Affects the HCE.Shared.DeterministicNupkg sample project.'
     },
