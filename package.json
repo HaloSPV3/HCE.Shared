@@ -95,7 +95,7 @@
     "prettier-config-moon": "^1.1.2",
     "tmp": "^0.2.3",
     "tslib": "^2.8.1",
-    "tsx": "^4.10.5",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "engines": {
