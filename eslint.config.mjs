@@ -5,7 +5,7 @@ import { tsImport } from 'tsx/esm/api';
 import { config } from 'typescript-eslint';
 
 /**
- * @typedef {typeof import('./src/eslintConfig.js').default} FlatConfigArray
+ * @typedef {typeof import('./src/eslintConfig.ts').default} FlatConfigArray
  * @type {FlatConfigArray} */
 const eslintConfig = await tsImport('./src/eslintConfig.ts', join(import.meta.dirname, 'src'))
   // eslint-disable-next-line @stylistic/no-extra-parens
