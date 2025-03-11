@@ -1,21 +1,21 @@
-import stylistic from '@stylistic/eslint-plugin'
-import stylisticTs from '@stylistic/eslint-plugin-ts'
-import { join } from 'path'
-import { tsImport } from 'tsx/esm/api'
-import { config } from 'typescript-eslint'
+import stylistic from '@stylistic/eslint-plugin';
+import stylisticTs from '@stylistic/eslint-plugin-ts';
+import { join } from 'path';
+import { tsImport } from 'tsx/esm/api';
+import { config } from 'typescript-eslint';
 
 /**
  * @typedef {typeof import('./src/eslintConfig.js').default} FlatConfigArray
  * @type {FlatConfigArray} */
 const eslintConfig = await tsImport('./src/eslintConfig.ts', join(import.meta.dirname, 'src'))
   // eslint-disable-next-line @stylistic/no-extra-parens
-  .then((/** @type {FlatConfigArray} */module) => 'default' in module ? /** @type {FlatConfigArray} */(module.default) : module)
+  .then((/** @type {FlatConfigArray} */module) => 'default' in module ? /** @type {FlatConfigArray} */(module.default) : module);
 
-const stylisticConfig = stylistic.configs['recommended-flat']
-stylisticConfig.ignores ??= []
-stylisticConfig.ignores.push('**/*.json')
-stylisticConfig.rules ??= {}
-stylisticConfig.rules['@stylistic/no-extra-parens'] = 'warn'
+const stylisticConfig = stylistic.configs['recommended-flat'];
+stylisticConfig.ignores ??= [];
+stylisticConfig.ignores.push('**/*.json');
+stylisticConfig.rules ??= {};
+stylisticConfig.rules['@stylistic/no-extra-parens'] = 'warn';
 
 export default config(
   ...eslintConfig,
@@ -47,4 +47,4 @@ export default config(
       '@stylistic/semi': ['error', 'always'],
     },
   },
-)
+);
