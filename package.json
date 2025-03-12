@@ -36,7 +36,7 @@
     "clean": "packemon clean",
     "clean-build": "npm run clean && npm run build",
     "coverage": "npm run test -- --experimental-test-coverage",
-    "format": "prettier --write",
+    "format": "prettier --write --cache",
     "lint": "eslint --cache --fix .",
     "eslint-inspector": "eslint --inspect-config",
     "pack": "packemon pack --addExports --addFiles --declaration --loadConfigs && npm run validate",
