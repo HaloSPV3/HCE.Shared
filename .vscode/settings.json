@@ -82,8 +82,6 @@
 		"typescript",
 		"typescriptreact"
 	],
-	"typescript.tsserver.experimental.enableProjectDiagnostics": true,
-	"typescript.tsserver.web.projectWideIntellisense.enabled": true,
 	"git.allowNoVerifyCommit": true,
 	"markiscodecoverage.enableDecorations": true,
 	"sarif-viewer.connectToGithubCodeScanning": "off",
