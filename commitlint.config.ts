@@ -1,0 +1,66 @@
+import type { RuleConfigCondition, RuleConfigSeverity, UserConfig } from '@commitlint/types'
+import commitlintConfig from './src/commitlintConfig.js'
+
+const scopes = {
+  'commitlint':
+    'Affects "src/commitlintConfig.ts", its tests, the repo\'s commitlint config, or anything else related to commitlint.',
+  'deps-dev':
+    'Affects dependencies required in the dev environment or during build time.',
+  'deps':
+    'Affects dependencies required at runtime.',
+  'dotnet.helpers':
+    'Affects "src/dotnet/helpers.ts" or its tests.',
+  'dotnet.END':
+    'Affects "dotnet/ExecNupkgDeterministicator.targets".',
+  'dotnet.GHNRI':
+    'Affects "src/dotnet/GithubNugetRegistryInfo.ts" or its tests.',
+  'dotnet.GLNRI':
+    'Affects "src/dotnet/GitlabNugetRegistryInfo.ts" or its tests.',
+  'dotnet.INVAP':
+    'Affects "src/dotnet/IsNextVersionAlreadyPublish.cli.ts" or its tests.',
+  'dotnet.MSBP':
+    'Affects "src/dotnet/MSBuildProject.ts" or its tests (including "tests/dotnet/MSBuildProject.projects.ts").',
+  'dotnet.MSBPP':
+    'Affects "src/dotnet/MSBuildProjectProperties.ts" or its tests.',
+  'dotnet.NPP':
+    'Affects "src/dotnet/NugetProjectProperties.ts" or its tests.',
+  'dotnet.NRI':
+    'Affects "src/dotnet/RegistryInfo.ts" or its tests.',
+  'dotnet.samples.DN':
+    'Affects the HCE.Shared.DeterministicNupkg sample project.',
+  'dotnet.samples.SAP':
+    'Affects the SignAfterPack sample project.',
+  'dotnet.samples':
+    'Affects multiple sample projects. If necessary, add a new scope for a new sample project!',
+  'dotnet.SAP':
+    'Affects "dotnet/SignAfterPack.targets" or its tests.',
+  'dotnet':
+    'Affects files in "dotnet/" or "src/dotnet/" not included in other scopes -OR- affects our generic GitHub reusable workflows provided for assisting dotnet CI.',
+  'packemon':
+    'Affects Packemon\'s configurations: "package.json#packemon", "packemon.config.ts"',
+  'utils.execAsync':
+    'Affects "src/utils/execAsync.ts" or its tests.',
+  'utils.miscTypes':
+    'Affects "src/utils/miscTypes.ts" or its tests.',
+  'utils.reflection':
+    'Affects "src/utils/reflection.ts" or its tests.',
+  'utils':
+    'Affects "src/utils/*" or its tests.',
+  'vscode':
+    'Affects ".vscode/".',
+} as const
+
+const config: UserConfig = {
+  ...commitlintConfig satisfies UserConfig,
+  // get and add all commit scopes defined in ./.vscode/settings.json for extension 'gitCommitMessageEditor'
+  rules: {
+    ...commitlintConfig.rules,
+    'scope-enum': [
+      2 as RuleConfigSeverity.Error,
+      'always' as RuleConfigCondition,
+      Object.keys(scopes) satisfies string[],
+    ],
+  },
+}
+
+export default config
