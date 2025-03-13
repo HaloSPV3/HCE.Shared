@@ -30,10 +30,7 @@ export default config(
   {
     languageOptions: {
       parserOptions: {
-        projectService: {
-          allowDefaultProject: ['./*.js'],
-          loadTypeScriptPlugins: true,
-        },
+        projectService: { allowDefaultProject: ['./*.js'] },
       },
     },
     files: [
