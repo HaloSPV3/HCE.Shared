@@ -11,7 +11,7 @@ const eslintConfig = await tsImport('./src/eslintConfig.ts', join(import.meta.di
   // eslint-disable-next-line @stylistic/no-extra-parens
   .then((/** @type {FlatConfigArray} */module) => 'default' in module ? /** @type {FlatConfigArray} */(module.default) : module);
 
-const stylisticConfig = stylistic.configs['recommended-flat'];
+const stylisticConfig = stylistic.configs.recommended;
 stylisticConfig.ignores ??= [];
 stylisticConfig.ignores.push('**/*.json');
 stylisticConfig.rules ??= {};
