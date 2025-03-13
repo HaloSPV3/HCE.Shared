@@ -58,7 +58,6 @@
       ]
     }
   ],
-  "prettier.configPath": "prettier.config.js",
   "typescript.implementationsCodeLens.enabled": true,
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "yaml.format.singleQuote": true,
