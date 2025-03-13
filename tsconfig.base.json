@@ -27,6 +27,7 @@
   "compilerOptions": {
     "composite": true,
     "declarationMap": true,
+    "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedDeclarations": true,
     "isolatedModules": true,
