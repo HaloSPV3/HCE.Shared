@@ -1,91 +1,91 @@
 {
-	"[json]": {
-		"files.insertFinalNewline": true
-	},
-	"[jsonc]": {
-		"files.insertFinalNewline": true
-	},
-	"auto-close-tag.disableOnLanguage": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact"
-	],
-	"cSpell.words": [
-		"arktype",
-		"conventionalcommits",
-		"determinize",
-		"determinized",
-		"GHNRI",
-		"GHPR",
-		"GLNRI",
-		"globbed",
-		"GLPR",
-		"halospv3",
-		"Kuinox",
-		"MSBPP",
-		"nameof",
-		"packemon",
-		"polyrepo",
-		"tseslint",
-		"tsout"
-	],
-	"editor.quickSuggestions": {
-		"strings": "on"
-	},
-	"files.readonlyInclude": {
-		"_tsout/**": true,
-		"node_modules/**": true,
-		"cjs/**": true,
-		"mjs/**": true
-	},
-	"nodejs-testing.include": [
-		"./",
-		"./tests/",
-		"./tests/dotnet/",
-		"./tests/package.test.ts"
-	],
-	"nodejs-testing.extensions": [
-		{
-			"extensions": [
-				"mts",
-				"cts",
-				"ts"
-			],
-			"parameters": [
-				"--import",
-				"tsx"
-			]
-		}
-	],
-	"prettier.configPath": "prettier.config.js",
-	"typescript.implementationsCodeLens.enabled": true,
-	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"yaml.format.singleQuote": true,
-	"eslint.probe": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact",
-		"html",
-		"vue",
-		"markdown",
-		"json",
-		"jsonc",
-		"json5"
-	],
-	"eslint.useFlatConfig": true,
-	"eslint.useESLintClass": true,
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"json",
-		"jsonc",
-		"json5",
-		"typescript",
-		"typescriptreact"
-	],
-	"git.allowNoVerifyCommit": true,
-	"markiscodecoverage.enableDecorations": true,
-	"sarif-viewer.connectToGithubCodeScanning": "off"
+  "[json]": {
+    "files.insertFinalNewline": true
+  },
+  "[jsonc]": {
+    "files.insertFinalNewline": true
+  },
+  "auto-close-tag.disableOnLanguage": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "cSpell.words": [
+    "arktype",
+    "conventionalcommits",
+    "determinize",
+    "determinized",
+    "GHNRI",
+    "GHPR",
+    "GLNRI",
+    "globbed",
+    "GLPR",
+    "halospv3",
+    "Kuinox",
+    "MSBPP",
+    "nameof",
+    "packemon",
+    "polyrepo",
+    "tseslint",
+    "tsout"
+  ],
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "files.readonlyInclude": {
+    "_tsout/**": true,
+    "node_modules/**": true,
+    "cjs/**": true,
+    "mjs/**": true
+  },
+  "nodejs-testing.include": [
+    "./",
+    "./tests/",
+    "./tests/dotnet/",
+    "./tests/package.test.ts"
+  ],
+  "nodejs-testing.extensions": [
+    {
+      "extensions": [
+        "mts",
+        "cts",
+        "ts"
+      ],
+      "parameters": [
+        "--import",
+        "tsx"
+      ]
+    }
+  ],
+  "prettier.configPath": "prettier.config.js",
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "yaml.format.singleQuote": true,
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown",
+    "json",
+    "jsonc",
+    "json5"
+  ],
+  "eslint.useFlatConfig": true,
+  "eslint.useESLintClass": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "json5",
+    "typescript",
+    "typescriptreact"
+  ],
+  "git.allowNoVerifyCommit": true,
+  "markiscodecoverage.enableDecorations": true,
+  "sarif-viewer.connectToGithubCodeScanning": "off"
 }
