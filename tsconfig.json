@@ -6,9 +6,7 @@
     "include": [
         "./*.cts",
         "./*.mts",
-        "./*.ts",
-        "src/**/*.ts",
-        "tests/**/*.ts"
+        "./*.ts"
     ],
     "references": [
         {
