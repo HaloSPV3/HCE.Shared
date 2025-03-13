@@ -4,11 +4,15 @@
     "config:recommended",
     ":preserveSemverRanges"
   ],
-  "baseBranches": [ "develop" ],
+  "baseBranches": [
+    "develop"
+  ],
   "semanticCommitType": "build",
   "packageRules": [
     {
-      "matchDepTypes": [ "devDependencies" ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
       "automerge": true
     }
   ]

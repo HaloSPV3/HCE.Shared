@@ -1,19 +1,19 @@
 {
-    "extends": "./tsconfig.base.json",
-    "compilerOptions": {
-        "outDir": "_tsout"
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "_tsout"
+  },
+  "include": [
+    "./*.cts",
+    "./*.mts",
+    "./*.ts"
+  ],
+  "references": [
+    {
+      "path": "./tests/tsconfig.json"
     },
-    "include": [
-        "./*.cts",
-        "./*.mts",
-        "./*.ts"
-    ],
-    "references": [
-        {
-            "path": "./tests/tsconfig.json"
-        },
-        {
-            "path": "./src/tsconfig.json"
-        }
-    ]
+    {
+      "path": "./src/tsconfig.json"
+    }
+  ]
 }

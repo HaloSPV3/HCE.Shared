@@ -1,9 +1,9 @@
 {
-    "extends": "./src/tsconfig.json",
-    "compilerOptions": {
-        "declarationDir": "./mjs/",
-        "emitDeclarationOnly": true,
-        "outDir": "./mjs/",
-        "rootDir": "./src/"
-    }
+  "extends": "./src/tsconfig.json",
+  "compilerOptions": {
+    "declarationDir": "./mjs/",
+    "emitDeclarationOnly": true,
+    "outDir": "./mjs/",
+    "rootDir": "./src/"
+  }
 }
