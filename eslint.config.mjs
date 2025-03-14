@@ -1,16 +1,13 @@
 import stylistic from '@stylistic/eslint-plugin';
 import stylisticTs from '@stylistic/eslint-plugin-ts';
 import md from '@eslint/markdown';
-import { join } from 'path';
-import { tsImport } from 'tsx/esm/api';
+import 'tsx';
 import { config } from 'typescript-eslint';
 
 /**
  * @typedef {typeof import('./src/eslintConfig.ts').default} FlatConfigArray
  * @type {FlatConfigArray} */
-const eslintConfig = await tsImport('./src/eslintConfig.ts', join(import.meta.dirname, 'src'))
-  // eslint-disable-next-line @stylistic/no-extra-parens
-  .then((/** @type {FlatConfigArray} */module) => 'default' in module ? /** @type {FlatConfigArray} */(module.default) : module);
+const eslintConfig = (await import('./src/eslintConfig.ts')).default;
 
 const stylisticConfig = stylistic.configs.recommended;
 stylisticConfig.ignores ??= [];
