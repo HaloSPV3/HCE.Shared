@@ -32,7 +32,7 @@ export default config(
   {
     languageOptions: {
       parserOptions: {
-        projectService: { allowDefaultProject: ['./*.js'] },
+        projectService: true,
       },
     },
     files: [
