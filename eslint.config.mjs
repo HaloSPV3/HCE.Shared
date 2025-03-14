@@ -1,5 +1,4 @@
 import stylistic from '@stylistic/eslint-plugin';
-import stylisticTs from '@stylistic/eslint-plugin-ts';
 import md from '@eslint/markdown';
 import 'tsx';
 import { config } from 'typescript-eslint';
@@ -19,13 +18,6 @@ export default config(
   ...eslintConfig,
   ...md.configs.recommended,
   stylisticConfig,
-  {
-    ...stylisticTs.configs.all,
-    rules: {
-      '@stylistic/ts/indent': 'off',
-      '@stylistic/ts/quotes': ['error', 'single'],
-    },
-  },
   {
     languageOptions: {
       parserOptions: {
