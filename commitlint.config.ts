@@ -1,17 +1,19 @@
-import type { RuleConfigCondition, RuleConfigSeverity, UserConfig } from '@commitlint/types'
-import commitlintConfig from './src/commitlintConfig.js'
+import type {
+  RuleConfigCondition,
+  RuleConfigSeverity,
+  UserConfig,
+} from '@commitlint/types';
+import commitlintConfig from './src/commitlintConfig.js';
 
+// e.g. { 'scope': 'description' }
 const scopes = {
-  'commitlint':
+  commitlint:
     'Affects "src/commitlintConfig.ts", its tests, the repo\'s commitlint config, or anything else related to commitlint.',
   'deps-dev':
     'Affects dependencies required in the dev environment or during build time.',
-  'deps':
-    'Affects dependencies required at runtime.',
-  'dotnet.helpers':
-    'Affects "src/dotnet/helpers.ts" or its tests.',
-  'dotnet.END':
-    'Affects "dotnet/ExecNupkgDeterministicator.targets".',
+  deps: 'Affects dependencies required at runtime.',
+  'dotnet.helpers': 'Affects "src/dotnet/helpers.ts" or its tests.',
+  'dotnet.END': 'Affects "dotnet/ExecNupkgDeterministicator.targets".',
   'dotnet.GHNRI':
     'Affects "src/dotnet/GithubNugetRegistryInfo.ts" or its tests.',
   'dotnet.GLNRI':
@@ -22,33 +24,24 @@ const scopes = {
     'Affects "src/dotnet/MSBuildProject.ts" or its tests (including "tests/dotnet/MSBuildProject.projects.ts").',
   'dotnet.MSBPP':
     'Affects "src/dotnet/MSBuildProjectProperties.ts" or its tests.',
-  'dotnet.NPP':
-    'Affects "src/dotnet/NugetProjectProperties.ts" or its tests.',
-  'dotnet.NRI':
-    'Affects "src/dotnet/RegistryInfo.ts" or its tests.',
+  'dotnet.NPP': 'Affects "src/dotnet/NugetProjectProperties.ts" or its tests.',
+  'dotnet.NRI': 'Affects "src/dotnet/RegistryInfo.ts" or its tests.',
   'dotnet.samples.DN':
     'Affects the HCE.Shared.DeterministicNupkg sample project.',
-  'dotnet.samples.SAP':
-    'Affects the SignAfterPack sample project.',
+  'dotnet.samples.SAP': 'Affects the SignAfterPack sample project.',
   'dotnet.samples':
     'Affects multiple sample projects. If necessary, add a new scope for a new sample project!',
-  'dotnet.SAP':
-    'Affects "dotnet/SignAfterPack.targets" or its tests.',
-  'dotnet':
+  'dotnet.SAP': 'Affects "dotnet/SignAfterPack.targets" or its tests.',
+  dotnet:
     'Affects files in "dotnet/" or "src/dotnet/" not included in other scopes -OR- affects our generic GitHub reusable workflows provided for assisting dotnet CI.',
-  'packemon':
+  packemon:
     'Affects Packemon\'s configurations: "package.json#packemon", "packemon.config.ts"',
-  'utils.execAsync':
-    'Affects "src/utils/execAsync.ts" or its tests.',
-  'utils.miscTypes':
-    'Affects "src/utils/miscTypes.ts" or its tests.',
-  'utils.reflection':
-    'Affects "src/utils/reflection.ts" or its tests.',
-  'utils':
-    'Affects "src/utils/*" or its tests.',
-  'vscode':
-    'Affects ".vscode/".',
-} as const
+  'utils.execAsync': 'Affects "src/utils/execAsync.ts" or its tests.',
+  'utils.miscTypes': 'Affects "src/utils/miscTypes.ts" or its tests.',
+  'utils.reflection': 'Affects "src/utils/reflection.ts" or its tests.',
+  utils: 'Affects "src/utils/*" or its tests.',
+  vscode: 'Affects ".vscode/".',
+} as const;
 
 const config: UserConfig = {
   ...commitlintConfig satisfies UserConfig,
@@ -61,6 +54,6 @@ const config: UserConfig = {
       Object.keys(scopes) satisfies string[],
     ],
   },
-}
+};
 
-export default config
+export default config;
