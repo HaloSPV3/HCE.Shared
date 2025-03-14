@@ -1,5 +1,5 @@
-import stylistic from '@stylistic/eslint-plugin';
 import md from '@eslint/markdown';
+import stylistic from '@stylistic/eslint-plugin';
 import 'tsx';
 import { config } from 'typescript-eslint';
 
