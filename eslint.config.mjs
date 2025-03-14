@@ -1,5 +1,6 @@
 import stylistic from '@stylistic/eslint-plugin';
 import stylisticTs from '@stylistic/eslint-plugin-ts';
+import md from '@eslint/markdown';
 import { join } from 'path';
 import { tsImport } from 'tsx/esm/api';
 import { config } from 'typescript-eslint';
@@ -19,6 +20,7 @@ stylisticConfig.rules['@stylistic/no-extra-parens'] = 'warn';
 
 export default config(
   ...eslintConfig,
+  ...md.configs.recommended,
   stylisticConfig,
   {
     ...stylisticTs.configs.all,
