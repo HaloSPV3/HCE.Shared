@@ -7,18 +7,10 @@
     "isolatedDeclarations": false
   },
   "include": [
-    "./.vscode/settings.json",
-    "./.vscode/settings.json.d.ts",
-    "./*.cjs",
-    "./*.js",
-    "./*.mjs"
-  ],
-  "references": [
-    {
-      "path": "./tests/tsconfig.json"
-    },
-    {
-      "path": "./src/tsconfig.json"
-    }
+    "*.cjs",
+    "*.js",
+    "*.mjs",
+    "src/eslintConfig.ts",
+    "src/index.ts"
   ]
 }
