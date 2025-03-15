@@ -1,11 +1,11 @@
 /** @see 'file://./../node_modules/@semantic-release/git/index.js' */
 declare module '@semantic-release/git' {
-  import type { Options as SemanticReleaseOptions } from 'semantic-release'
-  export type MicromatchGlob = string
+  import type { Options as SemanticReleaseOptions } from 'semantic-release';
+  export type MicromatchGlob = string;
   export interface AssetObject {
-    path: MicromatchGlob
+    path: MicromatchGlob;
   }
-  export type AssetEntry = AssetObject | MicromatchGlob
+  export type AssetEntry = AssetObject | MicromatchGlob;
   export interface Options {
     /**
      * Files to include in the release commit. Set to `false` to disable adding files to the release commit.
@@ -33,7 +33,7 @@ declare module '@semantic-release/git' {
      * // include all js and css files in the dist directory and its sub-directories excluding the minified version.
      * [['dist/**\/*.{js,css}', '!**\/*.min.*']]
      */
-    assets?: AssetEntry | AssetEntry[] | false
+    assets?: AssetEntry | AssetEntry[] | false;
     /**
      * The message for the release commit.
      * @default `chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}`
@@ -64,28 +64,27 @@ declare module '@semantic-release/git' {
      * > ...
      *
      */
-    message?: string
+    message?: string;
   }
 
   function verifyConditions(
     pluginConfig: Options,
-    context: {
+    context: VerifyConditionsContext & {
       options: {
-        prepare: unknown
-      }
-    }
-  ): void
+        prepare: unknown;
+      };
+    },
+  ): void;
   function prepare(
-    pluginConfig: Options,
     context: {
-      env: unknown
-      cwd: string
-      branch: { name: string }
-      options: SemanticReleaseOptions
-      lastRelease: unknown
-      nextRelease: { version: unknown, notes: unknown, gitTag: unknown }
-      logger: { log(_0: string, _1: unknown | number): void }
+      env: unknown;
+      cwd: string;
+      branch: { name: string };
+      options: SemanticReleaseOptions;
+      lastRelease: unknown;
+      nextRelease: { version: unknown; notes: unknown; gitTag: unknown };
+      logger: { log(_0: string, _1: unknown | number): void };
     }
-  ): Promise<void>
-  export { prepare, verifyConditions }
+  ): Promise<void>;
+  export { prepare, verifyConditions };
 }

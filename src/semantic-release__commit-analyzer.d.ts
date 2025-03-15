@@ -1,26 +1,26 @@
 declare module '@semantic-release/commit-analyzer' {
 
   interface RuleObject {
-    type?: string
-    scope?: string
-    release: string
+    type?: string;
+    scope?: string;
+    release: string;
   }
 
-  type AnyRecord = Record<keyof unknown, unknown>
+  type AnyRecord = Record<keyof unknown, unknown>;
 
   export interface CommitAnalyzerConfig {
-    preset?: string
-    config?: string
-    parserOpts?: AnyRecord
+    preset?: string;
+    config?: string;
+    parserOpts?: AnyRecord;
     /**
      * Can be a string only if the string is a path to a modules whose default export provides {@link RuleObject}[].
      * See https://github.com/semantic-release/commit-analyzer?tab=readme-ov-file#external-package--file
      */
-    releaseRules?: string | RuleObject[]
-    presetConfig?: AnyRecord
+    releaseRules?: string | RuleObject[];
+    presetConfig?: AnyRecord;
   }
 
-  export type Options = CommitAnalyzerConfig
+  export type Options = CommitAnalyzerConfig;
 
   /**
    * Determine the type of release to create based on a list of commits.
@@ -40,13 +40,14 @@ declare module '@semantic-release/commit-analyzer' {
    */
   export function analyzeCommits(
     pluginConfig: {
-      preset: string
-      config: string
-      releaseRules: string | AnyRecord[]
-      parserOpts: unknown
-    }, context: {
-      commits: unknown[]
-      cwd: string
-    }
-  ): Promise<string | null>
+      preset: string;
+      config: string;
+      releaseRules: string | AnyRecord[];
+      parserOpts: unknown;
+    },
+    context: {
+      commits: unknown[];
+      cwd: string;
+    },
+  ): Promise<string | null>;
 }
