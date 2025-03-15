@@ -7,13 +7,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: "recursive"
+          submodules: 'recursive'
           fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          cache: "npm"
+          cache: 'npm'
           node-version-file: package.json
           check-latest: true
       - run: npm i -g npm@latest

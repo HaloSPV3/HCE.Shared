@@ -16,11 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: "recursive"
+          submodules: 'recursive'
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          cache: "npm"
+          cache: 'npm'
           node-version-file: package.json # The Node.js version to use is derived from package.json's "engine.node" property.
           check-latest: true
 
@@ -29,9 +29,9 @@ jobs:
       - run: npm audit signatures
       - run: npm run pack
       - run: npm run check
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - run: npx semantic-release # make git tag, commit updated files, release to GitHub/GitLab.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

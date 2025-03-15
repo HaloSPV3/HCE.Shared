@@ -9,15 +9,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: 'recursive'
-        fetch-depth: 0
-    - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
 
-    - run: dotnet build src/SPV3.csproj -c Release -p:ContinuousIntegrationBuild=true
-      # ContinuousIntegrationBuild comes from dotnet/sourcelink. 
-      # Make sure Deterministic is also true!
-      # If you use this package's dotnet props/targets files, you're good to go!
-      # 
-      # Alternatively, add a PropertyGroup with the condition " '$(CI)' != '' "
+      - run:
+          dotnet build src/SPV3.csproj -c Release
+          -p:ContinuousIntegrationBuild=true
+        # ContinuousIntegrationBuild comes from dotnet/sourcelink.
+        # Make sure Deterministic is also true!
+        # If you use this package's dotnet props/targets files, you're good to go!
+        #
+        # Alternatively, add a PropertyGroup with the condition " '$(CI)' != '' "
