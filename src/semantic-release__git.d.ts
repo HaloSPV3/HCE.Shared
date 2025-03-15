@@ -1,7 +1,6 @@
-import type { GlobalConfig, PrepareContext, VerifyConditionsContext } from 'semantic-release';
-
 /** @see file://./../node_modules/@semantic-release/git/index.js */
 declare module '@semantic-release/git' {
+  import type { GlobalConfig, PrepareContext, VerifyConditionsContext } from 'semantic-release';
   export type MicromatchGlob = string;
   export interface AssetObject {
     path: MicromatchGlob;
