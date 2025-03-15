@@ -6,11 +6,11 @@ name: dotnet-release
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
     paths-ignore:
-    - ".github/**/*.*"
-    - "**/*.md"
-    - "**/*.txt"
+      - '.github/**/*.*'
+      - '**/*.md'
+      - '**/*.txt'
 
 jobs:
   ci:
@@ -24,27 +24,27 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-    ################
-    # SETUP
-    ################
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 # Required by GitVersion, Semantic Release
-        submodules: "recursive" # submodule fetch depth unknown
-    - uses: actions/setup-dotnet@v4
-    - uses: actions/setup-node@v4
-    - run: npm install -g npm@latest
-    - run: npm ci # Required by Semantic Release
+      ################
+      # SETUP
+      ################
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required by GitVersion, Semantic Release
+          submodules: 'recursive' # submodule fetch depth unknown
+      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-node@v4
+      - run: npm install -g npm@latest
+      - run: npm ci # Required by Semantic Release
 
-    ################
-    # RELEASE
-    # @semantic-release/exec should be configured to execute
-    # `dotnet publish`, `dotnet pack`, and `dotnet nuget push`
-    # You can use this package's semanticReleaseConfigDotnet exports to do so.
-    ################
-    # https://github.com/semantic-release/semantic-release
-    - name: Semantic Release
-      run: npx semantic-release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      ################
+      # RELEASE
+      # @semantic-release/exec should be configured to execute
+      # `dotnet publish`, `dotnet pack`, and `dotnet nuget push`
+      # You can use this package's semanticReleaseConfigDotnet exports to do so.
+      ################
+      # https://github.com/semantic-release/semantic-release
+      - name: Semantic Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}

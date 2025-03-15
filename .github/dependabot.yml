@@ -6,42 +6,42 @@
 version: 2
 enable-beta-ecosystems: true
 updates:
-  - package-ecosystem: "gitsubmodule"
-    directory: "/"
+  - package-ecosystem: 'gitsubmodule'
+    directory: '/'
     schedule:
-      interval: "daily"
-    target-branch: "develop"
+      interval: 'daily'
+    target-branch: 'develop'
     groups:
-      "Git SubModules":
+      'Git SubModules':
         patterns:
-          - "*"
+          - '*'
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "daily"
-    target-branch: "develop"
+      interval: 'daily'
+    target-branch: 'develop'
     groups:
-      "GitHub Actions Dependencies":
+      'GitHub Actions Dependencies':
         patterns:
-          - "*"
+          - '*'
 
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
-    target-branch: "develop"
+      interval: 'daily'
+    target-branch: 'develop'
     groups:
-      "NPM Dependencies":
+      'NPM Dependencies':
         patterns:
-          - "*"
+          - '*'
 
-  - package-ecosystem: "nuget"
-    directory: "/"
+  - package-ecosystem: 'nuget'
+    directory: '/'
     schedule:
-      interval: "daily"
-    target-branch: "develop"
+      interval: 'daily'
+    target-branch: 'develop'
     groups:
-      "NuGet Dependencies":
+      'NuGet Dependencies':
         patterns:
-          - "*"
+          - '*'

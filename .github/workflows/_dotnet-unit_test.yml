@@ -2,7 +2,7 @@
 on:
   workflow_call:
 env:
-  DOTNET_ROLL_FORWARD: "Major"
+  DOTNET_ROLL_FORWARD: 'Major'
 
 jobs:
   unit_test:
@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          cache: "npm"
+          cache: 'npm'
           check-latest: true
           node-version-file: package.json
       - run: npm i -g npm@latest
@@ -29,6 +29,6 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.x"
+          dotnet-version: '8.x'
 
       - run: dotnet test

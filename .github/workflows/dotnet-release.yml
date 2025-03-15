@@ -1,7 +1,7 @@
 # Test changes locally with https://github.com/nektos/act
 name: dotnet-release
 
-# TODO 
+# TODO
 # - Allow workflows to be driven by the project(s)
 
 on:
@@ -27,33 +27,33 @@ jobs:
       id-token: write # to enable use of OIDC for npm provenance
       packages: write # for pushing GitHub Nuget packages
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 # Required by GitVersion, Semantic Release
-        submodules: "recursive"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required by GitVersion, Semantic Release
+          submodules: 'recursive'
 
-    - uses: actions/setup-node@v4
-      with:
-        cache: "npm"
-        check-latest: true
-        node-version-file: package.json
-        node-version: lts/*
-    - run: npm i -g npm@latest
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          check-latest: true
+          node-version-file: package.json
+          node-version: lts/*
+      - run: npm i -g npm@latest
 
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: "8.x"
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
 
-    - name: NPM - Clean Install
-      run: npm ci # Required for Semantic Release
+      - name: NPM - Clean Install
+        run: npm ci # Required for Semantic Release
 
-    ################
-    # RELEASE
-    # `dotnet publish` must be executed by @semantic-release/exec
-    ################
-    # https://github.com/semantic-release/semantic-release
-    - name: Semantic Release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-      run: npx semantic-release
+      ################
+      # RELEASE
+      # `dotnet publish` must be executed by @semantic-release/exec
+      ################
+      # https://github.com/semantic-release/semantic-release
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+        run: npx semantic-release
