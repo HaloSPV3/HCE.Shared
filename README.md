@@ -40,7 +40,7 @@ objects are _not_ merged. You can...
 
 ```js
 // releaserc.config.js
-import hceSharedConfig from "@halospv3/hce.shared-config"
+import hceSharedConfig from '@halospv3/hce.shared-config';
 
 // modify it however you wish before the export statement!
 
@@ -50,8 +50,8 @@ export default hceSharedConfig;
 ```js
 // releaserc.config.js
 export default {
-  extends: ["@halospv3/hce.shared-config"]
-}
+  extends: ['@halospv3/hce.shared-config'],
+};
 ```
 
 ```json
@@ -66,12 +66,13 @@ export default {
 #### Dotnet Config
 
 > An extension of our base config.
+>
 > Exports a function with parameters for 'projects to pack' and 'projects to push (to nuget)'.
 > Although `@halospv3/hce.shared-config/semanticReleaseConfigDotnet` can be used
-  via `extends` and configured via the `PROJECTS_TO_PUBLISH` and
-  `PROJECTS_TO_PACK_AND_PUSH` environment variables, it is recommended to call
-  the function and pass it parameters so errors are caught before they reach
-  production.
+> via `extends` and configured via the `PROJECTS_TO_PUBLISH` and
+> `PROJECTS_TO_PACK_AND_PUSH` environment variables, it is recommended to call
+> the function and pass it parameters so errors are caught before they reach
+> production.
 >
 > Differences to the base config:
 >
@@ -89,7 +90,7 @@ For a basic "best-guess" config...
 ```ts
 // releaserc.config.js
 // TODO: getConfig was removed. Update instructions!
-import { getConfig } from "@halospv3/hce.shared-config/semanticReleaseConfigDotnet"
+import { getConfig } from '@halospv3/hce.shared-config/semanticReleaseConfigDotnet';
 
 /* Caveat: semantic-release will version and release all specified projects under the same Git tags and GitHub releases.
  * To version and release them separately, use [https://github.com/pmowrer/semantic-release-monorepo](semantic-release-monorepo).
@@ -103,8 +104,8 @@ import { getConfig } from "@halospv3/hce.shared-config/semanticReleaseConfigDotn
  * _regardless of compatibility and intended combinations_.
  */
 const projectsToPublish = [
-  "./Library/Library.csproj",
-  "./Sample/Sample.csproj"
+  './Library/Library.csproj',
+  './Sample/Sample.csproj',
 ];
 /*
  * `prepareCmd` will also contain `dotnet pack` and
@@ -112,10 +113,10 @@ const projectsToPublish = [
  * `publishCmd` will contain `dotnet nuget push` commands
  *  to push Library to Nuget.org and GitHub Package Registry.
  */
-const projectsToPackAndPush = ["./Library/Library.csproj"];
+const projectsToPackAndPush = ['./Library/Library.csproj'];
 
 // runs getConfig and exports its return value
-export default await getConfig(projectsToPublish, projectsToPackAndPush)
+export default await getConfig(projectsToPublish, projectsToPackAndPush);
 ```
 
 ###### `extends` key in a javascript config file
@@ -126,15 +127,15 @@ Your projects' paths must be assigned to environment variables. See [Dotnet Conf
 ```js
 // releaserc.config.js (if {"type": "module"} in package.json)
 export default {
-  extends: ["@halospv3/hce.shared-config"]
-}
+  extends: ['@halospv3/hce.shared-config'],
+};
 ```
 
 ```js
 // releaserc.config.js (if {"type": "commonjs"} in package.json)
 module.exports = {
-  extends: ["@halospv3/hce.shared-config"]
-}
+  extends: ['@halospv3/hce.shared-config'],
+};
 ```
 
 ###### `release` key in package.json
@@ -143,8 +144,8 @@ module.exports = {
 // package.json
 // `npm install --save-dev cross-env`
 {
-  "scripts":{
-    "release":"cross-env PROJECTS_TO_PUBLISH=\"./Library/Library.csproj;./Sample/Sample.csproj\" semantic-release"
+  "scripts": {
+    "release": "cross-env PROJECTS_TO_PUBLISH=\"./Library/Library.csproj;./Sample/Sample.csproj\" semantic-release"
   },
   "release": {
     "extends": ["@halospv3/hce.shared-config/semanticReleaseConfigDotnet"]
@@ -167,7 +168,8 @@ module.exports = {
 - [`@semantic-release/changelog`](https://github.com/semantic-release/changelog#options)
   - changelogFile (default: `'CHANGELOG.md'`)
 - [`@semantic-release/git`](https://github.com/semantic-release/git#options)
-  - assets (default: `['README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json']`)
+  - assets (default:
+    `['README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json']`)
 - `@semantic-release/exec`
   - prepareCmd
 - [`@semantic-release/github`](https://github.com/semantic-release/github#options)
@@ -217,10 +219,10 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 
 These may evaluate to the following:
 
-| Property     | Evaluated Value|
-| ------------ | -------------- |
-|`RepoRootDir` | `c:\Repos\HaloSPV3\HCE.Shared\` |
-|`HCESharedDir`| `c:\Repos\HaloSPV3\HCE.Shared\node_modules\@halospv3\hce.shared-config\` |
+| Property       | Evaluated Value                                                          |
+| -------------- | ------------------------------------------------------------------------ |
+| `RepoRootDir`  | `c:\Repos\HaloSPV3\HCE.Shared\`                                          |
+| `HCESharedDir` | `c:\Repos\HaloSPV3\HCE.Shared\node_modules\@halospv3\hce.shared-config\` |
 
 #### CI/CD-Only Properties
 
@@ -310,7 +312,7 @@ Add the following to `package.json`:
 
 ```json
 {
-  "private": true,
+  "private": true
 }
 ```
 
