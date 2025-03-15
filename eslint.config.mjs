@@ -5,34 +5,33 @@ import { config } from 'typescript-eslint';
 
 /**
  * @typedef {typeof import('./src/eslintConfig.ts').default} FlatConfigArray
+ * @typedef {import('@stylistic/eslint-plugin').RuleOptions} RuleOptions
  * @type {FlatConfigArray} */
-const eslintConfig = (await import('./src/eslintConfig.ts')).default;
-
-const stylisticConfig = stylistic.configs.recommended;
-stylisticConfig.ignores ??= [];
-stylisticConfig.ignores.push('**/*.json');
-stylisticConfig.rules ??= {};
-stylisticConfig.rules['@stylistic/no-extra-parens'] = 'warn';
+const hceSharedConfig = (await import('./src/eslintConfig.ts')).default;
 
 export default config(
-  ...eslintConfig,
-  ...md.configs.recommended,
-  stylisticConfig,
+  ...hceSharedConfig.filter((v) => v.name == undefined || v.name !== 'JSTS'),
+  md.configs.recommended,
   {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-      },
-    },
-    files: [
-      'src/**/*.ts',
-      'tests/**/*.ts',
-      '*.js',
-      '*.mjs',
-      'packemon.config.ts',
+    extends: [
+      hceSharedConfig.filter((v) => v.name === 'JSTS'),
+      stylistic.configs.customize({
+        quoteProps: 'as-needed',
+        semi: true,
+      }),
     ],
+
     rules: {
-      '@stylistic/semi': ['error', 'always'],
+      '@stylistic/semi': [
+        'error',
+        'always',
+        /** @type {Partial<RuleOptions['@stylistic/semi'][1]>} */ ({
+          omitLastInOneLineBlock: false,
+          omitLastInOneLineClassBody: false,
+        }),
+      ],
+      // broken. Try to use VSCode's TypeScript formatter.
+      '@stylistic/ts/indent': ['off'],
     },
   },
 );
