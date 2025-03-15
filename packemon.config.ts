@@ -1,8 +1,8 @@
-import type { TransformOptions as BabelOptions } from '@babel/core'
-import { writeFileSync } from 'node:fs'
+import type { TransformOptions as BabelOptions } from '@babel/core';
+import { writeFileSync } from 'node:fs';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import type { ConfigFile } from 'packemon'
+import type { ConfigFile } from 'packemon';
 
 export default {
   babelInput(config: BabelOptions) {
@@ -14,6 +14,6 @@ export default {
         2,
       ),
       'utf8',
-    )
+    );
   },
-} as ConfigFile
+} as ConfigFile;
