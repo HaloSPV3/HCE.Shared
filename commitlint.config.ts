@@ -3,7 +3,9 @@ import type {
   RuleConfigSeverity,
   UserConfig,
 } from '@commitlint/types';
-import commitlintConfig from './src/commitlintConfig.js';
+import 'tsx';
+
+const commitlintConfig = (await import('./src/commitlintConfig.ts')).default;
 
 // e.g. { 'scope': 'description' }
 const scopes = {
