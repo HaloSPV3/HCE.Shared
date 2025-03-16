@@ -15,18 +15,16 @@
  * When 'plugins' is set, only commit-analyzer is added if missing.
  */
 
-import { tsImport } from 'tsx/esm/api';
+import 'tsx';
 import { type } from 'arktype';
 import { ok } from 'node:assert/strict';
-import { join } from 'node:path';
 import { env } from 'node:process';
 import { inspect } from 'node:util';
 
 /**
  * @type {typeof import('./src/index.js').default}
  */
-const hceSharedConfig = await tsImport('./src/index.ts', join(import.meta.dirname, 'src'))
-  .then(module => 'default' in module ? module.default : module);
+const hceSharedConfig = (await import('./src/index.ts')).default;
 
 /**
  * {@link hceSharedConfig} customized for this project's release pipeline
