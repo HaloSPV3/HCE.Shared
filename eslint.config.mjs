@@ -30,8 +30,6 @@ export default config(
           omitLastInOneLineClassBody: false,
         }),
       ],
-      // broken. Try to use VSCode's TypeScript formatter.
-      '@stylistic/ts/indent': ['off'],
     },
   },
 );
