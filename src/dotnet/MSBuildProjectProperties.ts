@@ -1,7 +1,7 @@
-import { strictEqual } from 'node:assert/strict'
-import { existsSync } from 'node:fs'
-import { basename, isAbsolute, resolve } from 'node:path'
-import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
+import { strictEqual } from 'node:assert/strict';
+import { existsSync } from 'node:fs';
+import { basename, isAbsolute, resolve } from 'node:path';
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 
 /**
  * Known properties. Additional properties may be added upon request.
@@ -14,7 +14,7 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
  * - [Microsoft.NET.Sdk.Web](https://learn.microsoft.com/en-us/aspnet/core/razor-pages/web-sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json#properties)
  * - [Microsoft.NET.Sdk.Razor](https://learn.microsoft.com/en-us/aspnet/core/razor-pages/sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json)
  * - [Microsoft.NET.Sdk.Desktop](https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop)
-*/
+ */
 export class MSBuildProjectProperties {
   // #region static
   // #region static
@@ -26,10 +26,10 @@ export class MSBuildProjectProperties {
    */
   static GetFullPath(path: string) {
     if (!isAbsolute(path))
-      path = resolve(path)
+      path = resolve(path);
     if (!existsSync(path))
-      throw new Error(`${basename(path)} could not be found at "${path}"`)
-    return path
+      throw new Error(`${basename(path)} could not be found at "${path}"`);
+    return path;
   }
 
   /**
@@ -41,76 +41,95 @@ export class MSBuildProjectProperties {
    * @returns If found, the value of the `[string, string]` tuple found in {@link properties}. Else, `undefined`.
    * @remarks This method may remove elements from {@link properties}.
    */
-  protected static getAndForget(properties: CaseInsensitiveMap<string, string>, key: string): string | undefined {
-    const v: string | undefined = properties.get(key)
+  protected static getAndForget(
+    properties: CaseInsensitiveMap<string, string>,
+    key: string,
+  ): string | undefined {
+    const v: string | undefined = properties.get(key);
     if (v !== undefined)
-      properties.delete(key)
-    return v
+      properties.delete(key);
+    return v;
   }
 
   // #endregion static
   // #endregion static
 
   // #region private
-  private _msbuildProjectFullPath: string | undefined
-  private _assemblyName: string | undefined
-  private _description: string | undefined
-  private _outputPath: string | undefined
-  private _runtimeIdentifier: string | undefined
-  private _runtimeIdentifiers: string | undefined
-  private _targetFramework: string | undefined
-  private _targetFrameworks: string | undefined
-  private _version: string | undefined
-  private _versionPrefix: string | undefined
-  private _versionSuffix: string | undefined
+  private _msbuildProjectFullPath: string | undefined;
+  private _assemblyName: string | undefined;
+  private _description: string | undefined;
+  private _outputPath: string | undefined;
+  private _runtimeIdentifier: string | undefined;
+  private _runtimeIdentifiers: string | undefined;
+  private _targetFramework: string | undefined;
+  private _targetFrameworks: string | undefined;
+  private _version: string | undefined;
+  private _versionPrefix: string | undefined;
+  private _versionSuffix: string | undefined;
   // #endregion private
 
-  constructor(msbuildProjectFullPath: string, properties: CaseInsensitiveMap<string, string>) {
+  constructor(
+    msbuildProjectFullPath: string,
+    properties: CaseInsensitiveMap<string, string>,
+  ) {
     // runtime type checks
-    strictEqual(typeof msbuildProjectFullPath, 'string', TypeError(`msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`))
-    strictEqual(properties instanceof CaseInsensitiveMap, true, `arg 'properties' should be instanceof ${CaseInsensitiveMap.name}`)
-    strictEqual([...properties.keys()].every((v): v is string => typeof v === 'string'), true, 'all keys in arg \'properties\' should be strings')
+    strictEqual(
+      typeof msbuildProjectFullPath,
+      'string',
+      TypeError(
+        `msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`,
+      ),
+    );
+    strictEqual(
+      properties instanceof CaseInsensitiveMap,
+      true,
+      `arg 'properties' should be instanceof ${CaseInsensitiveMap.name}`,
+    );
+    strictEqual(
+      [...properties.keys()].every((v): v is string => typeof v === 'string'),
+      true,
+      'all keys in arg \'properties\' should be strings',
+    );
     // filter out entries with undefined values
     properties.forEach((key, value) => {
       if (value === undefined)
-        properties.delete(key)
-    })
+        properties.delete(key);
+    });
 
-    this._msbuildProjectFullPath = MPP.GetFullPath(msbuildProjectFullPath)
-    this._assemblyName = MPP.getAndForget(properties, 'AssemblyName')
-    this._description = MPP.getAndForget(properties, 'Description')
-    this._outputPath = MPP.getAndForget(properties, 'OutputPath')
-    this._runtimeIdentifier = MPP.getAndForget(properties, 'RuntimeIdentifier')
-    this._runtimeIdentifiers = MPP.getAndForget(properties, 'RuntimeIdentifiers')
-    this._targetFramework = MPP.getAndForget(properties, 'TargetFramework')
-    this._targetFrameworks = MPP.getAndForget(properties, 'TargetFrameworks')
-    this._version = MPP.getAndForget(properties, 'Version')
-    this._versionPrefix = MPP.getAndForget(properties, 'VersionPrefix')
-    this._versionSuffix = MPP.getAndForget(properties, 'VersionSuffix')
+    this._msbuildProjectFullPath = MPP.GetFullPath(msbuildProjectFullPath);
+    this._assemblyName = MPP.getAndForget(properties, 'AssemblyName');
+    this._description = MPP.getAndForget(properties, 'Description');
+    this._outputPath = MPP.getAndForget(properties, 'OutputPath');
+    this._runtimeIdentifier = MPP.getAndForget(properties, 'RuntimeIdentifier');
+    this._runtimeIdentifiers = MPP.getAndForget(
+      properties,
+      'RuntimeIdentifiers',
+    );
+    this._targetFramework = MPP.getAndForget(properties, 'TargetFramework');
+    this._targetFrameworks = MPP.getAndForget(properties, 'TargetFrameworks');
+    this._version = MPP.getAndForget(properties, 'Version');
+    this._versionPrefix = MPP.getAndForget(properties, 'VersionPrefix');
+    this._versionSuffix = MPP.getAndForget(properties, 'VersionSuffix');
     // rest
     for (const key of properties.keys()) {
-      const value = MPP.getAndForget(properties, key)
+      const value = MPP.getAndForget(properties, key);
       if (value !== undefined) {
-        Object.defineProperty(
-          this,
-          key,
-          {
-            value: value,
-            writable: false,
-            enumerable: true,
-            configurable: true,
-          },
-        )
+        Object.defineProperty(this, key, {
+          value: value,
+          writable: false,
+          enumerable: true,
+          configurable: true,
+        });
       }
     }
   }
 
   get MSBuildProjectFullPath(): string {
-    return this._msbuildProjectFullPath ??= ''
+    return (this._msbuildProjectFullPath ??= '');
   }
 
   get AssemblyName(): string {
-    return this._assemblyName ??= ''
+    return (this._assemblyName ??= '');
   }
 
   /**
@@ -118,16 +137,16 @@ export class MSBuildProjectProperties {
    * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
    */
   get Description(): string {
-    return this._description ??= ''
+    return (this._description ??= '');
   }
 
   get OutputPath(): string {
-    return this._outputPath ??= ''
+    return (this._outputPath ??= '');
   }
 
   /** Set Version -OR- VersionPrefix. */
   get Version(): string {
-    return this._version ??= ''
+    return (this._version ??= '');
   }
 
   /**
@@ -135,7 +154,7 @@ export class MSBuildProjectProperties {
    * @remarks Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
    */
   get VersionPrefix(): string {
-    return this._versionPrefix ??= ''
+    return (this._versionPrefix ??= '');
   }
 
   /**
@@ -150,7 +169,7 @@ export class MSBuildProjectProperties {
    * @remarks Setting {@link PackageVersion} overwrites {@link VersionSuffix}
    */
   get VersionSuffix(): string {
-    return this._versionSuffix ??= ''
+    return (this._versionSuffix ??= '');
   }
 
   /**
@@ -160,7 +179,7 @@ export class MSBuildProjectProperties {
    * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
    */
   get TargetFramework(): string {
-    return this._targetFramework ??= ''
+    return (this._targetFramework ??= '');
   }
 
   /**
@@ -170,7 +189,7 @@ export class MSBuildProjectProperties {
    * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
    */
   get TargetFrameworks(): string {
-    return this._targetFrameworks ??= ''
+    return (this._targetFrameworks ??= '');
   }
 
   /**
@@ -182,7 +201,7 @@ export class MSBuildProjectProperties {
    * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
    */
   get RuntimeIdentifier(): string {
-    return this._runtimeIdentifier ??= ''
+    return (this._runtimeIdentifier ??= '');
   }
 
   /**
@@ -196,8 +215,8 @@ export class MSBuildProjectProperties {
    * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
    */
   get RuntimeIdentifiers(): string {
-    return this._runtimeIdentifiers ??= ''
+    return (this._runtimeIdentifiers ??= '');
   }
 }
 
-const MPP = MSBuildProjectProperties
+const MPP = MSBuildProjectProperties;

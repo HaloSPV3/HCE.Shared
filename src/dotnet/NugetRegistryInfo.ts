@@ -1,25 +1,25 @@
-import { type } from 'arktype'
-import { detectFile, detectFileSync } from 'chardet'
-import { configDotenv } from 'dotenv'
-import { ok } from 'node:assert/strict'
-import { existsSync, writeFileSync } from 'node:fs'
-import { writeFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import node_path from 'node:path'
-import { cwd, env } from 'node:process'
-import { isNativeError } from 'node:util/types'
-import { getEnvVarValue } from '../envUtils.js'
-import { execAsync } from '../utils/execAsync.js'
-import { MSBuildProject } from './MSBuildProject.js'
+import { type } from 'arktype';
+import { detectFile, detectFileSync } from 'chardet';
+import { configDotenv } from 'dotenv';
+import { ok } from 'node:assert/strict';
+import { existsSync, writeFileSync } from 'node:fs';
+import { writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import node_path from 'node:path';
+import { cwd, env } from 'node:process';
+import { isNativeError } from 'node:util/types';
+import { getEnvVarValue } from '../envUtils.js';
+import { execAsync } from '../utils/execAsync.js';
+import { MSBuildProject } from './MSBuildProject.js';
 
 /* JSDoc Types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { NugetProjectProperties } from './NugetProjectProperties.js'
-import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet.js'
+import type { NugetProjectProperties } from './NugetProjectProperties.js';
+import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-const tmpDirNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
-const defaultNugetSource = 'https://api.nuget.org/v3/index.json'
+const tmpDirNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies');
+const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
 
 /**
  * Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
@@ -27,23 +27,23 @@ const defaultNugetSource = 'https://api.nuget.org/v3/index.json'
  */
 export async function getGithubOutput() {
   if (env.GITHUB_OUTPUT === undefined || !existsSync(env.GITHUB_OUTPUT)) {
-    const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT')
+    const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
     if (!existsSync(githubOutputPath))
-      await writeFile(githubOutputPath, '')
-    env.GITHUB_OUTPUT = githubOutputPath
+      await writeFile(githubOutputPath, '');
+    env['GITHUB_OUTPUT'] = githubOutputPath;
   }
 
-  const encoding = await detectFile(env.GITHUB_OUTPUT)
+  const encoding = await detectFile(env['GITHUB_OUTPUT']);
   const envOutput = configDotenv({
-    path: env.GITHUB_OUTPUT,
+    path: env['GITHUB_OUTPUT'],
     override: true,
     encoding: encoding ?? undefined,
     processEnv: {},
-  })
+  });
 
   if (isNativeError(envOutput.error))
-    throw envOutput.error
-  return envOutput.parsed
+    throw envOutput.error;
+  return envOutput.parsed;
 }
 
 /**
@@ -52,23 +52,23 @@ export async function getGithubOutput() {
  */
 export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed'] {
   if (env.GITHUB_OUTPUT === undefined || !existsSync(env.GITHUB_OUTPUT)) {
-    const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT')
+    const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
     if (!existsSync(githubOutputPath))
-      writeFileSync(githubOutputPath, '')
-    env.GITHUB_OUTPUT = githubOutputPath
+      writeFileSync(githubOutputPath, '');
+    env.GITHUB_OUTPUT = githubOutputPath;
   }
 
-  const encoding = detectFileSync(env.GITHUB_OUTPUT)
+  const encoding = detectFileSync(env['GITHUB_OUTPUT']);
   const envOutput = configDotenv({
-    path: env.GITHUB_OUTPUT,
+    path: env['GITHUB_OUTPUT'],
     override: true,
     encoding: encoding ?? undefined,
     processEnv: {},
-  })
+  });
 
   if (isNativeError(envOutput.error))
-    throw envOutput.error
-  return envOutput.parsed
+    throw envOutput.error;
+  return envOutput.parsed;
 }
 
 /**
@@ -82,29 +82,31 @@ export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed']
 function getDummiesDir(project?: MSBuildProject): string {
   return project !== undefined
     ? node_path.join(tmpDirNamespace, project.Properties.PackageId, node_path.sep)
-    : node_path.join(tmpDirNamespace, node_path.sep)
+    : node_path.join(tmpDirNamespace, node_path.sep);
 }
 
 export class NugetRegistryInfo {
-  private _canPushPackagesToUrl: Promise<true> | undefined = undefined
-  private readonly _project: MSBuildProject
-  private readonly _resolvedEnvVariable: string
-  private readonly _url: string
+  private _canPushPackagesToUrl: Promise<true> | undefined = undefined;
+  private readonly _project: MSBuildProject;
+  private readonly _resolvedEnvVariable: string;
+  private readonly _url: string;
 
-  public static readonly DefaultTokenEnvVars: readonly ['NUGET_TOKEN'] = Object.freeze(
-    ['NUGET_TOKEN'] as const,
-  )
+  public static readonly DefaultTokenEnvVars: readonly ['NUGET_TOKEN']
+    = Object.freeze(['NUGET_TOKEN'] as const);
 
   private static _parseStdoutForNupkgs(stdout: string): string[] {
     return stdout
       .replace('\r', '')
       .split('\n')
-      .filter(line => line.endsWith(`.nupkg'.`) || line.endsWith(`.snupkg'.`))
+      .filter(
+        line => line.endsWith('.nupkg\'.') || line.endsWith('.snupkg\'.'),
+      )
       // remove everything up to and including the first apostrophe.
       // Pray no cultures add another apostrophe before the path.
       .map(line => line.replace(/^[^']+'/, ''))
       // trim the apostrophe and period from the end of the string.
-      .map(line => line.replace(`'.`, ''))
+      .map(line => line.replace('\'.', ''))
+    ;
   }
 
   /**
@@ -122,10 +124,13 @@ export class NugetRegistryInfo {
    * `${hostname}_${pathname.replace('/', '_')}`.
    */
   static GetNameForURL(url: string) {
-    const _url = new URL(url)
+    const _url = new URL(url);
     if (_url.pathname.endsWith('/index.json'))
-      _url.pathname = _url.pathname.substring(0, _url.pathname.length - '/index.json'.length)
-    return `${_url.hostname}${_url.pathname}`.replaceAll('/', '_')
+      _url.pathname = _url.pathname.substring(
+        0,
+        _url.pathname.length - '/index.json'.length,
+      );
+    return `${_url.hostname}${_url.pathname}`.replaceAll('/', '_');
   }
 
   /**
@@ -161,14 +166,16 @@ export class NugetRegistryInfo {
   constructor(opts: typeof NRIOpts['inferIn']) {
     // note: you can reassign `opts` only when typeof `inferOut` is assignable
     // to typeof `inferIn`.
-    const validOpts = NRIOpts.from(opts)
-    this._project = validOpts.project
+    const validOpts = NRIOpts.from(opts);
+    this._project = validOpts.project;
     /**
      * May throw! Assign key of the first key-value pair to
      * {@link resolvedEnvVariable}
      */
-    this._resolvedEnvVariable = _GetTokenEnvVariables(validOpts.tokenEnvVars)[0][0]
-    this._url = validOpts.url
+    this._resolvedEnvVariable = _GetTokenEnvVariables(
+      validOpts.tokenEnvVars,
+    )[0][0];
+    this._url = validOpts.url;
 
     /**
      * Get the environment variables as key-value pairs.
@@ -180,23 +187,29 @@ export class NugetRegistryInfo {
      */
     function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): readonly [string, string][] {
       const definedTokens = Object.freeze(
-        tokenEnvVars.map(
-          // key-value tuple
-          key => [key, getEnvVarValue(key)] as const,
-        ).filter(
-          (pair: readonly [string, string | undefined]): pair is [string, string] =>
-            pair[1] !== undefined,
-        ),
-      )
+        tokenEnvVars
+          .map(
+            /* key-value tuple */ key => [key, getEnvVarValue(key)] as const,
+          )
+          .filter(
+            (
+              pair: readonly [string, string | undefined],
+            ): pair is [string, string] => pair[1] !== undefined,
+          ),
+      );
 
       if (definedTokens.length !== 0)
-        return definedTokens
+        return definedTokens;
 
-      throw new Error(`The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined.`)
+      throw new Error(
+        `The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined.`,
+      );
     }
   }
 
-  public get project(): MSBuildProject { return this._project }
+  public get project(): MSBuildProject {
+    return this._project;
+  }
 
   /**
    * This is not useful without it being executed as part of a Semantic Release
@@ -217,14 +230,14 @@ export class NugetRegistryInfo {
   // @ts-expect-error ts(6133): 'canPushPackagesToUrl' is declared but its value is never read.
   private get canPushPackagesToUrl(): Promise<true> {
     if (this._canPushPackagesToUrl !== undefined)
-      return this._canPushPackagesToUrl
+      return this._canPushPackagesToUrl;
 
-    const tokenValue = NRI._GetTokenValue(this.resolvedEnvVariable)
+    const tokenValue = NRI._GetTokenValue(this.resolvedEnvVariable);
 
     if (tokenValue.startsWith('github_pat_')) {
-      const errMsg = `The value of the token in ${this.resolvedEnvVariable} begins with 'github_pat_', indicating it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`
-      const err = new Error(errMsg)
-      return this._canPushPackagesToUrl = Promise.reject(err)
+      const errMsg = `The value of the token in ${this.resolvedEnvVariable} begins with 'github_pat_', indicating it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`;
+      const err = new Error(errMsg);
+      return this._canPushPackagesToUrl = Promise.reject(err);
     }
 
     return this._canPushPackagesToUrl = this.PackDummyPackage({})
@@ -234,9 +247,9 @@ export class NugetRegistryInfo {
         apiKey: getEnvVarValue(this.resolvedEnvVariable),
       }))
       .then<true>((execAsyncReturn) => {
-        ok(execAsyncReturn)
-        return true as const
-      })
+        ok(execAsyncReturn);
+        return true as const;
+      });
   }
 
   /**
@@ -245,8 +258,13 @@ export class NugetRegistryInfo {
    * @readonly
    * @type {string}
    */
-  get resolvedEnvVariable() { return this._resolvedEnvVariable }
-  get url() { return this._url }
+  get resolvedEnvVariable(): string {
+    return this._resolvedEnvVariable;
+  }
+
+  get url(): string {
+    return this._url;
+  }
 
   /**
    * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
@@ -255,16 +273,16 @@ export class NugetRegistryInfo {
    * @throws {Error} when none of the provided environment variables are defined.
    */
   private static _GetTokenValue(resolvedEnvVariable: string): string {
-    type.string.assert(resolvedEnvVariable)
+    type.string.assert(resolvedEnvVariable);
 
-    const tokenValue = getEnvVarValue(resolvedEnvVariable)
+    const tokenValue = getEnvVarValue(resolvedEnvVariable);
     if (tokenValue === undefined) {
       throw new Error(`\
 The environment variable ${resolvedEnvVariable} was specified \
 as the source of the token to push a NuGet package, \
-but the environment variable is empty or undefined.`)
+but the environment variable is empty or undefined.`);
     }
-    return tokenValue
+    return tokenValue;
   }
 
   // #region Pack
@@ -272,25 +290,27 @@ but the environment variable is empty or undefined.`)
   /**
    * The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
    */
-  static readonly PackPackagesOptionsType = Object.freeze(type({
-    artifactsPath: 'string',
-    configuration: '"Release" | "Debug"',
-    disableBuildServers: 'boolean',
-    force: 'boolean',
-    includeSource: 'boolean',
-    includeSymbols: 'boolean',
-    interactive: 'boolean',
-    noBuild: 'boolean',
-    noLogo: 'boolean',
-    noRestore: 'boolean',
-    output: 'string',
-    runtime: 'string',
-    serviceable: 'boolean',
-    terminalLogger: '"auto" | "on" | "off"',
-    useCurrentRuntime: 'boolean',
-    verbosity: '"quiet" | "minimal" | "normal" | "detailed" | "diagnostic"',
-    versionSuffix: 'string',
-  }).partial())
+  static readonly PackPackagesOptionsType = Object.freeze(
+    type({
+      artifactsPath: 'string',
+      configuration: '"Release" | "Debug"',
+      disableBuildServers: 'boolean',
+      force: 'boolean',
+      includeSource: 'boolean',
+      includeSymbols: 'boolean',
+      interactive: 'boolean',
+      noBuild: 'boolean',
+      noLogo: 'boolean',
+      noRestore: 'boolean',
+      output: 'string',
+      runtime: 'string',
+      serviceable: 'boolean',
+      terminalLogger: '"auto" | "on" | "off"',
+      useCurrentRuntime: 'boolean',
+      verbosity: '"quiet" | "minimal" | "normal" | "detailed" | "diagnostic"',
+      versionSuffix: 'string',
+    }).partial(),
+  );
 
   /**
    * Get a `dotnet pack` command line string, outputting the package(s) to a
@@ -310,15 +330,15 @@ but the environment variable is empty or undefined.`)
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): string {
-    const validOpts = NRI.PackPackagesOptionsType.from(opts)
-    type.boolean.assert(usePerSourceSubfolder)
-    type.boolean.assert(usePerPackageIdSubfolder)
+    const validOpts = NRI.PackPackagesOptionsType.from(opts);
+    type.boolean.assert(usePerSourceSubfolder);
+    type.boolean.assert(usePerPackageIdSubfolder);
 
-    validOpts.output ??= `${cwd()}/publish`
-    if (usePerSourceSubfolder === true)
-      validOpts.output = node_path.join(validOpts.output, NugetRegistryInfo.GetNameForURL(this.url), node_path.sep)
+    validOpts.output ??= `${cwd()}/publish`;
+    if (usePerSourceSubfolder)
+      validOpts.output = node_path.join(validOpts.output, NugetRegistryInfo.GetNameForURL(this.url), node_path.sep);
     if (usePerPackageIdSubfolder)
-      validOpts.output = node_path.join(validOpts.output, this._project.Properties.PackageId, node_path.sep)
+      validOpts.output = node_path.join(validOpts.output, this._project.Properties.PackageId, node_path.sep);
 
     const packCmdArr: string[] = [
       'dotnet',
@@ -326,41 +346,33 @@ but the environment variable is empty or undefined.`)
       `"${this._project.Properties.MSBuildProjectFullPath}"`,
       '-o',
       `"${validOpts.output}"`,
-    ]
+    ];
     if (validOpts.artifactsPath !== undefined)
-      packCmdArr.push('--artifactsPath', `"${validOpts.artifactsPath}"`)
+      packCmdArr.push('--artifactsPath', `"${validOpts.artifactsPath}"`);
     if (validOpts.configuration !== undefined)
-      packCmdArr.push('--configuration', validOpts.configuration)
+      packCmdArr.push('--configuration', validOpts.configuration);
     if (validOpts.disableBuildServers === true)
-      packCmdArr.push('--disable-build-servers')
-    if (validOpts.force === true)
-      packCmdArr.push('--force')
-    if (validOpts.includeSource === true)
-      packCmdArr.push('--include-source')
-    if (validOpts.includeSymbols === true)
-      packCmdArr.push('--include-symbols')
-    if (validOpts.interactive === true)
-      packCmdArr.push('--interactive')
-    if (validOpts.noBuild === true)
-      packCmdArr.push('--no-build')
-    if (validOpts.noLogo === true)
-      packCmdArr.push('--nologo')
-    if (validOpts.noRestore === true)
-      packCmdArr.push('--no-restore')
+      packCmdArr.push('--disable-build-servers');
+    if (validOpts.force === true) packCmdArr.push('--force');
+    if (validOpts.includeSource === true) packCmdArr.push('--include-source');
+    if (validOpts.includeSymbols === true) packCmdArr.push('--include-symbols');
+    if (validOpts.interactive === true) packCmdArr.push('--interactive');
+    if (validOpts.noBuild === true) packCmdArr.push('--no-build');
+    if (validOpts.noLogo === true) packCmdArr.push('--nologo');
+    if (validOpts.noRestore === true) packCmdArr.push('--no-restore');
     if (validOpts.runtime !== undefined)
-      packCmdArr.push('--runtime', validOpts.runtime)
-    if (validOpts.serviceable === true)
-      packCmdArr.push('--serviceable')
+      packCmdArr.push('--runtime', validOpts.runtime);
+    if (validOpts.serviceable === true) packCmdArr.push('--serviceable');
     if (validOpts.terminalLogger !== undefined)
-      packCmdArr.push('--tl', validOpts.terminalLogger)
+      packCmdArr.push('--tl', validOpts.terminalLogger);
     if (validOpts.useCurrentRuntime === true)
-      packCmdArr.push('--use-current-runtime')
+      packCmdArr.push('--use-current-runtime');
     if (validOpts.verbosity !== undefined)
-      packCmdArr.push('--verbosity', validOpts.verbosity)
+      packCmdArr.push('--verbosity', validOpts.verbosity);
     if (validOpts.versionSuffix !== undefined)
-      packCmdArr.push('--version-suffix', validOpts.versionSuffix)
+      packCmdArr.push('--version-suffix', validOpts.versionSuffix);
 
-    return packCmdArr.join(' ')
+    return packCmdArr.join(' ');
   }
 
   /**
@@ -397,8 +409,8 @@ but the environment variable is empty or undefined.`)
         usePerPackageIdSubfolder,
       ),
       true,
-    )
-    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
+    );
+    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout);
   }
 
   /**
@@ -418,10 +430,10 @@ but the environment variable is empty or undefined.`)
   public async PackDummyPackage(
     opts: typeof NRI.PackPackagesOptionsType.inferIn,
   ): Promise<string[]> {
-    const validOpts = NRI.PackPackagesOptionsType.from(opts)
+    const validOpts = NRI.PackPackagesOptionsType.from(opts);
 
-    validOpts.output = getDummiesDir(this._project)
-    const packCmd: string = this.GetPackCommand(validOpts, true)
+    validOpts.output = getDummiesDir(this._project);
+    const packCmd: string = this.GetPackCommand(validOpts, true);
     /** e.g.
      * ```txt
      *  Determining projects to restore...
@@ -431,8 +443,8 @@ but the environment variable is empty or undefined.`)
      *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
      * ```
      */
-    const packOutput = await execAsync(`${packCmd} -p:Version=0.0.1-DUMMY`, true)
-    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
+    const packOutput = await execAsync(`${packCmd} -p:Version=0.0.1-DUMMY`, true);
+    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout);
   }
 
   // #endregion Pack
@@ -447,21 +459,25 @@ but the environment variable is empty or undefined.`)
    * Specific to this API:
    * If you want to use this API's default root value (\`${cwd()}/publish`), assign an empty string.
    */
-  static readonly PushPackagesOptionsType = Object.freeze(type({
-    apiKey: 'string',
-    disableBuffering: 'boolean',
-    forceEnglishOutput: 'boolean',
-    interactive: 'boolean',
-    noServiceEndpoint: 'boolean',
-    noSymbols: 'boolean',
-    skipDuplicate: 'boolean',
-    source: 'string',
-    symbolApiKey: 'string',
-    symbolSource: 'string',
-    timeout: 'number',
-  }).partial().and({
-    root: 'string',
-  }))
+  static readonly PushPackagesOptionsType = Object.freeze(
+    type({
+      apiKey: 'string',
+      disableBuffering: 'boolean',
+      forceEnglishOutput: 'boolean',
+      interactive: 'boolean',
+      noServiceEndpoint: 'boolean',
+      noSymbols: 'boolean',
+      skipDuplicate: 'boolean',
+      source: 'string',
+      symbolApiKey: 'string',
+      symbolSource: 'string',
+      timeout: 'number',
+    })
+      .partial()
+      .and({
+        root: 'string',
+      }),
+  );
 
   /**
    * Create a `dotnet nuget push` command line from the given options and
@@ -482,52 +498,50 @@ but the environment variable is empty or undefined.`)
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): string {
-    const validOpts = NRI.PushPackagesOptionsType.from(opts)
-    type.boolean.assert(usePerSourceSubfolder)
-    type.boolean.assert(usePerPackageIdSubfolder)
+    const validOpts = NRI.PushPackagesOptionsType.from(opts);
+    type.boolean.assert(usePerSourceSubfolder);
+    type.boolean.assert(usePerPackageIdSubfolder);
 
-    validOpts.root ??= `${cwd()}/publish`
-    if (usePerSourceSubfolder === true)
-      validOpts.root = node_path.join(validOpts.root, NugetRegistryInfo.GetNameForURL(this.url), node_path.sep)
+    validOpts.root ??= `${cwd()}/publish`;
+    if (usePerSourceSubfolder)
+      validOpts.root = node_path.join(validOpts.root, NugetRegistryInfo.GetNameForURL(this.url), node_path.sep);
     if (usePerPackageIdSubfolder)
-      validOpts.root = node_path.join(validOpts.root, this._project.Properties.PackageId, node_path.sep)
+      validOpts.root = node_path.join(validOpts.root, this._project.Properties.PackageId, node_path.sep);
 
     const packCmdArr: string[] = [
       'dotnet',
       'nuget',
       'push',
       `"${validOpts.root}"`,
-    ]
+    ];
+
+    validOpts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable);
     /**
      * If apiKey is an empty string, defer to the dotnet CLI's NuGet client
      * ability to lookup API keys saved via `dotnet nuget add source` or NuGet config
      * files.
      */
-    if ((validOpts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable)) !== undefined
-      && validOpts.apiKey !== '')
-      packCmdArr.push('--api-key', `"${validOpts.apiKey}"`)
+    if (validOpts.apiKey !== '')
+      packCmdArr.push('--api-key', `"${validOpts.apiKey}"`);
     if (validOpts.disableBuffering === true)
-      packCmdArr.push('--disable-buffering')
+      packCmdArr.push('--disable-buffering');
     if (validOpts.forceEnglishOutput === true)
-      packCmdArr.push('--force-english-output')
-    if (validOpts.interactive === true)
-      packCmdArr.push('--interactive')
+      packCmdArr.push('--force-english-output');
+    if (validOpts.interactive === true) packCmdArr.push('--interactive');
     if (validOpts.noServiceEndpoint === true)
-      packCmdArr.push('--no-service-endpoint')
-    if (validOpts.noSymbols === true)
-      packCmdArr.push('--no-symbols')
-    if (validOpts.skipDuplicate === true)
-      packCmdArr.push('--skip-duplicate')
-    if ((validOpts.source ??= this.url) !== undefined)
-      packCmdArr.push('--source', validOpts.source)
+      packCmdArr.push('--no-service-endpoint');
+    if (validOpts.noSymbols === true) packCmdArr.push('--no-symbols');
+    if (validOpts.skipDuplicate === true) packCmdArr.push('--skip-duplicate');
+    validOpts.source ??= this.url;
+    packCmdArr.push('--source', validOpts.source);
     if (validOpts.symbolApiKey !== undefined)
-      packCmdArr.push('--symbol-api-key', validOpts.symbolApiKey)
+      packCmdArr.push('--symbol-api-key', validOpts.symbolApiKey);
     if (validOpts.symbolSource !== undefined)
-      packCmdArr.push('--symbol-source', validOpts.symbolSource)
+      packCmdArr.push('--symbol-source', validOpts.symbolSource);
     if (validOpts.timeout !== undefined)
-      packCmdArr.push('--timeout', validOpts.timeout.toString())
+      packCmdArr.push('--timeout', validOpts.timeout.toString());
 
-    return packCmdArr.join(' ')
+    return packCmdArr.join(' ');
   }
 
   /**
@@ -558,7 +572,7 @@ but the environment variable is empty or undefined.`)
         usePerPackageIdSubfolder,
       ),
       true,
-    )
+    );
   }
 
   /**
@@ -590,10 +604,12 @@ but the environment variable is empty or undefined.`)
    * @returns {string} a `dotnet nuget push` command to push a dummy package
    * (created by executing {@link PackDummyPackage}) to {@link url}
    */
-  GetPushDummyCommand(opts: typeof NRI.PushPackagesOptionsType.inferIn): string {
-    opts.root = getDummiesDir(this.project)
-    opts.skipDuplicate = true
-    return this.GetPushCommand(opts, true)
+  GetPushDummyCommand(
+    opts: typeof NRI.PushPackagesOptionsType.inferIn,
+  ): string {
+    opts.root = getDummiesDir(this.project);
+    opts.skipDuplicate = true;
+    return this.GetPushCommand(opts, true);
   }
 
   /**
@@ -606,9 +622,11 @@ but the environment variable is empty or undefined.`)
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
    */
-  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.inferIn): Promise<ReturnType<typeof execAsync>> {
-    const pushCmd: string = this.GetPushDummyCommand(opts)
-    return await execAsync(pushCmd, true)
+  private async _PushDummyPackages(
+    opts: typeof NRI.PushPackagesOptionsType.inferIn,
+  ): Promise<ReturnType<typeof execAsync>> {
+    const pushCmd: string = this.GetPushDummyCommand(opts);
+    return await execAsync(pushCmd, true);
   }
 
   // #endregion Push
@@ -630,9 +648,11 @@ but the environment variable is empty or undefined.`)
         ],
       }),
     },
-  }
+  };
 
-  private static readonly _ParseNugetSearchReturn = type('string.json.parse').to(this._NugetSearchReturnTypes.ExactMatch.v2)
+  private static readonly _ParseNugetSearchReturn = type(
+    'string.json.parse',
+  ).to(this._NugetSearchReturnTypes.ExactMatch.v2);
 
   /**
    * !WARNING: this method requires the Nuget Source to be configured via `dotnet nuget add source` or `dotnet nuget update source`. If your publish pipeline only pushes to one NuGet Source and you're especially lazy, you can assign the API token to NUGET_TOKEN.
@@ -646,21 +666,26 @@ but the environment variable is empty or undefined.`)
    * @todo utilize in custom plugin inserted at the beginning of `prepare`
    * @deprecated NOT IMPLEMENTED
    */
-  static async IsNextVersionAlreadyPublished(source: string, packageId: string, nextVersion: string): Promise<boolean> {
+  static async IsNextVersionAlreadyPublished(
+    source: string,
+    packageId: string,
+    nextVersion: string,
+  ): Promise<boolean> {
     if (nextVersion === '')
-      throw new Error('The value of nextVersion is empty')
-    return await execAsync(`dotnet package search --format JSON --exact-match --source ${source} --prerelease ${packageId}`, true)
+      throw new Error('The value of nextVersion is empty');
+    return await execAsync(
+      `dotnet package search --format JSON --exact-match --source ${source} --prerelease ${packageId}`,
+      true,
+    )
       .then(stdPair => stdPair.stdout)
       .then(json => this._ParseNugetSearchReturn(json))
-      .then((errsOrObj) => {
-        if (errsOrObj instanceof type.errors)
-          throw errsOrObj.throw()
-        return errsOrObj
-      })
+      .then(errsOrObj => errsOrObj instanceof type.errors ? errsOrObj.throw() : errsOrObj)
       .then(obj => obj.searchResult)
       .then(results => results[0].packages)
-      .then(pkgs => pkgs.find(p => p.version === type('string.semver').from(nextVersion)))
-      .then(pkg => pkg === undefined ? false : true)
+      .then(pkgs =>
+        pkgs.find(p => p.version === type('string.semver').from(nextVersion)),
+      )
+      .then(pkg => pkg !== undefined);
   }
 
   /**
@@ -683,9 +708,9 @@ but the environment variable is empty or undefined.`)
    */
   GetIsNextVersionAlreadyPublishedCommand(): string {
     // if GITHUB_OUTPUT unset or its file does not exist, create it. ''
-    getGithubOutputSync()
+    getGithubOutputSync();
     // The script will run
-    return `node ${node_path.join(import.meta.dirname, './IsNextVersionAlreadyPublished.cli.js')} --packageId ${this._project.Properties.PackageId} --url ${this.url}`
+    return `node ${node_path.join(import.meta.dirname, './IsNextVersionAlreadyPublished.cli.js')} --packageId ${this._project.Properties.PackageId} --url ${this.url}`;
   }
 
   /*
@@ -700,7 +725,7 @@ but the environment variable is empty or undefined.`)
 }
 
 // shorthand/alias for NugetRegistryInfo
-const NRI = NugetRegistryInfo
+const NRI = NugetRegistryInfo;
 
 /**
  * The base type for {@link NugetRegistryInfoOptions} and related types. Extend
@@ -713,9 +738,9 @@ export const NugetRegistryInfoOptionsBase = type({
    * one token is found. If none of the environment variables are defined,
    * {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
    */
-  project: type.instanceOf(MSBuildProject).or(
-    type.instanceOf(MSBuildProject).readonly(),
-  ),
+  project: type
+    .instanceOf(MSBuildProject)
+    .or(type.instanceOf(MSBuildProject).readonly()),
   /**
    * The environment variables whose values are tokens with permission to push a
    * package to the NuGet package registry.The array is iterated through until
@@ -725,8 +750,8 @@ export const NugetRegistryInfoOptionsBase = type({
   tokenEnvVars: type.string.array().readonly(),
   /** A NuGet package registry's API endpoint URL. */
   url: type.string,
-})
-const NRIOptsBase = NugetRegistryInfoOptionsBase
+});
+const NRIOptsBase = NugetRegistryInfoOptionsBase;
 
 /**
  * The type of the parameter for {@link NugetRegistryInfo}'s constructor.
@@ -737,10 +762,12 @@ export const NugetRegistryInfoOptions = NRIOptsBase.merge({
    * Defaults to {@link NugetRegistryInfo.DefaultTokenEnvVars}
    * @see NugetRegistryInfoOptionsBase.inferIn.tokenEnvVars
    */
-  tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(() => NugetRegistryInfo.DefaultTokenEnvVars),
+  tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(
+    () => NugetRegistryInfo.DefaultTokenEnvVars,
+  ),
   /**
    * A NuGet package registry's API endpoint URL.
    * @default 'https://api.nuget.org/v3/index.json' */
   url: NRIOptsBase.get('url').default(() => defaultNugetSource),
-})
-const NRIOpts = NugetRegistryInfoOptions
+});
+const NRIOpts = NugetRegistryInfoOptions;

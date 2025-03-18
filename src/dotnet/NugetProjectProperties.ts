@@ -1,8 +1,17 @@
-import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
-import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
-import { type } from 'arktype'
-import { tBooleanString, type BooleanString, tEmptyOrBooleanString, type EmptyOrBooleanString } from '../utils/miscTypes.js'
-import { filterForGetters, getOwnPropertyDescriptors, listOwnGetters } from '../utils/reflection.js'
+import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
+import { type } from 'arktype';
+import {
+  tBooleanString,
+  type BooleanString,
+  tEmptyOrBooleanString,
+  type EmptyOrBooleanString,
+} from '../utils/miscTypes.js';
+import {
+  filterForGetters,
+  getOwnPropertyDescriptors,
+  listOwnGetters,
+} from '../utils/reflection.js';
 
 /**
  * A readonly record of a .csproj or .fsproj with NuGet configuration properties in
@@ -15,43 +24,43 @@ import { filterForGetters, getOwnPropertyDescriptors, listOwnGetters } from '../
  */
 export class NugetProjectProperties extends MSBuildProjectProperties {
   // #region private
-  private _isPackable: BooleanString | undefined
-  private _suppressDependenciesWhenPacking: BooleanString | undefined
-  private _packageVersion: string | undefined
-  private _packageId: string | undefined
-  private _packageDescription: string | undefined
-  private _authors: string | undefined
-  private _copyright: string | undefined
-  private _packageRequireLicenseAcceptance: BooleanString | undefined
-  private _developmentDependency: EmptyOrBooleanString | undefined
-  private _packageLicenseExpression: string | undefined
-  private _packageLicenseFile: string | undefined
-  private _packageProjectUrl: string | undefined
-  private _packageIcon: string | undefined
-  private _packageReleaseNotes: string | undefined
-  private _packageReadmeFile: string | undefined
-  private _packageTags: string | undefined
-  private _packageOutputPath: string | undefined
-  private _includeSymbols: EmptyOrBooleanString | undefined
-  private _includeSource: EmptyOrBooleanString | undefined
-  private _packageType: string | undefined
-  private _isTool: EmptyOrBooleanString | undefined
-  private _repositoryUrl: string | undefined
-  private _repositoryType: '' | 'git' | 'tfs' | undefined
-  private _repositoryCommit: string | undefined
-  private _symbolPackageFormat: 'symbols.nupkg' | 'snupkg' | undefined
-  private _noPackageAnalysis: string | undefined
-  private _minClientVersion: string | undefined
-  private _includeBuiltOutput: BooleanString | undefined
-  private _includeContentInPack: BooleanString | undefined
-  private _buildOutputTargetFolder: string | undefined
-  private _contentTargetFolders: string | undefined
-  private _nuspecFile: string | undefined
-  private _nuspecBasePath: string | undefined
-  private _nuspecProperties: string | undefined
-  private _title: string | undefined
-  private _company: string | undefined
-  private _product: string | undefined
+  private _isPackable: BooleanString | undefined;
+  private _suppressDependenciesWhenPacking: BooleanString | undefined;
+  private _packageVersion: string | undefined;
+  private _packageId: string | undefined;
+  private _packageDescription: string | undefined;
+  private _authors: string | undefined;
+  private _copyright: string | undefined;
+  private _packageRequireLicenseAcceptance: BooleanString | undefined;
+  private _developmentDependency: EmptyOrBooleanString | undefined;
+  private _packageLicenseExpression: string | undefined;
+  private _packageLicenseFile: string | undefined;
+  private _packageProjectUrl: string | undefined;
+  private _packageIcon: string | undefined;
+  private _packageReleaseNotes: string | undefined;
+  private _packageReadmeFile: string | undefined;
+  private _packageTags: string | undefined;
+  private _packageOutputPath: string | undefined;
+  private _includeSymbols: EmptyOrBooleanString | undefined;
+  private _includeSource: EmptyOrBooleanString | undefined;
+  private _packageType: string | undefined;
+  private _isTool: EmptyOrBooleanString | undefined;
+  private _repositoryUrl: string | undefined;
+  private _repositoryType: '' | 'git' | 'tfs' | undefined;
+  private _repositoryCommit: string | undefined;
+  private _symbolPackageFormat: 'symbols.nupkg' | 'snupkg' | undefined;
+  private _noPackageAnalysis: string | undefined;
+  private _minClientVersion: string | undefined;
+  private _includeBuiltOutput: BooleanString | undefined;
+  private _includeContentInPack: BooleanString | undefined;
+  private _buildOutputTargetFolder: string | undefined;
+  private _contentTargetFolders: string | undefined;
+  private _nuspecFile: string | undefined;
+  private _nuspecBasePath: string | undefined;
+  private _nuspecProperties: string | undefined;
+  private _title: string | undefined;
+  private _company: string | undefined;
+  private _product: string | undefined;
   // #endregion private
 
   /**
@@ -59,7 +68,10 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @param msbuildProjectFullPath @inheritdoc {@link NugetProjectProperties.MSBuildProjectFullPath}
    * @param properties The dictionary returned by MSBuild's `-getProperty:propname,...` argument
    */
-  constructor(msbuildProjectFullPath: string, properties: CaseInsensitiveMap<string, string>) {
+  constructor(
+    msbuildProjectFullPath: string,
+    properties: CaseInsensitiveMap<string, string>,
+  ) {
     /* runtime type checks */
     // check msbuildProjectFullPath in super
     // strictEqual(typeof msbuildProjectFullPath, 'string', TypeError(`msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`))
@@ -71,78 +83,78 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * These are the names of getters, lowercased.
      */
     const keysToMoveOut = listOwnGetters(NPP)
-      .map(v => v.toLowerCase())
+      .map(v => v.toLowerCase());
     /** Entries to remove from {@link properties} and apply to `this` after calling `super` */
-    const consumables = new CaseInsensitiveMap<string, string>()
+    const consumables = new CaseInsensitiveMap<string, string>();
     // move property by key from `properties` to `consumables`. The types of keys and values in `properties` do not matter here.
     for (const key of keysToMoveOut) {
-      const value = NPP.getAndForget(properties, key)
+      const value = NPP.getAndForget(properties, key);
       if (value !== undefined)
-        consumables.set(key, value)
+        consumables.set(key, value);
     }
 
     // Pass the remainder to super
-    super(msbuildProjectFullPath, properties)
+    super(msbuildProjectFullPath, properties);
 
     /** filter out entries with undefined values; convert values to strings */
     consumables.forEach((key, value, map) => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (value === undefined)
-        map.delete(key)
+        map.delete(key);
       if (typeof value !== 'string')
-        consumables.set(key, String(value))
-    })
+        consumables.set(key, String(value));
+    });
 
-    const _getAndForget = (key: string) => NPP.getAndForget(consumables, key)
-    let data
-    this._authors = _getAndForget('Authors')
-    this._buildOutputTargetFolder = _getAndForget('BuildOutputTargetFolder')
-    this._company = _getAndForget('Company')
-    this._contentTargetFolders = _getAndForget('ContentTargetFolders')
-    this._copyright = _getAndForget('Copyright')
-    if (tEmptyOrBooleanString.allows(data = _getAndForget('DevelopmentDependency')))
-      this._developmentDependency = data
-    if (tBooleanString.allows(data = _getAndForget('IncludeBuiltOutput')))
-      this._includeBuiltOutput = data
-    if (tBooleanString.allows(data = _getAndForget('IncludeContentInPack')))
-      this._includeContentInPack = data
-    if (tEmptyOrBooleanString.allows(data = _getAndForget('IncludeSource')))
-      this._includeSource = data
-    if (tEmptyOrBooleanString.allows(data = _getAndForget('IncludeSymbols')))
-      this._includeSymbols = data
-    if (tBooleanString.allows(data = _getAndForget('IsPackable')))
-      this._isPackable = data
-    if (tEmptyOrBooleanString.allows(data = _getAndForget('IsTool')))
-      this._isTool = data
-    this._minClientVersion = _getAndForget('MinClientVersion')
-    this._noPackageAnalysis = _getAndForget('NoPackageAnalysis')
-    this._nuspecBasePath = _getAndForget('NuspecBasePath')
-    this._nuspecFile = _getAndForget('NuspecFile')
-    this._nuspecProperties = _getAndForget('NuspecProperties')
-    this._packageDescription = _getAndForget('PackageDescription')
-    this._packageIcon = _getAndForget('PackageIcon')
-    this._packageId = _getAndForget('PackageId')
-    this._packageLicenseExpression = _getAndForget('PackageLicenseExpression')
-    this._packageLicenseFile = _getAndForget('PackageLicenseFile')
-    this._packageOutputPath = _getAndForget('PackageOutputPath')
-    this._packageProjectUrl = _getAndForget('PackageProjectUrl')
-    this._packageReadmeFile = _getAndForget('PackageReadmeFile')
-    this._packageReleaseNotes = _getAndForget('PackageReleaseNotes')
-    if (tBooleanString.allows(data = _getAndForget('PackageRequireLicenseAcceptance')))
-      this._packageRequireLicenseAcceptance = data
-    this._packageTags = _getAndForget('PackageTags')
-    this._packageType = _getAndForget('PackageType')
-    this._packageVersion = _getAndForget('PackageVersion')
-    this._product = _getAndForget('Product')
-    this._repositoryCommit = _getAndForget('RepositoryCommit')
-    if (type('""|"git"|"tfs"').allows(data = _getAndForget('RepositoryType')))
-      this._repositoryType = data
-    this._repositoryUrl = _getAndForget('RepositoryUrl')
-    if (tBooleanString.allows(data = _getAndForget('SuppressDependenciesWhenPacking')))
-      this._suppressDependenciesWhenPacking = data
-    if (type('"symbols.nupkg" | "snupkg"').allows(data = _getAndForget('SymbolPackageFormat')))
-      this._symbolPackageFormat = data
-    this._title = _getAndForget('Title')
+    const _getAndForget = (key: string) => NPP.getAndForget(consumables, key);
+    let data;
+    this._authors = _getAndForget('Authors');
+    this._buildOutputTargetFolder = _getAndForget('BuildOutputTargetFolder');
+    this._company = _getAndForget('Company');
+    this._contentTargetFolders = _getAndForget('ContentTargetFolders');
+    this._copyright = _getAndForget('Copyright');
+    if (tEmptyOrBooleanString.allows((data = _getAndForget('DevelopmentDependency'))))
+      this._developmentDependency = data;
+    if (tBooleanString.allows((data = _getAndForget('IncludeBuiltOutput'))))
+      this._includeBuiltOutput = data;
+    if (tBooleanString.allows((data = _getAndForget('IncludeContentInPack'))))
+      this._includeContentInPack = data;
+    if (tEmptyOrBooleanString.allows((data = _getAndForget('IncludeSource'))))
+      this._includeSource = data;
+    if (tEmptyOrBooleanString.allows((data = _getAndForget('IncludeSymbols'))))
+      this._includeSymbols = data;
+    if (tBooleanString.allows((data = _getAndForget('IsPackable'))))
+      this._isPackable = data;
+    if (tEmptyOrBooleanString.allows((data = _getAndForget('IsTool'))))
+      this._isTool = data;
+    this._minClientVersion = _getAndForget('MinClientVersion');
+    this._noPackageAnalysis = _getAndForget('NoPackageAnalysis');
+    this._nuspecBasePath = _getAndForget('NuspecBasePath');
+    this._nuspecFile = _getAndForget('NuspecFile');
+    this._nuspecProperties = _getAndForget('NuspecProperties');
+    this._packageDescription = _getAndForget('PackageDescription');
+    this._packageIcon = _getAndForget('PackageIcon');
+    this._packageId = _getAndForget('PackageId');
+    this._packageLicenseExpression = _getAndForget('PackageLicenseExpression');
+    this._packageLicenseFile = _getAndForget('PackageLicenseFile');
+    this._packageOutputPath = _getAndForget('PackageOutputPath');
+    this._packageProjectUrl = _getAndForget('PackageProjectUrl');
+    this._packageReadmeFile = _getAndForget('PackageReadmeFile');
+    this._packageReleaseNotes = _getAndForget('PackageReleaseNotes');
+    if (tBooleanString.allows((data = _getAndForget('PackageRequireLicenseAcceptance'))))
+      this._packageRequireLicenseAcceptance = data;
+    this._packageTags = _getAndForget('PackageTags');
+    this._packageType = _getAndForget('PackageType');
+    this._packageVersion = _getAndForget('PackageVersion');
+    this._product = _getAndForget('Product');
+    this._repositoryCommit = _getAndForget('RepositoryCommit');
+    if (type('""|"git"|"tfs"').allows((data = _getAndForget('RepositoryType'))))
+      this._repositoryType = data;
+    this._repositoryUrl = _getAndForget('RepositoryUrl');
+    if (tBooleanString.allows((data = _getAndForget('SuppressDependenciesWhenPacking'))))
+      this._suppressDependenciesWhenPacking = data;
+    if (type('"symbols.nupkg" | "snupkg"').allows((data = _getAndForget('SymbolPackageFormat'))))
+      this._symbolPackageFormat = data;
+    this._title = _getAndForget('Title');
   }
 
   /**
@@ -151,7 +163,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default "true"
    */
   get IsPackable(): BooleanString {
-    return this._isPackable ??= 'true'
+    return (this._isPackable ??= 'true');
   }
 
   /**
@@ -159,7 +171,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default "false"
    */
   get SuppressDependenciesWhenPacking(): BooleanString {
-    return this._suppressDependenciesWhenPacking ??= 'false'
+    return (this._suppressDependenciesWhenPacking ??= 'false');
   }
 
   /**
@@ -170,7 +182,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue {@link Version}
    */
   get PackageVersion(): string {
-    return this._packageVersion ??= this.Version
+    return (this._packageVersion ??= this.Version);
   }
 
   /**
@@ -180,7 +192,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue {@link AssemblyName}
    */
   get PackageId(): string {
-    return this._packageId ??= this.AssemblyName
+    return (this._packageId ??= this.AssemblyName);
   }
 
   /**
@@ -188,7 +200,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue {@link Description}
    */
   get PackageDescription(): string {
-    return this._packageDescription ??= this.Description
+    return (this._packageDescription ??= this.Description);
   }
 
   /**
@@ -199,12 +211,12 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * If not specified, the default value is the {@link AssemblyName}.
    */
   get Authors(): string {
-    return this._authors ??= this.AssemblyName
+    return (this._authors ??= this.AssemblyName);
   }
 
   /** Copyright details for the package. */
   get Copyright(): string {
-    return this._copyright ??= ''
+    return (this._copyright ??= '');
   }
 
   /**
@@ -213,7 +225,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default "false"
    */
   get PackageRequireLicenseAcceptance(): BooleanString {
-    return this._packageRequireLicenseAcceptance ??= 'false'
+    return (this._packageRequireLicenseAcceptance ??= 'false');
   }
 
   /**
@@ -227,7 +239,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * PackageReference](https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference).
    */
   get DevelopmentDependency(): EmptyOrBooleanString {
-    return this._developmentDependency ??= ''
+    return (this._developmentDependency ??= '');
   }
 
   /**
@@ -236,7 +248,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * For more information, see [Packing a license expression or a license file](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-a-license-expression-or-a-license-file).
    */
   get PackageLicenseExpression(): string {
-    return this._packageLicenseExpression ??= ''
+    return (this._packageLicenseExpression ??= '');
   }
 
   /**
@@ -244,11 +256,11 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * license or a license that hasn't been assigned an SPDX identifier.
    */
   get PackageLicenseFile(): string {
-    return this._packageLicenseFile ??= ''
+    return (this._packageLicenseFile ??= '');
   }
 
   get PackageProjectUrl(): string {
-    return this._packageProjectUrl ??= ''
+    return (this._packageProjectUrl ??= '');
   }
 
   /**
@@ -260,12 +272,12 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * and [icon metadata](https://learn.microsoft.com/en-us/nuget/reference/nuspec#icon).
    */
   get PackageIcon(): string {
-    return this._packageIcon ??= ''
+    return (this._packageIcon ??= '');
   }
 
   /** Release notes for the package. */
   get PackageReleaseNotes(): string {
-    return this._packageReleaseNotes ??= ''
+    return (this._packageReleaseNotes ??= '');
   }
 
   /**
@@ -273,12 +285,12 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @remarks You need to explicitly pack the referenced readme file.
    */
   get PackageReadmeFile(): string {
-    return this._packageReadmeFile ??= ''
+    return (this._packageReadmeFile ??= '');
   }
 
   /** A semicolon-delimited list of tags that designates the package. */
   get PackageTags(): string {
-    return this._packageTags ??= ''
+    return (this._packageTags ??= '');
   }
 
   /**
@@ -286,7 +298,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * Default is `$(OutputPath)` ({@link This.OutputPath}).
    */
   get PackageOutputPath(): string {
-    return this._packageOutputPath ??= this.OutputPath
+    return (this._packageOutputPath ??= this.OutputPath);
   }
 
   /**
@@ -301,7 +313,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * creates a regular package and a symbols package.
    */
   get IncludeSymbols(): EmptyOrBooleanString {
-    return this._includeSymbols ??= ''
+    return (this._includeSymbols ??= '');
   }
 
   /**
@@ -312,14 +324,14 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * [IncludeSource](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesource).
    */
   get IncludeSource(): EmptyOrBooleanString {
-    return this._includeSource ??= ''
+    return (this._includeSource ??= '');
   }
 
   /**
    * @default ""
    */
   get PackageType(): string {
-    return this._packageType ??= ''
+    return (this._packageType ??= '');
   }
 
   /**
@@ -329,7 +341,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default ""
    */
   get IsTool(): EmptyOrBooleanString {
-    return this._isTool ??= ''
+    return (this._isTool ??= '');
   }
 
   /**
@@ -337,7 +349,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * _[https://github.com/NuGet/NuGet.Client.git](https://github.com/NuGet/NuGet.Client.git)_.
    */
   get RepositoryUrl(): string {
-    return this._repositoryUrl ??= ''
+    return (this._repositoryUrl ??= '');
   }
 
   /**
@@ -345,7 +357,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default "git"
    */
   get RepositoryType(): 'git' | 'tfs' | '' {
-    return this._repositoryType ??= ''
+    return (this._repositoryType ??= '');
   }
 
   /**
@@ -356,7 +368,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @requires targets: ["pack", "publish"] // "restore" will not work.
    */
   get RepositoryCommit(): string {
-    return this._repositoryCommit ??= ''
+    return (this._repositoryCommit ??= '');
   }
 
   /**
@@ -368,7 +380,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue "symbols.nupkg"
    */
   get SymbolPackageFormat(): 'symbols.nupkg' | 'snupkg' {
-    return this._symbolPackageFormat ??= 'symbols.nupkg'
+    return (this._symbolPackageFormat ??= 'symbols.nupkg');
   }
 
   /**
@@ -376,7 +388,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default ""
    */
   get NoPackageAnalysis(): string {
-    return this._noPackageAnalysis ??= ''
+    return (this._noPackageAnalysis ??= '');
   }
 
   /**
@@ -386,7 +398,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default ""
    */
   get MinClientVersion(): string {
-    return this._minClientVersion ??= ''
+    return (this._minClientVersion ??= '');
   }
 
   /**
@@ -398,7 +410,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default "true"
    */
   get IncludeBuildOutput(): BooleanString {
-    return this._includeBuiltOutput ??= 'true'
+    return (this._includeBuiltOutput ??= 'true');
   }
 
   /**
@@ -407,14 +419,14 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default "true"
    */
   get IncludeContentInPack(): BooleanString {
-    return this._includeContentInPack ??= 'true'
+    return (this._includeContentInPack ??= 'true');
   }
 
   /**
    * Specifies the folder where to place the output assemblies. The output assemblies (and other output files) are copied into their respective framework folders. For more information, see [Output assemblies](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#output-assemblies).
    */
   get BuildOutputTargetFolder(): string {
-    return this._buildOutputTargetFolder ??= ''
+    return (this._buildOutputTargetFolder ??= '');
   }
 
   /**
@@ -425,7 +437,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @default "content;contentFiles"
    */
   get ContentTargetFolders(): string {
-    return this._contentTargetFolders ??= 'content;contentFiles'
+    return (this._contentTargetFolders ??= 'content;contentFiles');
   }
 
   /**
@@ -435,7 +447,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
    */
   get NuspecFile(): string {
-    return this._nuspecFile ??= ''
+    return (this._nuspecFile ??= '');
   }
 
   /**
@@ -443,7 +455,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
    */
   get NuspecBasePath(): string {
-    return this._nuspecBasePath ??= ''
+    return (this._nuspecBasePath ??= '');
   }
 
   /**
@@ -451,7 +463,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
    */
   get NuspecProperties(): string {
-    return this._nuspecProperties ??= ''
+    return (this._nuspecProperties ??= '');
   }
 
   /**
@@ -459,7 +471,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * on nuget.org and the Package Manager in Visual Studio.
    */
   get Title(): string {
-    return this._title ??= this.PackageId
+    return (this._title ??= this.PackageId);
   }
 
   /**
@@ -467,7 +479,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * If not specified, the default value is the {@link Authors} value.
    */
   get Company(): string {
-    return this._company ??= this.Authors
+    return (this._company ??= this.Authors);
   }
 
   /**
@@ -475,42 +487,40 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue {@link AssemblyName}
    */
   get Product(): string {
-    return this._product ??= this.AssemblyName
+    return (this._product ??= this.AssemblyName);
   }
 }
 
-const NPP = NugetProjectProperties
+const NPP = NugetProjectProperties;
 
-type Nullable<T> = T | null
+type Nullable<T> = T | null;
 
 const _nppGetterNames = {
   instanceProps: null as Nullable<readonly string[]>,
   instancePropsRecursive: null as Nullable<readonly string[]>,
   staticProps: null as Nullable<readonly string[]>,
   staticPropsRecursive: null as Nullable<readonly string[]>,
-}
+};
 
 export function GetNPPGetterNames(instanceProps: boolean, recurse: boolean) {
   if (instanceProps) {
     return recurse
-      ? _nppGetterNames.instancePropsRecursive ??= _createCache()
-      : _nppGetterNames.instanceProps ??= _createCache()
+      ? (_nppGetterNames.instancePropsRecursive ??= _createCache())
+      : (_nppGetterNames.instanceProps ??= _createCache());
   }
 
   if (recurse)
-    return _nppGetterNames.staticPropsRecursive ??= _createCache()
-  return _nppGetterNames.staticProps ??= _createCache()
+    return (_nppGetterNames.staticPropsRecursive ??= _createCache());
+  return (_nppGetterNames.staticProps ??= _createCache());
 
   function _createCache() {
     return Object.freeze(
       getOwnPropertyDescriptors<typeof NPP>(
-        NugetProjectProperties, instanceProps, recurse,
-      ).flatMap(
-        o =>
-          filterForGetters(o)
-            .map(e => e[0]),
-      ),
-    )
+        NugetProjectProperties,
+        instanceProps,
+        recurse,
+      ).flatMap(o => filterForGetters(o).map(e => e[0])),
+    );
   }
 }
 

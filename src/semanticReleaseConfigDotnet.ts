@@ -10,34 +10,33 @@
  *
  */
 
-import { inspect } from 'node:util'
-import type { Options } from 'semantic-release'
-import type { Options as SRExecOptions } from '@semantic-release/exec'
-import debug from './debug.js'
-import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/helpers.js'
-import { getEnvVarValue } from './envUtils.js'
-import { baseConfig } from './semanticReleaseConfig.js'
-import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js'
-import { MSBuildProject } from './dotnet/MSBuildProject.js'
-import { NugetProjectProperties } from './dotnet/NugetProjectProperties.js'
-import { listOwnGetters } from './utils/reflection.js'
-import { MSBuildProjectProperties } from './dotnet/MSBuildProjectProperties.js'
+import { inspect } from 'node:util';
+import type { Options } from 'semantic-release';
+import type { Options as SRExecOptions } from '@semantic-release/exec';
+import debug from './debug.js';
+import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/helpers.js';
+import { getEnvVarValue } from './envUtils.js';
+import { baseConfig } from './semanticReleaseConfig.js';
+import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js';
+import { MSBuildProject } from './dotnet/MSBuildProject.js';
+import { NugetProjectProperties } from './dotnet/NugetProjectProperties.js';
+import { listOwnGetters } from './utils/reflection.js';
+import { MSBuildProjectProperties } from './dotnet/MSBuildProjectProperties.js';
 
-type UnArray<T> = T extends (infer U)[] ? U : T
+type UnArray<T> = T extends (infer U)[] ? U : T;
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
-  plugins: (UnArray<typeof baseConfig.plugins> | [string, unknown]
-  )[]
-};
+  plugins: (UnArray<typeof baseConfig.plugins> | [string, unknown])[];
+}
 
 /**
  * @public
  * @class SemanticReleaseConfigDotnet
  */
 export class SemanticReleaseConfigDotnet {
-  private options: SRConfigDotnetOptions
-  private _projectsToPublish: string[] | MSBuildProject[]
-  private _projectsToPackAndPush: string[] | NugetRegistryInfo[]
-  private _evaluatedProjects: MSBuildProject[]
+  private options: SRConfigDotnetOptions;
+  private _projectsToPublish: string[] | MSBuildProject[];
+  private _projectsToPackAndPush: string[] | NugetRegistryInfo[];
+  private _evaluatedProjects: MSBuildProject[];
 
   /**
    * Creates an instance of SemanticReleaseConfigDotnet.
@@ -73,48 +72,64 @@ export class SemanticReleaseConfigDotnet {
     projectsToPublish: string[] | MSBuildProject[],
     projectsToPackAndPush: string[] | NugetRegistryInfo[],
   ) {
-    this.options = baseConfig
+    this.options = baseConfig;
     /* normalize PluginSpecs to tuples */
     this.options.plugins = this.options.plugins.map(pluginSpec => typeof pluginSpec === 'string'
       ? [pluginSpec, {}]
       : pluginSpec,
-    )
+    );
 
-    this._projectsToPublish = projectsToPublish
+    this._projectsToPublish = projectsToPublish;
     if (this._projectsToPublish.length === 0) {
-      const p = getEnvVarValue('PROJECTS_TO_PUBLISH')?.split(';')
+      const p = getEnvVarValue('PROJECTS_TO_PUBLISH')?.split(';');
       if (p && p.length > 0) {
-        this._projectsToPublish = p
+        this._projectsToPublish = p;
       }
       else if (debug.enabled) {
-        debug.log(new Error('At least one project must be published. `projectsToPackAndPush` is empty and environment variable `PROJECTS_TO_PUBLISH` is undefined or empty.'))
+        debug.log(new Error('At least one project must be published. `projectsToPackAndPush` is empty and environment variable `PROJECTS_TO_PUBLISH` is undefined or empty.'));
       }
     }
 
-    this._projectsToPackAndPush = projectsToPackAndPush
+    this._projectsToPackAndPush = projectsToPackAndPush;
     if (this._projectsToPackAndPush.length === 0) {
-      const p = getEnvVarValue('PROJECTS_TO_PACK_AND_PUSH')?.split(';')
+      const p = getEnvVarValue('PROJECTS_TO_PACK_AND_PUSH')?.split(';');
       if (p && p.length > 0) {
-        projectsToPackAndPush = p
+        projectsToPackAndPush = p;
       }
       else if (debug.enabled) {
-        debug.log(new Error('projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.'))
+        debug.log(new Error('projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.'));
       }
     }
 
     // may be zero-length array
     this._evaluatedProjects = [
       ...this._projectsToPublish.filter(v => v instanceof MSBuildProject),
-      ...this._projectsToPackAndPush.filter(v => v instanceof NugetRegistryInfo).map(v => v.project),
-    ]
+      ...this._projectsToPackAndPush
+        .filter(v => v instanceof NugetRegistryInfo)
+        .map(v => v.project),
+    ];
   }
 
-  get ProjectsToPublish(): string[] | MSBuildProject[] { return this._projectsToPublish }
-  get ProjectsToPackAndPush(): string[] | NugetRegistryInfo[] { return this._projectsToPackAndPush }
-  get EvaluatedProjects(): MSBuildProject[] { return this._evaluatedProjects }
+  get ProjectsToPublish(): string[] | MSBuildProject[] {
+    return this._projectsToPublish;
+  }
 
-  async insertPlugin(afterPluginsIDs: string[], insertPluginIDs: string[], beforePluginsIDs: string[]) {
-    const pluginIDs = new Array(...this.options.plugins).map(v => typeof v === 'string' ? v : v[0])
+  get ProjectsToPackAndPush(): string[] | NugetRegistryInfo[] {
+    return this._projectsToPackAndPush;
+  }
+
+  get EvaluatedProjects(): MSBuildProject[] {
+    return this._evaluatedProjects;
+  }
+
+  async insertPlugin(
+    afterPluginsIDs: string[],
+    insertPluginIDs: string[],
+    beforePluginsIDs: string[],
+  ) {
+    const pluginIDs = new Array(...this.options.plugins).map(v =>
+      typeof v === 'string' ? v : v[0],
+    );
 
     // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
 
@@ -122,30 +137,32 @@ export class SemanticReleaseConfigDotnet {
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
       .sort()
-      .find((_v, i, obj) => i === obj.length - 1)
+      .find((_v, i, obj) => i === obj.length - 1);
     if (!indexOfLastAfter)
-      throw new ReferenceError('An attempt to get the last element of an array returned undefined.')
+      throw new ReferenceError(
+        'An attempt to get the last element of an array returned undefined.',
+      );
 
     const indicesOfBefore = beforePluginsIDs
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
-      .sort()
+      .sort();
 
     // This for-of collects *all* sorting errors. The resulting AggregateError
     // notifies the API user of *all* errors in the order rather than just the
     // first error encountered.
-    const errors: Error[] = []
+    const errors: Error[] = [];
     for (const index of indicesOfBefore) {
       if (index <= indexOfLastAfter) {
         errors.push(
           new Error(
             `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => `"${v}"`).join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${pluginIDs[indexOfLastAfter]} comes after ${pluginIDs[index]}!`,
           ),
-        )
+        );
       }
     }
     if (errors.length > 0)
-      throw new AggregateError(errors)
+      throw new AggregateError(errors);
 
     // insert plugin(s)
     this.options.plugins.splice(
@@ -154,7 +171,7 @@ export class SemanticReleaseConfigDotnet {
       ...insertPluginIDs.map(id =>
         [id, {}] as [string, unknown],
       ),
-    )
+    );
   }
 
   /**
@@ -166,8 +183,10 @@ export class SemanticReleaseConfigDotnet {
    * @see https://github.com/semantic-release/exec#usage
    */
   async setupDotnetCommands(): Promise<void> {
-    const srExecIndex = this.options.plugins.findIndex(v => v[0] === '@semantic-release/exec')
-    const execOptions = this.options.plugins[srExecIndex] as SRExecOptions
+    const srExecIndex = this.options.plugins.findIndex(
+      v => v[0] === '@semantic-release/exec',
+    );
+    const execOptions = this.options.plugins[srExecIndex] as SRExecOptions;
 
     // TODO: move configurePrepareCmd into SemanticReleaseConfigDotnet
     // ensure all packable projects are evaluated
@@ -185,30 +204,37 @@ export class SemanticReleaseConfigDotnet {
             GetTargetResult: [],
             Property: {},
             Targets: ['Restore', 'Pack'],
-          })
+          });
 
-          this._evaluatedProjects.push(msbp)
+          this._evaluatedProjects.push(msbp);
 
-          return new NugetRegistryInfo({ project: msbp })
+          return new NugetRegistryInfo({ project: msbp });
         }
-        else return v
+        else return v;
       }),
-    )
+    );
     // todo: double-check token-testing commands. Are they formatted prepended correctly?
-    const prepareCmdAppendix = await configurePrepareCmd(this._projectsToPublish, this._projectsToPackAndPush)
+    const prepareCmdAppendix = await configurePrepareCmd(
+      this._projectsToPublish,
+      this._projectsToPackAndPush,
+    );
 
     // 'ZipPublishDir' zips each publish folder to ./publish/*.zip
-    execOptions.prepareCmd = (execOptions.prepareCmd?.length ?? 0) > 0
-      ? `${execOptions.prepareCmd} && ${prepareCmdAppendix}`
-      : prepareCmdAppendix
+    execOptions.prepareCmd
+      = (execOptions.prepareCmd?.length ?? 0) > 0
+        ? `${execOptions.prepareCmd} && ${prepareCmdAppendix}`
+        : prepareCmdAppendix;
 
     // FINISHED execOptions.prepareCmd
     // STARTING execOptions.publishCmd
     if (this._projectsToPackAndPush.length > 0) {
-      const publishCmdAppendix = await configureDotnetNugetPush(this._projectsToPackAndPush)
-      execOptions.publishCmd = execOptions.publishCmd && execOptions.publishCmd.length > 0
-        ? `${execOptions.publishCmd} && ${publishCmdAppendix}`
-        : publishCmdAppendix
+      const publishCmdAppendix = await configureDotnetNugetPush(
+        this._projectsToPackAndPush,
+      );
+      execOptions.publishCmd
+        = execOptions.publishCmd && execOptions.publishCmd.length > 0
+          ? `${execOptions.publishCmd} && ${publishCmdAppendix}`
+          : publishCmdAppendix;
     }
 
     // FINISHED execOptions.publishCmd
@@ -225,9 +251,15 @@ export class SemanticReleaseConfigDotnet {
    * @param {string[]} insertBeforePluginsIDs plugins which should appear AFTER the
    * inserted plugin(s).
    */
-  splicePlugin(insertAfterPluginIDs: string[], insertPluginIDs: string[], insertBeforePluginsIDs: string[]): void {
-    const errors: Error[] = []
-    const pluginIDs = new Array(...this.options.plugins).map(v => typeof v === 'string' ? v : v[0])
+  splicePlugin(
+    insertAfterPluginIDs: string[],
+    insertPluginIDs: string[],
+    insertBeforePluginsIDs: string[],
+  ): void {
+    const errors: Error[] = [];
+    const pluginIDs = new Array(...this.options.plugins).map(v =>
+      typeof v === 'string' ? v : v[0],
+    );
 
     // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
 
@@ -235,76 +267,94 @@ export class SemanticReleaseConfigDotnet {
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
       .sort()
-      .find((_v, i, obj) => i === obj.length - 1)
+      .find((_v, i, obj) => i === obj.length - 1);
     if (!indexOfLastPreceding)
-      throw new ReferenceError('An attempt to get the last element of indexOfLastAfter returned undefined.')
+      throw new ReferenceError(
+        'An attempt to get the last element of indexOfLastAfter returned undefined.',
+      );
 
     const indicesOfBefore: number[] = insertBeforePluginsIDs
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
-      .sort()
+      .sort();
 
     for (const index of indicesOfBefore) {
       if (index <= indexOfLastPreceding) {
-        const formattedInsertIds: string = '[' + insertPluginIDs.map(v => `"${v}"`).join(', ') + ']'
-        const formattedAfterIds: string = '[' + insertAfterPluginIDs.map(v => `"${v}"`).join(', ') + ']'
-        const formattedBeforeIds: string = '[' + insertBeforePluginsIDs.map(v => `"${v}"`).join(', ') + ']'
+        const formattedInsertIds: string
+          = '[' + insertPluginIDs.map(v => `"${v}"`).join(', ') + ']';
+        const formattedAfterIds: string
+          = '[' + insertAfterPluginIDs.map(v => `"${v}"`).join(', ') + ']';
+        const formattedBeforeIds: string
+          = '[' + insertBeforePluginsIDs.map(v => `"${v}"`).join(', ') + ']';
         errors.push(
           new Error(
             `insertPlugin was instructed to insert ${formattedInsertIds} after ${formattedAfterIds} and before ${formattedBeforeIds}, `
             + `but ${pluginIDs[indexOfLastPreceding]} is ordered after ${pluginIDs[index]}!`,
           ),
-        )
+        );
       }
     }
 
     if (errors.length > 0)
-      throw new AggregateError(errors)
+      throw new AggregateError(errors);
 
-    this.options.plugins.splice(indexOfLastPreceding + 1, 0, ...insertPluginIDs.map(v => [v, {}] satisfies [string, unknown]))
+    this.options.plugins.splice(
+      indexOfLastPreceding + 1,
+      0,
+      ...insertPluginIDs.map(v => [v, {}] satisfies [string, unknown]),
+    );
   }
 
   // todo: join result with dummy pack commands
   protected async getTokenTestingCommands(): Promise<string> {
-    let promiseProjects
-    if (this.ProjectsToPackAndPush.every(nri => nri instanceof NugetRegistryInfo)) {
-      promiseProjects = this.ProjectsToPackAndPush.map(nri => nri.project)
+    let promiseProjects;
+    if (
+      this.ProjectsToPackAndPush.every(
+        nri => nri instanceof NugetRegistryInfo,
+      )
+    ) {
+      promiseProjects = this.ProjectsToPackAndPush.map(nri => nri.project);
     }
     else {
-      promiseProjects = await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush)
+      promiseProjects = await MSBuildProject.PackableProjectsToMSBuildProjects(
+        this.ProjectsToPackAndPush,
+      );
     }
 
     /** if a project is not in {@link EvaluatedProjects}, add it */
     for (const project of promiseProjects) {
       if (!this.EvaluatedProjects.includes(project))
-        this.EvaluatedProjects.push(project)
+        this.EvaluatedProjects.push(project);
     }
 
-    const regInfos = promiseProjects.map(p => new NugetRegistryInfo({ project: p }))
+    const regInfos = promiseProjects.map(
+      p => new NugetRegistryInfo({ project: p }),
+    );
     const nupkgPaths = await Promise.all(
       regInfos.map(async nri =>
-        nri.PackDummyPackage({})
-          .then((nupkgs) => {
-            // this is a full file path.
-            const mainNupkg = nupkgs.find(nupkg => RegExp(/(?<!symbols)\.nupkg$/).test(nupkg))
-            if (mainNupkg !== undefined)
-              return { nri: nri, nupkgPath: mainNupkg } as const
-            throw new Error(
-              'None of the following dummy packages are non-symbol .nupkg files:\n'
-              + nupkgs.map(nupkg => `  - ${nupkg}`).join('\n')
-              + '\nIf you intended to push only symbol packages, check if a feature request already exists (https://github.com/HaloSPV3/HCE.Shared/issues?q=push+snupkg) and, if one does not exist, create one containing the keywords "push snupkg".',
-            )
-          }),
+        nri.PackDummyPackage({}).then((nupkgs) => {
+          // this is a full file path.
+          const mainNupkg = nupkgs.find(nupkg =>
+            RegExp(/(?<!symbols)\.nupkg$/).test(nupkg),
+          );
+          if (mainNupkg !== undefined)
+            return { nri: nri, nupkgPath: mainNupkg } as const;
+          throw new Error(
+            'None of the following dummy packages are non-symbol .nupkg files:\n'
+            + nupkgs.map(nupkg => `  - ${nupkg}`).join('\n')
+            + '\nIf you intended to push only symbol packages, check if a feature request already exists (https://github.com/HaloSPV3/HCE.Shared/issues?q=push+snupkg) and, if one does not exist, create one containing the keywords "push snupkg".',
+          );
+        }),
       ),
-    )
+    );
     const pushCommands = nupkgPaths.map(pair =>
       pair.nri.GetPushDummyCommand({ root: pair.nupkgPath }),
-    )
-    return pushCommands.join(' && ')
+    );
+    return pushCommands.join(' && ');
   }
 
   async toOptions(): Promise<Options> {
-    return this.options
+    return this.options;
   }
 }
 
@@ -327,27 +377,38 @@ export class SemanticReleaseConfigDotnet {
  * `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and
  * `push` the specified projects.
  */
-export async function getConfig(projectsToPublish: string[] | MSBuildProject[], projectsToPackAndPush?: string[] | NugetRegistryInfo[]): Promise<Options> {
+export async function getConfig(
+  projectsToPublish: string[] | MSBuildProject[],
+  projectsToPackAndPush?: string[] | NugetRegistryInfo[],
+): Promise<Options> {
   if (debug.enabled) {
-    debug.log('hce.shared-config:\n' + inspect(baseConfig, false, Infinity, true))
+    debug.log(
+      'hce.shared-config:\n' + inspect(baseConfig, false, Infinity, true),
+    );
   }
 
-  const errors: Error[] = []
+  const errors: Error[] = [];
 
   if (projectsToPublish.length === 0) {
-    const _ = getEnvVarValue('PROJECTS_TO_PUBLISH')
+    const _ = getEnvVarValue('PROJECTS_TO_PUBLISH');
     if (_ === undefined)
-      errors.push(new Error('projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path.'))
-    else
-      projectsToPublish = _.split(';')
+      errors.push(
+        new Error(
+          'projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path.',
+        ),
+      );
+    else projectsToPublish = _.split(';');
   }
 
   if (!projectsToPackAndPush) {
-    const _ = getEnvVarValue('PROJECTS_TO_PACK_AND_PUSH')
+    const _ = getEnvVarValue('PROJECTS_TO_PACK_AND_PUSH');
     if (_ === undefined)
-      errors.push(new Error('projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.'))
-    else
-      projectsToPackAndPush = _.split(';')
+      errors.push(
+        new Error(
+          'projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.',
+        ),
+      );
+    else projectsToPackAndPush = _.split(';');
   }
 
   if (errors.length > 0) {
@@ -356,18 +417,23 @@ export async function getConfig(projectsToPublish: string[] | MSBuildProject[], 
         'getConfig cannot continue. One or more errors occurred.',
         ...errors.map(v => v.stack),
       ].join('\n'),
-    )
+    );
   }
 
-  const config = new SemanticReleaseConfigDotnet(projectsToPublish, projectsToPackAndPush ?? [])
-  await config.setupDotnetCommands()
+  const config = new SemanticReleaseConfigDotnet(
+    projectsToPublish,
+    projectsToPackAndPush ?? [],
+  );
+  await config.setupDotnetCommands();
 
-  const options = await config.toOptions()
+  const options = await config.toOptions();
   if (debug.enabled) {
-    console.debug(`modified plugins array:\n${inspect(options.plugins, false, Infinity)}`)
+    console.debug(
+      `modified plugins array:\n${inspect(options.plugins, false, Infinity)}`,
+    );
   }
 
-  return options
+  return options;
 }
 
 /**
