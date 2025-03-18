@@ -1,9 +1,9 @@
-import { MSBuildProject } from './MSBuildProject.js'
-import { NugetRegistryInfo } from './NugetRegistryInfo.js'
-import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js'
-import { listOwnGetters } from '../utils/reflection.js'
-import { NugetProjectProperties as NPP } from './NugetProjectProperties.js'
-import { cwd } from 'process'
+import { MSBuildProject } from './MSBuildProject.js';
+import { NugetRegistryInfo } from './NugetRegistryInfo.js';
+import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
+import { listOwnGetters } from '../utils/reflection.js';
+import { NugetProjectProperties as NPP } from './NugetProjectProperties.js';
+import { cwd } from 'process';
 
 /**
  * Build a prepareCmd string from .NET projects.\
@@ -32,26 +32,32 @@ export async function configurePrepareCmd(
   projectsToPackAndPush?: string[] | NugetRegistryInfo[],
   dotnetNugetSignArgs: string[] = ['./publish'],
 ): Promise<string> {
-  const evaluatedProjects: MSBuildProject[] = []
+  const evaluatedProjects: MSBuildProject[] = [];
 
   // append evaluated projects
-  projectsToPublish.filter(p => p instanceof MSBuildProject)
-    .forEach(p => evaluatedProjects.push(p))
-  projectsToPackAndPush?.filter(p => p instanceof NugetRegistryInfo)
-    .forEach(p => evaluatedProjects.push(p.project))
+  projectsToPublish
+    .filter(p => p instanceof MSBuildProject)
+    .forEach(p => evaluatedProjects.push(p));
+  projectsToPackAndPush
+    ?.filter(p => p instanceof NugetRegistryInfo)
+    .forEach(p => evaluatedProjects.push(p.project));
 
   return [
     await formatDotnetPublish(
       projectsToPublish,
       MSBuildProject.MatrixProperties,
     ),
-    formatDotnetPack(projectsToPackAndPush ?? []),
+    await formatDotnetPack(projectsToPackAndPush ?? []),
     formatDotnetNugetSign(dotnetNugetSignArgs),
     // remove no-op commands
-  ].filter(v => v !== undefined)
-    .join(' && ')
+  ]
+    .filter(v => v !== undefined)
+    .join(' && ');
 
-  async function formatDotnetPublish(projectsToPublish: string[] | MSBuildProject[], publishProperties: readonly string[] | string[]): Promise<string> {
+  async function formatDotnetPublish(
+    projectsToPublish: string[] | MSBuildProject[],
+    publishProperties: readonly string[] | string[],
+  ): Promise<string> {
     /* Fun Fact: You can define a property and get the evaluated value in the same command!
     ```pwsh
     dotnet msbuild .\src\HXE.csproj -property:RuntimeIdentifiers="""place;holder""" -getProperty:RuntimeIdentifiers
@@ -60,18 +66,20 @@ export async function configurePrepareCmd(
       enclosing with """ is required in pwsh to prevent the semicolon from breaking the string.
     */
     if (!Array.isArray(projectsToPublish) || projectsToPublish.length === 0)
-      throw new Error(`Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] or MSBuildProject[] where length > 0.`)
+      throw new Error(
+        `Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] or MSBuildProject[] where length > 0.`,
+      );
 
     // each may have TargetFramework OR TargetFrameworks (plural)
     const evaluatedPublishProjects: MSBuildProject[] = await Promise.all(
       projectsToPublish.map(async (proj) => {
         if (proj instanceof MSBuildProject)
-          return proj
+          return proj;
 
         // filter for projects whose full paths match the full path of the given string
         const filteredProjects = evaluatedProjects.filter(p =>
           p.Properties.MSBuildProjectFullPath === MSBPP.GetFullPath(proj),
-        )
+        );
 
         // if no pre-existing MSBuildProject found, evaluate a new one and push
         // it
@@ -83,9 +91,7 @@ export async function configurePrepareCmd(
             GetTargetResult: [],
             Property: {},
             Targets: ['Restore'],
-          })
-          evaluatedProjects.push(_proj)
-          return _proj
+          });
         }
 
         /*
@@ -164,13 +170,15 @@ export async function configurePrepareCmd(
    * todo: get "namespaced output" pack command from the NugetRegistryInfo[]
    * todo: require projectsToPackAndPush, never return undefined
    */
-  async function formatDotnetPack(projectsToPackAndPush: string[] | NugetRegistryInfo[]): Promise<string | undefined> {
+  async function formatDotnetPack(
+    projectsToPackAndPush: string[] | NugetRegistryInfo[],
+  ): Promise<string | undefined> {
     if (projectsToPackAndPush.length === 0)
-      return undefined
+      return undefined;
     return await Promise.all(
       projectsToPackAndPush.map(async (proj) => {
         if (proj instanceof NugetRegistryInfo)
-          return proj
+          return proj;
 
         const msbp = await MSBuildProject.Evaluate({
           FullName: proj,
@@ -183,17 +191,18 @@ export async function configurePrepareCmd(
           GetTargetResult: [],
           Property: {},
           Targets: ['Restore', 'Pack'],
-        })
+        });
 
-        evaluatedProjects.push(msbp)
+        evaluatedProjects.push(msbp);
 
-        return new NugetRegistryInfo({ project: msbp })
+        return new NugetRegistryInfo({ project: msbp });
       }),
     ).then((nriArray: NugetRegistryInfo[]): string => {
-      return nriArray.map((nri: NugetRegistryInfo): string =>
-        nri.GetPackCommand(NugetRegistryInfo.PackPackagesOptionsType.from({/** assume defaults/fallbacks */ })),
-      ).join(' && ')
-    })
+      return nriArray
+        .map((nri: NugetRegistryInfo): string =>
+          nri.GetPackCommand(NugetRegistryInfo.PackPackagesOptionsType.from({})),
+        ).join(' && ');
+    });
   }
 
   /**
@@ -201,10 +210,12 @@ export async function configurePrepareCmd(
    * arguments to append to 'dotnet nuget sign ', joined with spaces.
    * @returns {string} `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
    */
-  function formatDotnetNugetSign(dotnetNugetSignArgs?: string[]): string | undefined {
+  function formatDotnetNugetSign(
+    dotnetNugetSignArgs?: string[],
+  ): string | undefined {
     if (!dotnetNugetSignArgs || dotnetNugetSignArgs.length === 0)
-      return undefined
-    return `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
+      return undefined;
+    return `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `;
     //     throw new Error("")
     //     // this needs a rework.
     //     const packagePaths: string[] = [];

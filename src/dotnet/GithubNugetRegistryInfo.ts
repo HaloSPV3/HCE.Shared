@@ -1,29 +1,29 @@
-import { getEnvVarValue } from '../envUtils.js'
+import { getEnvVarValue } from '../envUtils.js';
 import {
   NugetRegistryInfo as NRI,
   NugetRegistryInfoOptionsBase as NRIOptsBase,
-} from './NugetRegistryInfo.js'
+} from './NugetRegistryInfo.js';
 
-const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
+const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
 const DefaultGithubTokenEnvVars = Object.freeze([
   'GITHUB_TOKEN',
   'GH_TOKEN',
-] as const)
+] as const);
 
 export class GithubNugetRegistryInfo extends NRI {
-  static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
+  static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
   static readonly DefaultGithubTokenEnvVars = Object.freeze([
     'GITHUB_TOKEN',
     'GH_TOKEN',
-  ] as const)
+  ] as const);
 
   // GithubNugetRegistryInfo.CtorArgs(...) behaves differently than NugetRegistryInfo.CtorArgs(...)
   /**
    * Creates an instance of GithubNugetRegistryInfo.
    * @param opts The input type of {@link GHNRIOpts.from}
    */
-  constructor(opts: typeof GHNRIOpts['inferIn']) {
-    super(GHNRIOpts.from(opts))
+  constructor(opts: (typeof GHNRIOpts)['inferIn']) {
+    super(GHNRIOpts.from(opts));
   }
 
   /**
@@ -33,13 +33,13 @@ export class GithubNugetRegistryInfo extends NRI {
    * Otherwise, returns `undefined`
    */
   static getNugetGitHubUrl(): string | undefined {
-    const owner = getEnvVarValue('GITHUB_REPOSITORY_OWNER')
+    const owner = getEnvVarValue('GITHUB_REPOSITORY_OWNER');
     return owner !== undefined
       ? `${NUGET_PKG_GITHUB_COM}/${owner}/index.json`
-      : undefined
+      : undefined;
   }
 }
-const GHNRI = GithubNugetRegistryInfo
+const GHNRI = GithubNugetRegistryInfo;
 
 /**
  * @remarks
@@ -53,5 +53,5 @@ export const GithubNugetRegistryInfoOptions = NRIOptsBase.merge({
       /* must be a function. A fixed-length array is NOT a primitive type! */
       () => DefaultGithubTokenEnvVars,
     ),
-})
-const GHNRIOpts = GithubNugetRegistryInfoOptions
+});
+const GHNRIOpts = GithubNugetRegistryInfoOptions;

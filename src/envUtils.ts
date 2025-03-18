@@ -1,5 +1,5 @@
-import { config as loadDotenv, type DotenvConfigOptions } from 'dotenv'
-import { env } from 'node:process'
+import { config as loadDotenv, type DotenvConfigOptions } from 'dotenv';
+import { env } from 'node:process';
 
 /**
  * Load a .env file from the CWD with the given options (or defaults), returns the new value of process.env
@@ -8,12 +8,12 @@ import { env } from 'node:process'
  * @returns
  */
 export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
-  loadDotenv(dotenvOptions)
+  loadDotenv(dotenvOptions);
 
   if (overrides)
-    Object.assign(env, overrides)
+    Object.assign(env, overrides);
 
-  return env
+  return env;
 }
 
 /**
@@ -22,15 +22,15 @@ export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.P
  * @returns
  */
 export function getEnvVarValue(envVar: string, options?: Parameters<typeof loadDotenv>[0]): string | undefined {
-  let value = env[envVar]
+  let value = env[envVar];
   if (!value) {
     try {
-      loadDotenv(options)
+      loadDotenv(options);
     }
     catch (err) {
-      console.error(String(err))
+      console.error(String(err));
     }
-    value = env[envVar]
+    value = env[envVar];
   }
-  return value
+  return value;
 }

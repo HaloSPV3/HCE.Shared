@@ -1,5 +1,5 @@
-import { exec } from 'child_process'
-import { promisify } from 'util'
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 /**
  * A promisify(exec) wrapper to optionally assign the child process's STDERR as the {@link Error.prototype.cause}.
@@ -12,14 +12,12 @@ import { promisify } from 'util'
  * @throws {Error & Awaited<ReturnType<typeof execAsync>>}
  */
 export async function execAsync(command: string, setStdErrAsCause = false) {
-  return await promisify(exec)(command)
-    .catch((err: unknown) => {
-      if (!(err instanceof Error))
-        throw new Error(String(err))
+  return await promisify(exec)(command).catch((err: unknown) => {
+    if (!(err instanceof Error)) throw new Error(String(err));
 
-      if (setStdErrAsCause && 'stderr' in err && typeof err.stderr === 'string')
-        err.cause = err.stderr
+    if (setStdErrAsCause && 'stderr' in err && typeof err.stderr === 'string')
+      err.cause = err.stderr;
 
-      throw err
-    })
+    throw err;
+  });
 }
