@@ -1,7 +1,8 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "_tsout"
+    "outDir": "_tsout",
+    "allowImportingTsExtensions": true
   },
   "include": [
     "./*.cts",
