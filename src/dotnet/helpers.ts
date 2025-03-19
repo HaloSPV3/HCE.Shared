@@ -72,7 +72,7 @@ export async function configurePrepareCmd(
 
     // each may have TargetFramework OR TargetFrameworks (plural)
     const evaluatedPublishProjects: MSBuildProject[] = await Promise.all(
-      projectsToPublish.map(async (proj) => {
+      projectsToPublish.map(async (proj): Promise<MSBuildProject> => {
         if (proj instanceof MSBuildProject)
           return proj;
 
