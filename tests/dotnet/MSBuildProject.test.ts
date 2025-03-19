@@ -1,45 +1,60 @@
-import { deepStrictEqual, ok } from 'node:assert/strict'
-import { existsSync, readdirSync, rmSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { describe, it } from 'node:test'
+import { deepStrictEqual, ok } from 'node:assert/strict';
+import { existsSync, readdirSync, rmSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { describe, it } from 'node:test';
 import {
   EvaluationOptions,
   MSBuildProject as MSBP,
-} from '../../src/dotnet/MSBuildProject.js'
+} from '../../src/dotnet/MSBuildProject.js';
 
-await it('is built', async () =>
+await it('is built', async () => {
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('@halospv3/hce.shared-config/dotnet/MSBuildProject')), undefined, 2),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/MSBuildProject.js')), undefined, 2),
-  ),
-)
+    JSON.stringify(
+      Object.entries(
+        await import('@halospv3/hce.shared-config/dotnet/MSBuildProject'),
+      ),
+      undefined,
+      2,
+    ),
+    JSON.stringify(
+      Object.entries(await import('../../src/dotnet/MSBuildProject.js')),
+      undefined,
+      2,
+    ),
+  );
+});
 
 await describe('MSBuildProject', async () => {
   await describe('MatrixProperties', async (ctx1) => {
-    await it('has expected name', async () => {
-      ok(ctx1.name in MSBP)
-    })
-    await it('is array of expected values', async () => {
-      deepStrictEqual(
-        MSBP.MatrixProperties,
-        [
-          'TargetFramework',
-          'TargetFrameworks',
-          'RuntimeIdentifier',
-          'RuntimeIdentifiers',
-        ],
-      )
-    })
-  })
+    await it('has expected name', () => {
+      ok(ctx1.name in MSBP);
+    });
+    await it('is array of expected values', () => {
+      deepStrictEqual(MSBP.MatrixProperties, [
+        'TargetFramework',
+        'TargetFrameworks',
+        'RuntimeIdentifier',
+        'RuntimeIdentifiers',
+      ]);
+    });
+  });
   await describe('Evaluate', async (c00) => {
     await it('has expected name', () => {
-      deepStrictEqual(MSBP.Evaluate.name, c00.name)
-    })
+      deepStrictEqual(MSBP.Evaluate.name, c00.name);
+    });
     await it('may return expected object (HCE.Shared.DeterministicNupkg)', async () => {
-      const deterministicNupkgProj = resolve(import.meta.dirname, '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj')
-      const pakDir = resolve(dirname(deterministicNupkgProj), 'packages')
-      if (existsSync(pakDir) && readdirSync(pakDir).some(v => v.endsWith('.nupkg') || v.endsWith('.snupkg')))
-        rmSync(pakDir, { recursive: true, force: true })
+      const deterministicNupkgProj = resolve(
+        import.meta.dirname,
+        '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
+      );
+      const pakDir = resolve(dirname(deterministicNupkgProj), 'packages');
+      if (
+        existsSync(pakDir)
+        && readdirSync(pakDir).some(
+          v => v.endsWith('.nupkg') || v.endsWith('.snupkg'),
+        )
+      )
+        rmSync(pakDir, { recursive: true, force: true });
       const evalOpts: EvaluationOptions = new EvaluationOptions({
         FullName: deterministicNupkgProj,
         GetItem: [],
@@ -47,8 +62,8 @@ await describe('MSBuildProject', async () => {
         GetTargetResult: [],
         Property: {},
         Targets: ['Restore', 'Pack'],
-      })
-      const actual: MSBP = await MSBP.Evaluate(evalOpts)
+      });
+      const actual: MSBP = await MSBP.Evaluate(evalOpts);
       const expected = new MSBP({
         fullPath: deterministicNupkgProj,
         projTargets: [
@@ -321,12 +336,12 @@ await describe('MSBuildProject', async () => {
             RuntimeIdentifiers: '',
           },
         },
-      })
+      });
 
-      deepStrictEqual(actual.Items, expected.Items)
-      deepStrictEqual(actual.Properties, expected.Properties)
-      deepStrictEqual(actual.Targets, expected.Targets)
-      deepStrictEqual(actual, expected)
-    })
-  })
-})
+      deepStrictEqual(actual.Items, expected.Items);
+      deepStrictEqual(actual.Properties, expected.Properties);
+      deepStrictEqual(actual.Targets, expected.Targets);
+      deepStrictEqual(actual, expected);
+    });
+  });
+});

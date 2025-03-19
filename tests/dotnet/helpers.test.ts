@@ -1,32 +1,40 @@
-import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict'
-import { describe, it, todo } from 'node:test'
+import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict';
+import { describe, it, todo } from 'node:test';
 import {
   configureDotnetNugetPush,
   configurePrepareCmd,
-} from '../../src/dotnet/helpers.js'
+} from '../../src/dotnet/helpers.js';
 
-await it('is built', async () =>
+await it('is built', async () => {
   deepStrictEqual(
-    JSON.stringify(Object.entries(await import('../../mjs/dotnet/helpers.js')), undefined, 2),
-    JSON.stringify(Object.entries(await import('../../src/dotnet/helpers.js')), undefined, 2),
-  ),
-)
+    JSON.stringify(
+      Object.entries(await import('../../mjs/dotnet/helpers.js')),
+      undefined,
+      2,
+    ),
+    JSON.stringify(
+      Object.entries(await import('../../src/dotnet/helpers.js')),
+      undefined,
+      2,
+    ),
+  );
+});
 
 await describe('dotnetHelpers', async () => {
   await todo('configurePrepareCmd', () => {
-    ok(typeof configureDotnetNugetPush === 'function')
-    strictEqual(typeof configureDotnetNugetPush, 'function')
-    strictEqual(configurePrepareCmd.name, 'configurePrepareCmd')
-  })
+    ok(typeof configureDotnetNugetPush === 'function');
+    strictEqual(typeof configureDotnetNugetPush, 'function');
+    strictEqual(configurePrepareCmd.name, 'configurePrepareCmd');
+  });
 
   await it('configureDotnetNugetPush works', (t) => {
-    strictEqual(typeof configureDotnetNugetPush, 'function')
-    strictEqual(configureDotnetNugetPush.name, 'configureDotnetNugetPush')
+    strictEqual(typeof configureDotnetNugetPush, 'function');
+    strictEqual(configureDotnetNugetPush.name, 'configureDotnetNugetPush');
 
-    t.todo(`nupkgDir - default`)
-    t.todo(`nupkgDir - custom`)
-    t.todo(`registries - default`)
-    t.todo(`registries - custom`)
-    t.todo(`pushToGitHub adds github defaults`)
-  })
-})
+    t.todo(`nupkgDir - default`);
+    t.todo(`nupkgDir - custom`);
+    t.todo(`registries - default`);
+    t.todo(`registries - custom`);
+    t.todo(`pushToGitHub adds github defaults`);
+  });
+});
