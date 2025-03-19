@@ -96,13 +96,20 @@ export async function configurePrepareCmd(
           return _proj;
         }
 
+        function getBest() {
+          let best: MSBuildProject | undefined;
+          if (filteredProjects.length > 0 && (best = filteredProjects[0]) instanceof MSBuildProject)
+            return best;
+          throw new Error('No MSBuildProjects could be found!');
+        }
+
         /*
         todo: improve filtering to select "optimal" instance.
           Which properties are most-needed?
           For now, we just pray the project has a well-defined publish flow e.g.
           @halospv3/hce.shared-config/dotnet/PublishAll.targets
          */
-        return filteredProjects[0];
+        return getBest();
       }),
     );
 
