@@ -92,6 +92,8 @@ export async function configurePrepareCmd(
             Property: {},
             Targets: ['Restore'],
           });
+          evaluatedProjects.push(_proj);
+          return _proj;
         }
 
         /*
