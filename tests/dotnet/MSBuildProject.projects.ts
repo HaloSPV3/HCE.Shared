@@ -1,5 +1,5 @@
-import { resolve } from 'path'
-import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.js'
+import { resolve } from 'path';
+import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.js';
 
 export const {
   DeterministicNupkgCsproj,
@@ -10,4 +10,4 @@ export const {
 ]).then((v: MSBP[]) => Object.freeze({
   DeterministicNupkgCsproj: Object.freeze(v[0]),
   SignAfterPackCsproj: Object.freeze(v[1]),
-}))
+}));
