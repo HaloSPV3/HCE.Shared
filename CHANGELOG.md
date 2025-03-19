@@ -1,3 +1,5 @@
+## [2.6.1-develop.3](https://github.com/halospv3/hce.shared/compare/v2.6.1-develop.2...v2.6.1-develop.3) (2025-03-19)
+
 ## [2.6.1-develop.2](https://github.com/halospv3/hce.shared/compare/v2.6.1-develop.1...v2.6.1-develop.2) (2024-09-20)
 
 ## [2.6.1-develop.1](https://github.com/halospv3/hce.shared/compare/v2.6.0...v2.6.1-develop.1) (2024-07-23)
