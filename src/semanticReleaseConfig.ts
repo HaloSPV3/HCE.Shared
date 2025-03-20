@@ -23,7 +23,7 @@ export interface SRReleaseNotesGeneratorOptions {
  * intended for use by plugins to associate their Options type with their plugin
  * name.
  */
-export type PluginSpecTuple<P extends string, T> = [P, T];
+export type PluginSpecTuple<P extends string = string, T = unknown> = [P, T];
 export type PluginSpecSRCommitAnalyzer<V extends SRCommitAnalyzerOptions = SRCommitAnalyzerOptions> = PluginSpecTuple<'@semantic-release/commit-analyzer', V>;
 export type PluginSpecSRChangelog<V extends Record<string, unknown>> = PluginSpecTuple<'@semantic-release/changelog', V>;
 export type PluginSpecExportData<V extends Record<string, unknown> = Record<string, unknown>> = PluginSpecTuple<'semantic-release-export-data', V>;
