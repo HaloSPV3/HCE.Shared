@@ -39,7 +39,8 @@ await describe('GithubNugetRegistryInfo', async () => {
 
       getOwner();
       strictEqual(
-        await new GHNRI({ project: DeterministicNupkgCsproj }).canPushPackagesToUrl,
+        await new GHNRI({ project: DeterministicNupkgCsproj })
+          .canPushPackagesToUrl,
         true,
       );
     });
