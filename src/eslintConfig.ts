@@ -97,10 +97,7 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
     ignores: globalIgnores.ignores,
     languageOptions: {
       parserOptions: {
-        projectService: {
-          allowDefaultProject: ['./*.js'],
-          loadTypeScriptPlugins: true,
-        },
+        projectService: true,
       },
       globals: globals.node,
     },
