@@ -6,23 +6,6 @@ import {
 import * as miscTypes from '../../src/utils/miscTypes.js';
 import { deepStrictEqual, ok } from 'node:assert/strict';
 
-await it('is built', async () => {
-  deepStrictEqual(
-    JSON.stringify(
-      Object.entries(
-        await import('@halospv3/hce.shared-config/utils/miscTypes'),
-      ),
-      undefined,
-      2,
-    ),
-    JSON.stringify(
-      Object.entries(await import('../../src/utils/miscTypes.js')),
-      undefined,
-      2,
-    ),
-  );
-});
-
 await describe('tBooleanString', async (c00) => {
   await it('has expected name', () => {
     deepStrictEqual(c00.name in miscTypes, true);

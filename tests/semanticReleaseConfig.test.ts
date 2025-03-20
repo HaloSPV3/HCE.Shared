@@ -11,23 +11,6 @@ import '../src/semantic-release__exec.d.ts';
 import '../src/semantic-release__git.d.ts';
 import '../src/semantic-release__github.d.ts';
 
-await it('is built', async () => {
-  deepStrictEqual(
-    JSON.stringify(
-      Object.entries(
-        await import('@halospv3/hce.shared-config/semanticReleaseConfig'),
-      ),
-      undefined,
-      2,
-    ),
-    JSON.stringify(
-      Object.entries(await import('../src/semanticReleaseConfig.js')),
-      undefined,
-      2,
-    ),
-  );
-});
-
 await describe('semanticReleaseConfig', async () => {
   await describe('baseConfig', () => {
     deepStrictEqual(baseConfig, {

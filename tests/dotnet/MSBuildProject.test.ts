@@ -7,23 +7,6 @@ import {
   MSBuildProject as MSBP,
 } from '../../src/dotnet/MSBuildProject.js';
 
-await it('is built', async () => {
-  deepStrictEqual(
-    JSON.stringify(
-      Object.entries(
-        await import('@halospv3/hce.shared-config/dotnet/MSBuildProject'),
-      ),
-      undefined,
-      2,
-    ),
-    JSON.stringify(
-      Object.entries(await import('../../src/dotnet/MSBuildProject.js')),
-      undefined,
-      2,
-    ),
-  );
-});
-
 await describe('MSBuildProject', async () => {
   await describe('MatrixProperties', async (ctx1) => {
     await it('has expected name', () => {

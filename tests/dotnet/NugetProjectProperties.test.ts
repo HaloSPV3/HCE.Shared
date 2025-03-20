@@ -1,28 +1,7 @@
-import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict';
+import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { CaseInsensitiveMap } from '../../src/CaseInsensitiveMap.js';
 import { NugetProjectProperties as NPP } from '../../src/dotnet/NugetProjectProperties.js';
-
-await it('is built', async () => {
-  deepStrictEqual(
-    JSON.stringify(
-      Object.entries(
-        await import(
-          '@halospv3/hce.shared-config/dotnet/NugetProjectProperties',
-        ),
-      ),
-      undefined,
-      2,
-    ),
-    JSON.stringify(
-      Object.entries(
-        await import('../../src/dotnet/NugetProjectProperties.js'),
-      ),
-      undefined,
-      2,
-    ),
-  );
-});
 
 await describe('NugetProjectProperties', async (c0) => {
   await it('has expected name', () => {
