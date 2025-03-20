@@ -122,7 +122,7 @@ export class SemanticReleaseConfigDotnet {
     return this._evaluatedProjects;
   }
 
-  async insertPlugin(
+  insertPlugin(
     afterPluginsIDs: string[],
     insertPluginIDs: string[],
     beforePluginsIDs: string[],
