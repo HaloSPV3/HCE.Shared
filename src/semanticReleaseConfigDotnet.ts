@@ -353,7 +353,7 @@ export class SemanticReleaseConfigDotnet {
     return pushCommands.join(' && ');
   }
 
-  async toOptions(): Promise<Options> {
+  toOptions(): Options {
     return this.options;
   }
 }
@@ -426,7 +426,7 @@ export async function getConfig(
   );
   await config.setupDotnetCommands();
 
-  const options = await config.toOptions();
+  const options: Options = config.toOptions();
   if (debug.enabled) {
     console.debug(
       `modified plugins array:\n${inspect(options.plugins, false, Infinity)}`,
