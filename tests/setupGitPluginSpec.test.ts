@@ -8,7 +8,7 @@ await describe('setupGitPluginSpec', async () => {
   });
 
   await it('modifies provided array if it includes Git PluginSpec', () => {
-    notDeepStrictEqual(setupGitPluginSpec(['@semantic-release/git']), [
+    notDeepStrictEqual(setupGitPluginSpec([['@semantic-release/git', {}]]), [
       '@semantic-release/git',
     ]);
   });
