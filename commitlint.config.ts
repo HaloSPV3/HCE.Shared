@@ -21,7 +21,7 @@ const scopes = {
   'dotnet.GLNRI':
     'Affects "src/dotnet/GitlabNugetRegistryInfo.ts" or its tests.',
   'dotnet.INVAP':
-    'Affects "src/dotnet/IsNextVersionAlreadyPublish.cli.ts" or its tests.',
+    'Affects "src/dotnet/IsNextVersionAlreadyPublished.cli.ts" or its tests.',
   'dotnet.MSBP':
     'Affects "src/dotnet/MSBuildProject.ts" or its tests (including "tests/dotnet/MSBuildProject.projects.ts").',
   'dotnet.MSBPP':
