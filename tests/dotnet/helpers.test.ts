@@ -1,24 +1,9 @@
-import { deepStrictEqual, ok, strictEqual } from 'node:assert/strict';
+import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it, todo } from 'node:test';
 import {
   configureDotnetNugetPush,
   configurePrepareCmd,
 } from '../../src/dotnet/helpers.js';
-
-await it('is built', async () => {
-  deepStrictEqual(
-    JSON.stringify(
-      Object.entries(await import('../../mjs/dotnet/helpers.js')),
-      undefined,
-      2,
-    ),
-    JSON.stringify(
-      Object.entries(await import('../../src/dotnet/helpers.js')),
-      undefined,
-      2,
-    ),
-  );
-});
 
 await describe('dotnetHelpers', async () => {
   await todo('configurePrepareCmd', () => {

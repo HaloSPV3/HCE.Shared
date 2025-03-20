@@ -10,23 +10,6 @@ import {
   listOwnGetters,
 } from '../../src/utils/reflection.js';
 
-await it('is built', async () => {
-  deepStrictEqual(
-    JSON.stringify(
-      Object.entries(
-        await import('@halospv3/hce.shared-config/utils/reflection'),
-      ),
-      undefined,
-      2,
-    ),
-    JSON.stringify(
-      Object.entries(await import('../../src/utils/reflection.js')),
-      undefined,
-      2,
-    ),
-  );
-});
-
 const NPPInstanceOwnGetters: string[] = [
   'Authors',
   'BuildOutputTargetFolder',

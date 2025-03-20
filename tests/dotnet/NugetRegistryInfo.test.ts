@@ -17,8 +17,6 @@ import { resolve } from 'node:path';
 import { isConstructor } from '../../src/utils/reflection.js';
 import { GetNPPGetterNames } from '../../src/dotnet/NugetProjectProperties.js';
 
-// No 'is built'. Checking classes and functions for equality is too complicated without reflection like .NET's
-
 await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is a class', () => {
     deepStrictEqual(isConstructor(NRI), true);
