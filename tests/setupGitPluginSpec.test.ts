@@ -1,4 +1,4 @@
-import { setupGitPluginSpec } from '@halospv3/hce.shared-config/setupGitPluginSpec';
+import { setupGitPluginSpec } from '../src/setupGitPluginSpec.js';
 import { deepStrictEqual, notDeepStrictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
