@@ -156,7 +156,7 @@ export class SemanticReleaseConfigDotnet {
       if (index <= indexOfLastAfter) {
         errors.push(
           new Error(
-            `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => `"${v}"`).join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${pluginIDs[indexOfLastAfter]} comes after ${pluginIDs[index]}!`,
+            `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => `"${v}"`).join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${JSON.stringify(pluginIDs[indexOfLastAfter])} comes after ${JSON.stringify(pluginIDs[index])}!`,
           ),
         );
       }
@@ -228,7 +228,7 @@ export class SemanticReleaseConfigDotnet {
     // FINISHED execOptions.prepareCmd
     // STARTING execOptions.publishCmd
     if (this._projectsToPackAndPush.length > 0) {
-      const publishCmdAppendix = await configureDotnetNugetPush(
+      const publishCmdAppendix: string = configureDotnetNugetPush(
         this._projectsToPackAndPush,
       );
       execOptions.publishCmd
@@ -289,7 +289,7 @@ export class SemanticReleaseConfigDotnet {
         errors.push(
           new Error(
             `insertPlugin was instructed to insert ${formattedInsertIds} after ${formattedAfterIds} and before ${formattedBeforeIds}, `
-            + `but ${pluginIDs[indexOfLastPreceding]} is ordered after ${pluginIDs[index]}!`,
+            + `but ${JSON.stringify(pluginIDs[indexOfLastPreceding])} is ordered after ${JSON.stringify(pluginIDs[index])}!`,
           ),
         );
       }
