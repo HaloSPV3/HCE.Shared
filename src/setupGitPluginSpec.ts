@@ -1,6 +1,5 @@
 import type { AssetEntry, Options as GitOptions } from '@semantic-release/git';
-import type { PluginSpec } from 'semantic-release';
-import type { PluginSpecSRGit } from './semanticReleaseConfig.js';
+import type { PluginSpecSRGit, PluginSpecTuple } from './semanticReleaseConfig.js';
 
 export const GitPluginId = '@semantic-release/git';
 
@@ -21,71 +20,111 @@ export const DefaultOptions = {
     'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
 } as const satisfies GitOptions;
 
-function gitAssetsToArray(
-  assets: AssetEntry | AssetEntry[] | false | undefined,
-) {
-  if (assets === undefined || assets === false) return [];
-  if (Array.isArray(assets)) return assets;
-  if (typeof assets === 'string') return [assets];
-  return assets.path === 'string' ? [assets.path] : [];
+function isGitAsset(unk: unknown): unk is AssetEntry {
+  if (typeof unk === 'string')
+    return true;
+  // Avoid ending condition with `typeof unk.path === 'string'`.
+  // TS narrowing is bugged; requires the check to be performed TWICE!!
+  if (typeof unk === 'object' && unk != null && 'path' in unk) {
+    return typeof unk.path === 'string';
+  }
+  return false;
+}
+
+function gitAssetsToStringArray(
+  assets: Exclude<GitOptions['assets'], false>,
+): string[] {
+  if (assets === undefined)
+    return [];
+  if (Array.isArray(assets)) {
+    return assets.filter(isGitAsset)
+      .map(v => typeof v === 'string' ? v : v.path);
+  }
+  if (typeof assets === 'string')
+    return [assets] as string[];
+  if (typeof assets.path === 'string')
+    return [assets.path];
+  else
+    throw new TypeError('assets is not typeof GitOptions[\'assets\'!');
+}
+
+function sanitizeGitOptions(opts: GitOptions): Omit<GitOptions, 'assets'> & { assets: string[] | false } {
+  return { ...opts, assets: opts.assets === false ? opts.assets : gitAssetsToStringArray(opts.assets) };
+}
+
+function isGitOptions(opts: unknown): opts is GitOptions {
+  let isOptions = false;
+
+  if (typeof opts !== 'object' || opts == null)
+    return isOptions;
+  if ('assets' in opts) {
+    isOptions = Array.isArray(opts.assets)
+      ? (opts.assets.every(isGitAsset))
+      : isGitAsset(opts.assets);
+  }
+  if ('message' in opts)
+    isOptions = typeof opts.message === 'string';
+  return isOptions;
+}
+
+function hasGitOptions<P extends string>(pluginSpec: PluginSpecTuple<P>): pluginSpec is PluginSpecTuple<P, GitOptions> {
+  return isGitOptions(pluginSpec[1]);
+};
+
+function isGitPluginSpecTuple<T>(pluginSpec: [string, T]): pluginSpec is [typeof GitPluginId, T] {
+  return pluginSpec[0] === GitPluginId;
 }
 
 /**
  * https://github.com/semantic-release/git#options
  *
  * This plugin may be deprecated at a later date.
- * Why do you need to commit during release?
- * If you don't need to update a changelog or version in a file, then you don't need this.
+ * Q: Why would I need to commit during release?
+ * A: This is for committing your changelog, README, and/or other files updated during the release procedure.
  *
- * @returns A {@link PluginSpec} array with {@link PluginSpec<GitOptions>}. If Git plugin not in original array, returns the original array.
- * todo: deprecate for generic or parameterized function
+ * @returns A {@link PluginSpecTuple}[]. Duplicate `@semantic-release/git` plugin entries are merged or overridden. The last entry takes priority e.g. if the last entry is `{assets: false}`, previous entries' assets are ignored.
  */
-export function setupGitPluginSpec(plugins: PluginSpec[]): PluginSpec[] {
-  let newPlugins = plugins;
-  let gitPluginIndex = -1;
+export function setupGitPluginSpec(plugins: PluginSpecTuple[]): PluginSpecTuple[] {
+  /** if Git plugin not in load order, return as-is. */
+  const firstGitPluginIndex = plugins.findIndex(isGitPluginSpecTuple);
+  if (firstGitPluginIndex === -1)
+    return plugins;
 
-  function pluginSpecIsGit(pluginSpec: PluginSpec, pluginSpecIndex: number) {
-    if (pluginSpec === GitPluginId || pluginSpec[0] === GitPluginId) {
-      gitPluginIndex = pluginSpecIndex;
-      return true;
+  /** the following two const variables are references--not clones.
+   * Modifying them will affect the plugins array. */
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const firstGitPlugin = plugins[firstGitPluginIndex]!;
+  const firstGitOpts: ReturnType<typeof sanitizeGitOptions> = isGitOptions(firstGitPlugin[1])
+    ? sanitizeGitOptions(firstGitPlugin[1])
+    : DefaultOptions;
+
+  /**
+   * remove duplicate Git plugin entries;
+   * merge extra options into firstGitPlugin's options
+   * if `firstGitOpts.assets === false`, do not change it.
+   * All duplicate PluginSpecSRGit entries are then reassigned `undefined` and all
+   * `undefined` items are filtered from the plugins array.
+   */
+  return plugins.map((current: PluginSpecTuple, index): PluginSpecTuple | PluginSpecSRGit | undefined => {
+    // skip everything up to and including the first Git PluginSpec
+    if (index <= firstGitPluginIndex || !isGitPluginSpecTuple(current))
+      return current;
+
+    /** if another Git PluginSpec is discovered, copy its options to the first Git PluginSpec and return undefined. */
+    if (hasGitOptions(current)) {
+      const currentGitOpts = sanitizeGitOptions(current[1]);
+
+      if (currentGitOpts.assets !== false) {
+        const assets: string[] = gitAssetsToStringArray(currentGitOpts.assets);
+        if (!Array.isArray(firstGitOpts.assets))
+          firstGitOpts.assets = assets;
+        else firstGitOpts.assets.push(...assets);
+      }
+      else firstGitOpts.assets = false;
+
+      if (typeof currentGitOpts.message === 'string')
+        firstGitOpts.message = currentGitOpts.message;
     }
-    return false;
-  }
-
-  // if Git plugin not in load order, return as-is.
-  if (!newPlugins.some(pluginSpecIsGit)) return plugins;
-
-  // if string, replace with tuple with default options.
-  newPlugins = newPlugins.map(plugin =>
-    plugin === GitPluginId ? [GitPluginId, DefaultOptions] : plugin,
-  );
-
-  // ensure assets is an array
-  (newPlugins[gitPluginIndex][1] as GitOptions).assets = gitAssetsToArray(
-    (newPlugins[gitPluginIndex][1] as GitOptions).assets,
-  );
-
-  const discardPile: number[] = [];
-
-  // de-duplicate Git plugin entries; assign single entry to newPlugins[gitPluginIndex]
-  newPlugins.forEach((current, i) => {
-    if (i > gitPluginIndex && pluginSpecIsGit(current, gitPluginIndex)) {
-      // convert its assets to an array
-      const { assets } = newPlugins[i][1] as GitOptions;
-      const { message } = newPlugins[i][1] as GitOptions;
-      // push unique assets to first entry's assets array
-      if (assets !== undefined)
-        (
-          (newPlugins[gitPluginIndex][1] as GitOptions).assets as AssetEntry[]
-        ).push(...gitAssetsToArray(assets));
-      if (message !== undefined)
-        (newPlugins[gitPluginIndex][1] as GitOptions).message = message;
-      discardPile.push(i);
-    }
-  });
-  for (const i of discardPile.sort().reverse()) {
-    newPlugins.splice(i, 1);
-  }
-
-  return newPlugins;
+    return undefined;
+  }).filter(pluginSpec => pluginSpec !== undefined);
 }
