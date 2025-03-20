@@ -70,10 +70,10 @@ await describe('filterForGetters', async (c00) => {
         Object.getOwnPropertyDescriptors(
           // eslint-disable-next-line @typescript-eslint/no-extraneous-class
           class {
-            static #var0: string;
+            private static _var0: string;
 
             static get var0() {
-              return this.#var0;
+              return this._var0;
             }
           },
         ),
