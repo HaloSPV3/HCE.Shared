@@ -2,7 +2,7 @@ import { type } from 'arktype';
 import { detectFile, detectFileSync } from 'chardet';
 import { configDotenv } from 'dotenv';
 import { ok } from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, writeFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
@@ -53,7 +53,7 @@ export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed']
   if (env['GITHUB_OUTPUT'] === undefined || !existsSync(env['GITHUB_OUTPUT'])) {
     const githubOutputPath = join(tmpdir(), 'GITHUB_OUTPUT');
     if (!existsSync(githubOutputPath))
-      writeFile(githubOutputPath, '');
+      writeFileSync(githubOutputPath, '');
     env['GITHUB_OUTPUT'] = githubOutputPath;
   }
 
