@@ -5,6 +5,10 @@
   "[jsonc]": {
     "files.insertFinalNewline": true
   },
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "files.autoSave": "onFocusChange",
   "auto-close-tag.disableOnLanguage": [
     "javascript",
     "javascriptreact",
@@ -74,7 +78,6 @@
     "json5"
   ],
   "eslint.useFlatConfig": true,
-  "eslint.useESLintClass": true,
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -86,5 +89,11 @@
   ],
   "git.allowNoVerifyCommit": true,
   "markiscodecoverage.enableDecorations": true,
-  "sarif-viewer.connectToGithubCodeScanning": "off"
+  "sarif-viewer.connectToGithubCodeScanning": "off",
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
 }
