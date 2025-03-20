@@ -223,7 +223,7 @@ export class SemanticReleaseConfigDotnet {
 
     // 'ZipPublishDir' zips each publish folder to ./publish/*.zip
     execOptions.prepareCmd
-      = (execOptions.prepareCmd?.length ?? 0) > 0
+      = execOptions.prepareCmd !== undefined && execOptions.prepareCmd.length > 0
         ? `${execOptions.prepareCmd} && ${prepareCmdAppendix}`
         : prepareCmdAppendix;
 
