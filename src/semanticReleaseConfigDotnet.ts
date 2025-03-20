@@ -94,7 +94,7 @@ export class SemanticReleaseConfigDotnet {
     if (this._projectsToPackAndPush.length === 0) {
       const p = getEnvVarValue('PROJECTS_TO_PACK_AND_PUSH')?.split(';');
       if (p && p.length > 0) {
-        projectsToPackAndPush = p;
+        this._projectsToPackAndPush = p;
       }
       else if (debug.enabled) {
         debug.log(new Error('projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.'));
