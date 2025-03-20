@@ -4,8 +4,7 @@ import commitLintConventional from '@commitlint/config-conventional';
 import load from '@commitlint/load';
 import { RuleConfigSeverity, type QualifiedRuleConfig } from '@commitlint/types';
 import rawConfig from '../src/commitlintConfig.js';
-// @ts-expect-error ts(7016) Could not find a declaration file
-import createPreset from 'conventional-changelog-conventionalcommits';
+import { loadPreset } from 'conventional-changelog-preset-loader';
 
 await describe('commitlintConfig', async () => {
   await describe('rawConfig', async () => {
@@ -39,7 +38,7 @@ await describe('commitlintConfig', async () => {
   await describe('Loaded config tests', async () => {
     const config = await load(rawConfig);
     await it('has parserPreset', async () => {
-      const preset = await createPreset();
+      const preset = await loadPreset('conventionalcommits');
       ok(preset);
       ok('parserOpts' in preset || 'parser' in preset);
       ok(config.parserPreset);
