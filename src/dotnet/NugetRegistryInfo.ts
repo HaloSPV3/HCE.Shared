@@ -202,7 +202,7 @@ export class NugetRegistryInfo {
         return definedTokens;
 
       throw new Error(
-        `The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined.`,
+        `The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined in the process environment or nearest .env file.`,
       );
     }
   }
