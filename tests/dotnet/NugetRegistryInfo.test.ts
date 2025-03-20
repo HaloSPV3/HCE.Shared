@@ -1,4 +1,4 @@
-import { getEnvVarValue } from '../../src/envUtils.js';
+import { getEnvVarValue } from '../../src/utils/env.js';
 import {
   deepStrictEqual,
   notDeepStrictEqual,

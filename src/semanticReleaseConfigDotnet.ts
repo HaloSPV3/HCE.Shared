@@ -15,7 +15,7 @@ import type { Options } from 'semantic-release';
 import type { Options as SRExecOptions } from '@semantic-release/exec';
 import debug from './debug.js';
 import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/helpers.js';
-import { getEnvVarValue } from './envUtils.js';
+import { getEnvVarValue } from './utils/env.js';
 import { baseConfig } from './semanticReleaseConfig.js';
 import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js';
 import { MSBuildProject } from './dotnet/MSBuildProject.js';

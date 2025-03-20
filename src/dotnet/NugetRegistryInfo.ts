@@ -7,7 +7,7 @@ import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { cwd, env } from 'node:process';
-import { getEnvVarValue } from '../envUtils.js';
+import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
 import { MSBuildProject } from './MSBuildProject.js';
 
