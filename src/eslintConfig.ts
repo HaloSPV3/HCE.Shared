@@ -27,20 +27,32 @@ const globalIgnores: TSESLint.FlatConfig.Config = {
 
 const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
   {
+    /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
+    ...jsonc.configs['flat/recommended-with-json']
+      .map(v => ({ ...v } as JsoncCfgReducerIn))
+      .flatMap(a => jsonCfgReducer(a, {}))
+      .reduce(jsonCfgReducer),
     name: 'flat/recommended-with-json - https://github.com/ota-meshi/eslint-plugin-jsonc',
-    extends: jsonc.configs['flat/recommended-with-json'],
     files: ['*.json', '**/*.json'],
     ignores: globalIgnores.ignores,
   },
   {
+    /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
+    ...jsonc.configs['flat/recommended-with-json5']
+      .map(v => ({ ...v } as JsoncCfgReducerIn))
+      .flatMap(a => jsonCfgReducer(a, {}))
+      .reduce(jsonCfgReducer),
     name: 'flat/recommended-with-json5 - https://github.com/ota-meshi/eslint-plugin-jsonc',
-    extends: jsonc.configs['flat/recommended-with-json5'],
     files: ['*.json5', '**/*.json5'],
     ignores: globalIgnores.ignores,
   },
   {
+    /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
+    ...jsonc.configs['flat/recommended-with-jsonc']
+      .map(v => ({ ...v } as JsoncCfgReducerIn))
+      .flatMap(a => jsonCfgReducer(a, {}))
+      .reduce(jsonCfgReducer),
     name: 'flat/recommended-with-jsonc - https://github.com/ota-meshi/eslint-plugin-jsonc',
-    extends: jsonc.configs['flat/recommended-with-jsonc'],
     files: ['*.jsonc', '**/*.jsonc'],
     ignores: globalIgnores.ignores,
   },
@@ -73,3 +85,50 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
   globalIgnores,
 );
 export default config;
+
+type JsoncCfgReducerIn = Partial<typeof jsonc.configs['flat/recommended-with-jsonc'][number]>
+  | Partial<typeof jsonc.configs['flat/recommended-with-json5'][number]>;
+
+interface JsoncCfgReducerOut {
+  files: NonNullable<(typeof jsonc.configs)['flat/base'][number]['files']> | ['*.json', '**/*.json', '*.json5', '**/*.json5', '*.jsonc', '**/*.jsonc'];
+  plugins: typeof jsonc.configs['flat/base'][number]['plugins'];
+  languageOptions: {
+    parser: typeof import('jsonc-eslint-parser');
+  };
+  rules: NonNullable<
+    typeof jsonc['configs']['flat/recommended-with-json5'][number]['rules']
+    | typeof jsonc.configs['flat/recommended-with-jsonc'][number]['rules']
+  >;
+}
+
+function jsonCfgReducer(
+  a: JsoncCfgReducerIn | JsoncCfgReducerOut,
+  b: JsoncCfgReducerIn | JsoncCfgReducerOut,
+): JsoncCfgReducerOut {
+  const baseRules = jsonc.configs['flat/base']
+    .find(
+      v => v.rules !== undefined,
+    )?.rules ?? (() => { throw new Error('Unable to find jsonc base rules'); })();
+
+  return {
+    files: jsonc.configs['flat/base']
+      .filter(v => v.files !== undefined)
+      .flatMap(v => v.files),
+    plugins: {
+      jsonc: jsonc.configs['flat/base']
+        .find(v =>
+          v.plugins?.jsonc !== undefined,
+        )?.plugins?.jsonc ?? (() => { throw new Error('Unable to find jsonc plugin'); })(),
+    },
+    languageOptions: {
+      parser: jsonc.configs['flat/base']
+        .find(v => v.languageOptions?.parser)
+        ?.languageOptions?.parser ?? (() => { throw new Error('Unable to find jsonc parser'); })(),
+    },
+    rules: {
+      ...a.rules ?? {},
+      ...b.rules ?? {},
+      ...baseRules,
+    },
+  };
+}
