@@ -188,14 +188,8 @@ export class NugetRegistryInfo {
     function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): readonly [string, string][] {
       const definedTokens = Object.freeze(
         tokenEnvVars
-          .map(
-            /* key-value tuple */ key => [key, getEnvVarValue(key)] as const,
-          )
-          .filter(
-            (
-              pair: readonly [string, string | undefined],
-            ): pair is [string, string] => pair[1] !== undefined,
-          ),
+          .map(_envKeyToTuple)
+          .filter(_filterDefinedVars),
       );
 
       if (definedTokens.length !== 0)
@@ -204,6 +198,13 @@ export class NugetRegistryInfo {
       throw new Error(
         `The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined in the process environment or nearest .env file.`,
       );
+
+      function _envKeyToTuple(key: string): [typeof key, string | undefined] {
+        return [key, getEnvVarValue(key)] as const;
+      }
+      function _filterDefinedVars(envVarTuple: [string, string | undefined]): envVarTuple is [string, string] {
+        return envVarTuple[1] !== undefined;
+      }
     }
   }
 
