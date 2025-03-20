@@ -17,20 +17,27 @@ export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.P
 }
 
 /**
- * Get the value from the given env var. If undefined, load .env from CWD and try again or return undefined. If found by dotenv, the variable will be loaded into process.env.
- * @param envVar
- * @returns
+ * Get the value from the given env var in the current process or nearby .env file.
+ * If found in process environment, its value is returned.
+ * Else, load nearest .env file into the process environment and try again.
+ * If NOT found, console.warn and return `undefined`
+ *
+ * @export
+ * @param {string} envVar
+ * @param {?Parameters<typeof loadDotenv>[0]} [options]
+ * @returns {(string | undefined)}
  */
 export function getEnvVarValue(envVar: string, options?: Parameters<typeof loadDotenv>[0]): string | undefined {
-  let value = env[envVar];
-  if (!value) {
-    try {
-      loadDotenv(options);
-    }
-    catch (err) {
-      console.error(String(err));
-    }
-    value = env[envVar];
-  }
-  return value;
+  const value = env[envVar] ?? loadDotenv(options);
+  if (typeof value === 'string')
+    return value;
+  if (value.parsed?.[envVar] !== undefined)
+    return value.parsed[envVar];
+
+  const err = value.error !== undefined
+    ? `\n${value.error.stack ?? value.error.message}`
+    : '';
+  console.warn(`Unable to find ${envVar} in process environment or in a .env file.` + err);
+
+  return undefined;
 }
