@@ -37,6 +37,8 @@ const scopes = {
   dotnet:
     'Affects files in "dotnet/" or "src/dotnet/" not included in other scopes -OR- affects our generic GitHub reusable workflows provided for assisting dotnet CI.',
   'semantic-release': 'Affects "release.config.mjs" or "src/semantic*.ts".',
+  eslintConfig:
+    'Affects "src/eslintConfig.ts" or its tests.',
   packemon:
     'Affects Packemon\'s configurations: "package.json#packemon", "packemon.config.ts"',
   'utils.execAsync': 'Affects "src/utils/execAsync.ts" or its tests.',
