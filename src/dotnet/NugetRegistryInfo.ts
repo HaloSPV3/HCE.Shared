@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import node_path from 'node:path';
 import { cwd, env } from 'node:process';
 import { isNativeError } from 'node:util/types';
-import { getEnvVarValue } from '../envUtils.js';
+import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
 import { MSBuildProject } from './MSBuildProject.js';
 

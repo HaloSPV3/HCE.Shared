@@ -1,9 +1,9 @@
-import { getEnv, getEnvVarValue } from '@halospv3/hce.shared-config/envUtils';
+import { getEnv, getEnvVarValue } from '../../src/utils/env.js';
 import { strictEqual } from 'node:assert/strict';
 import { env } from 'node:process';
 import { describe, it } from 'node:test';
 
-await describe('envUtils', async () => {
+await describe('env', async () => {
   await describe('getEnvVarValue', async () => {
     await it('returns value of TEMP when told to do so', () => {
       strictEqual(getEnvVarValue('TEMP'), env['TEMP']);

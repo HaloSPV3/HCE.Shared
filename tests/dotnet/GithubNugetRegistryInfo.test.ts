@@ -1,4 +1,4 @@
-import { getEnvVarValue } from '../../src/envUtils.js';
+import { getEnvVarValue } from '../../src/utils/env.js';
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict';
 import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';

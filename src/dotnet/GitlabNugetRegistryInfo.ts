@@ -1,4 +1,4 @@
-import { getEnvVarValue } from '../envUtils.js';
+import { getEnvVarValue } from '../utils/env.js';
 import {
   NugetRegistryInfo as NugetRegistryInfo,
   NugetRegistryInfoOptions as NRIOpts,
