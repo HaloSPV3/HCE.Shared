@@ -6,7 +6,7 @@ import {
   RuleConfigSeverity,
   type QualifiedRuleConfig,
 } from '@commitlint/types';
-import rawConfig from '@halospv3/hce.shared-config/commitlintConfig';
+import rawConfig from '../src/commitlintConfig.js';
 // @ts-expect-error ts(7016) Could not find a declaration file
 import createPreset from 'conventional-changelog-conventionalcommits';
 
