@@ -165,9 +165,15 @@ export class NugetRegistryInfo {
   constructor(opts: (typeof NRIOpts)['inferIn']) {
     const validOpts = NRIOpts.from(opts);
     this._project = validOpts.project;
-    this._resolvedEnvVariable = _GetTokenEnvVariables(
-      validOpts.tokenEnvVars,
-    )[0][0];
+
+    const tokenVar = _GetTokenEnvVariables(validOpts.tokenEnvVars)[0];
+    if (tokenVar === undefined) {
+      throw new Error(
+        `None of the env variables specified in ${JSON.stringify(validOpts.tokenEnvVars)
+        } were found in the process environment or nearest .env file.`,
+      );
+    }
+    this._resolvedEnvVariable = tokenVar[0];
     this._url = validOpts.url;
 
     /**
