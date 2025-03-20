@@ -38,7 +38,7 @@ await describe('getConfig', async (c) => {
 
     ok(
       !(actual instanceof Error),
-      '`actual` should not be an Error.\n' + actual.stack,
+      '`actual` should not be an Error.\n' + String((actual as Error).stack ?? (actual as Error).message),
     );
   });
 
