@@ -21,6 +21,7 @@ const globalIgnores: TSESLint.FlatConfig.Config = {
     'mjs/',
     'node_modules/**/*',
     '**/node_modules/**/*',
+    '**/*.tsbuildinfo',
   ],
 };
 
