@@ -26,12 +26,12 @@ await describe('NugetRegistryInfo', async (ctx0) => {
     deepStrictEqual(NRI.name, ctx0.name);
   });
 
-  await describe('canPushPackagesToUrl', (ctx1) => {
+  await describe('canPushPackagesToUrl', async (ctx1) => {
     await it('exists in NugetRegistryInfo prototype', () => {
       strictEqual(ctx1.name in NRI.prototype, true);
     });
 
-    it('returns Promise<true>', async () => {
+    await it('returns Promise<true>', async () => {
       const x = await (Promise.resolve(
         true,
       ));
