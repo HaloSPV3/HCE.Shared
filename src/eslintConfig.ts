@@ -3,6 +3,7 @@ import type { TSESLint } from '@typescript-eslint/utils';
 import jsonc from 'eslint-plugin-jsonc';
 import globals from 'globals/globals.json' with { type: 'json' };
 import tseslint from 'typescript-eslint';
+import stylistic, { type RuleOptions } from '@stylistic/eslint-plugin';
 
 // https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config
 // https://www.google.com/search?q=javascript+recurse+through+object+and+remove+undefined+properties
@@ -62,6 +63,28 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
       eslint.configs.recommended satisfies TSESLint.FlatConfig.Config,
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
+      {
+        extends: [
+          stylistic.configs.customize({
+            quoteProps: 'as-needed',
+            semi: true,
+            indent: 2,
+          }),
+        ],
+        rules: {
+          '@stylistic/semi': [
+            'error',
+            'always',
+            {
+              omitLastInOneLineBlock: false,
+              omitLastInOneLineClassBody: false,
+            },
+          ] satisfies TSESLint.SharedConfig.RuleEntry | [TSESLint.SharedConfig.RuleLevelAndOptions, RuleOptions['@stylistic/semi'][0], RuleOptions['@stylistic/semi'][1]],
+          // broken. Try to use VSCode's TypeScript formatter.
+          '@stylistic/ts/indent': ['off'],
+          '@w': ['off'],
+        } as TSESLint.SharedConfig.RulesRecord,
+      },
     ],
     files: [
       '**/*.ts',
