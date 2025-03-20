@@ -5,7 +5,6 @@ import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import packageJson from '../package.json' with { type: 'json' };
 const { packemon } = packageJson;
-// import { isMainThread, Worker } from "node:worker_threads";
 
 // #region PackemonTypes
 type InputMap = Record<string, string>;
@@ -80,7 +79,6 @@ await describe('package.json', async () => {
         verb = 'require';
       }
 
-      // const worker = new Worker(`const def = ${action}('${id})`);
       const cp = spawnSync('node', ['-', `${verb}('${id}');.exit`], {
         encoding: 'utf8',
       });
@@ -135,7 +133,6 @@ await describe('package.json', async () => {
 
   const importedEsm: string[] = [];
   for (const result of results) {
-    // result.validity = await result.validity;
     if (!(result.validity instanceof Error)) {
       if (result.action === 'import') {
         importedEsm.push(result.entry.name);
