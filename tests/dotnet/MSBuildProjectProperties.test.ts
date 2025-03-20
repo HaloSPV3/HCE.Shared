@@ -7,7 +7,7 @@ import { CaseInsensitiveMap } from './../../src/CaseInsensitiveMap.js';
 await describe('MSBuildProjectProperties', async (c0) => {
   const emptyMap = new CaseInsensitiveMap<string, string>();
   const emptySample = new MPP('', emptyMap);
-  await it('throws if path does not exist', async () => {
+  await it('throws if path does not exist', () => {
     // does not create file
     const tmpName = tmpNameSync();
     let ctorHadThrown: boolean;

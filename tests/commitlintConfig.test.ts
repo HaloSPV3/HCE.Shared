@@ -53,7 +53,7 @@ await describe('commitlintConfig', async () => {
         deepStrictEqual(config.parserPreset.parserOpts, preset.parserOpts);
       }
     });
-    await it('has rules', async () => {
+    await it('has rules', () => {
       deepStrictEqual(
         config.rules['body-leading-blank'],
         commitLintConventional.rules['body-leading-blank'],

@@ -20,7 +20,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       project: DeterministicNupkgCsproj,
     });
 
-    await it('defaults to project-level endpoint', async () => {
+    await it('defaults to project-level endpoint', () => {
       if (!getEnvVarValue('CI_PROJECT_ID'))
         process.env['CI_PROJECT_ID'] = 'placeholder';
       if (!getEnvVarValue('CI_JOB_TOKEN'))
