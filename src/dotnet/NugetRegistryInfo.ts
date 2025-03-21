@@ -523,7 +523,7 @@ but the environment variable is empty or undefined.`);
     type.boolean.assert(usePerSourceSubfolder);
     type.boolean.assert(usePerPackageIdSubfolder);
 
-    validOpts.root ??= `${cwd()}/publish`;
+    validOpts.root = validOpts.root === '' ? `${cwd()}/publish` : validOpts.root;
     if (usePerSourceSubfolder)
       validOpts.root = join(
         validOpts.root,
