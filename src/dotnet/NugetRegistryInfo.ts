@@ -294,9 +294,11 @@ but the environment variable is empty or undefined.`);
 
   /**
    * The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
+   * `propertyOverrides` is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
    */
   static readonly PackPackagesOptionsType = Object.freeze(
     type({
+      propertyOverrides: type('Record<string,string>').configure({ description: 'a custom arg for handling MSBuild\'s `-property:<n>=<v>` argument for overriding MSBuild properties.' }),
       artifactsPath: 'string',
       configuration: '"Release" | "Debug"',
       disableBuildServers: 'boolean',
@@ -357,8 +359,6 @@ but the environment variable is empty or undefined.`);
       'dotnet',
       'pack',
       `"${this._project.Properties.MSBuildProjectFullPath}"`,
-      '-o',
-      `"${validOpts.output}"`,
     ];
     if (validOpts.artifactsPath !== undefined)
       packCmdArr.push('--artifactsPath', `"${validOpts.artifactsPath}"`);
@@ -384,6 +384,16 @@ but the environment variable is empty or undefined.`);
       packCmdArr.push('--verbosity', validOpts.verbosity);
     if (validOpts.versionSuffix !== undefined)
       packCmdArr.push('--version-suffix', validOpts.versionSuffix);
+    /** Haphazard. I need to override the Version and I'm not considering side
+     * effects of arbitrary overrides. */
+    if (validOpts.propertyOverrides) {
+      /** convert propertyOverrides record to "-p:n0=v0;n1=v1;n2=v2" et cetera */
+      const assignments: string = '-p:' + Object.entries(validOpts.propertyOverrides)
+        .map(v => `${v[0]}=${v[1]}`).join(';');
+      packCmdArr.push(`"${assignments}"`);
+    }
+    // MSBuild parses everything after -o as the path.
+    packCmdArr.push(`-o "${validOpts.output}"`);
 
     return packCmdArr.join(' ');
   }
@@ -446,6 +456,8 @@ but the environment variable is empty or undefined.`);
     const validOpts = NRI.PackPackagesOptionsType.from(opts);
 
     validOpts.output = getDummiesDir(this._project);
+    validOpts.propertyOverrides ??= {};
+    validOpts.propertyOverrides['Version'] = '0.0.1-DUMMY';
     const packCmd = this.GetPackCommand(validOpts, true);
     /** e.g.
      * ```txt
@@ -461,10 +473,7 @@ but the environment variable is empty or undefined.`);
     //  'C:\Repos\HaloSPV3\hce.shared-config\dotnet\samples\HCE.Shared.DeterministicNupkg\packages\HCE.Shared.DeterministicNupkg.0.0.1-DUMMY.nupkg'
     //  because it is being used by another process.
     // https://duckduckgo.com/?q=windows+log+file+operations+for+a+given+filename&atb=v459-1&ia=web
-    const packOutput = await execAsync(
-      `${packCmd} -p:Version=0.0.1-DUMMY`,
-      true,
-    );
+    const packOutput = await execAsync(packCmd, true);
     return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout);
   }
 
