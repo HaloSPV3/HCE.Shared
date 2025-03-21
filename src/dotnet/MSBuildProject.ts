@@ -235,8 +235,7 @@ export class MSBuildProject {
         return includeNonPublic
           ? targets
           : targets.filter(v => !v.startsWith('_'));
-      },
-      );
+      });
   }
 
   /**
