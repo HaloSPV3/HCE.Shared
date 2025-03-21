@@ -23,6 +23,8 @@ const globalIgnores: TSESLint.FlatConfig.Config = {
     'node_modules/**/*',
     '**/node_modules/**/*',
     '**/*.tsbuildinfo',
+    '**/bin/**/*',
+    '**/obj/**/*',
   ],
 };
 
