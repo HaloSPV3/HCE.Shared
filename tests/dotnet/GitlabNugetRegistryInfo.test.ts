@@ -25,7 +25,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         process.env['CI_PROJECT_ID'] = 'placeholder';
       if (!getEnvVarValue('CI_JOB_TOKEN'))
         process.env['CI_JOB_TOKEN'] = 'placeholder';
-      const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId}/packages/nuget/index.json`;
+      const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`;
       strictEqual(
         new GLNRI({ project: DeterministicNupkgCsproj }).url,
         expected,
@@ -37,7 +37,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
       if (!getEnvVarValue('CI_JOB_TOKEN'))
         process.env['CI_JOB_TOKEN'] = 'placeholder';
-      const expected = `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId}/-/packages/nuget/index.json`;
+      const expected = `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId ?? 'placeholder'}/-/packages/nuget/index.json`;
       strictEqual(
         new GLNRI({
           project: DeterministicNupkgCsproj,
@@ -163,7 +163,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
       strictEqual(
         GLNRI.groupUrl,
-        `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId}/-/packages/nuget/index.json`,
+        `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId ?? 'placeholder'}/-/packages/nuget/index.json`,
       );
     });
   });
@@ -178,7 +178,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         process.env['CI_PROJECT_ID'] = 'placeholder';
       strictEqual(
         GLNRI.projectUrl,
-        `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId}/packages/nuget/index.json`,
+        `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`,
       );
     });
   });
