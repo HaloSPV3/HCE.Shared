@@ -99,9 +99,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     super(msbuildProjectFullPath, properties);
 
     /** filter out entries with undefined values; convert values to strings */
-    consumables.forEach((key, value, map) => {
-      if (value === undefined)
-        map.delete(key);
+    consumables.forEach((key, value) => {
       if (typeof value !== 'string')
         consumables.set(key, String(value));
     });
