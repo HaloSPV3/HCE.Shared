@@ -80,9 +80,6 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
               omitLastInOneLineClassBody: false,
             },
           ] satisfies TSESLint.SharedConfig.RuleEntry | [TSESLint.SharedConfig.RuleLevelAndOptions, RuleOptions['@stylistic/semi'][0], RuleOptions['@stylistic/semi'][1]],
-          // broken. Try to use VSCode's TypeScript formatter.
-          '@stylistic/ts/indent': ['off'],
-          '@w': ['off'],
         } as TSESLint.SharedConfig.RulesRecord,
       },
     ],
