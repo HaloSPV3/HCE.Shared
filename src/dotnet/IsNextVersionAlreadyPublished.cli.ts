@@ -22,8 +22,7 @@ if (typeof options.url !== 'string')
 
 const packageId = options.packageId,
   url = options.url,
-  // versionPattern = new RegExp(/(?<=\\n?new-release-version=)[\d.\-+\w]+(?=\n|$)/)
-  versionPattern = new RegExp(/[\d.\-+\w]+/);
+  versionPattern = new RegExp(/\d+\.\d+\.\d+([-+].+)?/);
 const ghOutput = (await getGithubOutput()) ?? {};
 const matches = versionPattern.exec(ghOutput['new-release-version'] ?? '');
 if (matches === null || matches.length === 0)
