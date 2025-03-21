@@ -140,7 +140,7 @@ export function getPrototypes<T extends ClassLike<T>>(
   while (undefined != (parent = Reflect.getPrototypeOf(current))) {
     // current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
     if (isConstructor(current))
-      returnValue.push(returnType === 'classInstances' ? current.prototype : current);
+      returnValue.push(returnType === 'classInstances' ? current.prototype as object : current);
     else break;
 
     /*
@@ -149,13 +149,12 @@ export function getPrototypes<T extends ClassLike<T>>(
      * superclass.
      */
     if (
-      null !== (parent = Reflect.getPrototypeOf(current))
+      null != (parent = Reflect.getPrototypeOf(current))
       // && isConstructor(parent)
 
       && 'name' in parent
       && typeof parent.name === 'string'
       && '' !== parent.name
-      && parent !== undefined
     ) {
       current = parent;
     }
@@ -200,13 +199,18 @@ export function isConstructor(obj: unknown): obj is ClassLike {
    * > func.prototype?.constructor?.name === func.name
    * false
    */
-  if (typeof obj.prototype?.constructor === 'function') {
+  let ctor: undefined | ((...args: unknown[]) => unknown) = undefined;
+  if (typeof obj.prototype === 'object'
+    && (obj.prototype as object | null) != null
+    && 'constructor' in (obj.prototype as object)
+    && typeof (obj.prototype as { constructor: unknown }).constructor === 'function') {
+    ctor = (obj.prototype as { constructor: unknown }).constructor as ((...args: unknown[]) => unknown);
     const _ctor = Reflect.getOwnPropertyDescriptor(
       obj.prototype,
       'constructor',
     );
     const _name = Reflect.getOwnPropertyDescriptor(
-      obj.prototype.constructor,
+      ctor,
       'name',
     );
     // short-circuit if `obj.prototype.constructor` is a function, but not a constructor. Return false.
