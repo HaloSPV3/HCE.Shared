@@ -301,15 +301,25 @@ export class MSBuildProject {
         'dotnet msbuild was expected to output JSON, but output its version header instead.',
       );
     }
-    const evaluation = new MSBuildEvaluationOutput(
-      stdOutErr.stdout.startsWith('{')
-        ? JSON.parse(stdOutErr.stdout)
-        : msbuildEvaluationOutput.from({
-            Properties: {
-              [options.GetProperty[0]]: String(JSON.parse(stdOutErr.stdout)),
-            },
-          }),
-    );
+
+    let rawOutput = undefined;
+    if (stdOutErr.stdout.startsWith('{')) {
+      /** stdout is JSON string */
+      rawOutput = stdOutErr.stdout;
+    }
+    else if (options.GetProperty.length > 0 && options.GetProperty[0] !== undefined) {
+      rawOutput = {
+        Properties: {
+          [options.GetProperty[0]]: String(JSON.parse(stdOutErr.stdout)),
+        },
+      };
+    }
+    else {
+      throw new Error('Dotnet/MSBuild evaluation output is not a string nor JSON object or array.');
+    }
+
+    const evaluation = new MSBuildEvaluationOutput(rawOutput);
+
     return new MSBuildProject({
       fullPath: options.FullName,
       projTargets: await MSBuildProject.GetTargets(options.FullName),
