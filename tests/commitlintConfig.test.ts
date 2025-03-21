@@ -47,9 +47,9 @@ await describe('commitlintConfig', async () => {
         commitLintConventional.parserPreset,
       );
       if ('parser' in preset)
-        deepStrictEqual(config.parserPreset.parserOpts, preset.parser);
+        deepStrictEqual(config.parserPreset.parserOpts, preset['parser']);
       else {
-        deepStrictEqual(config.parserPreset.parserOpts, preset.parserOpts);
+        deepStrictEqual(config.parserPreset.parserOpts, preset['parserOpts']);
       }
     });
     await it('has rules', () => {
