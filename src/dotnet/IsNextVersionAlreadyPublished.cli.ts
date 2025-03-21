@@ -10,7 +10,7 @@ const options: {
 for (let i = 0; i < args.length; i += 2) {
   const argName = args[i];
   const argValue = args[i + 1];
-  if (argName.startsWith('--')) {
+  if (argValue !== undefined && argName?.startsWith('--') === true && options[argName.slice(2)] !== undefined) {
     options[argName.slice(2)] = argValue;
   }
 }
