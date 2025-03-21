@@ -326,9 +326,24 @@ export class MSBuildProject {
     });
   }
 
+  /**
+   * Evaluate multiple project paths with some default Evaluate options.
+   *
+   * @public
+   * @static
+   * @async
+   * @param {string[]} projectsToPackAndPush
+   * @returns {Promise<MSBuildProject[]>}
+   * @todo consider returning Promise<MSBuildProject>[] so callers can `await MSBP.PackableProjectsToMSBuildProjects(projPaths).then(projPromises => projPromises.map(p => ...))`. This is more difficult to maintain, but can have slightly greater performance.
+   */
   public static async PackableProjectsToMSBuildProjects(
     projectsToPackAndPush: string[],
   ): Promise<MSBuildProject[]> {
+    const dirEntriesPromise = toDirEntries(typeof projectsToPackAndPush === 'string' ? [projectsToPackAndPush] : projectsToPackAndPush);
+    const projectPromises: Promise<MSBuildProject>[] = await dirEntriesPromise.then((direntArr: Dirent[]) => direntArr.map(convertDirentToMSBuildProject));
+    const projects: Promise<MSBuildProject[]> = Promise.all(projectPromises);
+    return projects;
+
     async function toDirEntries(
       projectsToPackAndPush: string[],
     ): Promise<Dirent[]> {
@@ -367,29 +382,26 @@ export class MSBuildProject {
       return dirEntries.flat();
     }
 
-    return Promise.all(
-      await toDirEntries(projectsToPackAndPush).then(direntArr =>
-        direntArr.map(async (dirent): Promise<MSBuildProject> => {
-          const fullPath = resolve(dirent.parentPath, dirent.name);
-          const projTargets: Promise<string[]>
-            = MSBuildProject.GetTargets(fullPath);
-          // this might be too long for a command line. What was it on Windows?
-          // 2^15 (32,768) character limit for command lines?
-          const getProperties = GetNPPGetterNames(true, true);
-          return await this.Evaluate(
-            new EvaluationOptions({
-              FullName: fullPath,
-              GetItem: [],
-              GetProperty: getProperties,
-              GetTargetResult: [],
-              Property: {},
-              Targets: await projTargets.then(v =>
-                v.includes('Pack') ? ['Pack'] : [],
-              ),
-            }),
-          );
+    async function convertDirentToMSBuildProject(dirent: Dirent): Promise<MSBuildProject> {
+      const fullPath = resolve(dirent.parentPath, dirent.name);
+      const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath);
+      const evalTargets = await projTargets.then(v =>
+        v.includes('Pack') ? ['Pack'] : [],
+      );
+      // this might be too long for a command line. What was it on Windows?
+      // 2^15 (32,768) character limit for command lines?
+      const getProperties = GetNPPGetterNames(true, true);
+
+      return await MSBuildProject.Evaluate(
+        new EvaluationOptions({
+          FullName: fullPath,
+          GetItem: [],
+          GetProperty: getProperties,
+          GetTargetResult: [],
+          Property: {},
+          Targets: evalTargets,
         }),
-      ),
-    );
+      );
+    }
   }
 }
