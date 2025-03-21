@@ -198,9 +198,15 @@ export function isConstructor(obj: unknown): obj is ClassLike {
    * true
    * > func.prototype?.constructor?.name === func.name
    * false
+   * typeof String.prototype ==='object'
+   * > true
+   * typeof Function.prototype === 'object';
+   * > false
+   * typeof Function.prototype
+   * > 'function'
    */
   let ctor: undefined | ((...args: unknown[]) => unknown) = undefined;
-  if (typeof obj.prototype === 'object'
+  if ((typeof obj.prototype === 'object' || typeof obj.prototype === 'function')
     && (obj.prototype as object | null) != null
     && 'constructor' in (obj.prototype as object)
     && typeof (obj.prototype as { constructor: unknown }).constructor === 'function') {
