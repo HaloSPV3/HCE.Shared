@@ -1,7 +1,6 @@
 import { MSBuildProject } from './MSBuildProject.js';
 import { NugetRegistryInfo } from './NugetRegistryInfo.js';
 import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
-import { NugetProjectProperties as NPP } from './NugetProjectProperties.js';
 import { cwd } from 'process';
 
 /**
@@ -235,28 +234,32 @@ export async function configurePrepareCmd(
 }
 
 /**
- * todo: reorder parameters so registryInfos is first. Optional parameters should always follow required parameters.
- * todo: split into separate functions. Token verification should be in verifyConditionsCmd. Each package may be signed individually.
- * TODO: completely rewrite
+ * Prepare the CLI command to push NuGet packages. This should added to the `publishCmd` option of `@semantic-release/exec`
+ *
+ * Ensure your verifyConditionsCmd is set to prevent releases failing due to bad tokens or packages!
+ * See {@link NugetRegistryInfo#PackDummyPackage}, {@link NugetRegistryInfo#GetPushDummyCommand}
  * @param packageOutputPath
  * @param registryInfos
  * @param pushToGitHub
- * @returns
+ * @returns a string of `dotnet pack` and `dotnet push` commands, joined by ' && '
  */
-export async function configureDotnetNugetPush(
+export function configureDotnetNugetPush(
   registryInfos: NugetRegistryInfo[],
   packageOutputPath = `${cwd()}/publish`,
-): Promise<string> {
+): string {
   if (registryInfos.some(registry => registry.url.trim() === ''))
     throw new Error('The URL for one of the provided NuGet registries was empty or whitespace.');
 
-  return registryInfos
-    .map((nri): string =>
+  const packCmds = registryInfos.map(
+    (nri): string =>
       nri.GetPackCommand(
-        NugetRegistryInfo.PackPackagesOptionsType.from({ output: packageOutputPath }),
-        false,
-        false,
+        { output: packageOutputPath },
+        true,
+        true,
       ),
-    )
-    .join(' && ');
+  );
+
+  const pushCmds = registryInfos.map(nri => nri.GetPushCommand({ root: packageOutputPath }, true, true));
+
+  return [...packCmds, ...pushCmds].join(' && ');
 }
