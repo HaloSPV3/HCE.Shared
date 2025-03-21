@@ -12,7 +12,7 @@ export default {
         { ...config, caller: undefined, configFile: undefined } as BabelOptions,
         undefined,
         2,
-      ),
+      ) + '\n',
       'utf8',
     );
   },
