@@ -10,11 +10,11 @@ import { config } from 'typescript-eslint';
 const hceSharedConfig = (await import('./src/eslintConfig.ts')).default;
 
 export default config(
-  ...hceSharedConfig.filter((v) => v.name == undefined || v.name !== 'JSTS'),
+  ...hceSharedConfig.filter(v => v.name == undefined || v.name !== 'JSTS'),
   md.configs.recommended,
   {
     extends: [
-      hceSharedConfig.filter((v) => v.name === 'JSTS'),
+      hceSharedConfig.filter(v => v.name === 'JSTS'),
       stylistic.configs.customize({
         quoteProps: 'as-needed',
         semi: true,
