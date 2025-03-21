@@ -1,3 +1,9 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See
+[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
+for commit guidelines.
+
 ## [2.6.0](https://github.com/halospv3/hce.shared/compare/v2.5.0...v2.6.0) (2024-06-07)
 
 ### Features
@@ -257,12 +263,6 @@
 - **node:** rename index.mts to index.ts
   ([f0cd2ee](https://github.com/halospv3/hce.shared/commit/f0cd2ee2bc1e1a4af7dde349d6df65c85944b035))
 
-# Changelog
-
-All notable changes to this project will be documented in this file. See
-[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
-for commit guidelines.
-
 ## [1.0.5](https://github.com/halospv3/hce.shared/compare/v1.0.4...v1.0.5) (2023-07-17)
 
 ### Bug Fixes
@@ -292,13 +292,7 @@ for commit guidelines.
 - remove commitizen script
   ([46fdf69](https://github.com/halospv3/hce.shared/commit/46fdf6929bffbf63a81a2c2bfc06fb0d92e905e3))
 
-# Changelog
-
-All notable changes to this project will be documented in this file. See
-[standard-version](https://github.com/conventional-changelog/standard-version)
-for commit guidelines.
-
-### 1.0.2 (2021-12-29)
+## 1.0.2 (2021-12-29)
 
 ### Bug Fixes
 
