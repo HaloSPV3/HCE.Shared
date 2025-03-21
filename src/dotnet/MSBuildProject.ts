@@ -338,7 +338,7 @@ export class MSBuildProject {
       }
       const dirEntries: (Dirent | Dirent[])[] = await Promise.all(
         projectsToPackAndPush.map(async (proj) => {
-          proj = await realpath(await makeAbsolute(proj));
+          proj = await realpath(makeAbsolute(proj));
           const stats = await stat(proj);
           let entries: Dirent[];
 
