@@ -39,7 +39,10 @@ await describe('GithubNugetRegistryInfo', async () => {
 
       getOwner();
       strictEqual(
-        await new GHNRI(({ project: DeterministicNupkgCsproj })).canPushPackagesToUrl,
+        await new GHNRI({ project: DeterministicNupkgCsproj })
+        // @ts-expect-error Is deprecated
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+          .canPushPackagesToUrl,
         true,
       );
     });
@@ -51,9 +54,12 @@ await describe('GithubNugetRegistryInfo', async () => {
       const result = await new GHNRI({
         project: DeterministicNupkgCsproj,
         tokenEnvVars: tokenEnvVars,
-      }).canPushPackagesToUrl.catch((reason: unknown) =>
-        reason instanceof Error ? reason : new Error(String(reason)),
-      );
+      })
+      // @ts-expect-error Is deprecated
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+        .canPushPackagesToUrl.catch((reason: unknown) =>
+          reason instanceof Error ? reason : new Error(String(reason)),
+        );
       notDeepStrictEqual(result, true);
       ok(result instanceof Error);
     });
