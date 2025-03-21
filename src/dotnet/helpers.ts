@@ -113,58 +113,64 @@ export async function configurePrepareCmd(
       }),
     );
 
-    /** convert evaluatedPublishProjects to...strings? */
-    const converted = await Promise.all(
-      evaluatedPublishProjects.flatMap(async (proj: MSBuildProject): Promise<string[]> => {
-        // If the project imports PublishAll to publish for each TFM-RID
-        // permutation, return the appropriate command line.
-        if (proj.Targets.includes('PublishAll'))
-          return [`${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`];
+    /** @return e.g. `['--runtime win7-x86 --framework net6.0', '--runtime win7-x64 --framework net6.0' ]` */
+    function getPublishArgsPermutations(proj: MSBuildProject): string[] {
+      // If the project imports PublishAll to publish for each TFM-RID
+      // permutation, return the appropriate command line.
+      if (proj.Targets.includes('PublishAll'))
+        return [`${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`];
 
-        // #region formatFrameworksAndRuntimes
-        const tfmRidPermutations: string[] = []; // forEach, run dotnet [proj.Properties.MSBuildProjectFullPath,...v]
-        const RIDs: string[] = proj.Properties.RuntimeIdentifiers.split(';');
-        const TFMs: string[] = proj.Properties.TargetFrameworks.split(';');
-        /*
-         * const spaceStr = ' '
-         * const splitEmpty = emptyStr.split(';')
-         * console.log(splitEmpty)
-         * // Expected output: Array [" "]
-         */
+      // #region formatFrameworksAndRuntimes
+      const tfmRidPermutations: string[] = []; // forEach, run dotnet [proj.Properties.MSBuildProjectFullPath,...v]
+      const RIDs: string[] = proj.Properties.RuntimeIdentifiers.split(';');
+      const TFMs: string[] = proj.Properties.TargetFrameworks.split(';');
+      /*
+           * const spaceStr = ' '
+           * const splitEmpty = emptyStr.split(';')
+           * console.log(splitEmpty)
+           * // Expected output: Array [" "]
+           */
 
-        if (TFMs.length === 0 && RIDs.length === 0)
-          return [proj.Properties.MSBuildProjectFullPath]; // return string[]
+      if (TFMs.length === 0 && RIDs.length === 0)
+        return [proj.Properties.MSBuildProjectFullPath]; // return string[]
 
-        if (RIDs.length !== 0) {
-          if (TFMs.length !== 0) {
-            for (const RID of RIDs) {
-              for (const TFM of TFMs) {
-                tfmRidPermutations.push(`--runtime ${RID} --framework ${TFM}`);
-              }
-            }
-          }
-          else {
-            // assume singular TFM. No need to specify it.
-            for (const RID of RIDs) {
-              tfmRidPermutations.push(`--runtime ${RID}`);
+      if (RIDs.length !== 0) {
+        if (TFMs.length !== 0) {
+          for (const RID of RIDs) {
+            for (const TFM of TFMs) {
+              tfmRidPermutations.push(
+                `--runtime ${RID} --framework ${TFM}`,
+              );
             }
           }
         }
-        else if (TFMs.length !== 0) {
-          for (const TFM of TFMs) {
-            tfmRidPermutations.push(`--framework ${TFM}`);
+        else {
+          // assume singular TFM. No need to specify it.
+          for (const RID of RIDs) {
+            tfmRidPermutations.push(`--runtime ${RID}`);
           }
         }
+      }
+      else if (TFMs.length !== 0) {
+        for (const TFM of TFMs) {
+          tfmRidPermutations.push(`--framework ${TFM}`);
+        }
+      }
 
-        return tfmRidPermutations.map((permArgs: string): string =>
-          [proj.Properties.MSBuildProjectFullPath, permArgs].join(' '),
-        );
-      }),
-    );
+      return tfmRidPermutations.map((permArgs: string): string =>
+        [proj.Properties.MSBuildProjectFullPath, permArgs].join(' '),
+      );
+      // #endregion formatFrameworksAndRuntimes
+    }
 
-    return converted.map((args: string[]): string =>
-      `dotnet publish ${args.join(' ')}`,
-    ).join(' && ');
+    /** convert evaluatedPublishProjects to sets of space-separated CLI args. */
+    const argsSets: string[] = evaluatedPublishProjects.flatMap(proj => getPublishArgsPermutations(proj));
+
+    // For each argSet, create a new exec command. Then, join all commands with ' && ' so they are executed serially, synchronously.
+    // e.g. `dotnet publish project.csproj --runtime win7-x86 --framework net6.0 && dotnet publish project.csproj --runtime win-x64 --framework net8.0
+    return argsSets
+      .map((argsSet: string): string => `dotnet publish ${argsSet}`)
+      .join(' && ');
   }
 
   /**
