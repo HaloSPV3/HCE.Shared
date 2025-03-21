@@ -152,8 +152,9 @@ export async function configurePrepareCmd(
         }
       }
 
+      /** prepend each set of args with the project's path */
       return tfmRidPermutations.map((permArgs: string): string =>
-        [proj.Properties.MSBuildProjectFullPath, permArgs].join(' '),
+        `${proj.Properties.MSBuildProjectFullPath} ${permArgs}`,
       );
       // #endregion formatFrameworksAndRuntimes
     }
