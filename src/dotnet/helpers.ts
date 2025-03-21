@@ -114,8 +114,10 @@ export async function configurePrepareCmd(
 
     /** @return e.g. `['--runtime win7-x86 --framework net6.0', '--runtime win7-x64 --framework net6.0' ]` */
     function getPublishArgsPermutations(proj: MSBuildProject): string[] {
-      // If the project imports PublishAll to publish for each TFM-RID
-      // permutation, return the appropriate command line.
+      /**
+       * If the project imports PublishAll to publish for each TFM-RID
+       * permutation, return the appropriate command line.
+       */
       if (proj.Targets.includes('PublishAll'))
         return [`${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`];
 
@@ -123,12 +125,6 @@ export async function configurePrepareCmd(
       const tfmRidPermutations: string[] = []; // forEach, run dotnet [proj.Properties.MSBuildProjectFullPath,...v]
       const RIDs: string[] = proj.Properties.RuntimeIdentifiers.split(';');
       const TFMs: string[] = proj.Properties.TargetFrameworks.split(';');
-      /*
-           * const spaceStr = ' '
-           * const splitEmpty = emptyStr.split(';')
-           * console.log(splitEmpty)
-           * // Expected output: Array [" "]
-           */
 
       if (TFMs.length === 0 && RIDs.length === 0)
         return [proj.Properties.MSBuildProjectFullPath]; // return string[]
