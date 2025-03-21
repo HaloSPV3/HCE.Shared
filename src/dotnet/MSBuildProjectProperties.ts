@@ -90,11 +90,6 @@ export class MSBuildProjectProperties {
       true,
       'all keys in arg \'properties\' should be strings',
     );
-    // filter out entries with undefined values
-    properties.forEach((key, value) => {
-      if (value === undefined)
-        properties.delete(key);
-    });
 
     this._msbuildProjectFullPath = MPP.GetFullPath(msbuildProjectFullPath);
     this._assemblyName = MPP.getAndForget(properties, 'AssemblyName');
