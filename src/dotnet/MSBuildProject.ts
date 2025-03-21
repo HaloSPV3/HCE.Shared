@@ -242,9 +242,10 @@ export class MSBuildProject {
    * Evaluate {@link Items}, {@link Properties}, and {@link TargetResults},
    * returning them as an instance of {@link MSBuildProject}.\
    * @remarks MSBuild will probably fail if Restore is skipped and another
-   * target is specified. If you choose Pack, you must do ['Restore', 'Pack']
+   * target is specified. If you choose Pack, you must do ['Restore', 'Pack'].
    * @throws if the exec command fails -OR- the JSON parse fails -OR-
    * MSBuildProject's constructor fails.
+   * @see Consider calling {@link PackableProjectsToMSBuildProjects}, instead.
    */
   public static async Evaluate(
     options: EvaluationOptions,
