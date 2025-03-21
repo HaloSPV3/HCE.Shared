@@ -19,7 +19,7 @@ import { config } from 'typescript-eslint';
  *    };
  * }]}  markdownRecommended
  */
-const mdRecommended =/** @type {[...markdownRecommended]} */ (md.configs.recommended);
+const mdRecommended = (/** @type {[...markdownRecommended]} */ (md.configs.recommended))[0];
 
 /**
  * @typedef {typeof import('./src/eslintConfig.ts').default} FlatConfigArray
@@ -29,8 +29,10 @@ const hceSharedConfig = (await import('./src/eslintConfig.ts')).default;
 
 export default config(
   ...hceSharedConfig.filter(v => v.name == undefined || v.name !== 'JSTS'),
-  /** @satisfies {Parameters<typeof config>[0]} */
-  (mdRecommended),
+  {
+    ...mdRecommended,
+    language: 'markdown/gfm',
+  },
   {
     extends: [
       hceSharedConfig.filter(v => v.name === 'JSTS'),
