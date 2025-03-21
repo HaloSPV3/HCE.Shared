@@ -75,9 +75,13 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       const value = await new NRI({
         project: DeterministicNupkgCsproj,
         tokenEnvVars: ['INVALID_TOKEN'],
-      }).canPushPackagesToUrl.catch((reason: unknown) =>
-        reason instanceof Error ? reason : new Error(String(reason)),
-      );
+      })
+      // @ts-expect-error Is deprecated
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+        .canPushPackagesToUrl
+        .catch((reason: unknown) =>
+          reason instanceof Error ? reason : new Error(String(reason)),
+        );
       if (value === true) {
         notDeepStrictEqual(value, true);
         return;
@@ -97,16 +101,19 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       }));
 
       // todo: refactor canPushPackagesToUrl away from static dummy
-      const canPush = await registryInfo.canPushPackagesToUrl.catch((reason: unknown) => {
-        if (!(reason instanceof Error))
-          return new Error(inspect(reason, { depth: 3 }));
-        else if ('stderr' in reason && typeof reason.stderr === 'string') {
-          reason.message = reason.message.concat(
-            '\nSTDERR:\n',
-            `  ${reason.stderr.replaceAll('\n', '\n  ')}`,
-            reason.stack ?? '',
-          );
-        }
+      // @ts-expect-error Is deprecated
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const canPush = await registryInfo.canPushPackagesToUrl.catch(
+        (reason: unknown) => {
+          if (!(reason instanceof Error))
+            return new Error(inspect(reason, { depth: 3 }));
+          else if ('stderr' in reason && typeof reason.stderr === 'string') {
+            reason.message = reason.message.concat(
+              '\nSTDERR:\n',
+              `  ${reason.stderr.replaceAll('\n', '\n  ')}`,
+              reason.stack ?? ''
+            );
+          }
 
         return reason;
       },
