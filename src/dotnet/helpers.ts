@@ -1,7 +1,6 @@
 import { MSBuildProject } from './MSBuildProject.js';
 import { NugetRegistryInfo } from './NugetRegistryInfo.js';
 import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
-import { listOwnGetters } from '../utils/reflection.js';
 import { NugetProjectProperties as NPP } from './NugetProjectProperties.js';
 import { cwd } from 'process';
 
@@ -195,18 +194,9 @@ export async function configurePrepareCmd(
         if (proj instanceof NugetRegistryInfo)
           return proj;
 
-        const msbp = await MSBuildProject.Evaluate({
-          FullName: proj,
-          GetItem: [],
-          GetProperty: [
-            ...MSBuildProject.MatrixProperties,
-            ...listOwnGetters(MSBPP.prototype),
-            ...listOwnGetters(NPP.prototype),
-          ],
-          GetTargetResult: [],
-          Property: {},
-          Targets: ['Restore', 'Pack'],
-        });
+        const msbpArr: MSBuildProject[] = await MSBuildProject.PackableProjectsToMSBuildProjects([proj]);
+        const msbp: MSBuildProject = msbpArr[0]
+          ?? (() => { throw new Error(''); })();
 
         evaluatedProjects.push(msbp);
 
