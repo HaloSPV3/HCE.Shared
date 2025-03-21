@@ -9,6 +9,8 @@ const commitlintConfig = (await import('./src/commitlintConfig.ts')).default;
 
 // e.g. { 'scope': 'description' }
 const scopes = {
+  CHANGELOG:
+    'Affects "CHANGELOG.md".',
   commitlint:
     'Affects "src/commitlintConfig.ts", its tests, the repo\'s commitlint config, or anything else related to commitlint.',
   'deps-dev':
