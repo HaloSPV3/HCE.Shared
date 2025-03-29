@@ -19,7 +19,7 @@ export async function execAsync(command: string, setStdErrAsCause = false) {
       throw new Error(JSON.stringify(err));
 
     if (setStdErrAsCause && 'stderr' in err && typeof err.stderr === 'string')
-      err.cause = err.stderr;
+      err.cause ??= err.stderr;
 
     throw new ChildProcessSpawnException(err.message, { ...err as ExecException });
   });
