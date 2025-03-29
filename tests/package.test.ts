@@ -2,6 +2,7 @@ import { describe, it } from 'node:test';
 import { deepStrictEqual, notStrictEqual } from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { isNativeError } from 'node:util/types';
 import packageJson from '../package.json' with { type: 'json' };
 const { packemon } = packageJson;
 
@@ -93,7 +94,7 @@ await describe('package.json', async () => {
       return result;
     }
     catch (error) {
-      if (error instanceof Error) result.validity = error;
+      if (isNativeError(error)) result.validity = error;
       else if (typeof error === 'string') result.validity = new Error(error);
       else result.validity = new Error(String(error));
       return result;
@@ -132,7 +133,7 @@ await describe('package.json', async () => {
 
   const importedEsm: string[] = [];
   for (const result of results) {
-    if (!(result.validity instanceof Error)) {
+    if (!isNativeError(result.validity)) {
       if (result.action === 'import') {
         importedEsm.push(result.entry.name);
       }
@@ -147,7 +148,7 @@ await describe('package.json', async () => {
       validity: Error;
     }
     const errored = results.filter(
-      v => v.validity instanceof Error,
+      v => isNativeError(v.validity),
     ) as ErrorResult[];
     errored.forEach((v) => {
       console.debug(v);

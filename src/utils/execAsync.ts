@@ -2,6 +2,7 @@ import { type } from 'arktype';
 import { exec, type ExecException } from 'child_process';
 import { constants } from 'os';
 import { promisify } from 'util';
+import { isNativeError } from 'node:util/types';
 
 /**
  * A promisify(exec) wrapper to optionally assign the child process's STDERR as the {@link Error.prototype.cause}.
@@ -15,7 +16,7 @@ import { promisify } from 'util';
  */
 export async function execAsync(command: string, setStdErrAsCause = false) {
   return await promisify(exec)(command).catch((reason: unknown): never => {
-    if (!(reason instanceof Error))
+    if (!isNativeError(reason))
       throw new Error(JSON.stringify(reason));
 
     if (setStdErrAsCause && 'stderr' in reason && typeof reason.stderr === 'string')

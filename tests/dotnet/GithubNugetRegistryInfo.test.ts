@@ -4,6 +4,7 @@ import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { env } from 'node:process';
 import { describe, it } from 'node:test';
+import { isNativeError } from 'node:util/types';
 import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js';
 
 /**
@@ -58,10 +59,10 @@ await describe('GithubNugetRegistryInfo', async () => {
       // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
         .canPushPackagesToUrl.catch((reason: unknown) =>
-          reason instanceof Error ? reason : new Error(String(reason)),
+          isNativeError(reason) ? reason : new Error(String(reason)),
         );
       notDeepStrictEqual(result, true);
-      ok(result instanceof Error);
+      ok(isNativeError(result));
     });
   });
 });

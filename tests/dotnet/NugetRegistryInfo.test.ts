@@ -13,6 +13,7 @@ import {
   getGithubOutputSync,
 } from '../../src/dotnet/NugetRegistryInfo.js';
 import { isConstructor } from '../../src/utils/reflection.js';
+import { isNativeError } from 'node:util/types';
 
 await describe('NugetRegistryInfo', async (ctx0) => {
   await it('is a class', () => {
@@ -80,7 +81,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       // eslint-disable-next-line @typescript-eslint/no-deprecated
         .canPushPackagesToUrl
         .catch((reason: unknown) =>
-          reason instanceof Error ? reason : new Error(String(reason)),
+          isNativeError(reason) ? reason : new Error(String(reason)),
         );
       if (value === true) {
         notDeepStrictEqual(value, true);
@@ -105,7 +106,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       const canPush = await registryInfo.canPushPackagesToUrl.catch(
         (reason: unknown) => {
-          if (!(reason instanceof Error))
+          if (!isNativeError(reason))
             return new Error(inspect(reason, { depth: 3 }));
           else if ('stderr' in reason && typeof reason.stderr === 'string') {
             reason.message = reason.message.concat(

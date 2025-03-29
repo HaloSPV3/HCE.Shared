@@ -3,6 +3,7 @@ import { describe, it, todo } from 'node:test';
 import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.js';
 import { getEnv, getEnvVarValue } from '../../src/utils/env.js';
 import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js';
+import { isNativeError } from 'node:util/types';
 
 await describe('GitlabNugetRegistryInfo', async (ctx0) => {
   await it('has expected name', () => {
@@ -68,10 +69,10 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         value = new GLNRI({ project: DeterministicNupkgCsproj });
       }
       catch (err) {
-        value = err instanceof Error ? err : new Error(String(err));
+        value = isNativeError(err) ? err : new Error(String(err));
       }
 
-      ok(value instanceof Error);
+      ok(isNativeError(value));
 
       if (CI_JOB_TOKEN) process.env['CI_JOB_TOKEN'] = CI_JOB_TOKEN;
       if (GL_TOKEN) process.env['GL_TOKEN'] = GL_TOKEN;
@@ -90,9 +91,9 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
         });
       }
       catch (err) {
-        value = err instanceof Error ? err : new Error(String(err));
+        value = isNativeError(err) ? err : new Error(String(err));
       }
-      ok(value instanceof Error);
+      ok(isNativeError(value));
       ok(value.message.includes('no tokens were defined'));
     });
 
