@@ -526,7 +526,7 @@ but the environment variable is empty or undefined.`);
       'dotnet',
       'nuget',
       'push',
-      `"${validOpts.root}"`,
+      `"${join(validOpts.root, '*.nupkg')}"`,
     ];
 
     validOpts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable);
