@@ -14,8 +14,9 @@ import { promisify } from 'util';
  * @throws {Error | ExecException | ChildProcessSpawnException}
  */
 export async function execAsync(command: string, setStdErrAsCause = false) {
-  return await promisify(exec)(command).catch((err: unknown) => {
-    if (!(err instanceof Error)) throw new Error(String(err));
+  return await promisify(exec)(command).catch((err: unknown): never => {
+    if (!(err instanceof Error))
+      throw new Error(JSON.stringify(err));
 
     if (setStdErrAsCause && 'stderr' in err && typeof err.stderr === 'string')
       err.cause = err.stderr;
