@@ -343,7 +343,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
   /**
    * Repository URL used to clone or retrieve source code. Example:
-   * _[https://github.com/NuGet/NuGet.Client.git](https://github.com/NuGet/NuGet.Client.git)_.
+   * [https://github.com/NuGet/NuGet.Client.git](https://github.com/NuGet/NuGet.Client.git).
    */
   get RepositoryUrl(): string {
     return (this._repositoryUrl ??= '');
