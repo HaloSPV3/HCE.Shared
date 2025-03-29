@@ -7,6 +7,7 @@ import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { cwd, env } from 'node:process';
+import { isNativeError } from 'node:util/types';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
 import { MSBuildProject } from './MSBuildProject.js';
@@ -40,7 +41,7 @@ export async function getGithubOutput() {
     processEnv: {},
   });
 
-  if (envOutput.error instanceof Error)
+  if (isNativeError(envOutput.error))
     throw envOutput.error;
   return envOutput.parsed;
 }
@@ -65,7 +66,7 @@ export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed']
     processEnv: {},
   });
 
-  if (envOutput.error instanceof Error)
+  if (isNativeError(envOutput.error))
     throw envOutput.error;
   return envOutput.parsed;
 }
