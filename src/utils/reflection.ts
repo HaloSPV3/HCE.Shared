@@ -42,8 +42,7 @@ export function filterForGetters<T>(
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ClassLike<T extends abstract new (...args: ConstructorParameters<T>) => InstanceType<T> = abstract new (...args: readonly any[] | any[]) => unknown>
+export type ClassLike<T extends abstract new (...args: ConstructorParameters<T>) => InstanceType<T> = abstract new (...args: readonly unknown[] | unknown[]) => unknown>
   = abstract new (...args: ConstructorParameters<T>) => InstanceType<T>;
 
 /**
