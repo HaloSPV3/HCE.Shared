@@ -14,14 +14,14 @@ import { promisify } from 'util';
  * @throws {Error | ExecException | ChildProcessSpawnException}
  */
 export async function execAsync(command: string, setStdErrAsCause = false) {
-  return await promisify(exec)(command).catch((err: unknown): never => {
-    if (!(err instanceof Error))
-      throw new Error(JSON.stringify(err));
+  return await promisify(exec)(command).catch((reason: unknown): never => {
+    if (!(reason instanceof Error))
+      throw new Error(JSON.stringify(reason));
 
-    if (setStdErrAsCause && 'stderr' in err && typeof err.stderr === 'string')
-      err.cause ??= err.stderr;
+    if (setStdErrAsCause && 'stderr' in reason && typeof reason.stderr === 'string')
+      reason.cause ??= reason.stderr;
 
-    throw new ChildProcessSpawnException(err.message, { ...err as ExecException });
+    throw new ChildProcessSpawnException(reason.message, { ...reason as ExecException });
   });
 }
 
