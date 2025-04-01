@@ -75,7 +75,7 @@ export class MSBuildProjectProperties {
     strictEqual(
       typeof msbuildProjectFullPath,
       'string',
-      TypeError(
+      new TypeError(
         `msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`,
       ),
     );
