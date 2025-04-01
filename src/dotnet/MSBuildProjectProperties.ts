@@ -17,7 +17,6 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
  */
 export class MSBuildProjectProperties {
   // #region static
-  // #region static
 
   /**
    * Resolve the given path is not absolute. If the path exists, it is returned. Else, an Error is thrown.
