@@ -1,6 +1,6 @@
 import { strictEqual } from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import { basename, isAbsolute, resolve } from 'node:path';
+import node_path from 'node:path';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 
 /**
@@ -24,10 +24,10 @@ export class MSBuildProjectProperties {
    * @returns
    */
   static GetFullPath(path: string) {
-    if (!isAbsolute(path))
-      path = resolve(path);
+    if (!node_path.isAbsolute(path))
+      path = node_path.resolve(path);
     if (!existsSync(path))
-      throw new Error(`${basename(path)} could not be found at "${path}"`);
+      throw new Error(`${node_path.basename(path)} could not be found at "${path}"`);
     return path;
   }
 
