@@ -6,7 +6,7 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 /**
  * Known properties. Additional properties may be added upon request.
  *
- * todo: add Reserved properties, Well-Known properties, Common properties, and more. Maybe as sub classes.\
+ * todo: add Reserved properties, Well-Known properties, Common properties, and more. Maybe as sub classes.
  * See:
  * - [MSBuild Reserved and Well-known Properties](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2022)
  * - [Common MSBuild project properties](https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2022)
