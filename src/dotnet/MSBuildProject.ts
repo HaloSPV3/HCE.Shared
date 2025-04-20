@@ -81,9 +81,9 @@ class MSBuildEvaluationOutput {
    * @param knownObj The output of a CLI MSBuild project evaluation. May be the
    * UTF-8 string-encoded JSON or the object decoded from that JSON.
    */
-  constructor(obj: Parameters<typeof JSON.parse>[0] | Parameters<typeof msbuildEvaluationOutput.from>[0]) {
+  constructor(rawMSBuildEvaluation: Parameters<typeof JSON.parse>[0] | Parameters<typeof msbuildEvaluationOutput.from>[0]) {
     /** `.assert` instead of `.from` to allow `unknown` JSON.parse return type */
-    const knownObject = msbuildEvaluationOutput.assert(typeof obj === 'string' ? JSON.parse(obj) : obj);
+    const knownObject = msbuildEvaluationOutput.assert(typeof rawMSBuildEvaluation === 'string' ? JSON.parse(rawMSBuildEvaluation) : rawMSBuildEvaluation);
 
     this.Properties = knownObject.Properties;
     this.Items = knownObject.Items;
