@@ -347,9 +347,6 @@ export class MSBuildProject {
     async function toDirEntries(
       projectsToPackAndPush: string[],
     ): Promise<Dirent[]> {
-      function makeAbsolute(path: string) {
-        return isAbsolute(path) ? path : resolve(path);
-      }
       const dirEntries: (Dirent | Dirent[])[] = await Promise.all(
         projectsToPackAndPush.map(async (proj) => {
           proj = await realpath(makeAbsolute(proj));
@@ -404,4 +401,8 @@ export class MSBuildProject {
       );
     }
   }
+}
+
+function makeAbsolute(path: string) {
+  return isAbsolute(path) ? path : resolve(path);
 }
