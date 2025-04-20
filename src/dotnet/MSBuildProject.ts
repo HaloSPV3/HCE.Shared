@@ -83,11 +83,11 @@ class MSBuildEvaluationOutput {
    */
   constructor(obj: Parameters<typeof JSON.parse>[0] | Parameters<typeof msbuildEvaluationOutput.from>[0]) {
     /** `.assert` instead of `.from` to allow `unknown` JSON.parse return type */
-    const knownObj = msbuildEvaluationOutput.assert(typeof obj === 'string' ? JSON.parse(obj) : obj);
+    const knownObject = msbuildEvaluationOutput.assert(typeof obj === 'string' ? JSON.parse(obj) : obj);
 
-    this.Properties = knownObj.Properties;
-    this.Items = knownObj.Items;
-    this.TargetResults = knownObj.TargetResults;
+    this.Properties = knownObject.Properties;
+    this.Items = knownObject.Items;
+    this.TargetResults = knownObject.TargetResults;
   }
 
   /**
@@ -122,14 +122,14 @@ export class EvaluationOptions {
     }),
   );
 
-  constructor(opts: typeof EvaluationOptions.t.infer) {
-    opts = EvaluationOptions.t.from(opts);
-    this.FullName = opts.FullName;
-    this.Property = opts.Property;
-    this.GetItem = opts.GetItem;
-    this.GetProperty = opts.GetProperty;
-    this.Targets = opts.Targets;
-    this.GetTargetResult = opts.GetTargetResult;
+  constructor(options: typeof EvaluationOptions.t.infer) {
+    options = EvaluationOptions.t.from(options);
+    this.FullName = options.FullName;
+    this.Property = options.Property;
+    this.GetItem = options.GetItem;
+    this.GetProperty = options.GetProperty;
+    this.Targets = options.Targets;
+    this.GetTargetResult = options.GetTargetResult;
   }
 
   /**
@@ -194,23 +194,23 @@ export class MSBuildProject {
    * breaking compatibility.
    * @param {string} opts.fullPath
    */
-  public constructor(opts: {
+  public constructor(options: {
     fullPath: string;
     projTargets: string[];
     evaluation: MSBuildEvaluationOutput;
   }) {
-    this.Items = opts.evaluation.Items ?? {};
+    this.Items = options.evaluation.Items ?? {};
     this.Properties = new NugetProjectProperties(
-      opts.fullPath,
+      options.fullPath,
       new CaseInsensitiveMap<string, string>(
-        Object.entries(opts.evaluation.Properties ?? {}),
+        Object.entries(options.evaluation.Properties ?? {}),
       ),
     );
-    this.Targets = opts.projTargets;
+    this.Targets = options.projTargets;
     this.TargetResults
-      = opts.evaluation.TargetResults !== undefined
-        ? [opts.evaluation.TargetResults]
-        : [];
+      = options.evaluation.TargetResults === undefined
+        ? []
+        : [options.evaluation.TargetResults];
   }
 
   readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
@@ -293,23 +293,23 @@ export class MSBuildProject {
       .filter(v => v !== '')
       .join(' ');
     // may throw
-    const stdOutErr = await execAsync(cmdLine, true);
-    if (stdOutErr.stdout.startsWith('MSBuild version')) {
-      warn(stdOutErr.stdout);
+    const stdOutError = await execAsync(cmdLine, true);
+    if (stdOutError.stdout.startsWith('MSBuild version')) {
+      warn(stdOutError.stdout);
       throw new Error(
         'dotnet msbuild was expected to output JSON, but output its version header instead.',
       );
     }
 
     let rawOutput = undefined;
-    if (stdOutErr.stdout.startsWith('{')) {
+    if (stdOutError.stdout.startsWith('{')) {
       /** stdout is JSON string */
-      rawOutput = stdOutErr.stdout;
+      rawOutput = stdOutError.stdout;
     }
     else if (options.GetProperty.length > 0 && options.GetProperty[0] !== undefined) {
       rawOutput = {
         Properties: {
-          [options.GetProperty[0]]: String(JSON.parse(stdOutErr.stdout)),
+          [options.GetProperty[0]]: String(JSON.parse(stdOutError.stdout)),
         },
       };
     }
