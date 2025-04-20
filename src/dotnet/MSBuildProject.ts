@@ -271,15 +271,15 @@ export class MSBuildProject {
     const getItem
       = options.GetItem.length === 0
         ? ''
-        : `"-getItem:${options.GetItem.join()}"`;
+        : `"-getItem:${options.GetItem.join(',')}"`;
     const getProperty
       = options.GetProperty.length === 0
         ? ''
-        : `"-getProperty:${options.GetProperty.join()}"`;
+        : `"-getProperty:${options.GetProperty.join(',')}"`;
     const getTargetResult
       = options.GetTargetResult.length === 0
         ? ''
-        : `"-getTargetResult:${options.GetTargetResult.join()}"`;
+        : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
     const cmdLine = [
       'dotnet',
       'msbuild',
