@@ -46,6 +46,7 @@
     "semantic-release": "semantic-release",
     "pretest": "npm run build",
     "test": "tsx --test ./tests/**/*.test.ts",
+    "test:watch": "tsx --watch --test ./tests/**/*.test.ts",
     "type": "tsc --build",
     "validate": "packemon validate",
     "watch": "packemon watch --loadConfigs"
