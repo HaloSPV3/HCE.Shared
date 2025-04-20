@@ -2,7 +2,7 @@ import { type } from 'arktype';
 import { warn } from 'node:console';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
-import { dirname, isAbsolute, resolve } from 'node:path';
+import path from 'node:path';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 import { execAsync } from '../utils/execAsync.js';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
@@ -356,9 +356,9 @@ export class MSBuildProject {
           let entries: Dirent[];
 
           if (stats.isFile()) {
-            entries = await readdir(dirname(proj), { withFileTypes: true });
+            entries = await readdir(path.dirname(proj), { withFileTypes: true });
             const dirent: Dirent | undefined = entries.find(v =>
-              resolve(v.parentPath, v.name) === proj,
+              path.resolve(v.parentPath, v.name) === proj,
             );
             if (dirent)
               return dirent;
@@ -382,7 +382,7 @@ export class MSBuildProject {
     }
 
     async function convertDirentToMSBuildProject(dirent: Dirent): Promise<MSBuildProject> {
-      const fullPath = resolve(dirent.parentPath, dirent.name);
+      const fullPath = path.resolve(dirent.parentPath, dirent.name);
       const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath);
       const evalTargets = await projTargets.then(v =>
         v.includes('Pack') ? ['Pack'] : [],
@@ -405,6 +405,6 @@ export class MSBuildProject {
   }
 }
 
-function makeAbsolute(path: string) {
-  return isAbsolute(path) ? path : resolve(path);
+function makeAbsolute(_path: string) {
+  return path.isAbsolute(_path) ? _path : path.resolve(_path);
 }
