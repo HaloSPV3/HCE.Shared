@@ -1,5 +1,11 @@
 # HCE.Shared
 
+## NOTICE
+
+> Activity is held up by a rewrite for the `next/3.0.0` branch.
+>
+> A fix for the `2.x` branch may be feasible if all that's wrong is async functions in CJS. The `2.x` release channel will not receive feature updates, but fixes and dependency updates are acceptable.
+
 Infrastructure resources shared with other HaloSPV3 repositories.
 
 It is recommended to "install" this repo via [Node Package Manager](#npm)
