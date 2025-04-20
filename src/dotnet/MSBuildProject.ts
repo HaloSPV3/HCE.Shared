@@ -340,7 +340,7 @@ export class MSBuildProject {
     projectsToPackAndPush: string[],
   ): Promise<MSBuildProject[]> {
     const dirEntriesPromise = toDirEntries(typeof projectsToPackAndPush === 'string' ? [projectsToPackAndPush] : projectsToPackAndPush);
-    const projectPromises: Promise<MSBuildProject>[] = await dirEntriesPromise.then((direntArr: Dirent[]) => direntArr.map(convertDirentToMSBuildProject));
+    const projectPromises: Promise<MSBuildProject>[] = await dirEntriesPromise.then((direntArray: Dirent[]) => direntArray.map(element => convertDirentToMSBuildProject(element)));
     const projects: Promise<MSBuildProject[]> = Promise.all(projectPromises);
     return projects;
 
