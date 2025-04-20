@@ -15,7 +15,7 @@ import {
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
  * Additional string-type properties may be present (e.g. `{ SubType: "designer" }`).
  */
-const iItemMetadataBuiltIn = type({
+const interface_ItemMetadataBuiltIn = type({
   '[string]': 'string',
   /** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\ConsoleApp1.dll" */
   Identity: 'string',
@@ -62,7 +62,7 @@ const iItemMetadataBuiltIn = type({
 
 const targetSuccess = type({
   Result: '\'Success\'',
-  Items: iItemMetadataBuiltIn.array(),
+  Items: interface_ItemMetadataBuiltIn.array(),
 });
 
 const targetFailure = type({
@@ -72,7 +72,7 @@ const targetFailure = type({
 
 const msbuildEvaluationOutput = type({
   'Properties?': type({ '[string]': 'string' }),
-  'Items?': type({ '[string]': iItemMetadataBuiltIn.array() }),
+  'Items?': type({ '[string]': interface_ItemMetadataBuiltIn.array() }),
   'TargetResults?': type({ '[string]': targetSuccess.or(targetFailure) }),
 });
 
