@@ -80,9 +80,9 @@ export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed']
  * {@link project} is defined. Else `${tmpdir()}/HCE.Shared/.NET/Dummies`
  */
 function getDummiesDir(project?: MSBuildProject): string {
-  return project !== undefined
-    ? node_path.join(tmpDirNamespace, project.Properties.PackageId, node_path.sep)
-    : node_path.join(tmpDirNamespace, node_path.sep);
+  return project === undefined
+    ? node_path.join(tmpDirNamespace, node_path.sep)
+    : node_path.join(tmpDirNamespace, project.Properties.PackageId, node_path.sep);
 }
 
 export class NugetRegistryInfo {
