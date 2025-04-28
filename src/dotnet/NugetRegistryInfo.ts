@@ -541,11 +541,14 @@ but the environment variable is empty or undefined.`);
       packCmdArr.push('--disable-buffering');
     if (validOpts.forceEnglishOutput === true)
       packCmdArr.push('--force-english-output');
-    if (validOpts.interactive === true) packCmdArr.push('--interactive');
+    if (validOpts.interactive === true)
+      packCmdArr.push('--interactive');
     if (validOpts.noServiceEndpoint === true)
       packCmdArr.push('--no-service-endpoint');
-    if (validOpts.noSymbols === true) packCmdArr.push('--no-symbols');
-    if (validOpts.skipDuplicate === true) packCmdArr.push('--skip-duplicate');
+    if (validOpts.noSymbols === true)
+      packCmdArr.push('--no-symbols');
+    if (validOpts.skipDuplicate === true)
+      packCmdArr.push('--skip-duplicate');
     validOpts.source ??= this.url;
     packCmdArr.push('--source', validOpts.source);
     if (validOpts.symbolApiKey !== undefined)
