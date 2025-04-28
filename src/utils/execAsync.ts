@@ -1,5 +1,5 @@
 import { type } from 'arktype';
-import { exec, type ExecException } from 'child_process';
+import { exec } from 'child_process';
 import { constants } from 'os';
 import { promisify } from 'util';
 import { isNativeError } from 'node:util/types';
@@ -22,7 +22,7 @@ export async function execAsync(command: string, setStdErrAsCause = false) {
     if (setStdErrAsCause && 'stderr' in reason && typeof reason.stderr === 'string')
       reason.cause ??= reason.stderr;
 
-    throw new ChildProcessSpawnException(reason.message, { ...reason as ExecException });
+    throw new ChildProcessSpawnException(reason.message, reason);
   });
 }
 
