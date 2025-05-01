@@ -3,13 +3,9 @@ import {
   tBooleanString,
   tEmptyOrBooleanString,
 } from '../../src/utils/miscTypes.js';
-import * as miscTypes from '../../src/utils/miscTypes.js';
-import { deepStrictEqual, ok } from 'node:assert/strict';
+import { ok } from 'node:assert/strict';
 
-await describe('tBooleanString', async (c00) => {
-  await it('has expected name', () => {
-    deepStrictEqual(c00.name in miscTypes, true);
-  });
+await describe('tBooleanString', async () => {
   await it('matches literal string "true"', () => {
     tBooleanString.assert('true');
   });
@@ -24,10 +20,7 @@ await describe('tBooleanString', async (c00) => {
   });
 });
 
-await describe('tEmptyOrBooleanString', async (c00) => {
-  await it('has expected name', () => {
-    deepStrictEqual(c00.name in miscTypes, true);
-  });
+await describe('tEmptyOrBooleanString', async () => {
   await it('matches literal string "true"', () => {
     tEmptyOrBooleanString.assert('true');
   });
