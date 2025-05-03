@@ -295,23 +295,23 @@ export class MSBuildProject {
       .filter(v => v !== '')
       .join(' ');
     // may throw
-    const stdOutError = await execAsync(cmdLine, true);
-    if (stdOutError.stdout.startsWith('MSBuild version')) {
-      warn(stdOutError.stdout);
+    const stdio = await execAsync(cmdLine, true);
+    if (stdio.stdout.startsWith('MSBuild version')) {
+      warn(stdio.stdout);
       throw new Error(
         'dotnet msbuild was expected to output JSON, but output its version header instead.',
       );
     }
 
     let rawOutput = undefined;
-    if (stdOutError.stdout.startsWith('{')) {
+    if (stdio.stdout.startsWith('{')) {
       /** stdout is JSON string */
-      rawOutput = stdOutError.stdout;
+      rawOutput = stdio.stdout;
     }
     else if (options.GetProperty.length > 0 && options.GetProperty[0] !== undefined) {
       rawOutput = {
         Properties: {
-          [options.GetProperty[0]]: String(JSON.parse(stdOutError.stdout)),
+          [options.GetProperty[0]]: String(JSON.parse(stdio.stdout)),
         },
       };
     }
