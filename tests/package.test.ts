@@ -150,9 +150,9 @@ await describe('package.json', async () => {
     const errored = results.filter(
       v => isNativeError(v.validity),
     ) as ErrorResult[];
-    errored.forEach((v) => {
+    for (const v of errored) {
       console.debug(v);
-    });
+    }
     deepStrictEqual(
       errored,
       [],
