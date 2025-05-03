@@ -27,7 +27,7 @@ import { inspect } from 'node:util';
  * @typedef {typeof import('./src/index.js').default} HceSharedConfig
  */
 
-const hceSharedConfig = (await import('./src/index.ts')).default;
+const { default: hceSharedConfig } = await import('./src/index.ts');
 
 /**
  * {@link hceSharedConfig} customized for this project's release pipeline
