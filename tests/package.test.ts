@@ -183,18 +183,20 @@ await describe('package.json', async () => {
   );
 
   await it('...exposes all expected ESM modules', () => {
+    const commaSeparatedNames = missingEsm.map(v => `"${v}"`).join(', ');
     deepStrictEqual(
       missingEsm,
       [],
-      `One or more input modules (${missingEsm.map(v => `"${v}"`).join(', ')}) were not imported! Is this a breaking change?`,
+      `One or more input modules (${commaSeparatedNames}) were not imported! Is this a breaking change?`,
     );
   });
   await it('...exposes no unexpected ESM modules', () => {
+    const commaSeparatedNames = unexpectedEsm.map(v => `"${v}"`).join(', ');
     deepStrictEqual(
       unexpectedEsm,
       [],
       `One or more exposed modules were imported, but were not found in ${nameof_expectedEsm}. `
-      + `Add the modules' names (${unexpectedEsm.map(v => `"${v}"`).join(', ')}) to './tests/package.test.ts#${nameof_expectedEsm}' to ensure they are not accidentally removed later!`,
+      + `Add the modules' names (${commaSeparatedNames}) to './tests/package.test.ts#${nameof_expectedEsm}' to ensure they are not accidentally removed later!`,
     );
   });
 });
