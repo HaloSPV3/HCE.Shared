@@ -76,23 +76,26 @@ export const GitlabNugetRegistryInfoOptions = NRIOpts.merge({
   url: NRIOptsBase.get('url').or('"group" | "project"').default('project'),
 }).pipe((obj) => {
   switch (obj.url) {
-    case 'group':
+    case 'group': {
       if (GLNRI.groupUrl === undefined)
         throw new Error(
           'The group-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_NAMESPACE_ID) were undefined.',
         );
       obj.url = GLNRI.groupUrl;
       break;
+    }
     /* fall to default */
-    case 'project':
+    case 'project': {
       if (GLNRI.projectUrl === undefined)
         throw new Error(
           'The project-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_ID) were undefined.',
         );
       obj.url = GLNRI.projectUrl;
       break;
-    default:
+    }
+    default: {
       break;
+    }
   }
   return obj;
 });
