@@ -163,5 +163,10 @@
       "bold": false,
       "italic": false
     }
+  ],
+  "autoRestart.fileGlobForESLint": [
+    "**/src/eslintConfig.ts",
+    "**/.eslintrc.{js,cjs,mjs,yaml,yml,json}",
+    "**/eslint.config.{js,cjs,mjs}"
   ]
 }
