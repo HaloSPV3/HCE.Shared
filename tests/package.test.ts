@@ -1,7 +1,7 @@
-import { describe, it } from 'node:test';
 import { deepStrictEqual, notStrictEqual } from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { describe, it } from 'node:test';
 import { isNativeError } from 'node:util/types';
 import packageJson from '../package.json' with { type: 'json' };
 const { packemon } = packageJson;
