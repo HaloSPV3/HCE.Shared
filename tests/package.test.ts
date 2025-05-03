@@ -134,9 +134,8 @@ await describe('package.json', async () => {
   const importedEsm: string[] = [];
   for (const result of results) {
     if (!isNativeError(result.validity)) {
-      if (result.action === 'import') {
+      if (result.action === 'import')
         importedEsm.push(result.entry.name);
-      }
       else throw new Error(`unexpected validation action '${result.action}'.`);
     }
   }
