@@ -37,9 +37,9 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
    */
   static getNugetGitHubUrl(): string | undefined {
     const owner = getEnvVarValue('GITHUB_REPOSITORY_OWNER');
-    return owner !== undefined
-      ? `${NUGET_PKG_GITHUB_COM}/${owner}/index.json`
-      : undefined;
+    return owner === undefined
+      ? undefined
+      : `${NUGET_PKG_GITHUB_COM}/${owner}/index.json`;
   }
 }
 const GHNRI = GithubNugetRegistryInfo;
