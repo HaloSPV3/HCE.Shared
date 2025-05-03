@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prevent-abbreviations */
 /** semantic-release
  * After HCE.Shared's Shareable Configuration (see 'static/.releaserc.yml', https://semantic-release.gitbook.io/semantic-release/usage/configuration#extends)
  * is loaded, the following semantic-release configuration is merged
