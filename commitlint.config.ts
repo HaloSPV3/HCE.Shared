@@ -5,7 +5,7 @@ import type {
 } from '@commitlint/types';
 import 'tsx';
 
-const commitlintConfig = (await import('./src/commitlintConfig.ts')).default;
+const { default: commitlintConfig } = await import('./src/commitlintConfig.ts');
 
 // e.g. { 'scope': 'description' }
 const scopes = {
