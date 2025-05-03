@@ -163,7 +163,7 @@
     }
   ],
   "autoRestart.fileGlobForESLint": [
-    "src/eslintConfig.ts",
+    "**/src/eslintConfig.ts",
     "**/.eslintrc.{js,cjs,mjs,yaml,yml,json}",
     "**/eslint.config.{js,cjs,mjs}"
   ]
