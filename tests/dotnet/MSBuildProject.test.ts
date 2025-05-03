@@ -25,7 +25,7 @@ await describe('MSBuildProject', async () => {
     await it('has expected name', () => {
       deepStrictEqual(MSBP.Evaluate.name, c00.name);
     });
-    await it('may return expected object (HCE.Shared.DeterministicNupkg)', async () => {
+    await it('may return expected object (HCE.Shared.DeterministicNupkg)', { concurrency: 1 }, async () => {
       const deterministicNupkgProj = resolve(
         import.meta.dirname,
         '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',

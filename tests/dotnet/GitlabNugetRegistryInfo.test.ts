@@ -10,7 +10,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     strictEqual(GLNRI.name, ctx0.name);
   });
 
-  await describe('an instance of GitlabNugetRegistryInfo', async (ctx1) => {
+  await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, async (ctx1) => {
     ok(ctx1);
 
     if (!getEnvVarValue('CI_JOB_TOKEN'))

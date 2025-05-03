@@ -52,7 +52,7 @@ await describe('NugetRegistryInfo', async (ctx0) => {
 });
 
 // memory leak...but why?
-await describe('InstanceOf NugetRegistryInfo', async () => {
+await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
   const predefinedToken = getEnvVarValue('NUGET_TOKEN');
   const { DeterministicNupkgCsproj } = await import(
     './MSBuildProject.projects.js',
