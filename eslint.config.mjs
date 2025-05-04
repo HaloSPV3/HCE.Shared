@@ -1,10 +1,10 @@
 import md from '@eslint/markdown';
-import stylistic from '@stylistic/eslint-plugin';
+import unicorn from 'eslint-plugin-unicorn';
 import 'tsx';
 import { config } from 'typescript-eslint';
 
 /**
- * @typedef {ReturnType<<T>(arg0:T)=> T extends (infer U)[] ? U : T>} FuncUnarray<T>
+ * @typedef { import('eslint').Linter.Config} ESLintConfig
  * @typedef {[{
  *  name: "markdown/recommended";
  *  files: ["**\/*.md"];
@@ -18,41 +18,42 @@ import { config } from 'typescript-eslint';
  *      readonly "markdown/no-missing-label-refs": "error";
  *    };
  * }]}  markdownRecommended
+ * @type {markdownRecommended[0]}
  */
-const mdRecommended = (/** @type {[...markdownRecommended]} */ (md.configs.recommended))[0];
-
-/**
- * @typedef {typeof import('./src/eslintConfig.ts').default} FlatConfigArray
- * @typedef {import('@stylistic/eslint-plugin').RuleOptions} RuleOptions
- * @type {FlatConfigArray} */
-const hceSharedConfig = (await import('./src/eslintConfig.ts')).default;
+const mdRecommended = /** @type {markdownRecommended[0]} */ (md.configs.recommended[0]);
+const { default: hceSharedConfig } = await import('./src/eslintConfig.ts');
+/** @type {ESLintConfig} */
+const unicornRecommended = {
+  ...unicorn.configs.recommended,
+  rules: {
+    ...unicorn.configs.recommended.rules,
+    // we use PascalCase for dotnet-related and class-only files and camelCase for traditional JavaScript files
+    'unicorn/filename-case': 'off',
+    'unicorn/prevent-abbreviations': 'warn',
+    'unicorn/import-style': 'warn',
+    'unicorn/switch-case-braces': 'warn',
+    'unicorn/catch-error-name': 'warn',
+    'unicorn/prefer-node-protocol': 'warn',
+  },
+  files: [
+    '**/*.cjs',
+    '**/*.cts',
+    '**/*.js',
+    '**/*.jsx',
+    '**/*.mjs',
+    '**/*.mts',
+    '**/*.ts',
+    '**/*.tsx',
+  ],
+};
 
 export default config(
-  ...hceSharedConfig.filter(v => v.name == undefined || v.name !== 'JSTS'),
+  ...hceSharedConfig,
   {
     ...mdRecommended,
     language: 'markdown/gfm',
   },
-  {
-    extends: [
-      hceSharedConfig.filter(v => v.name === 'JSTS'),
-      stylistic.configs.customize({
-        quoteProps: 'as-needed',
-        semi: true,
-      }),
-    ],
-
-    rules: {
-      '@stylistic/semi': [
-        'error',
-        'always',
-        /** @type {Partial<RuleOptions['@stylistic/semi'][1]>} */ ({
-          omitLastInOneLineBlock: false,
-          omitLastInOneLineClassBody: false,
-        }),
-      ],
-    },
-  },
+  unicornRecommended,
   {
     name: 'stylistic excludes',
     files: ['**/*.md'],
