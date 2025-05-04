@@ -62,7 +62,7 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
   {
     name: 'TSJS',
     extends: [
-      eslint.configs.recommended satisfies TSESLint.FlatConfig.Config,
+      eslint.configs.recommended,
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
       {
