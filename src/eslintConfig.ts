@@ -1,9 +1,9 @@
 import eslint from '@eslint/js';
+import stylistic, { type RuleOptions } from '@stylistic/eslint-plugin';
 import type { TSESLint } from '@typescript-eslint/utils';
 import jsonc from 'eslint-plugin-jsonc';
 import globals from 'globals/globals.json' with { type: 'json' };
 import tseslint from 'typescript-eslint';
-import stylistic, { type RuleOptions } from '@stylistic/eslint-plugin';
 
 // https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config
 // https://www.google.com/search?q=javascript+recurse+through+object+and+remove+undefined+properties
@@ -27,6 +27,39 @@ const globalIgnores: TSESLint.FlatConfig.Config = {
     '**/obj/**/*',
   ],
 };
+
+const stylisticWarn = stylistic.configs.customize({
+  quoteProps: 'as-needed',
+  semi: true,
+  indent: 2,
+}) as TSESLint.FlatConfig.Config & { rules: { [K in keyof RuleOptions]: TSESLint.SharedConfig.RuleLevel | [TSESLint.SharedConfig.RuleLevel, ...RuleOptions[K]] } };
+// change all stylistic error-severity to warn-severity. Style violations should not denote code errors.
+for (const key in stylisticWarn.rules) {
+  const element = stylisticWarn.rules[key];
+  if (Array.isArray(element) && (element[0] === 2 || element[0] === 'error'))
+    element[0] = 'warn';
+  else if (element === 2 || element === 'error') {
+    stylisticWarn.rules[key] = 'warn' satisfies TSESLint.SharedConfig.RuleLevel;
+  }
+}
+
+stylisticWarn.rules['@stylistic/no-extra-parens'] = [
+  'warn',
+  'all',
+  {
+    allowParensAfterCommentPattern: '@type|@satisfies',
+    nestedBinaryExpressions: false,
+  },
+];
+
+stylisticWarn.rules['@stylistic/semi'] = [
+  'warn',
+  'always',
+  {
+    omitLastInOneLineBlock: false,
+    omitLastInOneLineClassBody: false,
+  },
+] satisfies TSESLint.SharedConfig.RuleEntry | [TSESLint.SharedConfig.RuleLevelAndOptions, RuleOptions['@stylistic/semi'][0], RuleOptions['@stylistic/semi'][1]];
 
 const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
   {
@@ -65,25 +98,7 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
       eslint.configs.recommended,
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
-      {
-        extends: [
-          stylistic.configs.customize({
-            quoteProps: 'as-needed',
-            semi: true,
-            indent: 2,
-          }),
-        ],
-        rules: {
-          '@stylistic/semi': [
-            'error',
-            'always',
-            {
-              omitLastInOneLineBlock: false,
-              omitLastInOneLineClassBody: false,
-            },
-          ] satisfies TSESLint.SharedConfig.RuleEntry | [TSESLint.SharedConfig.RuleLevelAndOptions, RuleOptions['@stylistic/semi'][0], RuleOptions['@stylistic/semi'][1]],
-        } as TSESLint.SharedConfig.RulesRecord,
-      },
+      stylisticWarn,
     ],
     files: [
       '**/*.ts',
