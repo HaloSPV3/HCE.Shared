@@ -33,9 +33,10 @@ const T_ExecException = type('Error').and({
   'cmd?': 'string | null',
   'killed?': 'boolean | null',
   'code?': 'number | null',
-  'signal?': (Object.keys(constants.signals) as NodeJS.Signals[])
+  'signal?': type.null.or((Object.keys(constants.signals) as NodeJS.Signals[])
     .map(v => type(`'${v}'`))
-    .reduce((previous, current) => previous.or(current)),
+    // eslint-disable-next-line unicorn/no-array-reduce
+    .reduce((previous, current) => previous.or(current))),
   'stdout?': 'string',
   'stderr?': 'string',
 });
