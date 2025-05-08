@@ -19,7 +19,7 @@ export async function execAsync(command: string, setStdErrAsCause = false) {
     if (!isNativeError(reason))
       throw new Error(JSON.stringify(reason));
 
-    if (setStdErrAsCause && 'stderr' in reason && typeof reason.stderr === 'string')
+    if (setStdErrAsCause && 'stderr' in reason && typeof reason.stderr === 'string' && reason.stderr !== '')
       reason.cause ??= reason.stderr;
 
     throw new ChildProcessSpawnException(reason.message, reason);
