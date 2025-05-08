@@ -10,16 +10,16 @@ import { isNativeError } from 'node:util/types';
  * @see {@link promisify}, {@link exec}
  *
  * @param command The command to run, with space-separated arguments.
- * @param [setStdErrAsCause=false] If true and the child process's stderr is available, the thrown Error's {@link Error.prototype.cause} is assigned the stderr string.
+ * @param [setStderrAsCause=false] If true and the child process's stderr is available, the thrown Error's {@link Error.prototype.cause} is assigned the stderr string.
  * @returns A promise of the child process's STDOUT and STDERR streams as strings
  * @throws {Error | ExecException | ChildProcessSpawnException}
  */
-export async function execAsync(command: string, setStdErrAsCause = false) {
+export async function execAsync(command: string, setStderrAsCause = false) {
   return await promisify(exec)(command).catch((reason: unknown): never => {
     if (!isNativeError(reason))
       throw new Error(JSON.stringify(reason));
 
-    if (setStdErrAsCause && 'stderr' in reason && typeof reason.stderr === 'string' && reason.stderr !== '')
+    if (setStderrAsCause && 'stderr' in reason && typeof reason.stderr === 'string' && reason.stderr !== '')
       reason.cause ??= reason.stderr;
 
     throw new ChildProcessSpawnException(reason.message, reason);
