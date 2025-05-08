@@ -33,6 +33,7 @@
     "isolatedModules": true,
     "module": "Node18",
     "noEmitOnError": true,
+    "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
