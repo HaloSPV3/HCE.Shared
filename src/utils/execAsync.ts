@@ -1,7 +1,7 @@
 import { type } from 'arktype';
-import { exec } from 'child_process';
-import { constants } from 'os';
-import { promisify } from 'util';
+import { exec } from 'node:child_process';
+import { constants } from 'node:os';
+import { promisify } from 'node:util';
 import { isNativeError } from 'node:util/types';
 
 /**
