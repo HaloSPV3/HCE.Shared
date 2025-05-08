@@ -31,7 +31,7 @@ const globalIgnores: TSESLint.FlatConfig.Config = {
 const json_json = {
   /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
   ...jsonc.configs['flat/recommended-with-json']
-    .map(v => v  as JsoncCfgReducerIn)
+    .map(v => v as JsoncCfgReducerIn)
     .flatMap(a => jsonCfgReducer(a, {}))
     // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {} as JsoncCfgReducerOut),
