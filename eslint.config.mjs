@@ -2,6 +2,7 @@ import md from '@eslint/markdown';
 import unicorn from 'eslint-plugin-unicorn';
 import 'tsx';
 import { config } from 'typescript-eslint';
+import jsdoc from 'eslint-plugin-jsdoc';
 
 /**
  * @typedef { import('eslint').Linter.Config} ESLintConfig
@@ -46,9 +47,13 @@ const unicornRecommended = {
     '**/*.tsx',
   ],
 };
+const jsdocRecommended = {
+  ...jsdoc.configs['flat/recommended'],
+};
 
 export default config(
   ...hceSharedConfig,
+  jsdocRecommended,
   {
     ...mdRecommended,
     language: 'markdown/gfm',
