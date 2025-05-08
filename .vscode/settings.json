@@ -17,6 +17,7 @@
   ],
   "cSpell.words": [
     "arktype",
+    "commonmark",
     "conventionalcommits",
     "determinize",
     "determinized",
@@ -33,7 +34,9 @@
     "packemon",
     "polyrepo",
     "tseslint",
-    "tsout"
+    "TSJS",
+    "tsout",
+    "Tuplify"
   ],
   "editor.quickSuggestions": {
     "strings": "on"
