@@ -1,4 +1,6 @@
-/** Semantic-Release Config Factory (dotnet)
+/* eslint-disable unicorn/prevent-abbreviations */
+/**
+ * # Semantic-Release Config Factory (dotnet)
  * A functional Semantic-Release configuration for dotnet projects
  *
  * extends {@link baseConfig }
