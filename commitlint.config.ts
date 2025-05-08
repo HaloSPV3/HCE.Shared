@@ -49,6 +49,7 @@ const scopes = {
   'utils.execAsync': 'Affects "src/utils/execAsync.ts" or its tests.',
   'utils.miscTypes': 'Affects "src/utils/miscTypes.ts" or its tests.',
   'utils.reflection': 'Affects "src/utils/reflection.ts" or its tests.',
+  'utils.reflection.OwnKeyOf': 'Affects "src/utils/reflection/OwnKeyOf.ts" or its tests.',
   utils: 'Affects "src/utils/*" or its tests.',
   vscode: 'Affects ".vscode/".',
 } as const;
