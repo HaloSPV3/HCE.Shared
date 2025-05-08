@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/no-defaults */
 import { type } from 'arktype';
 import { exec } from 'node:child_process';
 import { constants } from 'node:os';
@@ -5,12 +6,10 @@ import { promisify } from 'node:util';
 import { isNativeError } from 'node:util/types';
 
 /**
- * A promisify(exec) wrapper to optionally assign the child process's STDERR as the {@link Error.prototype.cause}.
- *
+ * A `promisify(exec)` wrapper to optionally assign the child process's STDERR as the {@link Error.prototype.cause}.
  * @see {@link promisify}, {@link exec}
- *
- * @param command The command to run, with space-separated arguments.
- * @param [setStderrAsCause=false] If true and the child process's stderr is available, the thrown Error's {@link Error.prototype.cause} is assigned the stderr string.
+ * @param {string} command The command to run, with space-separated arguments.
+ * @param {boolean} [setStderrAsCause=false] If true and the child process's stderr is available, the thrown Error's {@link Error.prototype.cause} is assigned the stderr string.
  * @returns {Promise<{stdout: string;stderr: string;}>} A promise of the child process's STDOUT and STDERR streams as strings
  * @throws {Error | ChildProcessSpawnException}
  */
