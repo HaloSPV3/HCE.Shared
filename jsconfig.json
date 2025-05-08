@@ -4,7 +4,8 @@
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "checkJs": true,
-    "isolatedDeclarations": false
+    "isolatedDeclarations": false,
+    "skipLibCheck": true
   },
   "include": [
     "./*.cjs",
@@ -18,5 +19,11 @@
     {
       "path": "./src/tsconfig.json"
     }
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/node_modules/**",
+    "**/tsconfig.json",
+    "**/tsconfig.*.json"
   ]
 }
