@@ -18,14 +18,14 @@ export async function execAsync(command: string, setStderrAsCause = false): Prom
   stdout: string;
   stderr: string;
 }> {
-  return await promisify(exec)(command).catch((reason: unknown): never => {
-    if (!isNativeError(reason))
-      throw new Error(JSON.stringify(reason));
+  return await promisify(exec)(command).catch((error: unknown): never => {
+    if (!isNativeError(error))
+      throw new Error(JSON.stringify(error));
 
-    if (setStderrAsCause && 'stderr' in reason && typeof reason.stderr === 'string' && reason.stderr !== '')
-      reason.cause ??= reason.stderr;
+    if (setStderrAsCause && 'stderr' in error && typeof error.stderr === 'string' && error.stderr !== '')
+      error.cause ??= error.stderr;
 
-    throw new ChildProcessSpawnException(reason.message, reason);
+    throw new ChildProcessSpawnException(error.message, error);
   });
 }
 
