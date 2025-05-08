@@ -15,7 +15,7 @@ on:
 jobs:
   ci:
     name: CI # run test.yml. If it fails, this job fails.
-    uses: ./.github/workflows/ci.yml # <- your CI workflow here. Example: 'file://./ci.yml'
+    uses: ./dotnet/.github/workflows/ci.yml # <- your CI workflow here. Example: 'file://./ci.yml'
   release:
     needs: [ci] # start 'release' if 'ci' completes successfully
     runs-on: ubuntu-latest
