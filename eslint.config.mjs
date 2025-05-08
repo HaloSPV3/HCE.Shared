@@ -47,13 +47,29 @@ const unicornRecommended = {
     '**/*.tsx',
   ],
 };
-const jsdocRecommended = {
+const jsdocRecommended_js = {
   ...jsdoc.configs['flat/recommended'],
+  files: [
+    '**/*.cjs',
+    '**/*.js',
+    '**/*.jsx',
+    '**/*.mjs',
+  ],
+};
+const jsdocRecommended_ts = {
+  ...jsdoc.configs['flat/recommended-typescript'],
+  files: [
+    '**/*.cts',
+    '**/*.mts',
+    '**/*.ts',
+    '**/*.tsx',
+  ],
 };
 
 export default config(
   ...hceSharedConfig,
-  jsdocRecommended,
+  jsdocRecommended_js,
+  jsdocRecommended_ts,
   {
     ...mdRecommended,
     language: 'markdown/gfm',
