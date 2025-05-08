@@ -46,7 +46,7 @@
     "verbatimModuleSyntax": true
   },
   "exclude": [
-    "**/node_modules",
+    "**/node_modules/**",
     "**/tsconfig.json",
     "**/tsconfig.*.json"
   ]
