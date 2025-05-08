@@ -34,7 +34,7 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
     ...jsonc.configs['flat/recommended-with-json']
       .map(v => ({ ...v } as JsoncCfgReducerIn))
       .flatMap(a => jsonCfgReducer(a, {}))
-      .reduce(jsonCfgReducer),
+      .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {}),
     name: 'flat/recommended-with-json - https://github.com/ota-meshi/eslint-plugin-jsonc',
     files: ['*.json', '**/*.json'],
     ignores: globalIgnores.ignores,
@@ -44,7 +44,7 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
     ...jsonc.configs['flat/recommended-with-json5']
       .map(v => ({ ...v } as JsoncCfgReducerIn))
       .flatMap(a => jsonCfgReducer(a, {}))
-      .reduce(jsonCfgReducer),
+      .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {}),
     name: 'flat/recommended-with-json5 - https://github.com/ota-meshi/eslint-plugin-jsonc',
     files: ['*.json5', '**/*.json5'],
     ignores: globalIgnores.ignores,
@@ -54,7 +54,7 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
     ...jsonc.configs['flat/recommended-with-jsonc']
       .map(v => ({ ...v } as JsoncCfgReducerIn))
       .flatMap(a => jsonCfgReducer(a, {}))
-      .reduce(jsonCfgReducer),
+      .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {}),
     name: 'flat/recommended-with-jsonc - https://github.com/ota-meshi/eslint-plugin-jsonc',
     files: ['*.jsonc', '**/*.jsonc'],
     ignores: globalIgnores.ignores,
