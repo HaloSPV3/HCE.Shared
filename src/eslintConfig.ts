@@ -145,8 +145,8 @@ function jsonCfgReducer(
         ?.languageOptions?.parser ?? (() => { throw new Error('Unable to find jsonc parser'); })(),
     },
     rules: {
-      ...a.rules ?? {},
-      ...b.rules ?? {},
+      ...a.rules,
+      ...b.rules,
       ...baseRules,
     },
   };
