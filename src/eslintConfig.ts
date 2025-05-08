@@ -114,6 +114,8 @@ const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
       '**/*.js',
       '**/*.cjs',
       '**/*.mjs',
+      '**/*.jsx',
+      '**/*.tsx',
     ],
     ignores: globalIgnores.ignores,
     languageOptions: {
