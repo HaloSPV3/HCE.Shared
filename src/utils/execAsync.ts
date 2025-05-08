@@ -46,7 +46,7 @@ type _ExecException = typeof T_ExecException.inferOut;
 export class ChildProcessSpawnException extends Error implements _ExecException {
   constructor(
     message: Parameters<typeof Error>[0],
-    options: ErrorOptions & typeof T_ExecException.inferIn,
+    options: typeof T_ExecException.inferIn,
   ) {
     options = T_ExecException.from(options);
     super(message, options);
