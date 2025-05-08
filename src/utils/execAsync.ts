@@ -12,7 +12,7 @@ import { isNativeError } from 'node:util/types';
  * @param command The command to run, with space-separated arguments.
  * @param [setStderrAsCause=false] If true and the child process's stderr is available, the thrown Error's {@link Error.prototype.cause} is assigned the stderr string.
  * @returns A promise of the child process's STDOUT and STDERR streams as strings
- * @throws {Error | ExecException | ChildProcessSpawnException}
+ * @throws {Error | ChildProcessSpawnException}
  */
 export async function execAsync(command: string, setStderrAsCause = false) {
   return await promisify(exec)(command).catch((reason: unknown): never => {
