@@ -4,14 +4,23 @@
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "checkJs": true,
-    "isolatedDeclarations": false
+    "isolatedDeclarations": false,
+    "skipLibCheck": true
   },
   "include": [
     "*.cjs",
     "*.js",
-    "*.mjs",
-    "src/eslintConfig.ts",
-    "src/index.ts",
-    "src/semanticReleaseConfig.ts"
+    "*.mjs"
+  ],
+  "references": [
+    {
+      "path": "./src/tsconfig.json"
+    }
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/node_modules/**",
+    "**/tsconfig.json",
+    "**/tsconfig.*.json"
   ]
 }
