@@ -28,6 +28,40 @@ const globalIgnores: TSESLint.FlatConfig.Config = {
   ],
 };
 
+const json_json = {
+  /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
+  ...jsonc.configs['flat/recommended-with-json']
+    .map(v => v  as JsoncCfgReducerIn)
+    .flatMap(a => jsonCfgReducer(a, {}))
+    // eslint-disable-next-line unicorn/no-array-reduce
+    .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {} as JsoncCfgReducerOut),
+  name: 'flat/recommended-with-json - https://github.com/ota-meshi/eslint-plugin-jsonc' as const,
+  files: ['*.json', '**/*.json'] as ['*.json', '**/*.json'],
+  ignores: globalIgnores.ignores,
+};
+const json_json5 = {
+  /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
+  ...jsonc.configs['flat/recommended-with-json5']
+    .map(v => v as JsoncCfgReducerIn)
+    .flatMap(a => jsonCfgReducer(a, {}))
+    // eslint-disable-next-line unicorn/no-array-reduce
+    .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {} as JsoncCfgReducerOut),
+  name: 'flat/recommended-with-json5 - https://github.com/ota-meshi/eslint-plugin-jsonc' as const,
+  files: ['*.json5', '**/*.json5'] as ['*.json5', '**/*.json5'],
+  ignores: globalIgnores.ignores,
+};
+const json_jsonc = {
+  /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
+  ...jsonc.configs['flat/recommended-with-jsonc']
+    .map(v => v as JsoncCfgReducerIn)
+    .flatMap(a => jsonCfgReducer(a, {}))
+    // eslint-disable-next-line unicorn/no-array-reduce
+    .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {} as JsoncCfgReducerOut),
+  name: 'flat/recommended-with-jsonc - https://github.com/ota-meshi/eslint-plugin-jsonc' as const,
+  files: ['*.jsonc', '**/*.jsonc'] as ['*.jsonc', '**/*.jsonc'],
+  ignores: globalIgnores.ignores,
+};
+
 const stylisticWarn = stylistic.configs.customize({
   quoteProps: 'as-needed',
   semi: true,
@@ -62,36 +96,9 @@ stylisticWarn.rules['@stylistic/semi'] = [
 ] satisfies TSESLint.SharedConfig.RuleEntry | [TSESLint.SharedConfig.RuleLevelAndOptions, RuleOptions['@stylistic/semi'][0], RuleOptions['@stylistic/semi'][1]];
 
 const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
-  {
-    /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
-    ...jsonc.configs['flat/recommended-with-json']
-      .map(v => ({ ...v } as JsoncCfgReducerIn))
-      .flatMap(a => jsonCfgReducer(a, {}))
-      .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {}),
-    name: 'flat/recommended-with-json - https://github.com/ota-meshi/eslint-plugin-jsonc',
-    files: ['*.json', '**/*.json'],
-    ignores: globalIgnores.ignores,
-  },
-  {
-    /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
-    ...jsonc.configs['flat/recommended-with-json5']
-      .map(v => ({ ...v } as JsoncCfgReducerIn))
-      .flatMap(a => jsonCfgReducer(a, {}))
-      .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {}),
-    name: 'flat/recommended-with-json5 - https://github.com/ota-meshi/eslint-plugin-jsonc',
-    files: ['*.json5', '**/*.json5'],
-    ignores: globalIgnores.ignores,
-  },
-  {
-    /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
-    ...jsonc.configs['flat/recommended-with-jsonc']
-      .map(v => ({ ...v } as JsoncCfgReducerIn))
-      .flatMap(a => jsonCfgReducer(a, {}))
-      .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {}),
-    name: 'flat/recommended-with-jsonc - https://github.com/ota-meshi/eslint-plugin-jsonc',
-    files: ['*.jsonc', '**/*.jsonc'],
-    ignores: globalIgnores.ignores,
-  },
+  json_json,
+  json_json5,
+  json_jsonc,
   {
     name: 'TSJS',
     extends: [
