@@ -337,7 +337,7 @@ export class SemanticReleaseConfigDotnet {
         nri.PackDummyPackage({}).then((nupkgs) => {
           // this is a full file path.
           const mainNupkg = nupkgs.find(nupkg =>
-            RegExp(/(?<!symbols)\.nupkg$/).test(nupkg),
+            new RegExp(/(?<!symbols)\.nupkg$/).test(nupkg),
           );
           if (mainNupkg !== undefined)
             return { nri: nri, nupkgPath: mainNupkg } as const;
