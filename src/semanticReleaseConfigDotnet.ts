@@ -261,7 +261,7 @@ export class SemanticReleaseConfigDotnet {
     const errors: Error[] = [];
     const pluginIDs = this.options.plugins.map(v =>
       typeof v === 'string' ? v : v[0],
-    );
+    ) as (typeof this.options.plugins[number])[][0];
 
     // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
 
