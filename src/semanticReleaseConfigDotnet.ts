@@ -259,7 +259,7 @@ export class SemanticReleaseConfigDotnet {
     insertBeforePluginsIDs: string[],
   ): void {
     const errors: Error[] = [];
-    const pluginIDs = new Array(...this.options.plugins).map(v =>
+    const pluginIDs = this.options.plugins.map(v =>
       typeof v === 'string' ? v : v[0],
     );
 
