@@ -31,8 +31,6 @@ interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
 }
 
 /**
- * @public
- * @class SemanticReleaseConfigDotnet
  */
 export class SemanticReleaseConfigDotnet {
   private options: SRConfigDotnetOptions;
@@ -55,15 +53,12 @@ export class SemanticReleaseConfigDotnet {
    * If you sign different signatures depending on the NuGet registry,
    * splice your signing command (with "overwrite signature" enabled, if
    * desired) before the corresponding registry's `dotnet nuget push` command.
-   *
-   * @constructor
-   * @public
-   * @param {string[]} projectsToPublish An array of dotnet projects' relative paths. If
+   * @param projectsToPublish An array of dotnet projects' relative paths. If
    * empty or unspecified, tries getting projects' semi-colon-separated relative
    * paths from the `PROJECTS_TO_PUBLISH` environment variable. If configured as
    * recommended, the projects' publish outputs will be zipped to '$PWD/publish'
    * for use in the `publish` semantic-release step (typically, GitHub release).
-   * @param {string[] | NugetRegistryInfo[]} projectsToPackAndPush An array of dotnet projects' relative paths.
+   * @param projectsToPackAndPush An array of dotnet projects' relative paths.
    * If empty or unspecified, tries getting projects' semi-colon-separated
    * relative paths from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
    * Otherwise, no packages will be packed and pushed.
@@ -179,8 +174,6 @@ export class SemanticReleaseConfigDotnet {
   /**
    * generate dotnet commands for \@semantic-release/exec, appending commands with ' && ' when necessary.
    * ?todo: change to builder method? e.g. static async SetupDotnetCommands(this: SemanticReleaseConfigDotnet): Promise<SemanticReleaseConfigDotnet>
-   *
-   * @public
    * @async
    * @see https://github.com/semantic-release/exec#usage
    */
@@ -244,13 +237,11 @@ export class SemanticReleaseConfigDotnet {
 
   /**
    * Insert a plugin into the plugins array.
-   *
    * @deprecated EXPERIMENTAL: needs thorough tests implemented before use in production!
-   * @public
-   * @param {string[]} insertAfterPluginIDs Plugins which should appear BEFORE
+   * @param insertAfterPluginIDs Plugins which should appear BEFORE
    * {@link insertPluginIDs}.
-   * @param {string[]} insertPluginIDs The plugin(s) to insert into the plugins array.
-   * @param {string[]} insertBeforePluginsIDs plugins which should appear AFTER the
+   * @param insertPluginIDs The plugin(s) to insert into the plugins array.
+   * @param insertBeforePluginsIDs plugins which should appear AFTER the
    * inserted plugin(s).
    */
   splicePlugin(
