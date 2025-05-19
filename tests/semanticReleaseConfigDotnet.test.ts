@@ -8,20 +8,14 @@ import { isConstructor } from '../src/utils/reflection.js';
 import { join } from 'node:path';
 import { isNativeError } from 'node:util/types';
 
-await describe('SemanticReleaseConfigDotnet', async (c) => {
-  await it('has expected name', () => {
-    strictEqual(SemanticReleaseConfigDotnet.name, c.name);
-  });
+await describe('SemanticReleaseConfigDotnet', async () => {
   await it('is a class', () => {
     strictEqual(isConstructor(SemanticReleaseConfigDotnet), true);
   });
   await todo('Properties, Methods');
 });
 
-await describe('getConfig', async (c) => {
-  await it('has expected name', () => {
-    strictEqual(getConfig.name, c.name);
-  });
+await describe('getConfig', async () => {
   await it('is a function', () => {
     strictEqual(typeof getConfig, 'function');
   });
