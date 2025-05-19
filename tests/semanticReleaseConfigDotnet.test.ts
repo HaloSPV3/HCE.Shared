@@ -38,7 +38,7 @@ await describe('getConfig', async () => {
   });
 
   await it('throws Error when projectsToPublish is an empty array.', async () => {
-    let actual = undefined;
+    let actual;
     try {
       actual = await getConfig([]);
     }
