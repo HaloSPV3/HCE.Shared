@@ -1,15 +1,19 @@
 /* eslint-disable unicorn/prevent-abbreviations */
-/** semantic-release
+/**
+ * # semantic-release
+ *
  * After HCE.Shared's Shareable Configuration (see 'static/.releaserc.yml', https://semantic-release.gitbook.io/semantic-release/usage/configuration#extends)
  * is loaded, the following semantic-release configuration is merged
  * into the configuration object, overriding existing values.
  * Later, when a release is triggered, semantic-release will
  * add any unspecified settings with default values.
  *
- ** How to review the 'actual' config
+ * ## How to review the 'actual' config
+ *
  * `npx semantic-release --debug`.
  *
- ** Plugins Configuration
+ * ## Plugins Configuration
+ *
  * Plugins are configured via tuple-like arrays e.g. ['plugin name', {config object}].
  *
  * ! WARNING! Arrays and child objects are overwritten entirely.
@@ -21,11 +25,6 @@ import { type } from 'arktype';
 import { ok } from 'node:assert/strict';
 import { env } from 'node:process';
 import { inspect } from 'node:util';
-
-/** TypeDefs
- * @typedef {Exclude<import('./src/semanticReleaseConfig.ts').PluginSpecSRCommitAnalyzer,string>[1]} SRCommitAnalyzerOptions
- * @typedef {typeof import('./src/index.js').default} HceSharedConfig
- */
 
 const { default: hceSharedConfig } = await import('./src/index.ts');
 
@@ -45,6 +44,9 @@ ok(config.plugins);
 console.debug(inspect(config, false, Infinity));
 
 // #region COMMIT ANALYZER
+/**
+ * Setup Commit Analyzer plugin options
+ */
 async function setupCommitAnalyzer() {
   const COMMIT_ANALYZER_ID = '@semantic-release/commit-analyzer';
   const commitAnalyzerIndex = config.plugins.findIndex(pluginSpec =>
@@ -94,7 +96,10 @@ await setupCommitAnalyzer();
 
 // #endregion COMMIT ANALYZER
 
-/** @param {import('semantic-release').PluginSpec<unknown>[]} pluginsArray */
+/**
+ * @param {import('semantic-release').PluginSpec<unknown>[]} pluginsArray A Semantic Release Options object's plugins array.
+ * @returns {number | -1} the index of the Git plugin in the array, if present. Else `-1`.
+ */
 function getGitIndex(pluginsArray) {
   return pluginsArray.findIndex(v => v[0] === '@semantic-release/git' || v === '@semantic-release/git');
 }
@@ -112,6 +117,9 @@ if (undefined === config.plugins.find(v => v[0] === '@semantic-release/npm' || v
 
 // #region GITHUB
 
+/**
+ * Setup GitHub plugin options
+ */
 function setupGithub() {
   const SRGHOptions = type({
     githubUrl: type('undefined | string')
