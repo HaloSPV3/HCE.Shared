@@ -24,18 +24,15 @@ declare module '@semantic-release/commit-analyzer' {
 
   /**
    * Determine the type of release to create based on a list of commits.
-   *
-   * @param {Object} pluginConfig The plugin configuration.
-   * @param {String} pluginConfig.preset conventional-changelog preset ('angular', 'atom', 'codemirror', 'ember', 'eslint', 'express', 'jquery', 'jscs', 'jshint')
-   * @param {String} pluginConfig.config Require-able npm package with a custom conventional-changelog preset
-   * @param {String|Array} pluginConfig.releaseRules A `String` to load an external module or an `Array` of rules.
-   * @param {Object} pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
-   * @param {Object} context The semantic-release context.
-   * @param {Array<Object>} context.commits The commits to analyze.
-   * @param {String} context.cwd The current working directory.
-   *
-   * @returns {Promise<String|null>} the type of release to create based on the list of commits or `null` if no release has to be done.
-   *
+   * @param pluginConfig The plugin configuration.
+   * @param pluginConfig.preset conventional-changelog preset ('angular', 'atom', 'codemirror', 'ember', 'eslint', 'express', 'jquery', 'jscs', 'jshint')
+   * @param pluginConfig.config Require-able npm package with a custom conventional-changelog preset
+   * @param pluginConfig.releaseRules A `String` to load an external module or an `Array` of rules.
+   * @param pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
+   * @param context The semantic-release context.
+   * @param context.commits The commits to analyze.
+   * @param context.cwd The current working directory.
+   * @returns the type of release to create based on the list of commits or `null` if no release has to be done.
    * @see 'file://./../node_modules/@semantic-release/commit-analyzer/index.js'
    */
   export function analyzeCommits(
@@ -46,7 +43,7 @@ declare module '@semantic-release/commit-analyzer' {
       parserOpts: unknown;
     },
     context: {
-      commits: unknown[];
+      commits: object[];
       cwd: string;
     },
   ): Promise<string | null>;
