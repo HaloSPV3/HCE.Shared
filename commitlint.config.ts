@@ -46,6 +46,7 @@ const scopes = {
   semanticReleaseConfig: 'Affects "src/semanticReleaseConfig.ts" or its tests.',
   semanticReleaseConfigDotnet:
     'Affects "src/semanticReleaseConfigDotnet.ts" or its tests.',
+  setupGitPluginSpec: 'Affects "src/setupGitPluginSpec.ts" or its tests.',
   'utils.env': 'Affects "src/utils/env.ts" or its tests.',
   'utils.Exact': 'Affects "src/utils/Exact.ts" or its tests.',
   'utils.execAsync': 'Affects "src/utils/execAsync.ts" or its tests.',
