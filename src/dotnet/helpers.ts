@@ -1,7 +1,7 @@
 import { MSBuildProject } from './MSBuildProject.js';
 import { NugetRegistryInfo } from './NugetRegistryInfo.js';
 import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
-import { cwd } from 'process';
+import { cwd } from 'node:process';
 
 /**
  * Build a prepareCmd string from .NET projects.\
