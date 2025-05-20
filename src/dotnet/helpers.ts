@@ -159,7 +159,7 @@ export async function configurePrepareCmd(
     }
 
     /** convert evaluatedPublishProjects to sets of space-separated CLI args. */
-    const argsSets: string[] = evaluatedPublishProjects.flatMap(getPublishArgsPermutations);
+    const argsSets: string[] = evaluatedPublishProjects.flatMap(p => getPublishArgsPermutations(p));
 
     // For each argSet, create a new exec command. Then, join all commands with ' && ' so they are executed serially, synchronously.
     // e.g. `dotnet publish project.csproj --runtime win7-x86 --framework net6.0 && dotnet publish project.csproj --runtime win-x64 --framework net8.0
