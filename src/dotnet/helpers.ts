@@ -31,7 +31,7 @@ import { cwd } from 'node:process';
 export async function configurePrepareCmd(
   projectsToPublish: string[] | MSBuildProject[],
   projectsToPackAndPush?: string[] | NugetRegistryInfo[],
-  dotnetNugetSignArgs: string[] = ['./publish'],
+  dotnetNugetSignArgs: string[] | ['./publish'] = ['./publish'],
 ): Promise<string> {
   const evaluatedProjects: MSBuildProject[] = [];
 
