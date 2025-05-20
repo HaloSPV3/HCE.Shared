@@ -59,7 +59,7 @@ function isGitOptions(opts: unknown): opts is GitOptions {
     return isOptions;
   if ('assets' in opts) {
     isOptions = Array.isArray(opts.assets)
-      ? (opts.assets.every(isGitAsset))
+      ? opts.assets.every(unk => isGitAsset(unk))
       : isGitAsset(opts.assets);
   }
   if ('message' in opts)
