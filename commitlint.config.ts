@@ -45,7 +45,7 @@ const scopes = {
     'Affects Packemon\'s configurations: "package.json#packemon", "packemon.config.ts"',
   semanticReleaseConfig: 'Affects "src/semanticReleaseConfig.ts" or its tests.',
   semanticReleaseConfigDotnet:
-    'Affects the "src/semanticReleaseConfigDotnet.ts" or its tests.',
+    'Affects "src/semanticReleaseConfigDotnet.ts" or its tests.',
   'utils.env': 'Affects "src/utils/env.ts" or its tests.',
   'utils.Exact': 'Affects "src/utils/Exact.ts" or its tests.',
   'utils.execAsync': 'Affects "src/utils/execAsync.ts" or its tests.',
