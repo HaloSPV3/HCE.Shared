@@ -46,10 +46,7 @@ export async function configurePrepareCmd(
   }
 
   return [
-    await formatDotnetPublish(
-      projectsToPublish,
-      MSBuildProject.MatrixProperties,
-    ),
+    await formatDotnetPublish(projectsToPublish),
     await formatDotnetPack(projectsToPackAndPush ?? []),
     formatDotnetNugetSign(dotnetNugetSignArgs),
     // remove no-op commands
@@ -72,7 +69,6 @@ export async function configurePrepareCmd(
    */
   async function formatDotnetPublish(
     projectsToPublish: string[] | MSBuildProject[],
-    publishProperties: readonly string[] | string[],
   ): Promise<string> {
     /* Fun Fact: You can define a property and get the evaluated value in the same command!
     ```pwsh
@@ -102,7 +98,7 @@ export async function configurePrepareCmd(
         if (filteredProjects.length === 0) {
           const _proj = await MSBuildProject.Evaluate({
             FullName: proj,
-            GetProperty: publishProperties,
+            GetProperty: MSBuildProject.MatrixProperties,
             GetItem: [],
             GetTargetResult: [],
             Property: {},
