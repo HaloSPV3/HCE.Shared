@@ -146,9 +146,9 @@ interface JsoncCfgReducerOut {
 
 /**
  * Merge erroneously mutually-exclusive configs from `eslint-plugin-jsonc`.
- * @param {JsoncCfgReducerIn | JsoncCfgReducerOut} a A config exported by `eslint-plugin-jsonc` -OR- the output of this function.
- * @param {JsoncCfgReducerIn | JsoncCfgReducerOut} b A config exported by `eslint-plugin-jsonc` -OR- the output of this function.
- * @returns {JsoncCfgReducerOut} A merged combination of {@link a} and {@link b}.
+ * @param a A config exported by `eslint-plugin-jsonc` -OR- the output of this function.
+ * @param b A config exported by `eslint-plugin-jsonc` -OR- the output of this function.
+ * @returns A merged combination of {@link a} and {@link b}.
  */
 function jsonCfgReducer(
   a: JsoncCfgReducerIn | JsoncCfgReducerOut,
