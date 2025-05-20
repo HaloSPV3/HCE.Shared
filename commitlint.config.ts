@@ -43,6 +43,7 @@ const scopes = {
     'Affects "src/eslintConfig.ts" or its tests.',
   packemon:
     'Affects Packemon\'s configurations: "package.json#packemon", "packemon.config.ts"',
+  semanticReleaseConfig: 'Affects "src/semanticReleaseConfig.ts" or its tests.',
   semanticReleaseConfigDotnet:
     'Affects the "src/semanticReleaseConfigDotnet.ts" or its tests.',
   'utils.env': 'Affects "src/utils/env.ts" or its tests.',
