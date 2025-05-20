@@ -37,7 +37,7 @@ function gitAssetsToStringArray(
   if (assets === undefined)
     return [];
   if (Array.isArray(assets)) {
-    return assets.filter(isGitAsset)
+    return assets.filter(asset => isGitAsset(asset))
       .map(v => typeof v === 'string' ? v : v.path);
   }
   if (typeof assets === 'string')
