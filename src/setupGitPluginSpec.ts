@@ -25,7 +25,7 @@ function isGitAsset(unk: unknown): unk is AssetEntry {
     return true;
   // Avoid ending condition with `typeof unk.path === 'string'`.
   // TS narrowing is bugged; requires the check to be performed TWICE!!
-  if (typeof unk === 'object' && unk != null && 'path' in unk) {
+  if (typeof unk === 'object' && unk != undefined && 'path' in unk) {
     return typeof unk.path === 'string';
   }
   return false;
@@ -55,7 +55,7 @@ function sanitizeGitOptions(opts: GitOptions): Omit<GitOptions, 'assets'> & { as
 function isGitOptions(opts: unknown): opts is GitOptions {
   let isOptions = false;
 
-  if (typeof opts !== 'object' || opts == null)
+  if (typeof opts !== 'object' || opts == undefined)
     return isOptions;
   if ('assets' in opts) {
     isOptions = Array.isArray(opts.assets)
