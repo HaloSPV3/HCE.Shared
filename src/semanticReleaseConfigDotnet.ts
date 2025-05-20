@@ -288,7 +288,7 @@ export class SemanticReleaseConfigDotnet {
     }
 
     if (errors.length > 0)
-      throw new AggregateError(errors);
+      throw new AggregateError(errors, 'One or more errors occurred while splicing plugin-option tuples into the Semantic Release config!');
 
     this.options.plugins.splice(
       indexOfLastPreceding + 1,
