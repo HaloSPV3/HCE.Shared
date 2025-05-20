@@ -128,8 +128,8 @@ export async function configurePrepareCmd(
       if (TFMs.length === 0 && RIDs.length === 0)
         return [proj.Properties.MSBuildProjectFullPath]; // return string[]
 
-      if (RIDs.length !== 0) {
-        if (TFMs.length !== 0) {
+      if (RIDs.length > 0) {
+        if (TFMs.length > 0) {
           for (const RID of RIDs) {
             for (const TFM of TFMs) {
               tfmRidPermutations.push(
