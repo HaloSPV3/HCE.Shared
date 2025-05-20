@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prevent-abbreviations */
 import { MSBuildProject } from './MSBuildProject.js';
 import { NugetRegistryInfo } from './NugetRegistryInfo.js';
 import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
