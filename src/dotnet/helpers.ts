@@ -36,12 +36,14 @@ export async function configurePrepareCmd(
   const evaluatedProjects: MSBuildProject[] = [];
 
   // append evaluated projects
-  projectsToPublish
-    .filter(p => p instanceof MSBuildProject)
-    .forEach(p => evaluatedProjects.push(p));
-  projectsToPackAndPush
-    ?.filter(p => p instanceof NugetRegistryInfo)
-    .forEach(p => evaluatedProjects.push(p.project));
+  for (const p of projectsToPublish.filter(p => p instanceof MSBuildProject)) {
+    evaluatedProjects.push(p);
+  }
+  if (projectsToPackAndPush) {
+    for (const p of projectsToPackAndPush.filter(p => p instanceof NugetRegistryInfo)) {
+      evaluatedProjects.push(p.project);
+    }
+  }
 
   return [
     await formatDotnetPublish(
