@@ -211,8 +211,10 @@ export async function configurePrepareCmd(
           return proj;
 
         const msbpArr: MSBuildProject[] = await MSBuildProject.PackableProjectsToMSBuildProjects([proj]);
-        const msbp: MSBuildProject = msbpArr[0]
-          ?? (() => { throw new Error(''); })();
+        if (msbpArr.length === 0 || msbpArr[0] === undefined) {
+          throw new Error('This should be impossible!');
+        }
+        const msbp: MSBuildProject = msbpArr[0];
 
         evaluatedProjects.push(msbp);
 
