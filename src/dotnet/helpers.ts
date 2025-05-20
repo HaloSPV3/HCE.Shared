@@ -12,18 +12,21 @@ import { cwd } from 'process';
  * todo: parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild).
  * todo: cleanup, docs
  * todo: change to instance method of SemanticReleaseConfigDotnet
- * @export
- * @param {string[] | MSBuildProject[]} projectsToPublish
- * @param {string[] | NugetRegistryInfo[] | undefined} projectsToPackAndPush
+ * @param projectsToPublish An array of relative or full file paths of `.csproj`
+ * projects  -OR- an array of {@link MSBuildProject} objects.
+ * The project paths will be passed to `dotnet publish` commands.
+ * @param projectsToPackAndPush
  *  Relative and/or full file paths of projects to pass to `dotnet pack`. If
  *  string[], only the default NuGet Source will be used. If GitHub, GitLab,
  *  etc. are also desired, pass {@link NugetRegistryInfo}[]
- * @param {string[] } [dotnetNugetSignArgs=['./publish']]
+ * @param [dotnetNugetSignArgs]
+ * Default: `['./publish]`\
  * Arguments appended to `dotnet nuget sign`. You may append an arbitrary
  * command by splitting it into arguments e.g.
  * [..., '&& dotnet nuget sign your/package/path --certificate-path your/cert/path']
  * This can be used to sign a package with a different key. In fact, any
  * arbitrary command may be added here.
+ * @returns A single string of CLI commands joined by ' && '
  */
 export async function configurePrepareCmd(
   projectsToPublish: string[] | MSBuildProject[],
@@ -52,6 +55,19 @@ export async function configurePrepareCmd(
     .filter(v => v !== undefined)
     .join(' && ');
 
+  /**
+   * Create a string of CLI commands to run `dotnet publish` or the Publish
+   * MSBuild target for one or more projects.
+   * @async
+   * @param projectsToPublish An array of one or more projects, either
+   * pre-evaluated (see {@link MSBuildProject.Evaluate}) or as full file paths.\
+   * NOTE: Although `dotnet publish` allows directory or Solution file (.sln,
+   * .slnx) paths, this function expects projects' full or relative file
+   * paths.
+   * @returns A Promise of a string. This string contains one or more `dotnet publish`
+   * commands conjoined by " && ". It may also include one or more
+   * `dotnet msbuild ${...} -t:PublishAll` commands.
+   */
   async function formatDotnetPublish(
     projectsToPublish: string[] | MSBuildProject[],
     publishProperties: readonly string[] | string[],
@@ -79,8 +95,8 @@ export async function configurePrepareCmd(
           p.Properties.MSBuildProjectFullPath === MSBPP.GetFullPath(proj),
         );
 
-        // if no pre-existing MSBuildProject found, evaluate a new one and push
-        // it
+        // if no pre-existing MSBuildProject found,
+        // evaluate a new one and push it
         if (filteredProjects.length === 0) {
           const _proj = await MSBuildProject.Evaluate({
             FullName: proj,
@@ -94,6 +110,10 @@ export async function configurePrepareCmd(
           return _proj;
         }
 
+        /**
+         * Finds and returns the subjectively "best" project in {@link filteredProjects}
+         * @returns the subjective "best" project in {@link filteredProjects}
+         */
         function getBest() {
           let best: MSBuildProject | undefined;
           if (filteredProjects.length > 0 && (best = filteredProjects[0]) instanceof MSBuildProject)
@@ -207,9 +227,8 @@ export async function configurePrepareCmd(
   }
 
   /**
-   * @param {string[]} dotnetNugetSignArgs
-   * arguments to append to 'dotnet nuget sign ', joined with spaces.
-   * @returns {string} `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
+   * @param dotnetNugetSignArgs arguments to append to 'dotnet nuget sign ', joined with spaces.
+   * @returns `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
    */
   function formatDotnetNugetSign(
     dotnetNugetSignArgs?: string[],
@@ -238,10 +257,11 @@ export async function configurePrepareCmd(
  *
  * Ensure your verifyConditionsCmd is set to prevent releases failing due to bad tokens or packages!
  * See {@link NugetRegistryInfo#PackDummyPackage}, {@link NugetRegistryInfo#GetPushDummyCommand}
- * @param packageOutputPath
- * @param registryInfos
- * @param pushToGitHub
- * @returns a string of `dotnet pack` and `dotnet push` commands, joined by ' && '
+ * @param registryInfos an array of {@link NugetRegistryInfo} (or derived classes) instances.
+ * @param packageOutputPath Default: `${cwd()}/publish`.\
+ * The directory at which dotnet outputs the given projects' packages. Passed to
+ * `dotnet pack` via the `--output` argument.
+ * @returns a string of `dotnet pack` and `dotnet push` commands, joined by ' && '.
  */
 export function configureDotnetNugetPush(
   registryInfos: NugetRegistryInfo[],
