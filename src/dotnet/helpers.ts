@@ -225,31 +225,6 @@ export async function configurePrepareCmd(
         ).join(' && ');
     });
   }
-
-  /**
-   * @param dotnetNugetSignArgs arguments to append to 'dotnet nuget sign ', joined with spaces.
-   * @returns `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
-   */
-  function formatDotnetNugetSign(
-    dotnetNugetSignArgs?: string[],
-  ): string | undefined {
-    if (!dotnetNugetSignArgs || dotnetNugetSignArgs.length === 0)
-      return undefined;
-    return `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `;
-    //     throw new Error("")
-    //     // this needs a rework.
-    //     const packagePaths: string[] = [];
-    //     dotnetNugetSignArgs.forEach((dotnetNugetSignArgs, i) => {
-    //         // if current arg doesn't start with '-' and (current arg is first -OR- previous arg also does not start with '-')...
-    //         if (!dotnetNugetSignArgs.startsWith("-") && (i === 0 || (i > 0 && !dotnetNugetSignArgs[i - 1].startsWith("-")))) {
-    //             // ...then it's probably a package path.
-    //             packagePaths.push(dotnetNugetSignArgs);
-    //         }
-    //     });
-    //     if (packagePaths.length === 0)
-    //         return `dotnet nuget sign ${ dotnetNugetSignArgs.join(" ") } `
-    //     else return
-  }
 }
 
 /**
@@ -282,4 +257,16 @@ export function configureDotnetNugetPush(
   const pushCmds = registryInfos.map(nri => nri.GetPushCommand({ root: packageOutputPath }, true, true));
 
   return [...packCmds, ...pushCmds].join(' && ');
+}
+
+/**
+ * @param dotnetNugetSignArgs arguments to append to 'dotnet nuget sign ', joined with spaces.
+ * @returns `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
+ */
+function formatDotnetNugetSign(
+  dotnetNugetSignArgs?: string[],
+): string | undefined {
+  if (!dotnetNugetSignArgs || dotnetNugetSignArgs.length === 0)
+    return undefined;
+  return `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `;
 }
