@@ -114,13 +114,18 @@ export function setupGitPluginSpec(plugins: PluginSpecTuple[]): PluginSpecTuple[
     if (hasGitOptions(current)) {
       const currentGitOpts = sanitizeGitOptions(current[1]);
 
-      if (currentGitOpts.assets !== false) {
-        const assets: string[] = gitAssetsToStringArray(currentGitOpts.assets);
-        if (!Array.isArray(firstGitOpts.assets))
-          firstGitOpts.assets = assets;
-        else firstGitOpts.assets.push(...assets);
+      if (currentGitOpts.assets === false) {
+        firstGitOpts.assets = false;
       }
-      else firstGitOpts.assets = false;
+      else {
+        const assets: string[] = gitAssetsToStringArray(currentGitOpts.assets);
+        if (Array.isArray(firstGitOpts.assets)) {
+          firstGitOpts.assets.push(...assets);
+        }
+        else {
+          firstGitOpts.assets = assets;
+        }
+      }
 
       if (typeof currentGitOpts.message === 'string')
         firstGitOpts.message = currentGitOpts.message;
