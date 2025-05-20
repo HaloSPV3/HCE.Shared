@@ -86,7 +86,7 @@ function isGitPluginSpecTuple<T>(pluginSpec: [string, T]): pluginSpec is [typeof
  */
 export function setupGitPluginSpec(plugins: PluginSpecTuple[]): PluginSpecTuple[] {
   /** if Git plugin not in load order, return as-is. */
-  const firstGitPluginIndex = plugins.findIndex(isGitPluginSpecTuple);
+  const firstGitPluginIndex = plugins.findIndex(plugin => isGitPluginSpecTuple(plugin));
   if (firstGitPluginIndex === -1)
     return plugins;
 
