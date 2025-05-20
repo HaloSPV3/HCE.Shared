@@ -1,4 +1,7 @@
-/** @see file://./../node_modules/@semantic-release/git/index.js */
+/* eslint-disable jsdoc/tag-lines, jsdoc/require-param, jsdoc/require-returns */
+/**
+ * @see {@link ../node_modules/@semantic-release/git/index.js}
+ */
 declare module '@semantic-release/git' {
   import type { GlobalConfig, PrepareContext, VerifyConditionsContext } from 'semantic-release';
   export type MicromatchGlob = string;
