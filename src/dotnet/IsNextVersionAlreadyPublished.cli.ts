@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prevent-abbreviations */
 import { NugetRegistryInfo, getGithubOutput } from './NugetRegistryInfo.js';
 
 const args = process.argv.slice(2);
@@ -23,7 +24,7 @@ if (typeof options.url !== 'string')
 const packageId = options.packageId,
   url = options.url,
   versionPattern = new RegExp(/\d+\.\d+\.\d+([-+].+)?/);
-const ghOutput = (await getGithubOutput()) ?? {};
+const ghOutput = await getGithubOutput() ?? {};
 const matches = versionPattern.exec(ghOutput['new-release-version'] ?? '');
 if (matches === null || matches.length === 0)
   throw new Error(
