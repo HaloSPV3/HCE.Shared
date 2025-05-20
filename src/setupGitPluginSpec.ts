@@ -90,8 +90,10 @@ export function setupGitPluginSpec(plugins: PluginSpecTuple[]): PluginSpecTuple[
   if (firstGitPluginIndex === -1)
     return plugins;
 
-  /** the following two const variables are references--not clones.
-   * Modifying them will affect the plugins array. */
+  /**
+   * the following two const variables are references--not clones.
+   * Modifying them will affect the plugins array.
+   */
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const firstGitPlugin = plugins[firstGitPluginIndex]!;
   const firstGitOpts: ReturnType<typeof sanitizeGitOptions> = isGitOptions(firstGitPlugin[1])
