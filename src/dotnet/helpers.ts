@@ -130,17 +130,54 @@ export async function configurePrepareCmd(
       }),
     );
 
-    /** @return e.g. `['--runtime win7-x86 --framework net6.0', '--runtime win7-x64 --framework net6.0' ]` */
-    function getPublishArgsPermutations(proj: MSBuildProject): string[] {
+    /**
+     * Returns an array of one or more `dotnet` arguments.
+     * @param proj An {@link MSBuildProject} to be published for one or more
+     * runtime-framework combinations.
+     * @returns If {@link proj} imports {@link ../../dotnet/PublishAll.targets}...
+     * ```
+     * [`${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`]
+     * ```
+     * Else, an array of `dotnet publish` arguments permutations e.g.
+     * ```
+     * [
+     *   'myProj.csproj --runtime win7-x86 --framework net6.0',
+     *   'myProj.csproj --runtime win7-x64 --framework net6.0'
+     * ]
+     * ```
+     * @example
+     * const publishCmdArray = [];
+     * const permutations = getPublishArgsPermutations(msbuildProject);
+     * for (const permutation of permutations) {
+     *   if (permutation[0] === 'PublishAll') {
+     *     // 'dotnet msbuild full/path/to/myProj.csproj t:PublishAll'
+     *     publishCmdArray.push(`dotnet msbuild ${permutation[1]}`)
+     *   }
+     *   else {
+     *     publishCmdArray.push(`dotnet publish ${permutation}`)
+     *   }
+     * }
+     * // return array as success-chained CLI commands.
+     * return publishCmdArray.join(' && ');
+     */
+    function getPublishArgsPermutations(proj: MSBuildProject):
+      (['PublishAll', `${typeof proj.Properties.MSBuildProjectFullPath} -t:PublishAll`])
+      | ([typeof proj.Properties.MSBuildProjectFullPath])
+      | (`${typeof proj.Properties.MSBuildProjectFullPath} --runtime ${string} --framework ${string}`)[]
+      | (`${typeof proj.Properties.MSBuildProjectFullPath} --runtime ${string}`)[]
+      | (`${typeof proj.Properties.MSBuildProjectFullPath} --framework ${string}`)[] {
       /**
        * If the project imports PublishAll to publish for each TFM-RID
        * permutation, return the appropriate command line.
        */
       if (proj.Targets.includes('PublishAll'))
-        return [`${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`];
+        return ['PublishAll', `${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`];
 
       // #region formatFrameworksAndRuntimes
-      const tfmRidPermutations: string[] = []; // forEach, run dotnet [proj.Properties.MSBuildProjectFullPath,...v]
+      const tfmRidPermutations: `--runtime ${string} --framework ${string}`[]
+        | `--runtime ${string}`[]
+        | `--framework ${string}`[]
+        = []; // forEach, run dotnet [proj.Properties.MSBuildProjectFullPath,...v]
       const RIDs: string[] = proj.Properties.RuntimeIdentifiers.split(';');
       const TFMs: string[] = proj.Properties.TargetFrameworks.split(';');
 
@@ -151,7 +188,7 @@ export async function configurePrepareCmd(
         if (TFMs.length > 0) {
           for (const RID of RIDs) {
             for (const TFM of TFMs) {
-              tfmRidPermutations.push(
+              (tfmRidPermutations as `--runtime ${string} --framework ${string}`[]).push(
                 `--runtime ${RID} --framework ${TFM}`,
               );
             }
@@ -160,31 +197,44 @@ export async function configurePrepareCmd(
         else {
           // assume singular TFM. No need to specify it.
           for (const RID of RIDs) {
-            tfmRidPermutations.push(`--runtime ${RID}`);
+            (tfmRidPermutations as `--runtime ${string}`[]).push(
+              `--runtime ${RID}`,
+            );
           }
         }
       }
-      else if (TFMs.length !== 0) {
+      else if (TFMs.length > 0) {
         for (const TFM of TFMs) {
-          tfmRidPermutations.push(`--framework ${TFM}`);
+          (tfmRidPermutations as `--framework ${string}`[]).push(`--framework ${TFM}`);
         }
       }
 
       /** prepend each set of args with the project's path */
-      return tfmRidPermutations.map((permArgs: string): string =>
+      return tfmRidPermutations.map(permArgs =>
         `${proj.Properties.MSBuildProjectFullPath} ${permArgs}`,
-      );
+      ) as `${typeof proj.Properties.MSBuildProjectFullPath} --runtime ${string} --framework ${string}`[]
+      | `${typeof proj.Properties.MSBuildProjectFullPath} --runtime ${string}`[]
+      | `${typeof proj.Properties.MSBuildProjectFullPath} --framework ${string}`[];
       // #endregion formatFrameworksAndRuntimes
     }
 
-    /** convert evaluatedPublishProjects to sets of space-separated CLI args. */
-    const argsSets: string[] = evaluatedPublishProjects.flatMap(proj => getPublishArgsPermutations(proj));
+    const publishCmds: (`dotnet publish ${string}` | `dotnet msbuild ${string} -t:PublishAll`)[] = [];
+    /** convert {@link evaluatedPublishProjects} to sets of space-separated CLI args. */
+    const argsSets = evaluatedPublishProjects.flatMap<ReturnType<typeof getPublishArgsPermutations>>(proj => getPublishArgsPermutations(proj));
+    for (const args of argsSets) {
+      if (args.length === 2 && args[0] === 'PublishAll') {
+        publishCmds.push(`dotnet msbuild ${args[1]}`);
+      }
+      else {
+        for (const permutation of (args as [`${string}.${string}proj`] | `${string} --runtime ${string} --framework ${string}`[] | `${string} --runtime ${string}`[] | `${string} --framework ${string}`[])) {
+          publishCmds.push(`dotnet publish ${permutation}`);
+        }
+      }
+    }
 
     // For each argSet, create a new exec command. Then, join all commands with ' && ' so they are executed serially, synchronously.
     // e.g. `dotnet publish project.csproj --runtime win7-x86 --framework net6.0 && dotnet publish project.csproj --runtime win-x64 --framework net8.0
-    return argsSets
-      .map((argsSet: string): string => `dotnet publish ${argsSet}`)
-      .join(' && ');
+    return publishCmds.join(' && ');
   }
 
   /**
