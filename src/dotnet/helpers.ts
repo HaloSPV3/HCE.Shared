@@ -9,10 +9,7 @@ import { cwd } from 'node:process';
  * This will include a `dotnet publish` for each project's RID and TFM permutation,\
  * `dotnet pack` for each project with output paths separated by NuGet Source and PackageId,\
  * and `dotnet nuget sign` for each nupkg output directory.
- *
- * todo: parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild).
- * todo: cleanup, docs
- * todo: change to instance method of SemanticReleaseConfigDotnet
+ * @todo parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild).
  * @param projectsToPublish An array of relative or full file paths of `.csproj`
  * projects  -OR- an array of {@link MSBuildProject} objects.
  * The project paths will be passed to `dotnet publish` commands.
@@ -246,8 +243,6 @@ export async function configurePrepareCmd(
    * @returns one or more command line strings joined with ' && '.
    * Each command line comprises the `dotnet pack` command, a project file path,
    * and a hardcoded output path (`--output ${cwd()}/publish`)
-   * todo: get "namespaced output" pack command from the NugetRegistryInfo[]
-   * todo: require projectsToPackAndPush, never return undefined
    */
   async function formatDotnetPack(
     projectsToPackAndPush: string[] | NugetRegistryInfo[],
