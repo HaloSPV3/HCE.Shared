@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations */
 declare module '@semantic-release/github' {
   /**
    * @see https://github.com/semantic-release/github#configuration

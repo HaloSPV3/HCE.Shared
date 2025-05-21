@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prevent-abbreviations */
 import { NugetRegistryInfo, getGithubOutput } from './NugetRegistryInfo.js';
 
 const args = process.argv.slice(2);

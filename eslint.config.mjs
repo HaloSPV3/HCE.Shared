@@ -30,7 +30,7 @@ const unicornRecommended = {
     ...unicorn.configs.recommended.rules,
     // we use PascalCase for dotnet-related and class-only files and camelCase for traditional JavaScript files
     'unicorn/filename-case': 'off',
-    'unicorn/prevent-abbreviations': 'warn',
+    'unicorn/prevent-abbreviations': 'off',
     'unicorn/import-style': 'warn',
     'unicorn/switch-case-braces': 'warn',
     'unicorn/catch-error-name': 'warn',
