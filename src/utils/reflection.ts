@@ -1,3 +1,4 @@
+export type * from './reflection/GetterDescriptor.js';
 export type * from './reflection/FunctionLike.js';
 
 /**
