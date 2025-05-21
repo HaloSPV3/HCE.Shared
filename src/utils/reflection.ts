@@ -1,3 +1,5 @@
+export type * from './reflection/FunctionLike.js';
+
 /**
  * Returns the names of the instantiated, noninherited getters derived from the
  * given prototype or prototype of the given object.
