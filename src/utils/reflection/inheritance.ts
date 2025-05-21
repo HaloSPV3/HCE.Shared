@@ -225,9 +225,11 @@ export type IClass<Class extends ConstructorConstraint<Class>> =
  * Note: is `Class & ...`
  *
  * In addition to the Constructor constraint, this type...
- * - Optionally enables setting the type of the immediate superclass. By default, this will be `object | null`, the {@link ReturnType} of {@link Reflect.getPrototypeOf};
+ * - Sets the type of the immediate superclass.
  * - Sets `prototype` to {@link InstanceType}
- * @template Class The `typeof MyClass`. If this class extends a class, pass `typeof MySuperClass` to the generic argument `TypeofSuperClass`.
+ * @template Class The `typeof MyClass`. If this class extends a class, pass `typeof MySuperClass` to the generic argument {@link Class}.
+ * @example
+ * type Class_MyClass = ClassLike<typeof MyClass & WithProto<BaseClass<typeof MyBaseClass>>;
  * @since 3.0.0
  */
 export type ClassLike<
