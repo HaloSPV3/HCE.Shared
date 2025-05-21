@@ -21,11 +21,9 @@ export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.P
  * If found in process environment, its value is returned.
  * Else, load nearest .env file into the process environment and try again.
  * If NOT found, console.warn and return `undefined`
- *
- * @export
- * @param {string} envVar
- * @param {?Parameters<typeof loadDotenv>[0]} [options]
- * @returns {(string | undefined)}
+ * @param envVar The environment variable to lookup.
+ * @param [options] Options to pass to {@link loadDotenv}
+ * @returns The string value of the environment variable or `undefined`
  */
 export function getEnvVarValue(envVar: string, options?: Parameters<typeof loadDotenv>[0]): string | undefined {
   const value = env[envVar] ?? loadDotenv(options);
