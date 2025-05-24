@@ -451,6 +451,11 @@ export class MSBuildProject {
   }
 }
 
+/**
+ * Resolve a path if it is not already absolute.
+ * @param _path A filesystem path.
+ * @returns A full path to a filesystem entry. The path is unchecked for whether or not the path (or its parts) exist.
+ */
 function makeAbsolute(_path: string) {
   return path.isAbsolute(_path) ? _path : path.resolve(_path);
 }
