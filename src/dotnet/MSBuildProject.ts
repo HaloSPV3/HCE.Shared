@@ -192,28 +192,30 @@ export class MSBuildProject {
 
   /**
    * Creates an instance of MSBuildProject.
-   * @param {object} opts The order-independent arguments for this constructor.
+   * @param opts The order-independent arguments for this constructor.
    * Properties may be added or moved around in this definition without
    * breaking compatibility.
-   * @param {string} opts.fullPath
+   * @param options.fullPath
+   * @param options.projTargets
+   * @param options.evaluation
    */
-  public constructor(options: {
+  public constructor(opts: {
     fullPath: string;
     projTargets: string[];
     evaluation: MSBuildEvaluationOutput;
   }) {
-    this.Items = options.evaluation.Items ?? {};
+    this.Items = opts.evaluation.Items ?? {};
     this.Properties = new NugetProjectProperties(
-      options.fullPath,
+      opts.fullPath,
       new CaseInsensitiveMap<string, string>(
-        Object.entries(options.evaluation.Properties ?? {}),
+        Object.entries(opts.evaluation.Properties ?? {}),
       ),
     );
-    this.Targets = options.projTargets;
+    this.Targets = opts.projTargets;
     this.TargetResults
-      = options.evaluation.TargetResults === undefined
+      = opts.evaluation.TargetResults === undefined
         ? []
-        : [options.evaluation.TargetResults];
+        : [opts.evaluation.TargetResults];
   }
 
   readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
