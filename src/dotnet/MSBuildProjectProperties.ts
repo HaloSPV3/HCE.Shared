@@ -151,9 +151,11 @@ export class MSBuildProjectProperties {
   /**
    * Set Version -OR- VersionPrefix.
    * @returns The value of the `Version` property.
+   *
+   * Default: `"1.0.0"`
    */
   get Version(): string {
-    return this._version ??= '';
+    return this._version ??= '1.0.0';
   }
 
   /**
