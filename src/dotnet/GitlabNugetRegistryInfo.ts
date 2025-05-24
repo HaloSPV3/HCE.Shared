@@ -7,17 +7,29 @@ import {
 
 // https://docs.gitlab.com/ee/user/packages/nuget_repository/
 export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
-  /** The GitLab API v4 root URL.  */
+  /**
+   * The GitLab API v4 root URL.
+   * @returns The value of the environment variable `CI_API_V4_URL`.
+   * If that's `undefined`, 'https://gitlab.com/api/v4' is returned, instead.
+   */
   static get CI_API_V4_URL() {
     return getEnvVarValue('CI_API_V4_URL') ?? 'https://gitlab.com/api/v4';
   }
 
-  /** CI_PROJECT_ID - If you want to publish to your GitLab server, this needs to be set to the Id of the project you want to publish to. When running in GitLab CI this is already set to the project the pipeline runs in by GitLab. */
+  /**
+   * CI_PROJECT_ID - If you want to publish to your GitLab server, this needs to be set to the Id of the project you want to publish to. When running in GitLab CI this is already set to the project the pipeline runs in by GitLab.
+   * This method checks the contents of your `.env` file, if present.
+   * @returns The value of the environment variable `CI_PROJECT_ID` or `undefined`.
+   */
   static get projectId() {
     return getEnvVarValue('CI_PROJECT_ID');
   }
 
-  /** CI_PROJECT_NAMESPACE_ID */
+  /**
+   * CI_PROJECT_NAMESPACE_ID
+   * This method checks the contents of your `.env` file, if present.
+   * @returns The value of the environment variable 'CI_PROJECT_NAMESPACE_ID' or `undefined`.
+   */
   static get ownerId() {
     return getEnvVarValue('CI_PROJECT_NAMESPACE_ID');
   }
@@ -30,7 +42,6 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
 
   /**
    * Creates an instance of GitlabNugetRegistryInfo.
-   * @constructor
    * @param opts The input type of {@link GLNRIOpts.from}
    */
   constructor(opts: (typeof GLNRIOpts)['inferIn']) {
@@ -40,6 +51,9 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
   /**
    * Get the GitLab Nuget API for your project url as seen in https://docs.gitlab.com/ee/user/packages/nuget_repository/index.html#publish-a-nuget-package-by-using-cicd
    * ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json
+   * @returns If {@link projectId} is a string, a string formatted like
+   * `${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json`.
+   * Else, `false`
    */
   static get projectUrl(): string | undefined {
     return this.projectId
@@ -49,9 +63,9 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
 
   /**
    * ${CI_API_V4_URL}/groups/${CI_PROJECT_NAMESPACE_ID}/-/packages/nuget/index.json
-   *
-   * @static
-   * @returns {string}
+   * @returns If {@link ownerId} is a string, then a string formatted like
+   * `${CI_API_V4_URL}/groups/${CI_PROJECT_NAMESPACE_ID}/-/packages/nuget/index.json`.
+   * Else, `false`.
    */
   static get groupUrl(): string | undefined {
     return this.ownerId
@@ -63,7 +77,6 @@ const GLNRI = GitlabNugetRegistryInfo;
 
 /**
  * The Arktype definition for {@link GitlabNugetRegistryInfo}'s constructor parameter. Construct an object of this type by calling {@link GLNRIOpts.from}
- * @static @override @readonly
  * @param {typeof GLNRIOpts.inferIn} data
  * @param {typeof NRIOptsBase.t.project} data.project See {@link NRIOptsBase.t.project}
  * @param {typeof GLNRIOpts.inferIn.tokenEnvVars} [data.tokenEnvVars=DefaultGitlabTokenEnvVars] Defaults to {@link DefaultGitlabTokenEnvVars}. See {@link NRIOpts.t.tokenEnvVars}
