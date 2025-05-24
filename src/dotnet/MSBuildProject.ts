@@ -115,9 +115,9 @@ export class EvaluationOptions {
   static readonly t = Object.freeze(
     type({
       FullName: 'string',
-      Property: type.instanceOf(MSBuildProjectProperties).partial()
+      Property: type({ '[string]': 'string' })
         .as<{ -readonly [P in keyof MSBuildProjectProperties]: MSBuildProjectProperties[P] }>()
-        .and({ '[string]': 'string' }),
+        .partial(),
       Targets: type.string.array().readonly().or('string[]'),
       GetItem: type.string.array().readonly().or('string[]'),
       GetProperty: type.string.array().readonly().or('string[]'),
