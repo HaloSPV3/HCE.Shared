@@ -156,7 +156,7 @@ export class SemanticReleaseConfigDotnet {
       }
     }
     if (errors.length > 0)
-      throw new AggregateError(errors);
+      throw new AggregateError(errors, 'One or more errors occurred while inserting plugin configs into the Semantic Release config!');
 
     // insert plugin(s)
     this.options.plugins.splice(
