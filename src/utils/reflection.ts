@@ -15,27 +15,7 @@ export * from './reflection/filterForGetters.js';
 export * from './reflection/getPrototypeOf.js';
 export * from './reflection/inheritance.js';
 export * from './reflection/isConstructor.js';
-
-/**
- * Returns the names of the instantiated, noninherited getters derived from the
- * given prototype or prototype of the given object.
- * @param instanceOrPrototype An instantiated object or a prototype.
- * @returns An array of names of getters that were not inherited from a parent class.
- * @since 3.0.0
- */
-export function listOwnGetters(instanceOrPrototype: object): string[] {
-  // if prototype in instance, then it's not an instance. Assign prototype.
-  const prototype: object | null = 'prototype' in instanceOrPrototype
-    && typeof instanceOrPrototype.prototype === 'object'
-    && instanceOrPrototype.prototype !== null
-    ? instanceOrPrototype.prototype
-    : Reflect.getPrototypeOf(instanceOrPrototype);
-  const descriptors = Object.getOwnPropertyDescriptors(prototype);
-  const names = Object.entries(descriptors)
-    .filter(e => typeof e[1].get === 'function' && e[0] !== '__proto__')
-    .map(e => e[0]);
-  return names;
-}
+export * from './reflection/listOwnGetters.js';
 
 /**
  * Get the property descriptors of the class or constructor similar to {@link Object.getOwnPropertyDescriptors}, but with more options--including recursion.
