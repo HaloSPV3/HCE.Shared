@@ -7,10 +7,10 @@ import {
   type EmptyOrBooleanString,
 } from '../utils/miscTypes.js';
 import {
-  filterForGetters,
-  getOwnPropertyDescriptors,
+  getPrototypesChainOf,
   listOwnGetters,
   type ClassLike,
+  type ProtoChainOfClass,
   type WithProto,
 } from '../utils/reflection.js';
 import { MSBuildProjectProperties, type Class_MSBPP } from './MSBuildProjectProperties.js';
@@ -81,8 +81,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
      * names of properties to consume in this constructor instead of its super.
      * These are the names of getters, lowercased.
      */
-    const keysToMoveOut = listOwnGetters(NPP)
-      .map(v => v.toLowerCase());
+    const keysToMoveOut = NPPGetterNames.InstanceGetters;
     /** Entries to remove from {@link properties} and apply to `this` after calling `super` */
     const consumables = new CaseInsensitiveMap<string, string>();
     // move property by key from `properties` to `consumables`. The types of keys and values in `properties` do not matter here.
@@ -494,41 +493,35 @@ export type Class_NPP = ClassLike<
 
 const NPP = NugetProjectProperties;
 
-type Nullable<T> = T | null;
-
-const _nppGetterNames = {
-  instanceProps: null as Nullable<readonly string[]>,
-  instancePropsRecursive: null as Nullable<readonly string[]>,
-  staticProps: null as Nullable<readonly string[]>,
-  staticPropsRecursive: null as Nullable<readonly string[]>,
-};
-
-/**
- *
- * @param instanceProps
- * @param recurse
- */
-export function GetNPPGetterNames(instanceProps: boolean, recurse: boolean) {
-  if (instanceProps) {
-    return recurse
-      ? _nppGetterNames.instancePropsRecursive ??= _createCache()
-      : _nppGetterNames.instanceProps ??= _createCache();
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class NPPGetterNames {
+  private static _prototypeChain: ProtoChainOfClass<Class_NPP> | undefined;
+  private static get PrototypeChain(): [Class_NPP, Class_MSBPP] {
+    return this._prototypeChain ??= getPrototypesChainOf(NugetProjectProperties as Class_NPP, 'classes');
   }
 
-  if (recurse)
-    return _nppGetterNames.staticPropsRecursive ??= _createCache();
-  return _nppGetterNames.staticProps ??= _createCache();
+  private static _instanceGetters: Exclude<keyof NugetProjectProperties, keyof MSBuildProjectProperties>[] | undefined;
+  private static _instanceGettersRecursive: (keyof NugetProjectProperties)[] | undefined;
+  private static _StaticGetters: never[] | undefined;
+  private static _StaticGettersRecursive: (keyof typeof NugetProjectProperties)[] | undefined;
 
-  /**
-   *
-   */
-  function _createCache() {
-    return Object.freeze(
-      getOwnPropertyDescriptors<typeof NPP>(
-        NugetProjectProperties,
-        instanceProps,
-        recurse,
-      ).flatMap(o => filterForGetters(o).map(e => e[0])),
+  public static get InstanceGetters(): Exclude<keyof NugetProjectProperties, keyof MSBuildProjectProperties>[] {
+    return this._instanceGetters ??= listOwnGetters(NugetProjectProperties as Class_NPP, 'Instance');
+  }
+
+  public static get InstanceGettersRecursive(): (keyof NugetProjectProperties)[] {
+    return this._instanceGettersRecursive ??= this.PrototypeChain.flatMap(
+      proto => listOwnGetters<typeof proto, 'Instance'>(proto, 'Instance'),
+    );
+  }
+
+  public static get StaticGetters(): never[] {
+    return this._StaticGetters ??= listOwnGetters(NugetProjectProperties as Class_NPP, 'Static');
+  };
+
+  public static get StaticGettersRecursive(): ('prototype' | 'GetFullPath')[] {
+    return this._StaticGettersRecursive ??= this.PrototypeChain.flatMap(
+      proto => listOwnGetters(proto, 'Static'),
     );
   }
 }

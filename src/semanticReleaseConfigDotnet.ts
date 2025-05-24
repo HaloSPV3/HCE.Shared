@@ -20,9 +20,7 @@ import { getEnvVarValue } from './utils/env.js';
 import { baseConfig } from './semanticReleaseConfig.js';
 import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js';
 import { MSBuildProject } from './dotnet/MSBuildProject.js';
-import { NugetProjectProperties } from './dotnet/NugetProjectProperties.js';
-import { listOwnGetters } from './utils/reflection.js';
-import { MSBuildProjectProperties } from './dotnet/MSBuildProjectProperties.js';
+import { NPPGetterNames } from './dotnet/NugetProjectProperties.js';
 
 type UnArray<T> = T extends (infer U)[] ? U : T;
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
@@ -192,8 +190,7 @@ export class SemanticReleaseConfigDotnet {
             GetItem: [],
             GetProperty: [
               ...MSBuildProject.MatrixProperties,
-              ...listOwnGetters(MSBuildProjectProperties.prototype),
-              ...listOwnGetters(NugetProjectProperties.prototype),
+              ...NPPGetterNames.InstanceGettersRecursive,
             ],
             GetTargetResult: [],
             Property: {},

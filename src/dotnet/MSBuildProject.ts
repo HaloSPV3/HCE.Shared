@@ -7,7 +7,7 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 import { execAsync } from '../utils/execAsync.js';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
 import {
-  GetNPPGetterNames,
+  NPPGetterNames,
   NugetProjectProperties,
 } from './NugetProjectProperties.js';
 
@@ -180,7 +180,8 @@ export class EvaluationOptions {
 
 export class MSBuildProject {
   /**
-   * Properties for multi-targeting `dotnet publish` outputs. These are included in {@link import('./NugetProjectProperties.ts').GetNPPGetterNames} when param `recurse` is `true`
+   * Properties for multi-targeting `dotnet publish` outputs.
+   * These are included in {@link NPPGetterNames.InstanceGettersRecursive}.
    */
   public static readonly MatrixProperties: readonly string[] = Object.freeze([
     'TargetFramework',
@@ -389,7 +390,7 @@ export class MSBuildProject {
       );
       // this might be too long for a command line. What was it on Windows?
       // 2^15 (32,768) character limit for command lines?
-      const getProperties = GetNPPGetterNames(true, true);
+      const getProperties = NPPGetterNames.InstanceGettersRecursive;
 
       return await MSBuildProject.Evaluate(
         new EvaluationOptions({
