@@ -647,10 +647,11 @@ but the environment variable is empty or undefined.`);
    * fields are overwritten:
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
+   * @returns The return type of {@link execAsync} i.e. a {@link Promise} resolving to `{ stdout: string; stderr: string }`.
    */
   private async _PushDummyPackages(
     opts: typeof NRI.PushPackagesOptionsType.inferIn,
-  ): Promise<ReturnType<typeof execAsync>> {
+  ): ReturnType<typeof execAsync> {
     const pushCmd: string = this.GetPushDummyCommand(opts);
     return await execAsync(pushCmd, true);
   }
