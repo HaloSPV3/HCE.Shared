@@ -153,7 +153,7 @@ export class EvaluationOptions {
    *                        -property:WarningLevel=2;OutDir=bin\Debug\
    * ```
    */
-  Property: Readonly<Record<string, string>> | Record<string, string>;
+  Property: ReturnType<typeof EvaluationOptions.t.get<'Property'>>['inferOut'];
   /**
    * MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
    * including {@link MSBuild}
