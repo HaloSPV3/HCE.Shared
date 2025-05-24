@@ -255,7 +255,9 @@ export class NugetRegistryInfo {
   }
 
   /**
-   * The first environment variable found to have a defined value.
+   * The first environment variable found to have a defined value. Set by
+   * {@link _GetTokenEnvVariables} in the constructor.
+   * @returns The first environment variable found to have a defined value.
    */
   get resolvedEnvVariable(): string {
     return this._resolvedEnvVariable;
