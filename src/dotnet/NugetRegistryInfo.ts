@@ -103,7 +103,7 @@ function getDummiesDir(project?: MSBuildProject): string {
  * their values, filtered to only those whose values are not undefined.
  * @throws {Error} when none of the provided environment variables are defined.
  */
-function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): readonly [string, string][] {
+function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): [readonly [string, string], ...readonly [string, string][]] {
   const definedTokens = Object.freeze(
     tokenEnvVars
       .map((key: string) => [key, getEnvVarValue(key)] as const)
@@ -113,7 +113,7 @@ function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): readonly [strin
   );
 
   if (definedTokens.length > 0)
-    return definedTokens;
+    return definedTokens as [readonly [string, string], ...readonly [string, string][]];
 
   throw new Error(
     `The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined in the process environment or nearest .env file.`,
