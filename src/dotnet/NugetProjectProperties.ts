@@ -1,25 +1,24 @@
-import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
-import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 import { type } from 'arktype';
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 import {
   tBooleanString,
-  type BooleanString,
   tEmptyOrBooleanString,
+  type BooleanString,
   type EmptyOrBooleanString,
 } from '../utils/miscTypes.js';
 import {
   filterForGetters,
   getOwnPropertyDescriptors,
   listOwnGetters,
+  type ClassLike,
+  type WithProto,
 } from '../utils/reflection.js';
+import { MSBuildProjectProperties, type Class_MSBPP } from './MSBuildProjectProperties.js';
 
 /**
  * A readonly record of a .csproj or .fsproj with NuGet configuration properties in
  * addition to those specified by {@link MSBuildProjectProperties}. This record
  * should be considered immutable. A new instance should be constructed from MSBuild's evaluation output.
- * @export
- * @class {@link NugetProjectProperties}
- * @extends {MSBuildProjectProperties}
  * @see https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target-inputs
  */
 export class NugetProjectProperties extends MSBuildProjectProperties {
@@ -97,10 +96,10 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     super(msbuildProjectFullPath, properties);
 
     /** convert values to strings */
-    consumables.forEach((key, value) => {
+    for (const [value, key] of consumables.entries()) {
       if (typeof value !== 'string')
         consumables.set(key, String(value));
-    });
+    }
 
     const _getAndForget = (key: string) => NPP.getAndForget(consumables, key);
     let data;
@@ -109,19 +108,19 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     this._company = _getAndForget('Company');
     this._contentTargetFolders = _getAndForget('ContentTargetFolders');
     this._copyright = _getAndForget('Copyright');
-    if (tEmptyOrBooleanString.allows((data = _getAndForget('DevelopmentDependency'))))
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('DevelopmentDependency')))
       this._developmentDependency = data;
-    if (tBooleanString.allows((data = _getAndForget('IncludeBuiltOutput'))))
+    if (tBooleanString.allows(data = _getAndForget('IncludeBuiltOutput')))
       this._includeBuiltOutput = data;
-    if (tBooleanString.allows((data = _getAndForget('IncludeContentInPack'))))
+    if (tBooleanString.allows(data = _getAndForget('IncludeContentInPack')))
       this._includeContentInPack = data;
-    if (tEmptyOrBooleanString.allows((data = _getAndForget('IncludeSource'))))
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('IncludeSource')))
       this._includeSource = data;
-    if (tEmptyOrBooleanString.allows((data = _getAndForget('IncludeSymbols'))))
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('IncludeSymbols')))
       this._includeSymbols = data;
-    if (tBooleanString.allows((data = _getAndForget('IsPackable'))))
+    if (tBooleanString.allows(data = _getAndForget('IsPackable')))
       this._isPackable = data;
-    if (tEmptyOrBooleanString.allows((data = _getAndForget('IsTool'))))
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('IsTool')))
       this._isTool = data;
     this._minClientVersion = _getAndForget('MinClientVersion');
     this._noPackageAnalysis = _getAndForget('NoPackageAnalysis');
@@ -137,19 +136,19 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     this._packageProjectUrl = _getAndForget('PackageProjectUrl');
     this._packageReadmeFile = _getAndForget('PackageReadmeFile');
     this._packageReleaseNotes = _getAndForget('PackageReleaseNotes');
-    if (tBooleanString.allows((data = _getAndForget('PackageRequireLicenseAcceptance'))))
+    if (tBooleanString.allows(data = _getAndForget('PackageRequireLicenseAcceptance')))
       this._packageRequireLicenseAcceptance = data;
     this._packageTags = _getAndForget('PackageTags');
     this._packageType = _getAndForget('PackageType');
     this._packageVersion = _getAndForget('PackageVersion');
     this._product = _getAndForget('Product');
     this._repositoryCommit = _getAndForget('RepositoryCommit');
-    if (type('""|"git"|"tfs"').allows((data = _getAndForget('RepositoryType'))))
+    if (type('""|"git"|"tfs"').allows(data = _getAndForget('RepositoryType')))
       this._repositoryType = data;
     this._repositoryUrl = _getAndForget('RepositoryUrl');
-    if (tBooleanString.allows((data = _getAndForget('SuppressDependenciesWhenPacking'))))
+    if (tBooleanString.allows(data = _getAndForget('SuppressDependenciesWhenPacking')))
       this._suppressDependenciesWhenPacking = data;
-    if (type('"symbols.nupkg" | "snupkg"').allows((data = _getAndForget('SymbolPackageFormat'))))
+    if (type('"symbols.nupkg" | "snupkg"').allows(data = _getAndForget('SymbolPackageFormat')))
       this._symbolPackageFormat = data;
     this._title = _getAndForget('Title');
   }
@@ -157,18 +156,18 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   /**
    * A Boolean value that specifies whether the project can be packed.
    * The default value is `true`.
-   * @default "true"
+   * @default
    */
   get IsPackable(): BooleanString {
-    return (this._isPackable ??= 'true');
+    return this._isPackable ??= 'true';
   }
 
   /**
    * Set to `true` to suppress package dependencies from the generated NuGet package.
-   * @default "false"
+   * @default
    */
   get SuppressDependenciesWhenPacking(): BooleanString {
-    return (this._suppressDependenciesWhenPacking ??= 'false');
+    return this._suppressDependenciesWhenPacking ??= 'false';
   }
 
   /**
@@ -179,7 +178,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue {@link Version}
    */
   get PackageVersion(): string {
-    return (this._packageVersion ??= this.Version);
+    return this._packageVersion ??= this.Version;
   }
 
   /**
@@ -189,7 +188,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue {@link AssemblyName}
    */
   get PackageId(): string {
-    return (this._packageId ??= this.AssemblyName);
+    return this._packageId ??= this.AssemblyName;
   }
 
   /**
@@ -197,7 +196,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue {@link Description}
    */
   get PackageDescription(): string {
-    return (this._packageDescription ??= this.Description);
+    return this._packageDescription ??= this.Description;
   }
 
   /**
@@ -208,21 +207,21 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * If not specified, the default value is the {@link AssemblyName}.
    */
   get Authors(): string {
-    return (this._authors ??= this.AssemblyName);
+    return this._authors ??= this.AssemblyName;
   }
 
   /** Copyright details for the package. */
   get Copyright(): string {
-    return (this._copyright ??= '');
+    return this._copyright ??= '';
   }
 
   /**
    * A Boolean value that specifies whether the client must prompt the
    * consumer to accept the package license before installing the package.
-   * @default "false"
+   * @default
    */
   get PackageRequireLicenseAcceptance(): BooleanString {
-    return (this._packageRequireLicenseAcceptance ??= 'false');
+    return this._packageRequireLicenseAcceptance ??= 'false';
   }
 
   /**
@@ -236,7 +235,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * PackageReference](https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference).
    */
   get DevelopmentDependency(): EmptyOrBooleanString {
-    return (this._developmentDependency ??= '');
+    return this._developmentDependency ??= '';
   }
 
   /**
@@ -245,7 +244,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * For more information, see [Packing a license expression or a license file](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-a-license-expression-or-a-license-file).
    */
   get PackageLicenseExpression(): string {
-    return (this._packageLicenseExpression ??= '');
+    return this._packageLicenseExpression ??= '';
   }
 
   /**
@@ -253,11 +252,11 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * license or a license that hasn't been assigned an SPDX identifier.
    */
   get PackageLicenseFile(): string {
-    return (this._packageLicenseFile ??= '');
+    return this._packageLicenseFile ??= '';
   }
 
   get PackageProjectUrl(): string {
-    return (this._packageProjectUrl ??= '');
+    return this._packageProjectUrl ??= '';
   }
 
   /**
@@ -269,12 +268,12 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * and [icon metadata](https://learn.microsoft.com/en-us/nuget/reference/nuspec#icon).
    */
   get PackageIcon(): string {
-    return (this._packageIcon ??= '');
+    return this._packageIcon ??= '';
   }
 
   /** Release notes for the package. */
   get PackageReleaseNotes(): string {
-    return (this._packageReleaseNotes ??= '');
+    return this._packageReleaseNotes ??= '';
   }
 
   /**
@@ -282,12 +281,12 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @remarks You need to explicitly pack the referenced readme file.
    */
   get PackageReadmeFile(): string {
-    return (this._packageReadmeFile ??= '');
+    return this._packageReadmeFile ??= '';
   }
 
   /** A semicolon-delimited list of tags that designates the package. */
   get PackageTags(): string {
-    return (this._packageTags ??= '');
+    return this._packageTags ??= '';
   }
 
   /**
@@ -295,7 +294,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * Default is `$(OutputPath)` ({@link This.OutputPath}).
    */
   get PackageOutputPath(): string {
-    return (this._packageOutputPath ??= this.OutputPath);
+    return this._packageOutputPath ??= this.OutputPath;
   }
 
   /**
@@ -310,7 +309,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * creates a regular package and a symbols package.
    */
   get IncludeSymbols(): EmptyOrBooleanString {
-    return (this._includeSymbols ??= '');
+    return this._includeSymbols ??= '';
   }
 
   /**
@@ -321,24 +320,24 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * [IncludeSource](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesource).
    */
   get IncludeSource(): EmptyOrBooleanString {
-    return (this._includeSource ??= '');
+    return this._includeSource ??= '';
   }
 
   /**
-   * @default ""
+   * @default
    */
   get PackageType(): string {
-    return (this._packageType ??= '');
+    return this._packageType ??= '';
   }
 
   /**
    * Specifies whether all output files are copied to the *tools* folder
    * instead of the *lib* folder. For more information, see
    * [IsTool](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#istool).
-   * @default ""
+   * @default
    */
   get IsTool(): EmptyOrBooleanString {
-    return (this._isTool ??= '');
+    return this._isTool ??= '';
   }
 
   /**
@@ -346,15 +345,15 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * [https://github.com/NuGet/NuGet.Client.git](https://github.com/NuGet/NuGet.Client.git).
    */
   get RepositoryUrl(): string {
-    return (this._repositoryUrl ??= '');
+    return this._repositoryUrl ??= '';
   }
 
   /**
    * Repository type. Examples: git (default), tfs.
-   * @default "git"
+   * @default
    */
   get RepositoryType(): 'git' | 'tfs' | '' {
-    return (this._repositoryType ??= '');
+    return this._repositoryType ??= '';
   }
 
   /**
@@ -365,7 +364,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @requires targets: ["pack", "publish"] // "restore" will not work.
    */
   get RepositoryCommit(): string {
-    return (this._repositoryCommit ??= '');
+    return this._repositoryCommit ??= '';
   }
 
   /**
@@ -377,25 +376,25 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue "symbols.nupkg"
    */
   get SymbolPackageFormat(): 'symbols.nupkg' | 'snupkg' {
-    return (this._symbolPackageFormat ??= 'symbols.nupkg');
+    return this._symbolPackageFormat ??= 'symbols.nupkg';
   }
 
   /**
    * Specifies that `pack` should not run package analysis after building the package.
-   * @default ""
+   * @default
    */
   get NoPackageAnalysis(): string {
-    return (this._noPackageAnalysis ??= '');
+    return this._noPackageAnalysis ??= '';
   }
 
   /**
    * Specifies the minimum version of the NuGet client that can install
    * this package, enforced by nuget.exe and the Visual Studio Package
    * Manager.
-   * @default ""
+   * @default
    */
   get MinClientVersion(): string {
-    return (this._minClientVersion ??= '');
+    return this._minClientVersion ??= '';
   }
 
   /**
@@ -404,26 +403,26 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @remarks Useful for creating dummy packages i.e. packages with minimal
    * size for testing nuget pushes. When this is false, you still need at
    * least one file. And beware of version collisions!
-   * @default "true"
+   * @default
    */
   get IncludeBuildOutput(): BooleanString {
-    return (this._includeBuiltOutput ??= 'true');
+    return this._includeBuiltOutput ??= 'true';
   }
 
   /**
    * This Boolean value specifies whether any items that have a type of
    * Content are included in the resulting package automatically.
-   * @default "true"
+   * @default
    */
   get IncludeContentInPack(): BooleanString {
-    return (this._includeContentInPack ??= 'true');
+    return this._includeContentInPack ??= 'true';
   }
 
   /**
    * Specifies the folder where to place the output assemblies. The output assemblies (and other output files) are copied into their respective framework folders. For more information, see [Output assemblies](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#output-assemblies).
    */
   get BuildOutputTargetFolder(): string {
-    return (this._buildOutputTargetFolder ??= '');
+    return this._buildOutputTargetFolder ??= '';
   }
 
   /**
@@ -431,10 +430,10 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * if `PackagePath` is not specified for them.
    * For more information, see [Including content in a
    * package](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#including-content-in-a-package).
-   * @default "content;contentFiles"
+   * @default
    */
   get ContentTargetFolders(): string {
-    return (this._contentTargetFolders ??= 'content;contentFiles');
+    return this._contentTargetFolders ??= 'content;contentFiles';
   }
 
   /**
@@ -444,7 +443,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
    */
   get NuspecFile(): string {
-    return (this._nuspecFile ??= '');
+    return this._nuspecFile ??= '';
   }
 
   /**
@@ -452,7 +451,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
    */
   get NuspecBasePath(): string {
-    return (this._nuspecBasePath ??= '');
+    return this._nuspecBasePath ??= '';
   }
 
   /**
@@ -460,7 +459,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
    */
   get NuspecProperties(): string {
-    return (this._nuspecProperties ??= '');
+    return this._nuspecProperties ??= '';
   }
 
   /**
@@ -468,7 +467,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * on nuget.org and the Package Manager in Visual Studio.
    */
   get Title(): string {
-    return (this._title ??= this.PackageId);
+    return this._title ??= this.PackageId;
   }
 
   /**
@@ -476,7 +475,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * If not specified, the default value is the {@link Authors} value.
    */
   get Company(): string {
-    return (this._company ??= this.Authors);
+    return this._company ??= this.Authors;
   }
 
   /**
@@ -484,9 +483,14 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * @defaultValue {@link AssemblyName}
    */
   get Product(): string {
-    return (this._product ??= this.AssemblyName);
+    return this._product ??= this.AssemblyName;
   }
 }
+
+export type Class_NPP = ClassLike<
+  typeof NugetProjectProperties
+  & WithProto<Class_MSBPP>
+>;
 
 const NPP = NugetProjectProperties;
 
@@ -499,17 +503,25 @@ const _nppGetterNames = {
   staticPropsRecursive: null as Nullable<readonly string[]>,
 };
 
+/**
+ *
+ * @param instanceProps
+ * @param recurse
+ */
 export function GetNPPGetterNames(instanceProps: boolean, recurse: boolean) {
   if (instanceProps) {
     return recurse
-      ? (_nppGetterNames.instancePropsRecursive ??= _createCache())
-      : (_nppGetterNames.instanceProps ??= _createCache());
+      ? _nppGetterNames.instancePropsRecursive ??= _createCache()
+      : _nppGetterNames.instanceProps ??= _createCache();
   }
 
   if (recurse)
-    return (_nppGetterNames.staticPropsRecursive ??= _createCache());
-  return (_nppGetterNames.staticProps ??= _createCache());
+    return _nppGetterNames.staticPropsRecursive ??= _createCache();
+  return _nppGetterNames.staticProps ??= _createCache();
 
+  /**
+   *
+   */
   function _createCache() {
     return Object.freeze(
       getOwnPropertyDescriptors<typeof NPP>(
