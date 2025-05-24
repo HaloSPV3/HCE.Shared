@@ -30,10 +30,10 @@ interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
 /**
  */
 export class SemanticReleaseConfigDotnet {
-  private options: SRConfigDotnetOptions;
-  private _projectsToPublish: string[] | MSBuildProject[];
+  private readonly options: SRConfigDotnetOptions;
+  private readonly _projectsToPublish: string[] | MSBuildProject[];
   private _projectsToPackAndPush: string[] | NugetRegistryInfo[];
-  private _evaluatedProjects: MSBuildProject[];
+  private readonly _evaluatedProjects: MSBuildProject[];
 
   /**
    * Creates an instance of SemanticReleaseConfigDotnet.
