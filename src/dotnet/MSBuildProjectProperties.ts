@@ -33,13 +33,13 @@ export class MSBuildProjectProperties {
   }
 
   /**
+   * Note: This method may remove elements from {@link properties}.\
    * Try to get an element from {@link properties} by its {@link key}.
    * If an element is found, it is removed and the value of the element is returned.
    * Otherwise, `undefined` is returned.
    * @param properties The CaseInsensitiveMap of properties passed to the constructor.
    * @param key The key of the property to get from {@link properties}
    * @returns If found, the value of the `[string, string]` tuple found in {@link properties}. Else, `undefined`.
-   * @remarks This method may remove elements from {@link properties}.
    */
   protected static getAndForget(
     properties: CaseInsensitiveMap<string, string>,
