@@ -486,15 +486,14 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   }
 
   /**
-   * @returns The output directory of the output assemblies. The output
-   * assemblies (and other output files) are copied into their respective
-   * framework folders.
+   * @returns The output directory of the output assemblies relative to the root
+   * of the package. The output assemblies (and other output files) are copied
+   * into their respective framework folders.
    *
    * Default: `''`
    * @see
    * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#output-assemblies Output assemblies}
    */
-  // todo: Move to MSBPP
   get BuildOutputTargetFolder(): string {
     return this._buildOutputTargetFolder ??= '';
   }
