@@ -268,7 +268,7 @@ export class MSBuildProject {
     }
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
-    const _pairs = Object.entries(options.Property);
+    const _pairs = Object.entries(options.Property).filter(p => typeof p[1] === 'string');
     const property
       = _pairs.length === 0
         ? ''
