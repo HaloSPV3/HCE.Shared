@@ -250,6 +250,8 @@ export class MSBuildProject {
    * returning them as an instance of {@link MSBuildProject}.\
    * Note: MSBuild will probably fail if Restore is skipped and another
    * target is specified. If you choose Pack, you must do ['Restore', 'Pack'].
+   * @param options An instance of {@link EvaluationOptions}.
+   * @returns A promised {@link MSBuildProject} instance.
    * @throws if the exec command fails -OR- the JSON parse fails -OR-
    * MSBuildProject's constructor fails.
    * @see Consider calling {@link PackableProjectsToMSBuildProjects}, instead.
