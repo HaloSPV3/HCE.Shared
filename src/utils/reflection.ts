@@ -94,7 +94,7 @@ export function getOwnPropertyDescriptors<T extends ClassLike<ConstructorConstra
 /**
  * Iterate through the class and its base/super classes until an anonymous function is reached. This is the default superclass all classes extend.
  * @param classDef Any class type. This or its prototype are included in the return value.
- * @param [returnType='classes'] Default: 'classes'; Determines return type. If 'classInstances', the return type is an array of the classes' `.prototype`. Else, the classes themselves are returned.
+ * @param [returnType] Default: 'classes'; Determines return type. If 'classInstances', the return type is an array of the classes' `.prototype`. Else, the classes themselves are returned.
  * @returns `returnType extends 'classInstances' ? ClassLike<T>[] : ClassLike<T>[].map(c => c.prototype)`
  * Excludes default superclasses e.g. anonymous functions, native code.
  * @since 3.0.0
@@ -108,7 +108,7 @@ export function getPrototypes<T extends ClassLike<ConstructorConstraint<T> & Wit
   let current: ClassLike<T> | ClassLike_Unknown | object = classDef;
   let parent: ClassLike_Unknown | object | null = Reflect.getPrototypeOf(current);
 
-  while (null != parent) {
+  while (undefined != parent) {
     // current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
     if (isConstructor(current))
       returnValue.push(returnType === 'classInstances' ? current.prototype as object : current);
@@ -120,7 +120,7 @@ export function getPrototypes<T extends ClassLike<ConstructorConstraint<T> & Wit
      * superclass.
      */
     if (
-      null != (parent = Reflect.getPrototypeOf(current))
+      undefined != (parent = Reflect.getPrototypeOf(current))
       // && isConstructor(parent)
 
       && 'name' in parent
