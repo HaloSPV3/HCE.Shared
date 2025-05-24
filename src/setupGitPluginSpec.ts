@@ -20,6 +20,11 @@ export const DefaultOptions = {
     'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
 } as const satisfies GitOptions;
 
+/**
+ * Check if {@link unk} is an {@link AssetEntry}.
+ * @param unk Anything.
+ * @returns `true` if {@link unk} is an {@link AssetEntry}. Else, `false`.
+ */
 function isGitAsset(unk: unknown): unk is AssetEntry {
   if (typeof unk === 'string')
     return true;
@@ -31,6 +36,11 @@ function isGitAsset(unk: unknown): unk is AssetEntry {
   return false;
 }
 
+/**
+ * Convert one or more {@link AssetEntry AssetEntries} to a `string[]`.
+ * @param assets The `assets` property of a {@link GitOptions} object. This may not be `false`.
+ * @returns A `string[]` of the given {@link AssetEntry} objects or strings.
+ */
 function gitAssetsToStringArray(
   assets: Exclude<GitOptions['assets'], false>,
 ): string[] {
@@ -48,10 +58,20 @@ function gitAssetsToStringArray(
     throw new TypeError('assets is not typeof GitOptions[\'assets\'!');
 }
 
+/**
+ * Sanitize a {@link GitOptions} object so its {@link GitOptions#assets} property is either `false` or a `string[]`.
+ * @param opts A {@link GitOptions} object.
+ * @returns A {@link GitOptions} object whose {@link GitOptions#assets} is `string[] | false`.
+ */
 function sanitizeGitOptions(opts: GitOptions): Omit<GitOptions, 'assets'> & { assets: string[] | false } {
   return { ...opts, assets: opts.assets === false ? opts.assets : gitAssetsToStringArray(opts.assets) };
 }
 
+/**
+ *Determine if {@link opts} is a {@link GitOptions} object.
+ * @param opts Anything.
+ * @returns `true` if {@link opts} is a {@link GitOptions} object. Else, `false`.
+ */
 function isGitOptions(opts: unknown): opts is GitOptions {
   let isOptions = false;
 
@@ -67,10 +87,20 @@ function isGitOptions(opts: unknown): opts is GitOptions {
   return isOptions;
 }
 
+/**
+ * Determine if {@link pluginSpec} includes a {@link GitOptions} object.
+ * @param pluginSpec a {@link PluginSpecTuple}.
+ * @returns `true` if {@link pluginSpec[1]} is a {@link GitOptions} object. Else, `false`.
+ */
 function hasGitOptions<P extends string>(pluginSpec: PluginSpecTuple<P>): pluginSpec is PluginSpecTuple<P, GitOptions> {
   return isGitOptions(pluginSpec[1]);
 };
 
+/**
+ * Determined if the plugin ID in {@link pluginSpec} is {@link GitPluginId}.
+ * @param pluginSpec A {@link PluginSpecTuple}
+ * @returns `true` if {@link pluginSpec[0]} is {@link GitPluginId}
+ */
 function isGitPluginSpecTuple<T>(pluginSpec: [string, T]): pluginSpec is [typeof GitPluginId, T] {
   return pluginSpec[0] === GitPluginId;
 }
@@ -81,7 +111,7 @@ function isGitPluginSpecTuple<T>(pluginSpec: [string, T]): pluginSpec is [typeof
  * This plugin may be deprecated at a later date.
  * Q: Why would I need to commit during release?
  * A: This is for committing your changelog, README, and/or other files updated during the release procedure.
- *
+ * @param plugins An ordered array of {@link PluginSpecTuple PluginSpecTuples}.
  * @returns A {@link PluginSpecTuple}[]. Duplicate `@semantic-release/git` plugin entries are merged or overridden. The last entry takes priority e.g. if the last entry is `{assets: false}`, previous entries' assets are ignored.
  */
 export function setupGitPluginSpec(plugins: PluginSpecTuple[]): PluginSpecTuple[] {
