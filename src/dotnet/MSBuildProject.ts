@@ -3,8 +3,9 @@ import { warn } from 'node:console';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { setTimeout } from 'node:timers/promises';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
-import { execAsync } from '../utils/execAsync.js';
+import { ChildProcessSpawnException, execAsync } from '../utils/execAsync.js';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
 import {
   NPPGetterNames,
@@ -298,7 +299,31 @@ export class MSBuildProject {
       .filter(v => v !== '')
       .join(' ');
     // may throw
-    const stdio = await execAsync(cmdLine, true);
+    const stdio: Awaited<ReturnType<typeof execAsync>> = await execAsync(cmdLine, true)
+      .catch(async (error: unknown) => {
+        if (error instanceof ChildProcessSpawnException) {
+          let _stdio: Awaited<ReturnType<typeof execAsync>> | undefined;
+          // todo: locale-agnostic. Is the exit code reliable?
+          while (_stdio === undefined) {
+            await setTimeout(
+              10,
+              async () => {
+                try {
+                  _stdio = await execAsync(cmdLine, true);
+                }
+                catch (error) {
+                  if (error instanceof ChildProcessSpawnException && error.stderr?.includes('because it is being used by another process')) {
+                    return;
+                  }
+                };
+              },
+            ).then(async (v) => { await v(); });
+          }
+          return _stdio;
+        }
+        else throw error;
+      });
+
     if (stdio.stdout.startsWith('MSBuild version')) {
       warn(stdio.stdout);
       throw new Error(
