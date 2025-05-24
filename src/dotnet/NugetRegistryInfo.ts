@@ -25,6 +25,7 @@ const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
 /**
  * Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
  * If the file doesn't exist, it is created.
+ * @returns If successful, a promised object with a parsed key.
  */
 export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>['parsed']> {
   if (env.GITHUB_OUTPUT === undefined || !existsSync(env.GITHUB_OUTPUT)) {
