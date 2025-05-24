@@ -172,7 +172,6 @@ export class EvaluationOptions {
    *                      Example:
    *                        -target:Resources;Compile
    * ```
-   *
    * @default []
    */
   Targets: readonly string[] | string[] = [];
@@ -225,7 +224,7 @@ export class MSBuildProject {
   readonly Properties: Readonly<NugetProjectProperties>;
   readonly Targets: readonly string[];
   /**
-   * @remarks Allows appending subsequent target results.
+   * Allows appending subsequent target results.
    */
   readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][];
 
@@ -249,7 +248,7 @@ export class MSBuildProject {
   /**
    * Evaluate {@link Items}, {@link Properties}, and {@link TargetResults},
    * returning them as an instance of {@link MSBuildProject}.\
-   * @remarks MSBuild will probably fail if Restore is skipped and another
+   * Note: MSBuild will probably fail if Restore is skipped and another
    * target is specified. If you choose Pack, you must do ['Restore', 'Pack'].
    * @throws if the exec command fails -OR- the JSON parse fails -OR-
    * MSBuildProject's constructor fails.
