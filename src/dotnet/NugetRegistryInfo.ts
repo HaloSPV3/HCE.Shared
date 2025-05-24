@@ -2,6 +2,7 @@ import { type } from 'arktype';
 import { detectFile, detectFileSync } from 'chardet';
 import { configDotenv } from 'dotenv';
 import { ok } from 'node:assert/strict';
+import type { ExecException } from 'node:child_process';
 import { existsSync, writeFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -601,7 +602,12 @@ but the environment variable is empty or undefined.`);
         usePerPackageIdSubfolder,
       ),
       true,
-    );
+    ).catch((error: unknown) => {
+      const _error: Error = isNativeError(error) ? error : new Error(JSON.stringify(error));
+      throw opts.apiKey
+        ? _censorTokenInError(_error, opts.apiKey)
+        : _error;
+    });
   }
 
   /**
@@ -653,7 +659,13 @@ but the environment variable is empty or undefined.`);
     opts: typeof NRI.PushPackagesOptionsType.inferIn,
   ): ReturnType<typeof execAsync> {
     const pushCmd: string = this.GetPushDummyCommand(opts);
-    return await execAsync(pushCmd, true);
+    return await execAsync(pushCmd, true)
+      .catch((error: unknown) => {
+        const _error: Error = isNativeError(error) ? error : new Error(String(error));
+        throw opts.apiKey
+          ? _censorTokenInError(_error, opts.apiKey)
+          : _error;
+      });
   }
 
   // #endregion Push
@@ -802,3 +814,33 @@ export const NugetRegistryInfoOptions = NRIOptsBase.merge({
   url: NRIOptsBase.get('url').default(() => defaultNugetSource),
 });
 const NRIOpts = NugetRegistryInfoOptions;
+
+/**
+ * Replace all occurrences of {@link token} in the {@link string} with '***'.
+ * @param string The string in which a {@link token} may be found.
+ * @param token The NuGet API token you definitely don't want to leak!
+ * @returns A modified copy of the {@link string} with all occurrences of the
+ * {@link token} replaced with '***'.
+ */
+function _censorToken(string: string, token: string): string {
+  return string.replaceAll(token, '***');
+}
+
+/**
+ * Censor all occurrences of an API {@link token} in an {@link error}.
+ * @param error A {@link ExecException} in which the NuGet API {@link token} may be found.
+ * @param token The value of the NuGet API token
+ * @returns A modified copy of the provided exception sans any occurrence of the
+ * NuGet API token.
+ */
+function _censorTokenInError(error: ExecException, token: string): ExecException {
+  return Object.assign(
+    error,
+    JSON.parse(
+      _censorToken(
+        JSON.stringify(error),
+        token,
+      ),
+    ) as ExecException,
+  );
+}
