@@ -196,9 +196,11 @@ export class MSBuildProject {
    * @param opts The order-independent arguments for this constructor.
    * Properties may be added or moved around in this definition without
    * breaking compatibility.
-   * @param options.fullPath
-   * @param options.projTargets
-   * @param options.evaluation
+   * @param opts.fullPath The full path of the MSBuild project's file. This
+   * should have a '.csproj', '.fsproj', or '.vbproj' file extension.
+   * @param opts.projTargets A list of MSBuild Targets supported by the project.
+   * @param opts.evaluation The output of an MSBuild project evaluation. This
+   * comprises MSBuild Properties, Items, and Target results.
    */
   public constructor(opts: {
     fullPath: string;
