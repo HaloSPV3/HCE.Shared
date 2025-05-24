@@ -51,7 +51,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   private _repositoryType: '' | 'git' | 'tfs' | undefined;
   private _repositoryCommit: string | undefined;
   private _symbolPackageFormat: 'symbols.nupkg' | 'snupkg' | undefined;
-  private _noPackageAnalysis: string | undefined;
+  private _noPackageAnalysis: EmptyOrBooleanString | undefined;
   private _minClientVersion: string | undefined;
   private _includeBuiltOutput: BooleanString | undefined;
   private _includeContentInPack: BooleanString | undefined;
@@ -125,7 +125,8 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     if (tEmptyOrBooleanString.allows(data = _getAndForget('IsTool')))
       this._isTool = data;
     this._minClientVersion = _getAndForget('MinClientVersion');
-    this._noPackageAnalysis = _getAndForget('NoPackageAnalysis');
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('NoPackageAnalysis')))
+      this._noPackageAnalysis = data;
     this._nuspecBasePath = _getAndForget('NuspecBasePath');
     this._nuspecFile = _getAndForget('NuspecFile');
     this._nuspecProperties = _getAndForget('NuspecProperties');
@@ -449,8 +450,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    *
    * Default: `''` (false-y)
    */
-  // todo: change ReturnType to EmptyOrBooleanString
-  get NoPackageAnalysis(): string {
+  get NoPackageAnalysis(): EmptyOrBooleanString {
     return this._noPackageAnalysis ??= '';
   }
 
