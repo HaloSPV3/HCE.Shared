@@ -198,7 +198,7 @@ export class NugetRegistryInfo {
    * package registry. The array is iterated through until one token is found.
    * If none of the environment variables are defined, this constructor will
    * throw an {@link Error}.
-   * @param [opts.url]
+   * @param [opts.url] A NuGet package registry's API endpoint URL. Default: 'https://api.nuget.org/v3/index.json'
    */
   constructor(opts: typeof NRIOpts['inferIn']) {
     // note: you can reassign `opts` only when typeof `inferOut` is assignable
@@ -798,7 +798,7 @@ const NRIOptsBase = NugetRegistryInfoOptionsBase;
 
 /**
  * The type of the parameter for {@link NugetRegistryInfo}'s constructor.
- * url: A NuGet package registry's API endpoint URL.. Default: https://api.nuget.org/v3/index.json
+ * url: A NuGet package registry's API endpoint URL. Default: https://api.nuget.org/v3/index.json
  */
 export const NugetRegistryInfoOptions = NRIOptsBase.merge({
   /**
