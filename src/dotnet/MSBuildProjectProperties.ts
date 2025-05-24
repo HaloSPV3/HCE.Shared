@@ -120,11 +120,11 @@ export class MSBuildProjectProperties {
   }
 
   get MSBuildProjectFullPath(): string {
-    return (this._msbuildProjectFullPath ??= '');
+    return this._msbuildProjectFullPath ??= '';
   }
 
   get AssemblyName(): string {
-    return (this._assemblyName ??= '');
+    return this._assemblyName ??= '';
   }
 
   /**
@@ -132,16 +132,16 @@ export class MSBuildProjectProperties {
    * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
    */
   get Description(): string {
-    return (this._description ??= '');
+    return this._description ??= '';
   }
 
   get OutputPath(): string {
-    return (this._outputPath ??= '');
+    return this._outputPath ??= '';
   }
 
   /** Set Version -OR- VersionPrefix. */
   get Version(): string {
-    return (this._version ??= '');
+    return this._version ??= '';
   }
 
   /**
@@ -149,7 +149,7 @@ export class MSBuildProjectProperties {
    * @remarks Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
    */
   get VersionPrefix(): string {
-    return (this._versionPrefix ??= '');
+    return this._versionPrefix ??= '';
   }
 
   /**
@@ -164,7 +164,7 @@ export class MSBuildProjectProperties {
    * @remarks Setting {@link PackageVersion} overwrites {@link VersionSuffix}
    */
   get VersionSuffix(): string {
-    return (this._versionSuffix ??= '');
+    return this._versionSuffix ??= '';
   }
 
   /**
@@ -174,7 +174,7 @@ export class MSBuildProjectProperties {
    * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
    */
   get TargetFramework(): string {
-    return (this._targetFramework ??= '');
+    return this._targetFramework ??= '';
   }
 
   /**
@@ -184,7 +184,7 @@ export class MSBuildProjectProperties {
    * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
    */
   get TargetFrameworks(): string {
-    return (this._targetFrameworks ??= '');
+    return this._targetFrameworks ??= '';
   }
 
   /**
@@ -196,7 +196,7 @@ export class MSBuildProjectProperties {
    * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
    */
   get RuntimeIdentifier(): string {
-    return (this._runtimeIdentifier ??= '');
+    return this._runtimeIdentifier ??= '';
   }
 
   /**
@@ -210,7 +210,7 @@ export class MSBuildProjectProperties {
    * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
    */
   get RuntimeIdentifiers(): string {
-    return (this._runtimeIdentifiers ??= '');
+    return this._runtimeIdentifiers ??= '';
   }
 }
 
