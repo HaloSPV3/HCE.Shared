@@ -89,7 +89,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     const consumables = new CaseInsensitiveMap<string, string>();
     // move property by key from `properties` to `consumables`. The types of keys and values in `properties` do not matter here.
     for (const key of keysToMoveOut) {
-      const value = NPP.getAndForget(properties, key);
+      const value = NugetProjectProperties.getAndForget(properties, key);
       if (value !== undefined)
         consumables.set(key, value);
     }
@@ -103,7 +103,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
         consumables.set(key, String(value));
     }
 
-    const _getAndForget = (key: string) => NPP.getAndForget(consumables, key);
+    const _getAndForget = (key: string) => NugetProjectProperties.getAndForget(consumables, key);
     let data;
     this._authors = _getAndForget('Authors');
     this._buildOutputTargetFolder = _getAndForget('BuildOutputTargetFolder');
@@ -578,8 +578,6 @@ export type Class_NPP = ClassLike<
   typeof NugetProjectProperties
   & WithProto<Class_MSBPP>
 >;
-
-const NPP = NugetProjectProperties;
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class NPPGetterNames {
