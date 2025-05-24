@@ -15,6 +15,9 @@ import {
 } from '../utils/reflection.js';
 import { MSBuildProjectProperties, type Class_MSBPP } from './MSBuildProjectProperties.js';
 
+const Type_RepositoryType = type('""|"git"|"tfs"');
+const Type_SymbolPackageFormat = type('"symbols.nupkg" | "snupkg"');
+
 /**
  * A readonly record of a .csproj or .fsproj with NuGet configuration properties in
  * addition to those specified by {@link MSBuildProjectProperties}. This record
@@ -142,12 +145,12 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     this._packageVersion = _getAndForget('PackageVersion');
     this._product = _getAndForget('Product');
     this._repositoryCommit = _getAndForget('RepositoryCommit');
-    if (type('""|"git"|"tfs"').allows(data = _getAndForget('RepositoryType')))
+    if (Type_RepositoryType.allows(data = _getAndForget('RepositoryType')))
       this._repositoryType = data;
     this._repositoryUrl = _getAndForget('RepositoryUrl');
     if (tBooleanString.allows(data = _getAndForget('SuppressDependenciesWhenPacking')))
       this._suppressDependenciesWhenPacking = data;
-    if (type('"symbols.nupkg" | "snupkg"').allows(data = _getAndForget('SymbolPackageFormat')))
+    if (Type_SymbolPackageFormat.allows(data = _getAndForget('SymbolPackageFormat')))
       this._symbolPackageFormat = data;
     this._title = _getAndForget('Title');
   }
@@ -407,7 +410,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * Default: `''`
    * @example "git", "fts"
    */
-  get RepositoryType(): 'git' | 'tfs' | '' {
+  get RepositoryType(): typeof Type_RepositoryType.inferOut {
     return this._repositoryType ??= '';
   }
 
@@ -436,7 +439,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * Default: "symbols.nupkg"
    * @example "symbols.nupkg", "snupkg"
    */
-  get SymbolPackageFormat(): 'symbols.nupkg' | 'snupkg' {
+  get SymbolPackageFormat(): typeof Type_SymbolPackageFormat.inferOut {
     return this._symbolPackageFormat ??= 'symbols.nupkg';
   }
 
