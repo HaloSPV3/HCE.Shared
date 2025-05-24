@@ -78,8 +78,8 @@ const msbuildEvaluationOutput = type({
 
 class MSBuildEvaluationOutput {
   /**
-   * @param knownObj The output of a CLI MSBuild project evaluation. May be the
-   * UTF-8 string-encoded JSON or the object decoded from that JSON.
+   * @param rawMSBuildEvaluation The output of a CLI MSBuild project evaluation.
+   * May be the UTF-8 string-encoded JSON or the object decoded from that JSON.
    */
   constructor(rawMSBuildEvaluation: Parameters<typeof JSON.parse>[0] | Parameters<typeof msbuildEvaluationOutput.from>[0]) {
     /** `.assert` instead of `.from` to allow `unknown` JSON.parse return type */
