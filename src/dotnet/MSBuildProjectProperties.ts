@@ -2,6 +2,7 @@ import { strictEqual } from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import node_path from 'node:path';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
+import type { BaseClass, ClassLike } from '../utils/reflection.js';
 
 /**
  * Known properties. Additional properties may be added upon request.
@@ -214,3 +215,4 @@ export class MSBuildProjectProperties {
 }
 
 const MPP = MSBuildProjectProperties;
+export type Class_MSBPP = ClassLike<BaseClass<typeof MSBuildProjectProperties>>;
