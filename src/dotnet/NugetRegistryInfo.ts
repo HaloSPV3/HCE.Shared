@@ -711,7 +711,6 @@ but the environment variable is empty or undefined.`);
    * cancelled immediately.
    * Otherwise, the release should proceed.
    * @todo utilize in custom plugin inserted at the beginning of `prepare`
-   * @deprecated NOT IMPLEMENTED
    */
   static async IsNextVersionAlreadyPublished(
     source: string,
