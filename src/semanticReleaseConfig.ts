@@ -11,11 +11,17 @@ export interface SRReleaseNotesGeneratorOptions {
    * @default 'angular'
    */
   preset?: 'angular' | 'atom' | 'codemirror' | 'ember' | 'eslint' | 'express' | 'jquery' | 'jscs' | 'jshint' | 'conventionalcommits' | (string & Record<never, never>) | undefined;
-  /** Requireable npm package with a custom conventional-changelog preset. */
+  /**
+   * Requireable npm package with a custom conventional-changelog preset.
+   */
   config?: string | undefined;
-  /** Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`. */
+  /**
+   * Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
+   */
   parserOpts: object;
-  /** Additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`. */
+  /**
+   * Additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`.
+   */
   writerOpts: object;
 }
 
@@ -33,7 +39,9 @@ export type PluginSpecSRExec<V extends SRExecOptions = SRExecOptions> = PluginSp
 export type PluginSpecSRGit<V extends SRGitOptions = SRGitOptions> = PluginSpecTuple<'@semantic-release/git', V>;
 export type PluginSpecSRGithub<V extends SRGithubOptions = SRGithubOptions> = PluginSpecTuple<'@semantic-release/github', V>;
 
-/** @satisfies { readonly PluginSpec[] } */
+/**
+ * @satisfies { Readonly<PluginSpec[]> }
+ */
 export const defaultPlugins = Object.freeze([
   '@semantic-release/commit-analyzer',
   '@semantic-release/release-notes-generator',
@@ -42,7 +50,9 @@ export const defaultPlugins = Object.freeze([
 ] as const) satisfies readonly PluginSpec[];
 
 // define as const for string literals in type, then...
-/** @see baseConfig */
+/**
+ *  @see baseConfig
+ */
 const _baseConfig = {
   /** @see https://semantic-release.gitbook.io/semantic-release/usage/plugins#plugin-options-configuration */
   preset: 'conventionalcommits' as const,
