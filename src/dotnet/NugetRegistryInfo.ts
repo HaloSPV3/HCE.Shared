@@ -157,7 +157,7 @@ export class NugetRegistryInfo {
    * @returns A string suitable for a local filesystem folder name, formatted as
    * `${hostname}_${pathname.replace('/', '_')}`.
    */
-  static GetNameForURL(url: string) {
+  static GetNameForURL(url: string): string {
     const _url = new URL(url);
     if (_url.pathname.endsWith('/index.json'))
       _url.pathname = _url.pathname.slice(
