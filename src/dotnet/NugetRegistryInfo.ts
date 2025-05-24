@@ -746,7 +746,7 @@ but the environment variable is empty or undefined.`);
    * - {@link https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-with-a-personal-access-token Authenticating with a personal access token}.
    * ## For GitLab NuGet Registry authentication, see
    * - {@link https://docs.gitlab.com/ee/user/packages/nuget_repository/#add-a-source-with-the-net-cli Add a source with the .NET CLI}
-   * @experimental
+   * @returns a string containing a Node.JS command line invoking {@link ./IsNextVersionAlreadyPublished.cli.ts}
    * @see {@link ./IsNextVersionAlreadyPublished.cli.ts}, {@link ./IsNextVersionAlreadyPublished.cli.js}
    */
   GetIsNextVersionAlreadyPublishedCommand(): string {
