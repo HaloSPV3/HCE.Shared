@@ -85,6 +85,41 @@ function getDummiesDir(project?: MSBuildProject): string {
     : node_path.join(tmpDirNamespace, project.Properties.PackageId, node_path.sep);
 }
 
+/**
+ * Get the environment variables as key-value pairs.
+ * @param tokenEnvVars The name of the environment variables whose values are
+ * NuGet API keys.
+ * @param tokenEnvironmentVariables
+ * @returns an array of key-value pairs of the given environment variables and
+ * their values, filtered to only those whose values are not undefined.
+ * @throws {Error} when none of the provided environment variables are defined.
+ */
+
+/**
+ * Get the environment variables as key-value pairs.
+ * @param tokenEnvVars The name of the environment variables whose values are
+ * NuGet API keys.
+ * @returns an array of key-value pairs of the given environment variables and
+ * their values, filtered to only those whose values are not undefined.
+ * @throws {Error} when none of the provided environment variables are defined.
+ */
+function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): readonly [string, string][] {
+  const definedTokens = Object.freeze(
+    tokenEnvVars
+      .map((key: string) => [key, getEnvVarValue(key)] as const)
+      .filter((envVarTuple: readonly [string, string | undefined]): envVarTuple is [string, string] =>
+        envVarTuple[1] !== undefined,
+      ),
+  );
+
+  if (definedTokens.length > 0)
+    return definedTokens;
+
+  throw new Error(
+    `The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined in the process environment or nearest .env file.`,
+  );
+}
+
 export class NugetRegistryInfo {
   private _canPushPackagesToUrl: Promise<true> | undefined = undefined;
   private readonly _project: MSBuildProject;
@@ -176,36 +211,6 @@ export class NugetRegistryInfo {
       validOpts.tokenEnvVars,
     )[0][0];
     this._url = validOpts.url;
-
-    /**
-     * Get the environment variables as key-value pairs.
-     * @param tokenEnvVars The name of the environment variables whose values are
-     * NuGet API keys.
-     * @returns an array of key-value pairs of the given environment variables and
-     * their values, filtered to only those whose values are not undefined.
-     * @throws {Error} when none of the provided environment variables are defined.
-     */
-    function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): readonly [string, string][] {
-      const definedTokens = Object.freeze(
-        tokenEnvVars
-          .map(_envKeyToTuple)
-          .filter(_filterDefinedVars),
-      );
-
-      if (definedTokens.length !== 0)
-        return definedTokens;
-
-      throw new Error(
-        `The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined in the process environment or nearest .env file.`,
-      );
-
-      function _envKeyToTuple(key: string): [typeof key, string | undefined] {
-        return [key, getEnvVarValue(key)] as const;
-      }
-      function _filterDefinedVars(envVarTuple: [string, string | undefined]): envVarTuple is [string, string] {
-        return envVarTuple[1] !== undefined;
-      }
-    }
   }
 
   public get project(): MSBuildProject {
