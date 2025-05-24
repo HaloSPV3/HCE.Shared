@@ -695,7 +695,10 @@ but the environment variable is empty or undefined.`);
   ).to(this._NugetSearchReturnTypes.ExactMatch.v2);
 
   /**
-   * !WARNING: this method requires the Nuget Source to be configured via `dotnet nuget add source` or `dotnet nuget update source`. `NUGET_TOKEN` works, but it may be vulnerable to supply chain attacks.
+   * !WARNING: this method requires the Nuget Source to be configured via `dotnet nuget add source` or `dotnet nuget update source`. `NUGET_TOKEN` works, but it may be vulnerable to supply chain attacks.\
+   * Call during the `prepare` step of a Semantic Release run.\
+   * Determine if the `nextVersion` generated during the `analyze` Semantic
+   * Release step was already published to the NuGet {@link source}.
    * @param source The name or URI of the NuGet Source to search. If this API
    * endpoint does not support searches, the operation will fail. If this API
    * endpoint requires authentication (e.g. GitHub), it must be configured via
