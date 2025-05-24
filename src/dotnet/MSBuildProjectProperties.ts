@@ -123,6 +123,11 @@ export class MSBuildProjectProperties {
     return this._msbuildProjectFullPath ??= '';
   }
 
+  /**
+   * @returns The name of the assembly.
+   *
+   * Default: {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties#:~:text=MSBuildProjectDirectory,-Reserved MSBuildProjectDirectory}
+   */
   get AssemblyName(): string {
     return this._assemblyName ??= '';
   }
