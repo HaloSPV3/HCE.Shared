@@ -333,12 +333,14 @@ export class MSBuildProject {
 
   /**
    * Evaluate multiple project paths with some default Evaluate options.
-   *
-   * @public
-   * @static
    * @async
-   * @param {string[]} projectsToPackAndPush
-   * @returns {Promise<MSBuildProject[]>}
+   * @param projectsToPackAndPush An array of MSBuild projects' full file
+   * paths. If a path is a directory, files in that directory are filtered for
+   * `.csproj`, `.fsproj`, and `.vbproj` project files.
+   * See https://github.com/dotnet/sdk/blob/497f334b2862bdf98b30c00ede2fd259ea5f624d/src/Cli/dotnet/Commands/New/MSBuildEvaluation/MSBuildEvaluationResult.cs#L19-L32.\
+   * @returns A promised array of {@link MSBuildProject} instances.
+   * All known MSBuild and NuGet properties are evaluated.
+   * If applicable, a project's "Pack" target is evaluated.
    * @todo consider returning Promise<MSBuildProject>[] so callers can `await MSBP.PackableProjectsToMSBuildProjects(projPaths).then(projPromises => projPromises.map(p => ...))`. This is more difficult to maintain, but can have slightly greater performance.
    */
   public static async PackableProjectsToMSBuildProjects(
@@ -349,6 +351,14 @@ export class MSBuildProject {
     const projects: Promise<MSBuildProject[]> = Promise.all(projectPromises);
     return projects;
 
+    /**
+     * Map an array of filesystem paths to {@link Dirent} instances representing project files.
+     * @param projectsToPackAndPush An array of MSBuild projects' full file
+     * paths. If a path is a directory, files in that directory are filtered for
+     * `.csproj`, `.fsproj`, and `.vbproj` project files. See
+     * https://github.com/dotnet/sdk/blob/497f334b2862bdf98b30c00ede2fd259ea5f624d/src/Cli/dotnet/Commands/New/MSBuildEvaluation/MSBuildEvaluationResult.cs#L19-L32.\
+     * @returns An promised array of Dirent instances for discovered project files.
+     */
     async function toDirEntries(
       projectsToPackAndPush: string[],
     ): Promise<Dirent[]> {
@@ -384,6 +394,11 @@ export class MSBuildProject {
       return dirEntries.flat();
     }
 
+    /**
+     * Map a {@link Dirent} instance to an {@link MSBuildProject} instance.
+     * @param dirent A {@link Dirent} instance. This instance should be an MSBuild project file.
+     * @returns An instance of {@link MSBuildProject} evaluated with the `Pack` target result, if applicable. Evaluated properties will be those whose names are returned by {@link NPPGetterNames.InstanceGettersRecursive}.
+     */
     async function convertDirentToMSBuildProject(dirent: Dirent): Promise<MSBuildProject> {
       const fullPath = path.resolve(dirent.parentPath, dirent.name);
       const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath);
