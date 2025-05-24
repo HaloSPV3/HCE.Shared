@@ -130,23 +130,32 @@ export class MSBuildProjectProperties {
   /**
    * A long description for the assembly.
    * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
+   * @returns The value of the `Description` property.
    */
   get Description(): string {
     return this._description ??= '';
   }
 
+  /**
+   * @returns The path of the build output.
+   */
   get OutputPath(): string {
     return this._outputPath ??= '';
   }
 
-  /** Set Version -OR- VersionPrefix. */
+  /**
+   * Set Version -OR- VersionPrefix.
+   * @returns The value of the `Version` property.
+   */
   get Version(): string {
     return this._version ??= '';
   }
 
   /**
-   * Set Version -OR- VersionPrefix.
-   * @remarks Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
+   * Set Version -OR- VersionPrefix.\
+   * Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
+   * @returns The MAJOR.MINOR.PATCH string of the version.
+   * @see {@link VersionSuffix}
    */
   get VersionPrefix(): string {
     return this._versionPrefix ??= '';
@@ -161,14 +170,16 @@ export class MSBuildProjectProperties {
    * | VersionPrefix only     | $(VersionPrefix) |
    * | VersionSuffix only     | 1.0.0-$(VersionSuffix) |
    * | VersionPrefix and VersionSuffix | $(VersionPrefix)-$(VersionSuffix) |
-   * @remarks Setting {@link PackageVersion} overwrites {@link VersionSuffix}
+   * \
+   * Setting {@link PackageVersion} overwrites {@link VersionSuffix}
+   * @returns The string appended to the end of the MAJOR.MINOR.PATCH semver string (i.e. {@link VersionPrefix})
    */
   get VersionSuffix(): string {
     return this._versionSuffix ??= '';
   }
 
   /**
-   * https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframework
+   * @returns The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframework Target Framework}
    * @see
    * https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
    * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
@@ -178,7 +189,7 @@ export class MSBuildProjectProperties {
   }
 
   /**
-   * https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframeworks
+   * @returns The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframeworks Target Frameworks} (plural)
    * @see
    * https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
    * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
@@ -188,8 +199,8 @@ export class MSBuildProjectProperties {
   }
 
   /**
-   * https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier
-   * > The `RuntimeIdentifier` property lets you specify a single runtime
+   * @returns
+   * > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier `Runtime Identifier`} property lets you specify a single runtime
    * > identifier (RID) for the project. The RID enables publishing a
    * > self-contained deployment.
    * @see
@@ -200,8 +211,8 @@ export class MSBuildProjectProperties {
   }
 
   /**
-   * https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifiers
-   * > The `RuntimeIdentifiers` property lets you specify a
+   * @returns
+   * > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifiers `RuntimeIdentifiers`} property lets you specify a
    * > semicolon-delimited list of runtime identifiers (RIDs) for the project.
    * > Use this property if you need to publish for multiple runtimes.
    * > `RuntimeIdentifiers` is used at restore time to ensure the right assets
