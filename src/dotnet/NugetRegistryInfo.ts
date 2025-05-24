@@ -227,8 +227,7 @@ export class NugetRegistryInfo {
    * - {@link Error}
    *   - The token is invalid, of the wrong token type, or lacks permission to push packages
    *   - The URL does not exist or a connection could not be established
-   * @remarks Semantic Release Step: Beginning of `prepare`
-   * @deprecated
+   * @deprecated Call during the `prepare` step of Semantic Release!
    */
   // @ts-expect-error ts(6133): 'canPushPackagesToUrl' is declared but its value is never read.
   private get canPushPackagesToUrl(): Promise<true> {
