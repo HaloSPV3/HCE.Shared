@@ -270,7 +270,7 @@ export class MSBuildProject {
     const property
       = _pairs.length === 0
         ? ''
-        : `"-p:${_pairs.map(pair => `${pair[0]}=${pair[1]}`).join(';')}"`;
+        : `"-p:${_pairs.map(pair => pair[0] + '=' + pair[1]).join(';')}"`;
     const target
       = options.Targets.length === 0 ? '' : `"-t:${options.Targets.join(';')}"`;
     const getItem
