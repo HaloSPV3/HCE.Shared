@@ -12,84 +12,11 @@ export type * from './reflection/FunctionLike.js';
 export type * from './reflection/GetterDescriptor.js';
 
 export * from './reflection/filterForGetters.js';
+export * from './reflection/getOwnPropertyDescriptors.js';
 export * from './reflection/getPrototypeOf.js';
 export * from './reflection/inheritance.js';
 export * from './reflection/isConstructor.js';
 export * from './reflection/listOwnGetters.js';
-
-/**
- * Get the property descriptors of the class or constructor similar to {@link Object.getOwnPropertyDescriptors}, but with more options--including recursion.
- * @param classDef A class or constructor requiring the 'new' keyword for instantiation.
- * @param instanceProps If true, only the instance properties are returned. Else, only static properties are returned.
- * @param recurse If true, recurse through super classes (as defined by extends) and return their properties.
- * @returns An array of PropertyDescriptor objects.
- * todo: refactor!: change instanceProps to flag enum (instanceProps, staticProps, allProps)
- * @since 3.0.0
- */
-export function getOwnPropertyDescriptors<T extends ClassLike<ConstructorConstraint<T> & WithProto<SuperClassLike | BaseClassProto>>>(
-  classDef: T,
-  instanceProps: boolean,
-  recurse: boolean,
-): ReturnType<typeof Object.getOwnPropertyDescriptors>[] {
-  if (!recurse)
-    return [
-      Object.getOwnPropertyDescriptors(
-        instanceProps ? classDef.prototype : classDef,
-      ),
-    ];
-
-  let currentNameDesc: ReturnType<typeof Reflect.getOwnPropertyDescriptor>;
-  let current: ClassLike<T> | ClassLike_Unknown = classDef;
-  let parent: ClassLike_Unknown | object | null = null;
-  const descriptors: ReturnType<typeof Object.getOwnPropertyDescriptors>[] = [];
-
-  /** conditions:
-   * - {@link current.name} exists
-   * - typeof current.name} === 'string'
-   * - {@link current.name} is readonly and non-enumerable
-   * - {@link current.name} !== ''
-   * - {@link parent} is not null
-   * - {@link parent} is a constructor function (or class definition)
-   */
-  function shouldLoop() {
-    return (
-      'name' in current
-      && 'string' === typeof current.name
-      && undefined
-      !== (currentNameDesc = Reflect.getOwnPropertyDescriptor(current, 'name'))
-      && false === ((true === currentNameDesc.writable) || currentNameDesc.enumerable)
-      && '' !== current.name
-    );
-  }
-
-  // checking instanceProps outside of the `while` adds code redundancy, but slightly improves performance.
-  if (instanceProps) {
-    while (shouldLoop()) {
-      descriptors.push(Object.getOwnPropertyDescriptors(current.prototype));
-      parent = Reflect.getPrototypeOf(current);
-      if (null !== parent && isConstructor(parent)) {
-        current = parent;
-      }
-      else {
-        break;
-      }
-    }
-  }
-  /* !instanceProps */ else {
-    while (shouldLoop()) {
-      descriptors.push(Object.getOwnPropertyDescriptors(current)); // this is the only different to instanceProps' loop
-      parent = Reflect.getPrototypeOf(current);
-      if (null !== parent && isConstructor(parent)) {
-        current = parent;
-      }
-      else {
-        break;
-      }
-    }
-  }
-
-  return descriptors;
-}
 
 /**
  * Iterate through the class and its base/super classes until an anonymous function is reached. This is the default superclass all classes extend.
