@@ -417,5 +417,4 @@ export async function getConfig(
 
 /**
  * @module semanticReleaseConfigDotnet
- * @export {SemanticReleaseConfigDotnet}
  */
