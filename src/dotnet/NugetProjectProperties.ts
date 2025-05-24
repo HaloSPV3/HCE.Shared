@@ -74,12 +74,6 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     msbuildProjectFullPath: string,
     properties: CaseInsensitiveMap<string, string>,
   ) {
-    /* runtime type checks */
-    // check msbuildProjectFullPath in super
-    // strictEqual(typeof msbuildProjectFullPath, 'string', TypeError(`msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`))
-    /* properties MUST be instance of CaseInsensitiveMap for `consumables`! */
-    // strictEqual(properties instanceof CaseInsensitiveMap, true, `arg 'properties' should be instanceof ${CaseInsensitiveMap.name}`)
-
     /**
      * names of properties to consume in this constructor instead of its super.
      * These are the names of getters, lowercased.
