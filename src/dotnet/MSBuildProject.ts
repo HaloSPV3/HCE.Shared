@@ -386,7 +386,7 @@ export class MSBuildProject {
           entries = await readdir(proj, { withFileTypes: true });
           return entries.filter(v =>
             v.isFile()
-            && (v.name.endsWith('.csproj') || v.name.endsWith('.fsproj')),
+            && (v.name.endsWith('.csproj') || v.name.endsWith('.fsproj') || v.name.endsWith('.vbproj')),
           );
         }),
       );
