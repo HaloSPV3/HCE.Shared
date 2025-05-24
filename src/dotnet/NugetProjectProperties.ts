@@ -153,71 +153,79 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   }
 
   /**
-   * A Boolean value that specifies whether the project can be packed.
-   * The default value is `true`.
-   * @default
+   * @returns A string-formatted boolean. If 'false', the project's `Pack`
+   * Target (if available) will no-op.
+   *
+   * Default: `"true"`
    */
   get IsPackable(): BooleanString {
     return this._isPackable ??= 'true';
   }
 
   /**
-   * Set to `true` to suppress package dependencies from the generated NuGet package.
-   * @default
+   * @returns `"true"` or `"false"`. If "true", the package's dependencies are
+   * excluded from the generated NuGet package.
+   *
+   * Default: `"false"`
    */
   get SuppressDependenciesWhenPacking(): BooleanString {
     return this._suppressDependenciesWhenPacking ??= 'false';
   }
 
   /**
-   * A specific version number in the form Major.Minor.Patch[-Suffix], where
-   * -Suffix identifies prerelease versions.
-   * If not specified, the default value is 1.0.0.
-   * @remarks This is semver compatible, for example 1.0.0, 1.0.0-beta, or 1.0.0-beta-00345.
-   * @defaultValue {@link Version}
+   * @returns A semver-compatible version number in the form
+   * Major.Minor.Patch[-Suffix], where -Suffix identifies prerelease versions.
+   *
+   * Default: {@link Version}
+   * @example "1.0.0", "1.0.0-beta", "1.0.0-beta-00345"
    */
   get PackageVersion(): string {
     return this._packageVersion ??= this.Version;
   }
 
   /**
-   * Specifies the name for the resulting package.
-   * If not specified, the pack operation will default to using the
-   * AssemblyName or directory name as the name of the package.
-   * @defaultValue {@link AssemblyName}
+   * @returns The ID of the resulting NuGet package.
+   *
+   * Default: {@link AssemblyName}
    */
   get PackageId(): string {
     return this._packageId ??= this.AssemblyName;
   }
 
   /**
-   * A long description of the package for UI display.
-   * @defaultValue {@link Description}
+   * @returns A long description of the package for UI display.
+   *
+   * Default: {@link Description}
    */
   get PackageDescription(): string {
     return this._packageDescription ??= this.Description;
   }
 
   /**
-   * A semicolon-separated list of packages authors, matching the profile
-   * names on nuget.org.
-   * These are displayed in the NuGet Gallery on nuget.org and are used to
-   * cross-reference packages by the same authors.
-   * If not specified, the default value is the {@link AssemblyName}.
+   * @returns A semicolon-separated list of the package's authors, matching the
+   * profile names on nuget.org. These are displayed in the NuGet Gallery on
+   * nuget.org and are used to cross-reference packages by the same authors.
+   *
+   * Default: {@link AssemblyName `AssemblyName`}
    */
   get Authors(): string {
     return this._authors ??= this.AssemblyName;
   }
 
-  /** Copyright details for the package. */
+  /**
+   * @returns Copyright details for the package.
+   *
+   * Default: `''`
+   */
   get Copyright(): string {
     return this._copyright ??= '';
   }
 
   /**
-   * A Boolean value that specifies whether the client must prompt the
+   * @returns A string-formatted boolean. If `"true"`, the client must prompt the
    * consumer to accept the package license before installing the package.
-   * @default
+   *
+   * Default: `"false"`
    */
   get PackageRequireLicenseAcceptance(): BooleanString {
     return this._packageRequireLicenseAcceptance ??= 'false';
@@ -225,261 +233,338 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
   /**
    * This boolean only affects the package created from the project.
-   * A Boolean value that specifies whether the package is marked as a
-   * development-only dependency, which prevents the package from being
-   * included as a dependency in other packages. With PackageReference (NuGet
-   * 4.8+), this flag also means that compile-time assets are excluded from
-   * compilation.
-   * For more information, see [DevelopmentDependency support for
-   * PackageReference](https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference).
+   * @see
+   * {@link https://github.com/NuGet/Home/wiki/DevelopmentDependency-support-for-PackageReference DevelopmentDependency support for PackageReference}
+   * @returns A string-formatted boolean. If `"true"`, the package is marked as
+   * a development-only dependency and is prevented from being included as a
+   * dependency in other packages. With PackageReference (NuGet 4.8+), this flag
+   * also means that compile-time assets are excluded from compilation.
+   *
+   * Default: `''` (`false`-y)
    */
   get DevelopmentDependency(): EmptyOrBooleanString {
     return this._developmentDependency ??= '';
   }
 
   /**
-   * An [SPDX license identifier](https://spdx.org/licenses/) or expression,
-   * for example, `Apache-2.0`.
-   * For more information, see [Packing a license expression or a license file](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-a-license-expression-or-a-license-file).
+   * @returns The {@link https://spdx.org/licenses/ SPDX license identifier} or
+   * expression.
+   *
+   * Default: `''`
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-a-license-expression-or-a-license-file Packing a license expression or a license file}
+   * @example "Apache-2.0"
    */
   get PackageLicenseExpression(): string {
     return this._packageLicenseExpression ??= '';
   }
 
   /**
-   * Path to a license file within the package if you're using a custom
-   * license or a license that hasn't been assigned an SPDX identifier.
+   * @returns The path to a license file within the package if you're using a
+   * custom license or a license that hasn't been assigned an SPDX identifier.
+   *
+   * Default: `''`
    */
   get PackageLicenseFile(): string {
     return this._packageLicenseFile ??= '';
   }
 
+  /**
+   * @returns The package's project URL.
+   *
+   * Default: `''`
+   */
   get PackageProjectUrl(): string {
     return this._packageProjectUrl ??= '';
   }
 
   /**
-   * Specifies the package icon path, relative to the root of the package. For
-   * more information, see [Packing an icon image file](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-an-icon-image-file).
-   * @remarks You need to explicitly pack the referenced icon image file. For
-   * more information, see [Packing an icon image file](
-   * https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-an-icon-image-file)
-   * and [icon metadata](https://learn.microsoft.com/en-us/nuget/reference/nuspec#icon).
+   * @returns The package icon path, relative to the root of the package.
+   *
+   * Default: `''`
+   * @description You must pack the referenced icon image file. By default, it
+   * is not packed.
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-an-icon-image-file Packing an icon image file},
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/nuspec#icon icon metadata}
    */
   get PackageIcon(): string {
     return this._packageIcon ??= '';
   }
 
-  /** Release notes for the package. */
+  /**
+   * @returns Release notes for the package.
+   *
+   * Default: `''`
+   */
   get PackageReleaseNotes(): string {
     return this._packageReleaseNotes ??= '';
   }
 
   /**
-   * Readme for the package.
-   * @remarks You need to explicitly pack the referenced readme file.
+   * @returns The path of the package's README file relative to the package's
+   * root.
+   *
+   * Default: `''`
+   * @description You must pack the referenced readme file. By default, it is
+   * not packed.
    */
   get PackageReadmeFile(): string {
     return this._packageReadmeFile ??= '';
   }
 
-  /** A semicolon-delimited list of tags that designates the package. */
+  /**
+   * @returns A semicolon-delimited list of tags that designates the package.
+   *
+   * Default : `''`
+   */
   get PackageTags(): string {
     return this._packageTags ??= '';
   }
 
   /**
-   * Determines the output path in which the packed package will be dropped.
-   * Default is `$(OutputPath)` ({@link This.OutputPath}).
+   * @returns A relative or absolute path determining the where the packed
+   * package will be dropped.
+   *
+   * Default: {@link OutputPath}
    */
   get PackageOutputPath(): string {
     return this._packageOutputPath ??= this.OutputPath;
   }
 
   /**
-   * This Boolean value indicates whether the package should create an
-   * additional symbols package when the project is packed. The symbols
-   * package's format is controlled by the `SymbolPackageFormat` property. For
-   * more information, see
-   * [IncludeSymbols](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesymbols).
-   * @remarks When using MSBuild -t:pack -p:IncludeSymbols=true, the
+   * @returns A string-formatted boolean indicating whether the package should
+   * create an additional symbols package when the project is packed. The
+   * symbols package's format is controlled by the `SymbolPackageFormat`
+   * property.
+   *
+   * Default: `''` (false-y)
+   * @description When using `MSBuild -t:pack -p:IncludeSymbols=true`, the
    * corresponding .pdb files are copied along with other output files (.dll,
-   * .exe, .winmd, .xml, .json, .pri). Note that setting IncludeSymbols=true
+   * .exe, .winmd, .xml, .json, .pri). Note that setting `IncludeSymbols=true`
    * creates a regular package and a symbols package.
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesymbols IncludeSymbols}
    */
   get IncludeSymbols(): EmptyOrBooleanString {
     return this._includeSymbols ??= '';
   }
 
   /**
-   * This Boolean value indicates whether the pack process should create a
-   * source package. The source package contains the library's source code as
-   * well as PDB files. Source files are put under the `src/ProjectName`
-   * directory in the resulting package file. For more information, see
-   * [IncludeSource](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesource).
+   * @returns A string-formatted boolean indicating whether the pack process
+   * should create a source package. The source package contains the library's
+   * source code as well as PDB files. Source files are put under the
+   * `src/ProjectName` directory in the resulting package file.
+   *
+   * Default: `''` (false-y)
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesource IncludeSource}
    */
   get IncludeSource(): EmptyOrBooleanString {
     return this._includeSource ??= '';
   }
 
   /**
-   * @default
+   * @returns A semicolon-separated list of tags indicating the package's
+   * intended use. Custom types are allowed, but cannot be installed via Visual
+   * Studio nor nuget.exe. See https://github.com/NuGet/Home/issues/10468.
+   *
+   * Package types can be version e.g. `PackageType1, 1.0.0.0;PackageType2`
+   *
+   * Default: `''`
+   * @example "Dependency ", "DotnetTool", "MSBuildSdk", "Template"
+   * @see {@link https://learn.microsoft.com/en-us/nuget/create-packages/set-package-type?tabs=dotnet Set a NuGet package type}
    */
   get PackageType(): string {
     return this._packageType ??= '';
   }
 
   /**
-   * Specifies whether all output files are copied to the *tools* folder
-   * instead of the *lib* folder. For more information, see
-   * [IsTool](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#istool).
-   * @default
+   * @returns A string-formatted boolean specifying whether all output files are
+   * copied to the *tools* folder instead of the *lib* folder.
+   *
+   * Default: `''` (false-y)
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#istool IsTool}
    */
   get IsTool(): EmptyOrBooleanString {
     return this._isTool ??= '';
   }
 
   /**
-   * Repository URL used to clone or retrieve source code. Example:
-   * [https://github.com/NuGet/NuGet.Client.git](https://github.com/NuGet/NuGet.Client.git).
+   * @returns The repository URL used to clone or retrieve source code.
+   *
+   * Default: `''`
+   * @example "https://github.com/NuGet/NuGet.Client.git".
    */
   get RepositoryUrl(): string {
     return this._repositoryUrl ??= '';
   }
 
   /**
-   * Repository type. Examples: git (default), tfs.
-   * @default
+   * @returns The repository type.
+   *
+   * Default: `''`
+   * @example "git", "fts"
    */
   get RepositoryType(): 'git' | 'tfs' | '' {
     return this._repositoryType ??= '';
   }
 
   /**
-   * Optional repository commit or changeset to indicate which source the
-   * package was built against. {@link RepositoryUrl} must also be specified for
-   * this property to be included. Example:
-   * _0e4d1b598f350b3dc675018d539114d1328189ef_ (NuGet 4.7.0+).
-   * @requires targets: ["pack", "publish"] // "restore" will not work.
+   * @returns The (optional) repository commit or changeset to indicate which
+   * source the package was built against. {@link RepositoryUrl} must also be
+   * specified for this property to be included.
+   *
+   * Default: `''`
+   * @description This is evaluated only during the "Pack" and "Publish"
+   * Targets. If using nuget.exe or Visual Studio, NuGet 4.7.0 or later is
+   * required.
+   * @example "0e4d1b598f350b3dc675018d539114d1328189ef"
    */
   get RepositoryCommit(): string {
     return this._repositoryCommit ??= '';
   }
 
   /**
-   * Specifies the format of the symbols package. If "symbols.nupkg", a
-   * legacy symbols package is created with a .symbols.nupkg extension
-   * containing PDBs, DLLs, and other output files. If "snupkg", a snupkg
-   * symbol package is created containing the portable PDBs. The default
+   * @returns A string specifying the format of the symbols package. If
+   * "symbols.nupkg", a legacy symbols package is created with a .symbols.nupkg
+   * extension containing PDBs, DLLs, and other output files. If "snupkg", a
+   * snupkg symbol package is created containing the portable PDBs. The default
    * is "symbols.nupkg".
-   * @defaultValue "symbols.nupkg"
+   *
+   * Default: "symbols.nupkg"
+   * @example "symbols.nupkg", "snupkg"
    */
   get SymbolPackageFormat(): 'symbols.nupkg' | 'snupkg' {
     return this._symbolPackageFormat ??= 'symbols.nupkg';
   }
 
   /**
-   * Specifies that `pack` should not run package analysis after building the package.
-   * @default
+   * @returns A string-formatted boolean specifying that `pack` should not run
+   * package analysis after building the package.
+   *
+   * Default: `''` (false-y)
    */
+  // todo: change ReturnType to EmptyOrBooleanString
   get NoPackageAnalysis(): string {
     return this._noPackageAnalysis ??= '';
   }
 
   /**
-   * Specifies the minimum version of the NuGet client that can install
-   * this package, enforced by nuget.exe and the Visual Studio Package
-   * Manager.
-   * @default
+   * @returns A string specifying the minimum version of the NuGet client that
+   * can install this package, enforced by nuget.exe and the Visual Studio
+   * Package Manager.
+   *
+   * Default: `''`
    */
   get MinClientVersion(): string {
     return this._minClientVersion ??= '';
   }
 
   /**
-   * This Boolean value specifies whether the build output assemblies should
-   * be packed into the .nupkg file or not.
-   * @remarks Useful for creating dummy packages i.e. packages with minimal
-   * size for testing nuget pushes. When this is false, you still need at
-   * least one file. And beware of version collisions!
-   * @default
+   * @returns A string-formatted boolean value specifying whether the build
+   * output assemblies should be packed into the .nupkg file or not.
+   *
+   * Default: `"true"`
    */
   get IncludeBuildOutput(): BooleanString {
     return this._includeBuiltOutput ??= 'true';
   }
 
   /**
-   * This Boolean value specifies whether any items that have a type of
-   * Content are included in the resulting package automatically.
-   * @default
+   * @returns A string-formatted boolean specifying whether any items that have
+   * a type of Content are included in the resulting package automatically.
+   *
+   * Default: `"true"`
    */
   get IncludeContentInPack(): BooleanString {
     return this._includeContentInPack ??= 'true';
   }
 
   /**
-   * Specifies the folder where to place the output assemblies. The output assemblies (and other output files) are copied into their respective framework folders. For more information, see [Output assemblies](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#output-assemblies).
+   * @returns The output directory of the output assemblies. The output
+   * assemblies (and other output files) are copied into their respective
+   * framework folders.
+   *
+   * Default: `''`
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#output-assemblies Output assemblies}
    */
+  // todo: Move to MSBPP
   get BuildOutputTargetFolder(): string {
     return this._buildOutputTargetFolder ??= '';
   }
 
   /**
-   * Specifies the default location of where all the content files should go
-   * if `PackagePath` is not specified for them.
-   * For more information, see [Including content in a
-   * package](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#including-content-in-a-package).
-   * @default
+   * @returns A semicolon-separated list of default locations of where all the
+   * content files should go if `PackagePath` is not specified for them.
+   *
+   * Default: `"content;contentFiles"`
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#including-content-in-a-package Including content in a package}
    */
   get ContentTargetFolders(): string {
     return this._contentTargetFolders ??= 'content;contentFiles';
   }
 
   /**
-   * Relative or absolute path to the *.nuspec* file being used for packing.
-   * If specified, it's used **exclusively** for packaging information, and
-   * any information in the projects is not used.
-   * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
+   * @returns The relative or absolute path to the `*.nuspec` file being used
+   * for packing. If specified, it's used **exclusively** for packaging
+   * information, and any information in the projects is not used.
+   *
+   * Default: `''`
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file Packing using a .nuspec}
    */
   get NuspecFile(): string {
     return this._nuspecFile ??= '';
   }
 
   /**
-   * Base path for the *.nuspec* file.
-   * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
+   * @returns The base path for the *.nuspec* file.
+   *
+   * Default: `''`
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file Packing using a .nuspec}
    */
   get NuspecBasePath(): string {
     return this._nuspecBasePath ??= '';
   }
 
   /**
-   * Semicolon separated list of key=value pairs.
-   * For more information, see [Packing using a .nuspec](https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file).
+   * @returns A semicolon-separated list of key=value pairs.
+   *
+   * Default: `''`
+   * @see
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file Packing using a .nuspec}
    */
   get NuspecProperties(): string {
     return this._nuspecProperties ??= '';
   }
 
   /**
-   * A human-friendly title of the package, typically used in UI displays as
+   * @returns A human-friendly title of the package, typically used in UI displays as
    * on nuget.org and the Package Manager in Visual Studio.
+   * Default: {@link PackageId}
    */
   get Title(): string {
     return this._title ??= this.PackageId;
   }
 
   /**
-   * Company is company information.
-   * If not specified, the default value is the {@link Authors} value.
+   * @returns Company name or information.
+   *
+   * Default: {@link Authors}
    */
   get Company(): string {
     return this._company ??= this.Authors;
   }
 
   /**
-   * Product is product information.
-   * @defaultValue {@link AssemblyName}
+   * @returns Product name or information.
+   *
+   * Default: {@link AssemblyName}
    */
   get Product(): string {
     return this._product ??= this.AssemblyName;
