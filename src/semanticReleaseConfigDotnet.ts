@@ -150,7 +150,7 @@ export class SemanticReleaseConfigDotnet {
       if (index <= indexOfLastAfter) {
         errors.push(
           new Error(
-            `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => `"${v}"`).join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${JSON.stringify(pluginIDs[indexOfLastAfter])} comes after ${JSON.stringify(pluginIDs[index])}!`,
+            `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => '"' + v + '"').join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${JSON.stringify(pluginIDs[indexOfLastAfter])} comes after ${JSON.stringify(pluginIDs[index])}!`,
           ),
         );
       }
