@@ -9,12 +9,12 @@ import type { BaseClass, ClassLike } from '../utils/reflection.js';
  *
  * todo: add Reserved properties, Well-Known properties, Common properties, and more. Maybe as sub classes.
  * See:
- * - [MSBuild Reserved and Well-known Properties](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2022)
- * - [Common MSBuild project properties](https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2022)
- * - [Microsoft.NET.Sdk](https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props)
- * - [Microsoft.NET.Sdk.Web](https://learn.microsoft.com/en-us/aspnet/core/razor-pages/web-sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json#properties)
- * - [Microsoft.NET.Sdk.Razor](https://learn.microsoft.com/en-us/aspnet/core/razor-pages/sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json)
- * - [Microsoft.NET.Sdk.Desktop](https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop)
+ * - {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2022 MSBuild Reserved and Well-known Properties}
+ * - {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2022 Common MSBuild project properties}
+ * - {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props Microsoft.NET.Sdk}
+ * - {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/web-sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json#properties Microsoft.NET.Sdk.Web}
+ * - {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json Microsoft.NET.Sdk.Razor}
+ * - {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop Microsoft.NET.Sdk.Desktop}
  */
 export class MSBuildProjectProperties {
   // #region static
