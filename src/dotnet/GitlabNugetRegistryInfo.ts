@@ -34,7 +34,7 @@ export const GitlabNugetRegistryInfoOptions = NRIOpts.and({
   }
   return obj
 })
-const GLNRIOpts = GitlabNugetRegistryInfoOptions
+type GLNRIOpts = typeof GitlabNugetRegistryInfoOptions
 
 // https://docs.gitlab.com/ee/user/packages/nuget_repository/
 export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
@@ -53,8 +53,8 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
    * @constructor
    * @param opts The return value of {@link GLNRIOpts}
    */
-  constructor(opts: typeof GLNRIOpts.inferIn) {
-    super(GLNRIOpts.from(opts))
+  constructor(opts: GLNRIOpts["inferIn"]) {
+    super(GitlabNugetRegistryInfoOptions.from(opts))
   }
 
   /**
