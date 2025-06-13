@@ -71,7 +71,6 @@ export const _configArray: tseslint.ConfigWithExtends[] = tseslint.config(
     languageOptions: {
       parserOptions: {
         project: true,
-        // @ts-expect-error TS2322 Type '{ allowDefaultProjectForFiles: string[]; }' is not assignable to type 'boolean | undefined'.
         EXPERIMENTAL_useProjectService: {
           allowDefaultProjectForFiles: [
             './*.js',
