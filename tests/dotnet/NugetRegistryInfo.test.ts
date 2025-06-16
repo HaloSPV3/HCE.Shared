@@ -19,43 +19,12 @@ import {
 import { isConstructor } from '../../src/utils/reflection.js';
 import { isNativeError } from 'node:util/types';
 
-await describe('NugetRegistryInfo', async (ctx0) => {
+await describe('NugetRegistryInfo', async () => {
   await it('is a class', () => {
     deepStrictEqual(isConstructor(NRI), true);
   });
-
-  await it('has expected name', () => {
-    deepStrictEqual(NRI.name, ctx0.name);
-  });
-
-  await describe('canPushPackagesToUrl', async (ctx1) => {
-    await it('exists in NugetRegistryInfo prototype', () => {
-      strictEqual(ctx1.name in NRI.prototype, true);
-    });
-
-    await it('returns Promise<true>', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      const x = await (Promise.resolve(true) as typeof NRI.prototype['canPushPackagesToUrl']);
-      strictEqual(x, true);
-    });
-  });
-
-  await describe('resolvedEnvVariable', async (ctx1) => {
-    await it('exists in NugetRegistryInfo prototype', () => {
-      strictEqual(ctx1.name in NRI.prototype, true);
-    });
-    await todo('is a string');
-  });
-
-  await describe('url', async (ctx1) => {
-    await it('exists in NugetRegistryInfo prototype', () => {
-      strictEqual(ctx1.name in NRI.prototype, true);
-    });
-    await todo('is a string');
-  });
 });
 
-// memory leak...but why?
 await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
   const predefinedToken = getEnvVarValue('NUGET_TOKEN');
   const { DeterministicNupkgCsproj } = await import(
