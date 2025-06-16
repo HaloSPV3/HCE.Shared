@@ -54,7 +54,7 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
       // eslint-disable-next-line @typescript-eslint/no-deprecated
         .canPushPackagesToUrl
         .catch((reason: unknown) =>
-          isNativeError(reason) ? reason : new Error(String(reason)),
+          isNativeError(reason) ? reason : new Error(JSON.stringify(reason)),
         );
       if (value === true) {
         notDeepStrictEqual(value, true);
