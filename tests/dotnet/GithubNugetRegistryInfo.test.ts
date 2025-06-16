@@ -61,7 +61,7 @@ await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
       // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
         .canPushPackagesToUrl.catch((reason: unknown) =>
-          isNativeError(reason) ? reason : new Error(String(reason)),
+          isNativeError(reason) ? reason : new Error(JSON.stringify(reason)),
         );
       notDeepStrictEqual(result, true);
       ok(isNativeError(result));
