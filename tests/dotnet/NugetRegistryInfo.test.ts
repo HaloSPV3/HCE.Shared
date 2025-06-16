@@ -116,8 +116,8 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
             );
           }
 
-        return reason;
-      },
+          return reason;
+        },
       );
 
       deepStrictEqual(canPush, true);
