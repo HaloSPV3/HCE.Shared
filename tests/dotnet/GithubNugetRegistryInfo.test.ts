@@ -20,7 +20,7 @@ if (!existsSync(dotenvPath))
 
 // GHNRI will throw if imported while GITHUB_REPOSITORY_OWNER is unset!
 getOwner();
-const GHNRI = (await import ('../../src/dotnet/GithubNugetRegistryInfo.js')).GithubNugetRegistryInfo;
+const { GithubNugetRegistryInfo: GHNRI } = await import ('../../src/dotnet/GithubNugetRegistryInfo.js');
 
 await describe('GithubNugetRegistryInfo', async () => {
   await describe('canPushPackagesToUrl', async () => {
