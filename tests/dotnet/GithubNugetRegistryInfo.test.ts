@@ -11,6 +11,7 @@ import { getEnvVarValue } from '../../src/utils/env.js';
  * @returns the value of env.GITHUB_REPOSITORY_OWNER
  */
 function getOwner(): string {
+  // eslint-disable-next-line @stylistic/no-extra-parens
   return env['GITHUB_REPOSITORY_OWNER'] ??= (getEnvVarValue('GITHUB_REPOSITORY_OWNER ') ?? 'HaloSPV3');
 }
 const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env');
