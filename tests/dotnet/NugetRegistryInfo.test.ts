@@ -27,9 +27,7 @@ await describe('NugetRegistryInfo', async () => {
 
 await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
   const predefinedToken = getEnvVarValue('NUGET_TOKEN');
-  const { DeterministicNupkgCsproj } = await import(
-    './MSBuildProject.projects.js',
-  );
+  const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
 
   await it('defaults url to expected value', () => {
     process.env['NUGET_TOKEN'] ??= predefinedToken ?? 'placeholder';
@@ -74,7 +72,6 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
         project: DeterministicNupkgCsproj,
       });
 
-      // todo: refactor canPushPackagesToUrl away from static dummy
       // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       const canPush = await registryInfo.canPushPackagesToUrl.catch(
