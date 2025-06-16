@@ -1,13 +1,13 @@
-import { resolve } from 'path';
+import node_path from 'node:path';
 import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.js';
 
 // Binding elements can't be exported directly with --isolatedDeclarations. ts(9019)
 const projects = await MSBP.PackableProjectsToMSBuildProjects([
-  resolve(
+  node_path.resolve(
     import.meta.dirname,
     '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
   ),
-  resolve(
+  node_path.resolve(
     import.meta.dirname,
     '../../dotnet/samples/HCE.Shared.SignAfterPack/HCE.Shared.SignAfterPack.csproj',
   ),
