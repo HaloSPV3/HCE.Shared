@@ -12,6 +12,7 @@ import { inspect } from 'node:util';
 import {
   NugetRegistryInfo as NRI,
   NugetRegistryInfoOptionsBase as NRIOptsBase,
+  NugetRegistryInfoOptions,
   getGithubOutput,
   getGithubOutputSync,
 } from '../../src/dotnet/NugetRegistryInfo.js';
@@ -65,7 +66,7 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
     process.env['NUGET_TOKEN'] ??= predefinedToken ?? 'placeholder';
 
     strictEqual(
-      new NRI({ project: DeterministicNupkgCsproj }).url,
+      NugetRegistryInfoOptions.from({ project: DeterministicNupkgCsproj }).url,
       'https://api.nuget.org/v3/index.json',
     );
 
