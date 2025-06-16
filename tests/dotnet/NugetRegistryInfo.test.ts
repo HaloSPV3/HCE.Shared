@@ -109,6 +109,7 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
           if (!isNativeError(reason))
             return new Error(inspect(reason, { depth: 3 }));
           else if ('stderr' in reason && typeof reason.stderr === 'string') {
+            // eslint-disable-next-line unicorn/prefer-spread
             reason.message = reason.message.concat(
               '\nSTDERR:\n',
               `  ${reason.stderr.replaceAll('\n', '\n  ')}`,
