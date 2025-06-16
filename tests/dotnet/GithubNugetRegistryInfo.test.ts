@@ -5,7 +5,6 @@ import { dirname, resolve } from 'node:path';
 import { env } from 'node:process';
 import { describe, it } from 'node:test';
 import { isNativeError } from 'node:util/types';
-import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js';
 
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
@@ -22,7 +21,9 @@ if (!existsSync(dotenvPath))
 getOwner();
 const { GithubNugetRegistryInfo: GHNRI } = await import ('../../src/dotnet/GithubNugetRegistryInfo.js');
 
-await describe('GithubNugetRegistryInfo', async () => {
+await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
+  const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
+
   await describe('canPushPackagesToUrl', async () => {
     await it('returns true when GITHUB_TOKEN is valid and GITHUB_REPOSITORY_OWNER is defined', async (t) => {
       if (!getEnvVarValue('GITHUB_TOKEN')) {
