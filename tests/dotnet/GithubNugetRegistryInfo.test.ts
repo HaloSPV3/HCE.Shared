@@ -12,7 +12,7 @@ import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js';
  * @returns the value of env.GITHUB_REPOSITORY_OWNER
  */
 function getOwner(): string {
-  return (env['GITHUB_REPOSITORY_OWNER'] ??= (getEnvVarValue('GITHUB_REPOSITORY_OWNER ') ?? 'HaloSPV3'));
+  return env['GITHUB_REPOSITORY_OWNER'] ??= (getEnvVarValue('GITHUB_REPOSITORY_OWNER ') ?? 'HaloSPV3');
 }
 const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env');
 if (!existsSync(dotenvPath))
