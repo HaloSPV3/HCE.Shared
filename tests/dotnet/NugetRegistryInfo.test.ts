@@ -70,9 +70,9 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
         return;
       }
 
-      const registryInfo = new NRI(({
+      const registryInfo = new NRI({
         project: DeterministicNupkgCsproj,
-      }));
+      });
 
       // todo: refactor canPushPackagesToUrl away from static dummy
       // @ts-expect-error Is deprecated
