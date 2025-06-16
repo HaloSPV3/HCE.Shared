@@ -326,9 +326,12 @@ but the environment variable is empty or undefined.`);
    * @param opts Options passed to
    * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. The
    * {@link PackPackagesOptionsType.t.output} path is modified according to the
-   * {@link usePerSourceSubfolder} and {@link usePerPackageIdSubfolder} arguments.
-   * @param usePerSourceSubfolder
-   * @param usePerPackageIdSubfolder
+   * {@link usePerSourceSubfolder} and {@link usePerPackageIdSubfolder}
+   * arguments.
+   * @param usePerSourceSubfolder If true, the path of the package output will
+   * include a subfolder named after the NuGet Source.
+   * @param usePerPackageIdSubfolder If true, the path of the package output
+   * will include a subfolder named after the NuGet package's ID.
    * @returns `dotnet pack "${this.project.Properties.MSBuildProjectFullPath}"
    * -o "${outDir}"` where outDir may be `${cwd()}/publish/${NugetRegistryInfo.GetNameForURL(this.url)}/${this._project.Properties.PackageId}`
    */
