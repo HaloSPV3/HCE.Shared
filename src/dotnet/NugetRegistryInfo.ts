@@ -269,8 +269,9 @@ export class NugetRegistryInfo {
 
   /**
    * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
-   * @param tokenEnvVar The name of the environment variable(s) whose value is a NuGet API key.
-   * @param resolvedEnvVariable
+   * @param resolvedEnvVariable The name of the environment variable(s) whose
+   * value is a NuGet API key. Typically, the value of
+   * {@link NugetRegistryInfo#resolvedEnvVariable}.
    * @returns The value of the first defined environment variable.
    * @throws {Error} when none of the provided environment variables are defined.
    */
