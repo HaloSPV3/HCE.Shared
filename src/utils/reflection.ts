@@ -12,6 +12,7 @@ export type * from './reflection/FunctionLike.js';
 
 export * from './reflection/inheritance.js';
 export * from './reflection/getPrototypeOf.js';
+export * from './reflection/filterForGetters.js';
 
 /**
  * Returns the names of the instantiated, noninherited getters derived from the
@@ -32,29 +33,6 @@ export function listOwnGetters(instanceOrPrototype: object): string[] {
     .filter(e => typeof e[1].get === 'function' && e[0] !== '__proto__')
     .map(e => e[0]);
   return names;
-}
-
-type ExceptProto<T> = T extends '__proto__' ? never : Exclude<T, '__proto__'>;
-type GetterDescriptor = PropertyDescriptor &
-  Required<Pick<PropertyDescriptor, 'get'>>;
-
-/**
- * Converts a descriptors object to an array, filters the array for getters, and returns the getters array.
- * @param descriptors An object like the return value of Object.getOwnPropertyDescriptors
- * @returns An array of getters' key-Descriptor pairs
- * @since 3.0.0
- */
-export function filterForGetters<T>(
-  descriptors: ReturnType<typeof Object.getOwnPropertyDescriptors<T>>,
-) {
-  return Object.entries(descriptors).filter(
-    (
-      e,
-    ): e is [
-      ExceptProto<Extract<keyof typeof descriptors, string>>,
-      GetterDescriptor,
-    ] => e[0] !== '__proto__' && typeof e[1].get === 'function',
-  );
 }
 
 /**
