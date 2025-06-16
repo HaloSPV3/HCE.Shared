@@ -6,7 +6,8 @@ import type { Options, PluginSpec } from 'semantic-release';
 import { DefaultOptions } from './setupGitPluginSpec.js';
 
 export interface SRReleaseNotesGeneratorOptions {
-  /** conventional-changelog preset.
+  /**
+   * conventional-changelog preset.
    * @default 'angular'
    */
   preset?: 'angular' | 'atom' | 'codemirror' | 'ember' | 'eslint' | 'express' | 'jquery' | 'jscs' | 'jshint' | 'conventionalcommits' | (string & Record<never, never>) | undefined;
