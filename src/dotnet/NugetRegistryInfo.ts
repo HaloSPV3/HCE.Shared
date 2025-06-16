@@ -140,8 +140,7 @@ export class NugetRegistryInfo {
       // Pray no cultures add another apostrophe before the path.
       .map(line => line.replace(/^[^']+'/, ''))
       // trim the apostrophe and period from the end of the string.
-      .map(line => line.replace('\'.', ''))
-    ;
+      .map(line => line.replace('\'.', ''));
   }
 
   /**
@@ -161,9 +160,9 @@ export class NugetRegistryInfo {
   static GetNameForURL(url: string) {
     const _url = new URL(url);
     if (_url.pathname.endsWith('/index.json'))
-      _url.pathname = _url.pathname.substring(
+      _url.pathname = _url.pathname.slice(
         0,
-        _url.pathname.length - '/index.json'.length,
+        Math.max(0, _url.pathname.length - '/index.json'.length),
       );
     return `${_url.hostname}${_url.pathname}`.replaceAll('/', '_');
   }
@@ -184,19 +183,18 @@ export class NugetRegistryInfo {
    *   Release's config object for later use by `@semantic-release/exec`.
    * - Other EcmaScript modules can access the environment variable(s) and steal
    *   your key. Be aware of malicious dependencies!
-   * @constructor
-   * @param {typeof NRIOpts['inferIn']} opts The input type of {@link NugetRegistryInfoOptions.from}
-   * @param {MSBuildProject} opts.project The project whose package(s) will be
+   * @param opts The input type of {@link NugetRegistryInfoOptions.from}
+   * @param opts.project The project whose package(s) will be
    * pushed.\
    * - Its {@link NugetProjectProperties#PackageId} will be read.\
    * - Its {@link NugetProjectProperties#PackageVersion} will be overridden via CLI args when creating a dummy package. The real package's
    * `PackageVersion` will *not* be overridden.
-   * @param {readonly string[]} [opts.tokenEnvVars=NugetRegistryInfo.DefaultTokenEnvVars] The environment variables
+   * @param [opts.tokenEnvVars] The environment variables
    * whose values are tokens with permission to push a package to the NuGet
    * package registry. The array is iterated through until one token is found.
    * If none of the environment variables are defined, this constructor will
    * throw an {@link Error}.
-   * @param {string} [opts.url=defaultNugetSource]
+   * @param [opts.url]
    */
   constructor(opts: typeof NRIOpts['inferIn']) {
     // note: you can reassign `opts` only when typeof `inferOut` is assignable
@@ -229,7 +227,6 @@ export class NugetRegistryInfo {
    * - {@link Error}
    *   - The token is invalid, of the wrong token type, or lacks permission to push packages
    *   - The URL does not exist or a connection could not be established
-   * @type {Promise<true>}
    * @remarks Semantic Release Step: Beginning of `prepare`
    * @deprecated
    */
@@ -260,9 +257,6 @@ export class NugetRegistryInfo {
 
   /**
    * The first environment variable found to have a defined value.
-   *
-   * @readonly
-   * @type {string}
    */
   get resolvedEnvVariable(): string {
     return this._resolvedEnvVariable;
@@ -275,6 +269,7 @@ export class NugetRegistryInfo {
   /**
    * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
    * @param tokenEnvVar The name of the environment variable(s) whose value is a NuGet API key.
+   * @param resolvedEnvVariable
    * @returns The value of the first defined environment variable.
    * @throws {Error} when none of the provided environment variables are defined.
    */
@@ -326,10 +321,12 @@ but the environment variable is empty or undefined.`);
    * When pushing the package(s), you only need to supply the main .nupkg's path
    * or its directory to the dotnet CLI—by default, it will also push the
    * symbols package, if present.
-   * @param {typeof NRI.PackPackagesOptionsType.inferIn} opts Options passed to
+   * @param opts Options passed to
    * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. The
    * {@link PackPackagesOptionsType.t.output} path is modified according to the
    * {@link usePerSourceSubfolder} and {@link usePerPackageIdSubfolder} arguments.
+   * @param usePerSourceSubfolder
+   * @param usePerPackageIdSubfolder
    * @returns `dotnet pack "${this.project.Properties.MSBuildProjectFullPath}"
    * -o "${outDir}"` where outDir may be `${cwd()}/publish/${NugetRegistryInfo.GetNameForURL(this.url)}/${this._project.Properties.PackageId}`
    */
@@ -377,8 +374,10 @@ but the environment variable is empty or undefined.`);
       packCmdArr.push('--verbosity', validOpts.verbosity);
     if (validOpts.versionSuffix !== undefined)
       packCmdArr.push('--version-suffix', validOpts.versionSuffix);
-    /** Haphazard. I need to override the Version and I'm not considering side
-     * effects of arbitrary overrides. */
+    /**
+     * Haphazard. I need to override the Version and I'm not considering side
+     * effects of arbitrary overrides.
+     */
     if (validOpts.propertyOverrides) {
       /** convert propertyOverrides record to "-p:n0=v0;n1=v1;n2=v2" et cetera */
       const assignments: string = '-p:' + Object.entries(validOpts.propertyOverrides)
@@ -404,10 +403,10 @@ but the environment variable is empty or undefined.`);
    * @param opts `dotnet pack` options. See `dotnet pack -h`,
    * https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack, and
    * {@link PackPackagesOptionsType}.
-   * @param [usePerSourceSubfolder=false] If `true`, modify the output path to
+   * @param [usePerSourceSubfolder] If `true`, modify the output path to
    * include a subfolder bearing a path-safe encoding of the NuGet Source that
    * will receive the nupkg.
-   * @param [usePerPackageIdSubfolder=false] If `true`, modify the output path
+   * @param [usePerPackageIdSubfolder] If `true`, modify the output path
    * to include a subfolder named after the the PackageId.
    * @returns a string[] containing the full file paths of all new packages i.e.
    * .nupkg, .symbols.nupkg, .snupkg
@@ -432,7 +431,7 @@ but the environment variable is empty or undefined.`);
   /**
    * Create a dummy package for the current {@link project} by executing a
    * command line like \``dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this._project)}/${GetNameForURL(this.url)}`\`
-   * @param {typeof NRI.PackPackagesOptionsType.inferIn} opts Options passed to
+   * @param opts Options passed to
    * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument.
    * - The `output` field is ignored and overwritten. It is replaced with
    *   ${{@link getDummiesDir}({@link project})}/${{@link GetNameForURL}({@link url})}
@@ -452,7 +451,8 @@ but the environment variable is empty or undefined.`);
     validOpts.propertyOverrides ??= {};
     validOpts.propertyOverrides['Version'] = '0.0.1-DUMMY';
     const packCmd: string = this.GetPackCommand(validOpts, true);
-    /** e.g.
+    /**
+     * e.g.
      * ```txt
      *  Determining projects to restore...
      *  All projects are up-to-date for restore.
@@ -599,13 +599,12 @@ but the environment variable is empty or undefined.`);
 
   /**
    *
-   * Get a `dotnet nuget push` command for pushing one or more nupkg/snupkg
-   * files created by {@link GetPackCommand} or {@link _PackPackages}.\
-   * Like {@link PackDummyPackage}, the output/ROOT path will include a
-   * folder named after this NRI instance's {@link NugetRegistryInfo#url},
-   * but will not include a subfolder for the
-   * {@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}
-   *
+   *Get a `dotnet nuget push` command for pushing one or more nupkg/snupkg
+   *files created by {@link GetPackCommand} or {@link _PackPackages}.\
+   *Like {@link PackDummyPackage}, the output/ROOT path will include a
+   *folder named after this NRI instance's {@link NugetRegistryInfo#url},
+   *but will not include a subfolder for the
+   *{@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}
    * @example
    * ```ts
    * const packAndPushDummyCmd = [
@@ -617,13 +616,11 @@ but the environment variable is empty or undefined.`);
    *   nri.GetPushDummyPackageCommand(pushOpts, false, false),
    * ].join(' && ')
    * ```
-   *
-   * @public
    * @param opts the ROOT arg and options for `dotnet nuget push`. The following
    * fields are overwritten:
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
-   * @returns {string} a `dotnet nuget push` command to push a dummy package
+   * @returns a `dotnet nuget push` command to push a dummy package
    * (created by executing {@link PackDummyPackage}) to {@link url}
    */
   GetPushDummyCommand(
@@ -724,7 +721,6 @@ but the environment variable is empty or undefined.`);
    * - {@link https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-with-a-personal-access-token Authenticating with a personal access token}.
    * ## For GitLab NuGet Registry authentication, see
    * - {@link https://docs.gitlab.com/ee/user/packages/nuget_repository/#add-a-source-with-the-net-cli Add a source with the .NET CLI}
-   *
    * @experimental
    * @see {@link ./IsNextVersionAlreadyPublished.cli.ts}, {@link ./IsNextVersionAlreadyPublished.cli.js}
    */
@@ -789,7 +785,8 @@ export const NugetRegistryInfoOptions = NRIOptsBase.merge({
   ),
   /**
    * A NuGet package registry's API endpoint URL.
-   * @default 'https://api.nuget.org/v3/index.json' */
+   * @default 'https://api.nuget.org/v3/index.json'
+   */
   url: NRIOptsBase.get('url').default(() => defaultNugetSource),
 });
 const NRIOpts = NugetRegistryInfoOptions;
