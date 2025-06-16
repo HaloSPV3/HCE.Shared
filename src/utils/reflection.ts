@@ -8,12 +8,12 @@ import {
 } from './reflection/inheritance.js';
 import { isConstructor } from './reflection/isConstructor.js';
 
-export type * from './reflection/GetterDescriptor.js';
 export type * from './reflection/FunctionLike.js';
+export type * from './reflection/GetterDescriptor.js';
 
-export * from './reflection/inheritance.js';
-export * from './reflection/getPrototypeOf.js';
 export * from './reflection/filterForGetters.js';
+export * from './reflection/getPrototypeOf.js';
+export * from './reflection/inheritance.js';
 export * from './reflection/isConstructor.js';
 
 /**
