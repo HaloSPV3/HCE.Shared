@@ -599,12 +599,12 @@ but the environment variable is empty or undefined.`);
 
   /**
    *
-   *Get a `dotnet nuget push` command for pushing one or more nupkg/snupkg
-   *files created by {@link GetPackCommand} or {@link _PackPackages}.\
-   *Like {@link PackDummyPackage}, the output/ROOT path will include a
-   *folder named after this NRI instance's {@link NugetRegistryInfo#url},
-   *but will not include a subfolder for the
-   *{@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}
+   * Get a `dotnet nuget push` command for pushing one or more nupkg/snupkg
+   * files created by {@link GetPackCommand} or {@link _PackPackages}.\
+   * Like {@link PackDummyPackage}, the output/ROOT path will include a
+   * folder named after this NRI instance's {@link NugetRegistryInfo#url},
+   * but will not include a subfolder for the
+   * {@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}
    * @example
    * ```ts
    * const packAndPushDummyCmd = [
