@@ -6,6 +6,7 @@ import {
   type SuperClassLike,
   type WithProto,
 } from './reflection/inheritance.js';
+import { isConstructor } from './reflection/isConstructor.js';
 
 export type * from './reflection/GetterDescriptor.js';
 export type * from './reflection/FunctionLike.js';
@@ -13,6 +14,7 @@ export type * from './reflection/FunctionLike.js';
 export * from './reflection/inheritance.js';
 export * from './reflection/getPrototypeOf.js';
 export * from './reflection/filterForGetters.js';
+export * from './reflection/isConstructor.js';
 
 /**
  * Returns the names of the instantiated, noninherited getters derived from the
@@ -156,80 +158,4 @@ export function getPrototypes<T extends ClassLike<ConstructorConstraint<T> & Wit
     assuming current is NugetProjectProperties...
     Reflect.getPrototypeOf(current).name is 'MSBuildProjectProperties'
    */
-}
-
-/**
- * A very jank function to determine if an object can be the target of Reflect.construct.
- * Unfortunately, many functions have a constructor in their prototype. These
- * functions are treated like classes due to JavaScript's poor distinction between
- * classes and functions.\
- * Typescript can enforce "new" keyword usage, but overriding the type
- * allows you to `new isConstructor()` despite this function not intended to be
- * used with the `new` keyword.
- * @param obj
- * @returns
- * @since 3.0.0
- * @remarks Only works when targeting ES6/ES2015 or later. If your project or a dependent project is compiled to <= ES5/CJS, this function will always return `false`; classes and constructors were introduced in ES6/ES2015.
- * @see https://stackoverflow.com/a/49510834
- */
-export function isConstructor(obj: unknown): obj is ClassLike_Unknown {
-  // Method 0 - filter
-  if (typeof obj !== 'function')
-    return false;
-
-  // Method 1
-  // statically-defined class
-  if (/^class\s/.test(obj.toString())) return true;
-
-  /* Method 2
-   * > class class_ {}; function func(){}
-   * undefined
-   * > class_.prototype.constructor.name === class_.name
-   * true
-   * > func.prototype?.constructor?.name === func.name
-   * false
-   * typeof String.prototype ==='object'
-   * > true
-   * typeof Function.prototype === 'object';
-   * > false
-   * typeof Function.prototype
-   * > 'function'
-   */
-  let ctor: undefined | ((...args: unknown[]) => unknown) = undefined;
-  if ((typeof obj.prototype === 'object' || typeof obj.prototype === 'function')
-    && (obj.prototype as object | null) != null
-    && 'constructor' in (obj.prototype as object)
-    && typeof (obj.prototype as { constructor: unknown }).constructor === 'function') {
-    ctor = (obj.prototype as { constructor: unknown }).constructor as ((...args: unknown[]) => unknown);
-    const _ctor = Reflect.getOwnPropertyDescriptor(
-      obj.prototype,
-      'constructor',
-    );
-    const _name = Reflect.getOwnPropertyDescriptor(
-      ctor,
-      'name',
-    );
-    // short-circuit if `obj.prototype.constructor` is a function, but not a constructor. Return false.
-    return (
-      _ctor?.value === obj
-      && _name?.writable === false
-      && _name.enumerable === false
-      && _name.configurable === true
-    );
-  }
-
-  // Short-circuit
-  // Method 3 catches exceptions when !isConstructor. When debugging, that's annoying.
-  return false;
-
-  // Method 3
-  // isConstructable (See https://stackoverflow.com/a/49510834)
-  // try {
-  //   // @ts-expect-error ts(2351): Type 'Function' has no construct signatures.
-  //   new new Proxy(obj, { construct: () => ({}) })()
-  //   return true
-  // }
-  // catch {
-  //   return false
-  // }
 }
