@@ -105,19 +105,19 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
       // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       const canPush = await registryInfo.canPushPackagesToUrl.catch(
-        (reason: unknown) => {
-          if (!isNativeError(reason))
-            return new Error(inspect(reason, { depth: 3 }));
-          else if ('stderr' in reason && typeof reason.stderr === 'string') {
+        (error: unknown) => {
+          if (!isNativeError(error))
+            return new Error(inspect(error, { depth: 3 }));
+          else if ('stderr' in error && typeof error.stderr === 'string') {
             // eslint-disable-next-line unicorn/prefer-spread
-            reason.message = reason.message.concat(
+            error.message = error.message.concat(
               '\nSTDERR:\n',
-              `  ${reason.stderr.replaceAll('\n', '\n  ')}`,
-              reason.stack ?? '',
+              `  ${error.stderr.replaceAll('\n', '\n  ')}`,
+              error.stack ?? '',
             );
           }
 
-          return reason;
+          return error;
         },
       );
 
