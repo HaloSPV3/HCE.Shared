@@ -28,7 +28,7 @@ const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
  * @returns If successful, a promised object with a parsed key.
  */
 export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>['parsed']> {
-  if (env.GITHUB_OUTPUT === undefined || !existsSync(env.GITHUB_OUTPUT)) {
+  if (env['GITHUB_OUTPUT'] === undefined || !existsSync(env['GITHUB_OUTPUT'])) {
     const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
     if (!existsSync(githubOutputPath))
       await writeFile(githubOutputPath, '');
@@ -54,11 +54,11 @@ export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>
  * @returns An object with a parsed key if successful.
  */
 export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDotenv>['parsed']> {
-  if (env.GITHUB_OUTPUT === undefined || !existsSync(env.GITHUB_OUTPUT)) {
+  if (env['GITHUB_OUTPUT'] === undefined || !existsSync(env['GITHUB_OUTPUT'])) {
     const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
     if (!existsSync(githubOutputPath))
       writeFileSync(githubOutputPath, '');
-    env.GITHUB_OUTPUT = githubOutputPath;
+    env['GITHUB_OUTPUT'] = githubOutputPath;
   }
 
   const encoding = detectFileSync(env['GITHUB_OUTPUT']);
