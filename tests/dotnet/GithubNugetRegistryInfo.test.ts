@@ -1,10 +1,10 @@
-import { getEnvVarValue } from '../../src/utils/env.js';
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict';
 import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { env } from 'node:process';
 import { describe, it } from 'node:test';
 import { isNativeError } from 'node:util/types';
+import { getEnvVarValue } from '../../src/utils/env.js';
 
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
