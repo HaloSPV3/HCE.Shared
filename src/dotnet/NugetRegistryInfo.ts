@@ -49,8 +49,9 @@ export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>
 /**
  * Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
  * If the file doesn't exist, it is created.
+ * @returns An object with a parsed key if successful.
  */
-export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed'] {
+export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDotenv>['parsed']> {
   if (env.GITHUB_OUTPUT === undefined || !existsSync(env.GITHUB_OUTPUT)) {
     const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
     if (!existsSync(githubOutputPath))
@@ -64,9 +65,10 @@ export function getGithubOutputSync(): ReturnType<typeof configDotenv>['parsed']
     override: true,
     encoding: encoding ?? undefined,
     processEnv: {},
-  });
+  }) as { error: Error }
+  | { parsed: NonNullable<ReturnType<typeof configDotenv>['parsed']> };
 
-  if (isNativeError(envOutput.error))
+  if ('error' in envOutput)
     throw envOutput.error;
   return envOutput.parsed;
 }
