@@ -1,4 +1,3 @@
-import { getEnvVarValue } from '../../src/utils/env.js';
 import {
   deepStrictEqual,
   notDeepStrictEqual,
@@ -9,6 +8,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, it } from 'node:test';
 import { inspect } from 'node:util';
+import { isNativeError } from 'node:util/types';
 import {
   NugetRegistryInfo as NRI,
   NugetRegistryInfoOptionsBase as NRIOptsBase,
@@ -16,8 +16,8 @@ import {
   getGithubOutput,
   getGithubOutputSync,
 } from '../../src/dotnet/NugetRegistryInfo.js';
+import { getEnvVarValue } from '../../src/utils/env.js';
 import { isConstructor } from '../../src/utils/reflection.js';
-import { isNativeError } from 'node:util/types';
 
 await describe('NugetRegistryInfo', async () => {
   await it('is a class', () => {
