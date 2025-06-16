@@ -53,8 +53,8 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
       // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
         .canPushPackagesToUrl
-        .catch((reason: unknown) =>
-          isNativeError(reason) ? reason : new Error(JSON.stringify(reason)),
+        .catch((error: unknown) =>
+          isNativeError(error) ? error : new Error(JSON.stringify(error)),
         );
       if (value === true) {
         notDeepStrictEqual(value, true);
