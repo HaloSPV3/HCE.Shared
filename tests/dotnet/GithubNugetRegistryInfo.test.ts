@@ -1,6 +1,6 @@
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict';
 import { existsSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import path from 'node:path';
 import { env } from 'node:process';
 import { describe, it } from 'node:test';
 import { isNativeError } from 'node:util/types';
@@ -14,7 +14,7 @@ function getOwner(): string {
   // eslint-disable-next-line @stylistic/no-extra-parens
   return env['GITHUB_REPOSITORY_OWNER'] ??= (getEnvVarValue('GITHUB_REPOSITORY_OWNER ') ?? 'HaloSPV3');
 }
-const dotenvPath = resolve(dirname(dirname(import.meta.dirname)), '.env');
+const dotenvPath = path.resolve(path.dirname(path.dirname(import.meta.dirname)), '.env');
 if (!existsSync(dotenvPath))
   writeFileSync(dotenvPath, '');
 
