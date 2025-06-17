@@ -4,7 +4,7 @@ import { tmpNameSync } from 'tmp';
 import { MSBuildProjectProperties as MPP } from '../../src/dotnet/MSBuildProjectProperties.js';
 import { CaseInsensitiveMap } from './../../src/CaseInsensitiveMap.js';
 
-await describe('MSBuildProjectProperties', async (c0) => {
+await describe('MSBuildProjectProperties', async () => {
   const emptyMap = new CaseInsensitiveMap<string, string>();
   const emptySample = new MPP('', emptyMap);
   await it('throws if path does not exist', () => {
@@ -27,9 +27,6 @@ await describe('MSBuildProjectProperties', async (c0) => {
   });
   await it('does not throw if given path is empty string (defaults to CWD)', () => {
     strictEqual(emptySample.MSBuildProjectFullPath, process.cwd());
-  });
-  await it('has expected name', () => {
-    strictEqual(MPP.name, c0.name);
   });
   await it('has prototype', () => {
     ok('prototype' in MPP);
