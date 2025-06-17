@@ -30,8 +30,9 @@ await describe('MSBuildProject', async () => {
         && readdirSync(pakDir).some(
           v => v.endsWith('.nupkg') || v.endsWith('.snupkg'),
         )
-      )
+      ) {
         rmSync(pakDir, { recursive: true, force: true });
+      }
       const evalOpts: EvaluationOptions = new EvaluationOptions({
         FullName: deterministicNupkgProj,
         GetItem: [],
