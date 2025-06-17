@@ -237,7 +237,7 @@ export class MSBuildProject {
           .split('\n')
           .filter((v, index) => v !== '' && index !== 0)
           .map(v => v.replace('\r', ''))
-          .sort();
+          .sort((a, b) => a.localeCompare(b));
         return includeNonPublic
           ? targets
           : targets.filter(v => !v.startsWith('_'));
