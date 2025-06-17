@@ -17,14 +17,6 @@ await describe('env', async () => {
 
   await describe('getEnv', async () => {
     await it('returns ProcessEnv object', () => {
-      function isProcessEnv(o: object): o is NodeJS.ProcessEnv {
-        return (
-          Object.keys(o).every(v => typeof v === 'string')
-          && Object.values(o).every(
-            v => v === undefined || typeof v === 'string',
-          )
-        );
-      }
       const o = getEnv() satisfies NodeJS.ProcessEnv;
       strictEqual(isProcessEnv(o), true);
     });
@@ -34,3 +26,17 @@ await describe('env', async () => {
     await it('can override loaded variables', { todo: true });
   });
 });
+
+/**
+ * Determines if the {@link object} satisfies the {@link NodeJS.ProcessEnv} type.
+ * @param object any object
+ * @returns `true` if the {@link object} satisfies the {@link NodeJS.ProcessEnv} type. Else, `false`.
+ */
+function isProcessEnv(object: object): object is NodeJS.ProcessEnv {
+  return (
+    Object.keys(object).every(v => typeof v === 'string')
+    && Object.values(object).every(
+      v => v === undefined || typeof v === 'string',
+    )
+  );
+}
