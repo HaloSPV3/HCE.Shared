@@ -111,7 +111,6 @@ class MSBuildEvaluationOutput {
 }
 
 export class EvaluationOptions {
-  // todo: wait for https://github.com/arktypeio/arktype/issues/808. Then, refactor from fluent notation to readable string-notation
   static readonly t = Object.freeze(
     type({
       FullName: 'string',
