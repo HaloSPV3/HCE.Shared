@@ -2,7 +2,6 @@ import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it, todo } from 'node:test';
 import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.js';
 import { getEnv, getEnvVarValue } from '../../src/utils/env.js';
-import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js';
 import { isNativeError } from 'node:util/types';
 
 await describe('GitlabNugetRegistryInfo', async () => {
@@ -11,6 +10,8 @@ await describe('GitlabNugetRegistryInfo', async () => {
       process.env['CI_JOB_TOKEN'] = 'placeholder';
     if (!getEnvVarValue('CI_PROJECT_ID'))
       process.env['CI_PROJECT_ID'] = 'placeholder';
+    const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
+
     const defaultWithPlaceholders = new GLNRI({
       project: DeterministicNupkgCsproj,
     });
