@@ -5,14 +5,8 @@ import { getEnv, getEnvVarValue } from '../../src/utils/env.js';
 import { DeterministicNupkgCsproj } from './MSBuildProject.projects.js';
 import { isNativeError } from 'node:util/types';
 
-await describe('GitlabNugetRegistryInfo', async (ctx0) => {
-  await it('has expected name', () => {
-    strictEqual(GLNRI.name, ctx0.name);
-  });
-
-  await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, async (ctx1) => {
-    ok(ctx1);
-
+await describe('GitlabNugetRegistryInfo', async () => {
+  await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, async () => {
     if (!getEnvVarValue('CI_JOB_TOKEN'))
       process.env['CI_JOB_TOKEN'] = 'placeholder';
     if (!getEnvVarValue('CI_PROJECT_ID'))
@@ -105,11 +99,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       await todo('can...uhhhh...Sorry. Brainrot.');
     });
 
-    await describe('resolvedEnvVariable', async (ctx2) => {
-      await it('has expected name', () => {
-        ok(ctx2.name in defaultWithPlaceholders);
-      });
-
+    await describe('resolvedEnvVariable', async () => {
       await it('is a string', () => {
         strictEqual(
           typeof defaultWithPlaceholders.resolvedEnvVariable,
@@ -118,17 +108,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       });
     });
 
-    /* await describe("toRegistryPair", async (ctx2) => {
-      await it("has expected name", async () => {
-        ok(ctx2.name in defaultWithPlaceholders);
-      });
-    }); */
-
-    await describe('url', async (ctx2) => {
-      await it('has expected name', () => {
-        ok(ctx2.name in defaultWithPlaceholders);
-      });
-
+    await describe('url', async () => {
       await it('is a string', () => {
         strictEqual(typeof defaultWithPlaceholders.url, 'string');
       });
@@ -140,12 +120,8 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
      */
   });
 
-  await describe('CI_API_V4_URL', async (ctx1) => {
+  await describe('CI_API_V4_URL', async () => {
     const expectedValue = 'https://gitlab.com/api/v4';
-
-    await it('has expected name', () => {
-      ok(ctx1.name in GLNRI);
-    });
 
     await it('has the correct default value if the environment variable is undefined', () => {
       delete process.env['CI_API_V4_URL'];
@@ -155,11 +131,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     // await it("has the correct value the value is provided by the environment variable")
   });
 
-  await describe('groupUrl', async (ctx1) => {
-    await it('has expected name', () => {
-      ok(ctx1.name in GLNRI);
-    });
-
+  await describe('groupUrl', async () => {
     await it('returns the expected url when CI_PROJECT_NAMESPACE_ID is defined', () => {
       process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
       strictEqual(
@@ -169,11 +141,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     });
   });
 
-  await describe('projectUrl', async (ctx1) => {
-    await it('has expected name', () => {
-      ok(ctx1.name in GLNRI);
-    });
-
+  await describe('projectUrl', async () => {
     await it('returns the expected url when CI_PROJECT_ID is defined', () => {
       if (!getEnvVarValue('CI_PROJECT_ID'))
         process.env['CI_PROJECT_ID'] = 'placeholder';
@@ -184,11 +152,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     });
   });
 
-  await describe('ownerId', async (ctx1) => {
-    await it('has expected name', () => {
-      ok(ctx1.name in GLNRI);
-    });
-
+  await describe('ownerId', async () => {
     await it('returns undefined if CI_PROJECT_NAMESPACE_ID is undefined', (t) => {
       delete process.env['CI_PROJECT_NAMESPACE_ID'];
       if (getEnvVarValue('CI_PROJECT_NAMESPACE_ID')) {
@@ -207,11 +171,7 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
     });
   });
 
-  await describe('projectId', async (ctx1) => {
-    await it('has expected name', () => {
-      ok(ctx1.name in GLNRI);
-    });
-
+  await describe('projectId', async () => {
     await it('returns undefined if CI_PROJECT_ID is undefined', (t) => {
       delete process.env['CI_PROJECT_ID'];
       if (getEnvVarValue('CI_PROJECT_ID')) {
