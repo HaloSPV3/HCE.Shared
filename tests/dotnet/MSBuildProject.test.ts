@@ -1,6 +1,6 @@
 import { deepStrictEqual } from 'node:assert/strict';
 import { existsSync, readdirSync, rmSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import path from 'node:path';
 import { describe, it } from 'node:test';
 import {
   EvaluationOptions,
@@ -20,11 +20,11 @@ await describe('MSBuildProject', async () => {
   });
   await describe('Evaluate', async () => {
     await it('may return expected object (HCE.Shared.DeterministicNupkg)', { concurrency: 1 }, async () => {
-      const deterministicNupkgProj = resolve(
+      const deterministicNupkgProj = path.resolve(
         import.meta.dirname,
         '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
       );
-      const pakDir = resolve(dirname(deterministicNupkgProj), 'packages');
+      const pakDir = path.resolve(path.dirname(deterministicNupkgProj), 'packages');
       if (
         existsSync(pakDir)
         && readdirSync(pakDir).some(
