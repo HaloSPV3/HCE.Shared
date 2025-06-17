@@ -68,8 +68,8 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
       try {
         value = new GLNRI({ project: DeterministicNupkgCsproj });
       }
-      catch (err) {
-        value = isNativeError(err) ? err : new Error(JSON.stringify(err));
+      catch (error) {
+        value = isNativeError(error) ? error : new Error(JSON.stringify(error));
       }
 
       ok(isNativeError(value));
@@ -90,8 +90,8 @@ await describe('GitlabNugetRegistryInfo', async (ctx0) => {
           ],
         });
       }
-      catch (err) {
-        value = isNativeError(err) ? err : new Error(JSON.stringify(err));
+      catch (error) {
+        value = isNativeError(error) ? error : new Error(JSON.stringify(error));
       }
       ok(isNativeError(value));
       ok(value.message.includes('no tokens were defined'));
