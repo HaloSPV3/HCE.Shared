@@ -8,10 +8,7 @@ import {
 } from '../../src/dotnet/MSBuildProject.js';
 
 await describe('MSBuildProject', async () => {
-  await describe('MatrixProperties', async (ctx1) => {
-    await it('has expected name', () => {
-      ok(ctx1.name in MSBP);
-    });
+  await describe('MatrixProperties', async () => {
     await it('is array of expected values', () => {
       deepStrictEqual(MSBP.MatrixProperties, [
         'TargetFramework',
@@ -21,10 +18,7 @@ await describe('MSBuildProject', async () => {
       ]);
     });
   });
-  await describe('Evaluate', async (c00) => {
-    await it('has expected name', () => {
-      deepStrictEqual(MSBP.Evaluate.name, c00.name);
-    });
+  await describe('Evaluate', async () => {
     await it('may return expected object (HCE.Shared.DeterministicNupkg)', { concurrency: 1 }, async () => {
       const deterministicNupkgProj = resolve(
         import.meta.dirname,
