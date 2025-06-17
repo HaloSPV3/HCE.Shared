@@ -2,10 +2,12 @@ import { config as loadDotenv, type DotenvConfigOptions } from 'dotenv';
 import { env } from 'node:process';
 
 /**
- * Load a .env file from the CWD with the given options (or defaults), returns the new value of process.env
- * @param dotenvOptions
- * @param overrides
- * @returns
+ * A thin wrapper for {@link loadDotenv}. Loads a .env file from {@link process.cwd()} with the given options (or defaults), returns the new value of {@link process.env} with optional overrides.
+ * @param [dotenvOptions] An optional {@link DotenvConfigOptions} object to pass to {@link loadDotenv}.
+ * @param [overrides] If provided, this {@link NodeJS.ProcessEnv} object is merged into the return value, overriding existing properties where overlap occurs.
+ * @returns A {@link NodeJS.ProcessEnv} object whose properties are variables loaded from the
+ * process environment, the nearest .env file, and {@link overrides} (if provided). Where
+ * overlap occurs, the later source takes priority.
  */
 export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   loadDotenv(dotenvOptions);
