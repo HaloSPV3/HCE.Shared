@@ -206,8 +206,6 @@ await describe('getOwnPropertyDescriptors', async () => {
           'constructor' | '__proto__'
         >
       >,
-      // manually add getAndForget. TypeScript automatically excludes private and protected members
-      'getAndForget',
     ];
 
     const staticMethodNames: NoRepetition<'GetFullPath' | 'getAndForget'> = keys.filter(

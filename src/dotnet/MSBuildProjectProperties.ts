@@ -233,4 +233,9 @@ export class MSBuildProjectProperties {
 }
 
 const MPP = MSBuildProjectProperties;
-export type Class_MSBPP = ClassLike<BaseClass<typeof MSBuildProjectProperties>>;
+export type Class_MSBPP = ClassLike<BaseClass<typeof MSBuildProjectProperties & {
+  // @ts-expect-error Property 'getAndForget' is protected and only accessible within class 'MSBuildProjectProperties' and its subclasses. ts(2445)
+  getAndForget: ProtectedMember<typeof MSBuildProjectProperties.getAndForget>;
+}>>;
+
+type ProtectedMember<T> = T;
