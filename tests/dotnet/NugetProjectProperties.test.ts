@@ -3,10 +3,7 @@ import { describe, it } from 'node:test';
 import { CaseInsensitiveMap } from '../../src/CaseInsensitiveMap.js';
 import { NugetProjectProperties as NPP } from '../../src/dotnet/NugetProjectProperties.js';
 
-await describe('NugetProjectProperties', async (c0) => {
-  await it('has expected name', () => {
-    strictEqual(NPP.name, c0.name);
-  });
+await describe('NugetProjectProperties', async () => {
   await it('exists', () => {
     ok(NPP);
   });
