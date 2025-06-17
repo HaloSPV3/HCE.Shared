@@ -37,3 +37,5 @@ await describe('tEmptyOrBooleanString', async () => {
     ok(!tEmptyOrBooleanString.allows(false));
   });
 });
+
+await describe('TupleIndices', { todo: true });
