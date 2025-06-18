@@ -11,8 +11,8 @@ import { inspect } from 'node:util';
 import { isNativeError } from 'node:util/types';
 import {
   NugetRegistryInfo as NRI,
-  NugetRegistryInfoOptionsBase as NRIOptsBase,
-  NugetRegistryInfoOptions,
+  NRIOptsBase,
+  NRIOpts,
   getGithubOutput,
   getGithubOutputSync,
 } from '../../src/dotnet/NugetRegistryInfo.js';
@@ -33,7 +33,7 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
     process.env['NUGET_TOKEN'] ??= predefinedToken ?? 'placeholder';
 
     strictEqual(
-      NugetRegistryInfoOptions.from({ project: DeterministicNupkgCsproj }).url,
+      NRIOpts.from({ project: DeterministicNupkgCsproj }).url,
       'https://api.nuget.org/v3/index.json',
     );
 

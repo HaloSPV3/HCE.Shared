@@ -187,7 +187,7 @@ export class NugetRegistryInfo {
    *   Release's config object for later use by `@semantic-release/exec`.
    * - Other EcmaScript modules can access the environment variable(s) and steal
    *   your key. Be aware of malicious dependencies!
-   * @param opts The input type of {@link NugetRegistryInfoOptions.from}
+   * @param opts The input type of {@link NRIOpts.from}
    * @param opts.project The project whose package(s) will be
    * pushed.\
    * - Its {@link NugetProjectProperties#PackageId} will be read.\
@@ -773,10 +773,10 @@ but the environment variable is empty or undefined.`);
 const NRI = NugetRegistryInfo;
 
 /**
- * The base type for {@link NugetRegistryInfoOptions} and related types. Extend
- * this type while overriding member types via {@link NugetRegistryInfoOptionsBase.merge}
+ * The base type for {@link NRIOpts} and related types. Extend this type while
+ * overriding member types via {@link NRIOptsBase.merge}
  */
-export const NugetRegistryInfoOptionsBase = type({
+export const NRIOptsBase = type({
   /**
    * The environment variables whose values are tokens with permission to push a
    * package to the NuGet package registry. The array is iterated through until
@@ -796,16 +796,15 @@ export const NugetRegistryInfoOptionsBase = type({
   /** A NuGet package registry's API endpoint URL. */
   url: type.string,
 });
-const NRIOptsBase = NugetRegistryInfoOptionsBase;
 
 /**
  * The type of the parameter for {@link NugetRegistryInfo}'s constructor.
  * url: A NuGet package registry's API endpoint URL. Default: https://api.nuget.org/v3/index.json
  */
-export const NugetRegistryInfoOptions = NRIOptsBase.merge({
+export const NRIOpts = NRIOptsBase.merge({
   /**
    * Defaults to {@link NugetRegistryInfo.DefaultTokenEnvVars}
-   * @see NugetRegistryInfoOptionsBase.inferIn.tokenEnvVars
+   * @see NRIOptsBase.inferIn.tokenEnvVars
    */
   tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(
     () => NugetRegistryInfo.DefaultTokenEnvVars,
@@ -816,7 +815,6 @@ export const NugetRegistryInfoOptions = NRIOptsBase.merge({
    */
   url: NRIOptsBase.get('url').default(() => defaultNugetSource),
 });
-const NRIOpts = NugetRegistryInfoOptions;
 
 /**
  * Replace all occurrences of {@link token} in the {@link string} with '***'.

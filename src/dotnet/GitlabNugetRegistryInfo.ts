@@ -1,8 +1,8 @@
 import { getEnvVarValue } from '../utils/env.js';
 import {
   NugetRegistryInfo,
-  NugetRegistryInfoOptions as NRIOpts,
-  NugetRegistryInfoOptionsBase as NRIOptsBase,
+  NRIOpts,
+  NRIOptsBase,
 } from './NugetRegistryInfo.js';
 
 // https://docs.gitlab.com/ee/user/packages/nuget_repository/
@@ -82,7 +82,7 @@ const GLNRI = GitlabNugetRegistryInfo;
  * @param {typeof GLNRIOpts.inferIn.tokenEnvVars} [data.tokenEnvVars=DefaultGitlabTokenEnvVars] Defaults to {@link DefaultGitlabTokenEnvVars}. See {@link NRIOpts.t.tokenEnvVars}
  * @param {typeof GLNRIOpts.inferIn.url} data.url The GitLab Nuget API URL to push packages to -OR- a keyword such as "group" or "project" used to determine URL. See {@link GLNRI.projectUrl}, {@link GLNRI.groupUrl}
  */
-export const GitlabNugetRegistryInfoOptions = NRIOpts.merge({
+export const GLNRIOpts = NRIOpts.merge({
   tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(
     () => GLNRI.DefaultGitlabTokenEnvVars,
   ),
@@ -112,5 +112,3 @@ export const GitlabNugetRegistryInfoOptions = NRIOpts.merge({
   }
   return obj;
 });
-
-const GLNRIOpts = GitlabNugetRegistryInfoOptions;

@@ -1,7 +1,7 @@
 import { getEnvVarValue } from '../utils/env.js';
 import {
   NugetRegistryInfo,
-  NugetRegistryInfoOptionsBase as NRIOptsBase,
+  NRIOptsBase,
 } from './NugetRegistryInfo.js';
 
 const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
@@ -48,7 +48,7 @@ const GHNRI = GithubNugetRegistryInfo;
  * @remarks
  * The default value of `url` is dependent on {@link GHNRI.getNugetGitHubUrl} and will default to an empty string if the environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
  */
-export const GithubNugetRegistryInfoOptions = NRIOptsBase.merge({
+export const GHNRIOpts = NRIOptsBase.merge({
   url: NRIOptsBase.in.get('url')
     .default(() => GHNRI.getNugetGitHubUrl() ?? ''),
   tokenEnvVars: NRIOptsBase.in.get('tokenEnvVars')
@@ -57,4 +57,3 @@ export const GithubNugetRegistryInfoOptions = NRIOptsBase.merge({
       () => DefaultGithubTokenEnvVars,
     ),
 });
-const GHNRIOpts = GithubNugetRegistryInfoOptions;
