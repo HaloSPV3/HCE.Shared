@@ -19,7 +19,9 @@ import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
 import { MSBuildProject } from './MSBuildProject.js';
 
-const tmpDirNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies');
+type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
+type TmpDirNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
+const tmpDirNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies') as TmpDirNamespace_Unix | TmpDirNamespace_Win;
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
 
 /**
@@ -75,6 +77,14 @@ export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDoten
   return envOutput.parsed;
 }
 
+type DummiesDir<T> = T extends undefined ?
+`${TmpDirNamespace_Unix}/` | `${TmpDirNamespace_Win}\\`
+  : T extends MSBuildProject
+    ? `${TmpDirNamespace_Unix}/${T['Properties']['PackageId']}/` | `${TmpDirNamespace_Win}\\${T['Properties']['PackageId']}\\`
+    : never;
+
+function getDummiesDir<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDir<T>;
+function getDummiesDir<T extends MSBuildProject>(project: T): DummiesDir<T>;
 /**
  * Get HCE.Shared's temporary directory for .NET projects' dummy packages.
  * @param project The MSBuild project whose PackageId will be used to create a
@@ -83,10 +93,22 @@ export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDoten
  * `${tmpdir()}/HCE.Shared/.NET/Dummies/${project.Properties.PackageId}` if
  * {@link project} is defined. Else `${tmpdir()}/HCE.Shared/.NET/Dummies`
  */
-function getDummiesDir(project?: MSBuildProject): string {
-  return project === undefined
-    ? node_path.join(tmpDirNamespace, node_path.sep)
-    : node_path.join(tmpDirNamespace, project.Properties.PackageId, node_path.sep);
+function getDummiesDir<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDir<typeof project> {
+  switch (true) {
+    case project === undefined: {
+      return node_path.join(tmpDirNamespace, node_path.sep) as
+        DummiesDir<typeof project> satisfies
+        ReturnType<typeof getDummiesDir>;
+    }
+    case project instanceof MSBuildProject: {
+      return node_path.join(tmpDirNamespace, project.Properties.PackageId, node_path.sep) as
+        DummiesDir<typeof project> satisfies
+        ReturnType<typeof getDummiesDir<MSBuildProject>>;
+    }
+    default: {
+      throw new Error('The type of argument `project` must be `undefined` or `MSBuildProject`.');
+    }
+  }
 }
 
 /**
