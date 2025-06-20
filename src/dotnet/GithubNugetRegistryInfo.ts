@@ -30,9 +30,7 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
    * Returns `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json`
    * or (if GITHUB_REPOSITORY_OWNER is not defined in {@link process.env} nor
    * {@link process.cwd() $CWD}/.env) `undefined`.
-   *
-   * @export
-   * @returns {string?} If GITHUB_REPOSITORY_OWNER is defined, returns the GitHub Package Repository URL endpoint for NuGet pushes (--source).\
+   * @returns If GITHUB_REPOSITORY_OWNER is defined, returns the GitHub Package Repository URL endpoint for NuGet pushes (--source).\
    * Otherwise, returns `undefined`
    */
   static getNugetGitHubUrl(): string | undefined {
@@ -45,7 +43,6 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
 const GHNRI = GithubNugetRegistryInfo;
 
 /**
- * @remarks
  * The default value of `url` is dependent on {@link GHNRI.getNugetGitHubUrl} and will default to an empty string if the environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
  */
 export const GHNRIOpts = NRIOptsBase.merge({
