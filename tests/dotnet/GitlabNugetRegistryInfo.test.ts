@@ -5,122 +5,6 @@ import { getEnv, getEnvVarValue } from '../../src/utils/env.js';
 import { isNativeError } from 'node:util/types';
 
 await describe('GitlabNugetRegistryInfo', async () => {
-  await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, async () => {
-    if (!getEnvVarValue('CI_JOB_TOKEN'))
-      process.env['CI_JOB_TOKEN'] = 'placeholder';
-    if (!getEnvVarValue('CI_PROJECT_ID'))
-      process.env['CI_PROJECT_ID'] = 'placeholder';
-    const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
-
-    const defaultWithPlaceholders = new GLNRI({
-      project: DeterministicNupkgCsproj,
-    });
-
-    await it('defaults to project-level endpoint', () => {
-      if (!getEnvVarValue('CI_PROJECT_ID'))
-        process.env['CI_PROJECT_ID'] = 'placeholder';
-      if (!getEnvVarValue('CI_JOB_TOKEN'))
-        process.env['CI_JOB_TOKEN'] = 'placeholder';
-      const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`;
-      strictEqual(
-        new GLNRI({ project: DeterministicNupkgCsproj }).url,
-        expected,
-      );
-    });
-
-    await it('can be configured to use group-level endpoint', () => {
-      if (!getEnvVarValue('CI_PROJECT_NAMESPACE_ID'))
-        process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
-      if (!getEnvVarValue('CI_JOB_TOKEN'))
-        process.env['CI_JOB_TOKEN'] = 'placeholder';
-      const expected = `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId ?? 'placeholder'}/-/packages/nuget/index.json`;
-      strictEqual(
-        new GLNRI({
-          project: DeterministicNupkgCsproj,
-          url: 'group',
-        }).url,
-        expected,
-      );
-    });
-
-    await it('throws if default values and no token available', (t) => {
-      const { CI_JOB_TOKEN, GL_TOKEN, GITLAB_TOKEN } = getEnv();
-      delete process.env['CI_JOB_TOKEN'];
-      delete process.env['GL_TOKEN'];
-      delete process.env['GITLAB_TOKEN'];
-      if (
-        getEnvVarValue('CI_JOB_TOKEN')
-        || getEnvVarValue('GL_TOKEN')
-        || getEnvVarValue('GITLAB_TOKEN')
-      ) {
-        t.skip(
-          'one or more tokens (CI_JOB_TOKEN, GL_TOKEN, GITLAB_TOKEN) is defined in .env file',
-        );
-        return;
-      }
-
-      let value: GLNRI | Error;
-      try {
-        value = new GLNRI({ project: DeterministicNupkgCsproj });
-      }
-      catch (error) {
-        value = isNativeError(error) ? error : new Error(JSON.stringify(error));
-      }
-
-      ok(isNativeError(value));
-
-      if (CI_JOB_TOKEN) process.env['CI_JOB_TOKEN'] = CI_JOB_TOKEN;
-      if (GL_TOKEN) process.env['GL_TOKEN'] = GL_TOKEN;
-      if (GITLAB_TOKEN) process.env['GITLAB_TOKEN'] = GITLAB_TOKEN;
-    });
-
-    await it('throws when custom values and no token available', () => {
-      let value: GLNRI | Error;
-      try {
-        value = new GLNRI({
-          project: DeterministicNupkgCsproj,
-          tokenEnvVars: [
-            'UNDEFINED_TOKEN',
-            'ANOTHER_UNDEFINED_TOKEN',
-          ],
-        });
-      }
-      catch (error) {
-        value = isNativeError(error) ? error : new Error(JSON.stringify(error));
-      }
-      ok(isNativeError(value));
-      ok(value.message.includes('no tokens were defined'));
-    });
-
-    await describe('canPushPackagesToUrl', async (ctx2) => {
-      await it('has expected name', () => {
-        ok(ctx2.name in defaultWithPlaceholders);
-      });
-
-      await todo('can...uhhhh...Sorry. Brainrot.');
-    });
-
-    await describe('resolvedEnvVariable', async () => {
-      await it('is a string', () => {
-        strictEqual(
-          typeof defaultWithPlaceholders.resolvedEnvVariable,
-          'string',
-        );
-      });
-    });
-
-    await describe('url', async () => {
-      await it('is a string', () => {
-        strictEqual(typeof defaultWithPlaceholders.url, 'string');
-      });
-    });
-
-    /**
-     * value.toRegistryPair
-     * value.url
-     */
-  });
-
   await describe('CI_API_V4_URL', async () => {
     const expectedValue = 'https://gitlab.com/api/v4';
 
@@ -190,4 +74,120 @@ await describe('GitlabNugetRegistryInfo', async () => {
       strictEqual(GLNRI.projectId, process.env['CI_PROJECT_ID']);
     });
   });
+});
+
+await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, async () => {
+  if (!getEnvVarValue('CI_JOB_TOKEN'))
+    process.env['CI_JOB_TOKEN'] = 'placeholder';
+  if (!getEnvVarValue('CI_PROJECT_ID'))
+    process.env['CI_PROJECT_ID'] = 'placeholder';
+  const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
+
+  const defaultWithPlaceholders = new GLNRI({
+    project: DeterministicNupkgCsproj,
+  });
+
+  await it('defaults to project-level endpoint', () => {
+    if (!getEnvVarValue('CI_PROJECT_ID'))
+      process.env['CI_PROJECT_ID'] = 'placeholder';
+    if (!getEnvVarValue('CI_JOB_TOKEN'))
+      process.env['CI_JOB_TOKEN'] = 'placeholder';
+    const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`;
+    strictEqual(
+      new GLNRI({ project: DeterministicNupkgCsproj }).url,
+      expected,
+    );
+  });
+
+  await it('can be configured to use group-level endpoint', () => {
+    if (!getEnvVarValue('CI_PROJECT_NAMESPACE_ID'))
+      process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
+    if (!getEnvVarValue('CI_JOB_TOKEN'))
+      process.env['CI_JOB_TOKEN'] = 'placeholder';
+    const expected = `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId ?? 'placeholder'}/-/packages/nuget/index.json`;
+    strictEqual(
+      new GLNRI({
+        project: DeterministicNupkgCsproj,
+        url: 'group',
+      }).url,
+      expected,
+    );
+  });
+
+  await it('throws if default values and no token available', (t) => {
+    const { CI_JOB_TOKEN, GL_TOKEN, GITLAB_TOKEN } = getEnv();
+    delete process.env['CI_JOB_TOKEN'];
+    delete process.env['GL_TOKEN'];
+    delete process.env['GITLAB_TOKEN'];
+    if (
+      getEnvVarValue('CI_JOB_TOKEN')
+      || getEnvVarValue('GL_TOKEN')
+      || getEnvVarValue('GITLAB_TOKEN')
+    ) {
+      t.skip(
+        'one or more tokens (CI_JOB_TOKEN, GL_TOKEN, GITLAB_TOKEN) is defined in .env file',
+      );
+      return;
+    }
+
+    let value: GLNRI | Error;
+    try {
+      value = new GLNRI({ project: DeterministicNupkgCsproj });
+    }
+    catch (error) {
+      value = isNativeError(error) ? error : new Error(JSON.stringify(error));
+    }
+
+    ok(isNativeError(value));
+
+    if (CI_JOB_TOKEN) process.env['CI_JOB_TOKEN'] = CI_JOB_TOKEN;
+    if (GL_TOKEN) process.env['GL_TOKEN'] = GL_TOKEN;
+    if (GITLAB_TOKEN) process.env['GITLAB_TOKEN'] = GITLAB_TOKEN;
+  });
+
+  await it('throws when custom values and no token available', () => {
+    let value: GLNRI | Error;
+    try {
+      value = new GLNRI({
+        project: DeterministicNupkgCsproj,
+        tokenEnvVars: [
+          'UNDEFINED_TOKEN',
+          'ANOTHER_UNDEFINED_TOKEN',
+        ],
+      });
+    }
+    catch (error) {
+      value = isNativeError(error) ? error : new Error(JSON.stringify(error));
+    }
+    ok(isNativeError(value));
+    ok(value.message.includes('no tokens were defined'));
+  });
+
+  await describe('canPushPackagesToUrl', async (ctx2) => {
+    await it('has expected name', () => {
+      ok(ctx2.name in defaultWithPlaceholders);
+    });
+
+    await todo('can...uhhhh...Sorry. Brainrot.');
+  });
+
+  await describe('resolvedEnvVariable', async () => {
+    await it('is a string', () => {
+      strictEqual(
+        typeof defaultWithPlaceholders.resolvedEnvVariable,
+        'string',
+      );
+    });
+  });
+
+  await describe('url', async () => {
+    await it('is a string', () => {
+      strictEqual(typeof defaultWithPlaceholders.url, 'string');
+    });
+  });
+
+  /**
+   * value.toRegistryPair
+   * value.url
+   */
 });
