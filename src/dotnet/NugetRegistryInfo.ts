@@ -1,3 +1,9 @@
+/* JSDoc Types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { NugetProjectProperties } from './NugetProjectProperties.js';
+import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet.js';
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
 import { type } from 'arktype';
 import { detectFile, detectFileSync } from 'chardet';
 import { configDotenv } from 'dotenv';
@@ -12,12 +18,6 @@ import { isNativeError } from 'node:util/types';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
 import { MSBuildProject } from './MSBuildProject.js';
-
-/* JSDoc Types */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { NugetProjectProperties } from './NugetProjectProperties.js';
-import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet.js';
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 const tmpDirNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies');
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
