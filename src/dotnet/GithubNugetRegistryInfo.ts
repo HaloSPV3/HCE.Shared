@@ -22,7 +22,7 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
    * Creates an instance of GithubNugetRegistryInfo.
    * @param opts The input type of {@link GHNRIOpts.from}
    */
-  constructor(opts: (typeof GHNRIOpts)['inferIn']) {
+  constructor(opts: typeof GHNRIOpts.inferIn) {
     super(GHNRIOpts.from(opts));
   }
 
