@@ -44,7 +44,7 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
    * Creates an instance of GitlabNugetRegistryInfo.
    * @param opts The input type of {@link GLNRIOpts.from}
    */
-  constructor(opts: (typeof GLNRIOpts)['inferIn']) {
+  constructor(opts: typeof GLNRIOpts.inferIn) {
     super(GLNRIOpts.from(opts));
   }
 
