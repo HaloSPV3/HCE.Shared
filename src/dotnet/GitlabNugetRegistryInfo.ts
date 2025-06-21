@@ -77,24 +77,26 @@ const GLNRI = GitlabNugetRegistryInfo;
 
 /**
  * The Arktype definition for {@link GitlabNugetRegistryInfo}'s constructor parameter. Construct an object of this type by calling {@link GLNRIOpts.from}
- * @param {typeof GLNRIOpts.inferIn} data
- * @param {typeof NRIOptsBase.t.project} data.project See {@link NRIOptsBase.t.project}
- * @param {typeof GLNRIOpts.inferIn.tokenEnvVars} [data.tokenEnvVars=DefaultGitlabTokenEnvVars] Defaults to {@link DefaultGitlabTokenEnvVars}. See {@link NRIOpts.t.tokenEnvVars}
- * @param {typeof GLNRIOpts.inferIn.url} data.url The GitLab Nuget API URL to push packages to -OR- a keyword such as "group" or "project" used to determine URL. See {@link GLNRI.projectUrl}, {@link GLNRI.groupUrl}
  */
 export const GLNRIOpts = NRIOpts.merge({
   tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(
     () => GLNRI.DefaultGitlabTokenEnvVars,
   ),
-  url: NRIOptsBase.get('url').or('"group" | "project"').default('project'),
+  /**
+   * The GitLab Nuget API URL to push packages to -OR- a keyword such as "group"
+   * or "project" used to determine URL.
+   * @see {@link GLNRI.projectUrl}, {@link GLNRI.groupUrl}
+   */
+  // todo: change '"group" | "project"' to '"GITLAB:PROJECT" | "GITLAB:GROUP"'
+  source: NRIOptsBase.get('source').or('"group" | "project"').default('project'),
 }).pipe((obj) => {
-  switch (obj.url) {
+  switch (obj.source) {
     case 'group': {
       if (GLNRI.groupUrl === undefined)
         throw new Error(
           'The group-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_NAMESPACE_ID) were undefined.',
         );
-      obj.url = GLNRI.groupUrl;
+      obj.source = GLNRI.groupUrl;
       break;
     }
     /* fall to default */
@@ -103,7 +105,7 @@ export const GLNRIOpts = NRIOpts.merge({
         throw new Error(
           'The project-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_ID) were undefined.',
         );
-      obj.url = GLNRI.projectUrl;
+      obj.source = GLNRI.projectUrl;
       break;
     }
     default: {

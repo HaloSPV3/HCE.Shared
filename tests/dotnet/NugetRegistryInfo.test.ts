@@ -29,11 +29,11 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
   const predefinedToken = getEnvVarValue('NUGET_TOKEN');
   const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
 
-  await it('defaults url to expected value', () => {
+  await it('defaults source to expected value', () => {
     process.env['NUGET_TOKEN'] ??= predefinedToken ?? 'placeholder';
 
     strictEqual(
-      NRIOpts.from({ project: DeterministicNupkgCsproj }).url,
+      NRIOpts.from({ project: DeterministicNupkgCsproj }).source,
       'https://api.nuget.org/v3/index.json',
     );
 
@@ -41,7 +41,7 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
     else delete process.env['NUGET_TOKEN'];
   });
 
-  await it('canPushPackagesToUrl', async () => {
+  await it('canPushPackagesToSource', async () => {
     await it('rejects promise if token invalid', async () => {
       process.env['INVALID_TOKEN'] = 'placeholder';
       const value = await new NRI({
@@ -50,7 +50,7 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
       })
       // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
-        .canPushPackagesToUrl
+        .canPushPackagesToSource
         .catch((error: unknown) =>
           isNativeError(error) ? error : new Error(JSON.stringify(error)),
         );
@@ -62,7 +62,7 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
       strictEqual('name' in value, true);
     });
 
-    await it('resolves when token is defined, valid, and can push packages to url', async (t) => {
+    await it('resolves when token is defined, valid, and can push packages to source', async (t) => {
       if (!predefinedToken) {
         t.skip('NUGET_TOKEN environment variable undefined');
         return;
@@ -74,7 +74,7 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
 
       // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
-      const canPush = await registryInfo.canPushPackagesToUrl.catch(
+      const canPush = await registryInfo.canPushPackagesToSource.catch(
         (error: unknown) => {
           if (!isNativeError(error))
             return new Error(inspect(error, { depth: 3 }));
@@ -113,7 +113,7 @@ await describe('NRIOptsBase', async () => {
     }
   },
   {
-    "key": "url",
+    "key": "source",
     "value": "string"
   }
 ]`,
@@ -135,7 +135,7 @@ await describe('NRIOptsBase', async () => {
     }
   },
   {
-    "key": "url",
+    "key": "source",
     "value": "string"
   }
 ]`,
@@ -157,7 +157,7 @@ await describe('NRIOptsBase', async () => {
     }
   },
   {
-    "key": "url",
+    "key": "source",
     "value": "string"
   }
 ]`,

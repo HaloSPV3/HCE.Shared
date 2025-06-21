@@ -5,7 +5,7 @@ const args = process.argv.slice(2);
 // Parse command-line arguments - https://stackoverflow.com/a/76298476/14894786
 const options: {
   packageId?: string;
-  url?: string;
+  source?: string;
 } & Record<string, string> = {};
 for (let i = 0; i < args.length; i += 2) {
   const argName = args[i];
@@ -17,11 +17,11 @@ for (let i = 0; i < args.length; i += 2) {
 
 if (typeof options.packageId !== 'string')
   throw new Error('packageId must be a string');
-if (typeof options.url !== 'string')
-  throw new Error('url must be a string');
+if (typeof options.source !== 'string')
+  throw new Error('source must be a string');
 
 const packageId = options.packageId,
-  url = options.url,
+  source = options.source,
   versionPattern = new RegExp(/\d+\.\d+\.\d+([-+].+)?/);
 const ghOutput = await getGithubOutput() ?? {};
 const matches = versionPattern.exec(ghOutput['new-release-version'] ?? '');
@@ -32,7 +32,7 @@ if (matches === null || matches.length === 0)
 
 const nextVersion = matches[0];
 const isPublished = await NugetRegistryInfo.IsNextVersionAlreadyPublished(
-  url,
+  source,
   packageId,
   nextVersion,
 );
@@ -40,5 +40,5 @@ const isPublished = await NugetRegistryInfo.IsNextVersionAlreadyPublished(
 if (typeof isPublished !== 'boolean')
   throw new Error('isPublished is not a boolean');
 if (isPublished)
-  throw new Error(`${packageId}@${nextVersion} already exists at ${url}.`);
-console.log(`OK: ${packageId}@${nextVersion} does NOT yet exist at ${url}. Yay.`);
+  throw new Error(`${packageId}@${nextVersion} already exists at ${source}.`);
+console.log(`OK: ${packageId}@${nextVersion} does NOT yet exist at ${source}. Yay.`);

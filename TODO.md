@@ -24,7 +24,7 @@ refactor(dotnet): re-order constructors' optional parameters; rename arg
 
 # nuget rework
 
-- [x] refactor canPushPackagesToUrl away from static dummy
+- [x] refactor canPushPackagesToSource away from static dummy
 
 but it doesn't have --dry-run and the request for it has been open for three
 years with no progress. So, I have to jerry rig effectively equivalent

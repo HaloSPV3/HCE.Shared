@@ -43,12 +43,14 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
 const GHNRI = GithubNugetRegistryInfo;
 
 /**
- * The default value of `url` is dependent on {@link GHNRI.getNugetGitHubUrl} and will default to an empty string if the environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
+ * The default value of {@link GHNRIOpts.t.source}` is dependent on
+ * {@link GHNRI.getNugetGitHubUrl} and will default to an empty string if the
+ * environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
  */
 export const GHNRIOpts = NRIOptsBase.merge({
-  url: NRIOptsBase.in.get('url')
+  source: NRIOptsBase.get('source')
     .default(() => GHNRI.getNugetGitHubUrl() ?? ''),
-  tokenEnvVars: NRIOptsBase.in.get('tokenEnvVars')
+  tokenEnvVars: NRIOptsBase.get('tokenEnvVars')
     .default(
       /* must be a function. A fixed-length array is NOT a primitive type! */
       () => DefaultGithubTokenEnvVars,

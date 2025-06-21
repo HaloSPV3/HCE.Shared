@@ -94,7 +94,7 @@ await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, asy
       process.env['CI_JOB_TOKEN'] = 'placeholder';
     const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`;
     strictEqual(
-      new GLNRI({ project: DeterministicNupkgCsproj }).url,
+      new GLNRI({ project: DeterministicNupkgCsproj }).source,
       expected,
     );
   });
@@ -108,8 +108,8 @@ await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, asy
     strictEqual(
       new GLNRI({
         project: DeterministicNupkgCsproj,
-        url: 'group',
-      }).url,
+        source: 'group',
+      }).source,
       expected,
     );
   });
@@ -163,7 +163,7 @@ await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, asy
     ok(value.message.includes('no tokens were defined'));
   });
 
-  await describe('canPushPackagesToUrl', async (ctx2) => {
+  await describe('canPushPackagesToSource', async (ctx2) => {
     await it('has expected name', () => {
       ok(ctx2.name in defaultWithPlaceholders);
     });
@@ -180,14 +180,9 @@ await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, asy
     });
   });
 
-  await describe('url', async () => {
+  await describe('source', async () => {
     await it('is a string', () => {
-      strictEqual(typeof defaultWithPlaceholders.url, 'string');
+      strictEqual(typeof defaultWithPlaceholders.source, 'string');
     });
   });
-
-  /**
-   * value.toRegistryPair
-   * value.url
-   */
 });

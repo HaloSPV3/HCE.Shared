@@ -25,7 +25,7 @@ const { GithubNugetRegistryInfo: GHNRI } = await import ('../../src/dotnet/Githu
 await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
   const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
 
-  await describe('canPushPackagesToUrl', async () => {
+  await describe('canPushPackagesToSource', async () => {
     await it('returns true when GITHUB_TOKEN is valid and GITHUB_REPOSITORY_OWNER is defined', async (t) => {
       if (!getEnvVarValue('GITHUB_TOKEN')) {
         t.skip('GITHUB_TOKEN is unavailable for testing');
@@ -45,7 +45,7 @@ await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
         await new GHNRI({ project: DeterministicNupkgCsproj })
         // @ts-expect-error Is deprecated
         // eslint-disable-next-line @typescript-eslint/no-deprecated
-          .canPushPackagesToUrl,
+          .canPushPackagesToSource,
         true,
       );
     });
@@ -60,7 +60,7 @@ await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
       })
       // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
-        .canPushPackagesToUrl.catch((error: unknown) =>
+        .canPushPackagesToSource.catch((error: unknown) =>
           isNativeError(error) ? error : new Error(JSON.stringify(error)),
         );
       notDeepStrictEqual(result, true);

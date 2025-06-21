@@ -287,7 +287,7 @@ export function configureDotnetNugetPush(
   registryInfos: NugetRegistryInfo[],
   packageOutputPath = `${cwd()}/publish`,
 ): string {
-  if (registryInfos.some(registry => registry.url.trim() === ''))
+  if (registryInfos.some(registry => registry.source.trim() === ''))
     throw new Error('The URL for one of the provided NuGet registries was empty or whitespace.');
 
   const packCmds = registryInfos.map(
