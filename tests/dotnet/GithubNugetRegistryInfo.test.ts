@@ -43,7 +43,6 @@ await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
       getOwner();
       strictEqual(
         await new GHNRI({ project: DeterministicNupkgCsproj })
-        // @ts-expect-error Is deprecated
         // eslint-disable-next-line @typescript-eslint/no-deprecated
           .canPushPackagesToSource,
         true,
@@ -58,7 +57,6 @@ await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
         project: DeterministicNupkgCsproj,
         tokenEnvVars: tokenEnvVars,
       })
-      // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
         .canPushPackagesToSource.catch((error: unknown) =>
           isNativeError(error) ? error : new Error(JSON.stringify(error)),

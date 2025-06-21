@@ -253,8 +253,7 @@ export class NugetRegistryInfo {
    *   - The URL does not exist or a connection could not be established
    * @deprecated Call during the `prepare` step of Semantic Release!
    */
-  // @ts-expect-error ts(6133): 'canPushPackagesToSource' is declared but its value is never read.
-  private get canPushPackagesToSource(): Promise<true> {
+  public get canPushPackagesToSource(): Promise<true> {
     if (this._canPushPackagesToSource !== undefined)
       return this._canPushPackagesToSource;
 

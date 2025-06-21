@@ -48,7 +48,6 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
         project: DeterministicNupkgCsproj,
         tokenEnvVars: ['INVALID_TOKEN'],
       })
-      // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
         .canPushPackagesToSource
         .catch((error: unknown) =>
@@ -72,7 +71,6 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
         project: DeterministicNupkgCsproj,
       });
 
-      // @ts-expect-error Is deprecated
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       const canPush = await registryInfo.canPushPackagesToSource.catch(
         (error: unknown) => {
