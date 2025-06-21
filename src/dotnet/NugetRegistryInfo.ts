@@ -1,7 +1,7 @@
 /* JSDoc Types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { NugetProjectProperties } from './NugetProjectProperties.js';
 import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet.js';
+import type { NugetProjectProperties } from './NugetProjectProperties.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 import { type } from 'arktype';
