@@ -508,22 +508,20 @@ but the environment variable is empty or undefined.`);
    */
   static readonly PushPackagesOptionsType = Object.freeze(
     type({
-      apiKey: 'string',
-      disableBuffering: 'boolean',
-      forceEnglishOutput: 'boolean',
-      interactive: 'boolean',
-      noServiceEndpoint: 'boolean',
-      noSymbols: 'boolean',
-      skipDuplicate: 'boolean',
-      source: 'string',
-      symbolApiKey: 'string',
-      symbolSource: 'string',
-      timeout: 'number',
-    })
-      .partial()
-      .and({
-        root: 'string',
-      }),
+      root: 'string',
+      'apiKey?': 'string',
+      'configFile?': 'string',
+      'disableBuffering?': 'boolean',
+      'forceEnglishOutput?': 'boolean',
+      'interactive?': 'boolean',
+      'noServiceEndpoint?': 'boolean',
+      'noSymbols?': 'boolean',
+      'skipDuplicate?': 'boolean',
+      'source?': 'string',
+      'symbolApiKey?': 'string',
+      'symbolSource?': 'string',
+      'timeout?': 'number',
+    }),
   );
 
   /**
@@ -570,6 +568,8 @@ but the environment variable is empty or undefined.`);
      */
     if (validOpts.apiKey !== '')
       packCmdArr.push('--api-key', `"${validOpts.apiKey}"`);
+    if (validOpts.configFile)
+      packCmdArr.push('--configfile', validOpts.configFile);
     if (validOpts.disableBuffering === true)
       packCmdArr.push('--disable-buffering');
     if (validOpts.forceEnglishOutput === true)
