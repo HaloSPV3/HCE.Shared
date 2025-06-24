@@ -77,10 +77,11 @@ export async function configurePrepareCmd(
     ```
       enclosing with """ is required in pwsh to prevent the semicolon from breaking the string.
     */
-    if (!Array.isArray(projectsToPublish) || projectsToPublish.length === 0)
+    if (!Array.isArray(projectsToPublish) || projectsToPublish.length === 0) {
       throw new Error(
         `Type of projectsToPublish (${typeof projectsToPublish}) is not allowed. Expected a string[] or MSBuildProject[] where length > 0.`,
       );
+    }
 
     // each may have TargetFramework OR TargetFrameworks (plural)
     const evaluatedPublishProjects: MSBuildProject[] = await Promise.all(
