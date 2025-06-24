@@ -220,13 +220,19 @@ export async function configurePrepareCmd(
 
     const publishCmds: (`dotnet publish ${string}` | `dotnet msbuild ${string} -t:PublishAll`)[] = [];
     /** convert {@link evaluatedPublishProjects} to sets of space-separated CLI args. */
-    const argsSets = evaluatedPublishProjects.flatMap<ReturnType<typeof getPublishArgsPermutations>>(proj => getPublishArgsPermutations(proj));
+    const argsSets = evaluatedPublishProjects.map(
+      proj => getPublishArgsPermutations(proj),
+    );
     for (const args of argsSets) {
+      if (typeof args === 'string')
+        throw new Error(`\`args\` should not be a string!`);
       if (args.length === 2 && args[0] === 'PublishAll') {
         publishCmds.push(`dotnet msbuild ${args[1]}`);
       }
       else {
         for (const permutation of (args as [`${string}.${string}proj`] | `${string} --runtime ${string} --framework ${string}`[] | `${string} --runtime ${string}`[] | `${string} --framework ${string}`[])) {
+          if (typeof permutation === 'string' && permutation.length === 1)
+            throw new Error('Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!');
           publishCmds.push(`dotnet publish ${permutation}`);
         }
       }
