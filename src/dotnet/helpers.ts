@@ -41,10 +41,14 @@ export async function configurePrepareCmd(
     }
   }
 
+  const dotnetPublishCmd: string = await formatDotnetPublish(projectsToPublish);
+  const dotnetPackCmd: string | undefined = await formatDotnetPack(projectsToPackAndPush ?? []);
+  const dotnetNugetSignCmd: string | undefined = formatDotnetNugetSign(dotnetNugetSignOpts);
+
   return [
-    await formatDotnetPublish(projectsToPublish),
-    await formatDotnetPack(projectsToPackAndPush ?? []),
-    formatDotnetNugetSign(dotnetNugetSignOpts),
+    dotnetPublishCmd,
+    dotnetPackCmd,
+    dotnetNugetSignCmd,
     // remove no-op commands
   ]
     .filter(v => v !== undefined)
