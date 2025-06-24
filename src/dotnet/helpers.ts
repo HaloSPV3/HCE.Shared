@@ -1,7 +1,11 @@
-import { MSBuildProject } from './MSBuildProject.js';
-import { NugetRegistryInfo } from './NugetRegistryInfo.js';
-import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
+import { type } from 'arktype';
+import path from 'node:path';
 import { cwd } from 'node:process';
+import { MSBuildProject } from './MSBuildProject.js';
+import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
+import { NugetRegistryInfo } from './NugetRegistryInfo.js';
+
+const ourDefaultPubDir = path.join('.', 'publish') as `.${'/' | '\\'}publish`;
 
 /**
  * Build a prepareCmd string from .NET projects.\
@@ -16,19 +20,14 @@ import { cwd } from 'node:process';
  *  Relative and/or full file paths of projects to pass to `dotnet pack`. If
  *  string[], only the default NuGet Source will be used. If GitHub, GitLab,
  *  etc. are also desired, pass {@link NugetRegistryInfo}[]
- * @param [dotnetNugetSignArgs]
- * Default: `['./publish]`\
- * Arguments appended to `dotnet nuget sign`. You may append an arbitrary
- * command by splitting it into arguments e.g.
- * [..., '&& dotnet nuget sign your/package/path --certificate-path your/cert/path']
- * This can be used to sign a package with a different key. In fact, any
- * arbitrary command may be added here.
+ * @param dotnetNugetSignOpts A {@link DotnetNugetSignOptions} object. The value
+ * of the `--output` argument will be set to {@link ourDefaultPubDir} if `undefined`.
  * @returns A single string of CLI commands joined by ' && '
  */
 export async function configurePrepareCmd(
   projectsToPublish: string[] | MSBuildProject[],
   projectsToPackAndPush?: string[] | NugetRegistryInfo[],
-  dotnetNugetSignArgs: string[] | ['./publish'] = ['./publish'],
+  dotnetNugetSignOpts?: typeof DotnetNugetSignOptions.inferIn,
 ): Promise<string> {
   const evaluatedProjects: MSBuildProject[] = [];
 
@@ -45,7 +44,7 @@ export async function configurePrepareCmd(
   return [
     await formatDotnetPublish(projectsToPublish),
     await formatDotnetPack(projectsToPackAndPush ?? []),
-    formatDotnetNugetSign(dotnetNugetSignArgs),
+    formatDotnetNugetSign(dotnetNugetSignOpts),
     // remove no-op commands
   ]
     .filter(v => v !== undefined)
@@ -305,13 +304,139 @@ export function configureDotnetNugetPush(
 }
 
 /**
- * @param dotnetNugetSignArgs arguments to append to 'dotnet nuget sign ', joined with spaces.
- * @returns `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `
+ * You should try {@link ../../dotnet/SignAfterPack.targets}!.
+ * @param opts A {@link DotnetNugetSignOptions} object to be deconstructed and
+ * passed to `dotnet nuget sign` as args.
+ * @returns `dotnet nuget sign {...}`
  */
 function formatDotnetNugetSign(
-  dotnetNugetSignArgs?: string[],
+  opts: typeof DotnetNugetSignOptions.inferIn | undefined,
 ): string | undefined {
-  if (!dotnetNugetSignArgs || dotnetNugetSignArgs.length === 0)
+  if (opts === undefined)
     return undefined;
-  return `dotnet nuget sign ${dotnetNugetSignArgs.join(' ')} `;
+
+  const validOpts = DotnetNugetSignOptions.from(opts);
+  const args: ['--timestamper', typeof validOpts.timestamper, '-o', string, ...string[]] = [
+    '--timestamper', validOpts.timestamper,
+    '-o', validOpts.output ?? ourDefaultPubDir,
+  ];
+  if (validOpts.certificatePassword)
+    args.push('---certificate-password', validOpts.certificatePassword);
+  if (validOpts.hashAlgorithm)
+    args.push('--hash-algorithm', validOpts.hashAlgorithm);
+  if (validOpts.overwrite)
+    args.push('--overwrite');
+  if (validOpts.timestampHashAlgorithm)
+    args.push('--timestamp-hash-algorithm', validOpts.timestampHashAlgorithm);
+  if (validOpts.verbosity)
+    args.push('-v', validOpts.verbosity);
+
+  if ('certificatePath' in validOpts)
+    args.push('--certificate-path', validOpts.certificatePath);
+  else if ('certificateStoreName' in validOpts) {
+    SetSubjectNameOrFingerprint();
+    args.push('--certificate-store-name', validOpts.certificateStoreName);
+  }
+  else if ('certificateStoreLocation' in validOpts) {
+    SetSubjectNameOrFingerprint();
+    args.push('--certificate-store-location', validOpts.certificateStoreLocation);
+  }
+  else throw new Error('No code signing certificate was specified!');
+
+  return `dotnet nuget sign ${args.join(' ')} `;
+
+  // eslint-disable-next-line jsdoc/require-jsdoc
+  function SetSubjectNameOrFingerprint() {
+    if ('certificateSubjectName' in validOpts)
+      args.push('--certificate-subject-name', validOpts.certificateSubjectName);
+
+    else if ('certificateFingerprint' in validOpts)
+      args.push('--certificate-fingerprint', validOpts.certificateFingerprint);
+    else throw new Error('If certificateStoreName or certificateStoreLocation is set, either certificateSubjectName or certificateFingerprint must also be set!');
+  }
 }
+
+const DotnetNugetSignOptions = type({
+  /**
+   * Password for the certificate, if needed. This option can be used to specify
+   * the password for the certificate. The command will throw an error message
+   * if certificate is password protected but password is not provided as input.
+   */
+  'certificatePassword?': 'string',
+  /**
+   * Hash algorithm to be used to sign the package. Defaults to SHA256.
+   */
+  'hashAlgorithm?': 'string | "SHA256"',
+  /**
+   * Directory where the signed package(s) should be saved. By default the
+   * original package is overwritten by the signed package.
+   */
+  'output?': 'string',
+  /**
+   * Switch to indicate if the current signature should be overwritten. By
+   * default the command will fail if the package already has a signature.
+   */
+  'overwrite?': 'true',
+  /**
+   * URL to an RFC 3161 timestamping server.
+   */
+  timestamper: 'string = "https://rfc3161.ai.moda/"',
+  /**
+   * Hash algorithm to be used to sign the package. Defaults to SHA256.
+   */
+  'timestampHashAlgorithm?': 'string | "SHA256"',
+  /**
+   * Set the verbosity level of the command. Allowed values are q[uiet],
+   * m[inimal], n[ormal], d[etailed], and diag[nostic].
+   */
+  'verbosity?': '"q"|"quiet"|"m"|"minimal"|"n"|"normal"|"d"|"detailed"|"diag"|"diagnostic"',
+}).and(
+  type({
+    /**
+     * File path to the certificate to be used while signing the package.
+     */
+    certificatePath: 'string',
+  }).or(
+    type({
+      /**
+       * Name of the X.509 certificate store to use to search for the
+       * certificate. Defaults to "My", the X.509 certificate store for personal
+       * certificates.
+       *
+       * This option should be used when specifying the certificate via
+       * --certificate-subject-name or --certificate-fingerprint options.
+       */
+      certificateStoreName: 'string',
+    }).or({
+      /**
+       * Name of the X.509 certificate store use to search for the
+       * certificate. Defaults to "CurrentUser", the X.509 certificate store
+       * used by the current user.
+       *
+       * This option should be used when specifying the certificate via
+       * --certificate-subject-name or --certificate-fingerprint options.
+       */
+      certificateStoreLocation: 'string',
+    }),
+  ).and(
+    type({
+      /**
+       * Subject name of the certificate used to search a local certificate
+       * store for the certificate. The search is a case-insensitive string
+       * comparison using the supplied value, which will find all certificates
+       * with the subject name containing that string, regardless of other
+       * subject values. The certificate store can be specified by
+       * --certificate-store-name and --certificate-store-location options.
+       */
+      certificateSubjectName: 'string',
+    }).or({
+      /**
+       * SHA-256, SHA-384 or SHA-512 fingerprint of the certificate used to
+       * search a local certificate store for the certificate. The certificate
+       * store can be specified by --certificate-store-name and
+       * --certificate-store-location options.
+       */
+      certificateFingerprint: 'string',
+    }),
+  ),
+);
