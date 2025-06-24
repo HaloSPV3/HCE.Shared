@@ -116,16 +116,6 @@ function getDummiesDir<T extends MSBuildProject | undefined = undefined>(project
  * Get the environment variables as key-value pairs.
  * @param tokenEnvVars The name of the environment variables whose values are
  * NuGet API keys.
- * @param tokenEnvironmentVariables
- * @returns an array of key-value pairs of the given environment variables and
- * their values, filtered to only those whose values are not undefined.
- * @throws {Error} when none of the provided environment variables are defined.
- */
-
-/**
- * Get the environment variables as key-value pairs.
- * @param tokenEnvVars The name of the environment variables whose values are
- * NuGet API keys.
  * @returns an array of key-value pairs of the given environment variables and
  * their values, filtered to only those whose values are not undefined.
  * @throws {Error} when none of the provided environment variables are defined.
