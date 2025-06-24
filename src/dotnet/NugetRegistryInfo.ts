@@ -508,18 +508,35 @@ but the environment variable is empty or undefined.`);
    */
   static readonly PushPackagesOptionsType = Object.freeze(
     type({
+    /** If an empty string is passed, this property is overridden to `./publish` */
       root: 'string',
+      /** The API key for the server. NOTE: if `undefined`, the `dotnet nuget` client will lookup credentials set via `dotnet nuget {add|update} source`.` */
       'apiKey?': 'string',
+      /** The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see {@link https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior Common NuGet Configurations}. */
       'configFile?': 'string',
+      /** Disables buffering when pushing to an HTTP(S) server to reduce memory usage. */
       'disableBuffering?': 'boolean',
+      /** Forces the application to run using an invariant, English-based culture. */
       'forceEnglishOutput?': 'boolean',
+      /** Allows the command to stop and wait for user input or action. For example, to complete authentication. Available since .NET Core 3.0 SDK. */
       'interactive?': 'boolean',
+      /** Doesn't append "api/v2/package" to the source URL. */
       'noServiceEndpoint?': 'boolean',
       'noSymbols?': 'boolean',
+      /** When pushing multiple packages to an HTTP(S) server, treats any 409 Conflict response as a warning so that other pushes can continue. */
       'skipDuplicate?': 'boolean',
+      /**
+       * Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP.
+       *
+       * ### Important
+       * > Starting with NuGet 3.4.2, this is a mandatory parameter unless the NuGet config file specifies a `DefaultPushSource` value. For more information, see {@link https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior Configuring NuGet behavior}.
+       */
       'source?': 'string',
+      /** The API key for the symbol server. NOTE: if `undefined`, the `dotnet nuget` client will lookup credentials set via `dotnet nuget {add|update} source`.` */
       'symbolApiKey?': 'string',
+      /** Specifies the symbol server URL. */
       'symbolSource?': 'string',
+      /** Specifies the timeout for pushing to a server in seconds. Defaults to 300 seconds (5 minutes). Specifying 0 applies the default value. */
       'timeout?': 'number',
     }),
   );
