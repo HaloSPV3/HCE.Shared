@@ -178,8 +178,8 @@ export async function configurePrepareCmd(
         | `--runtime ${string}`[]
         | `--framework ${string}`[]
         = []; // forEach, run dotnet [proj.Properties.MSBuildProjectFullPath,...v]
-      const RIDs: string[] = proj.Properties.RuntimeIdentifiers.split(';');
-      const TFMs: string[] = proj.Properties.TargetFrameworks.split(';');
+      const RIDs: string[] = proj.Properties.RuntimeIdentifiers.split(';').filter(v => v !== '');
+      const TFMs: string[] = proj.Properties.TargetFrameworks.split(';').filter(v => v !== '');
 
       if (TFMs.length === 0 && RIDs.length === 0)
         return [proj.Properties.MSBuildProjectFullPath]; // return string[]
