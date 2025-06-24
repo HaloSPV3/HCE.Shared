@@ -30,7 +30,7 @@ await describe('getConfig', async () => {
     const actual = await getConfig(
       [DeterministicNupkgCsprojPath],
       [DeterministicNupkgCsprojPath],
-    ).catch((v: unknown) => (isNativeError(v) ? v : new Error(String(v))));
+    ).catch((error: unknown) => isNativeError(error) ? error : new Error(String(error)));
 
     ok(
       !isNativeError(actual),
