@@ -182,7 +182,7 @@ export async function configurePrepareCmd(
       const TFMs: string[] = proj.Properties.TargetFrameworks.split(';').filter(v => v !== '');
 
       if (TFMs.length === 0 && RIDs.length === 0)
-        return [proj.Properties.MSBuildProjectFullPath]; // return string[]
+        return [proj.Properties.MSBuildProjectFullPath] as [string];
 
       if (RIDs.length > 0) {
         if (TFMs.length > 0) {
