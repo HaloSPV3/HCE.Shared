@@ -1022,4 +1022,153 @@ function _censorTokenInError(error: ExecException, token: string): ExecException
   );
 }
 
-// #endregion token censorship
+// #region nuget configs
+
+/**
+ * An async alternative to {@link existsSync} built around {@link access}.
+ * @param path Any filesystem path.
+ * @throws {Error} if {@link access} encounters any error other than "file not
+ * found" -OR- the promise was rejected without a reason.
+ * @returns `true` if the path exists.
+ */
+async function existsAsync(path: PathLike): Promise<boolean> {
+  return access(path)
+    .then(() => true)
+    .catch((error: unknown): boolean => {
+      if (error == undefined)
+        throw new TypeError('An `fs.access` promise was rejected without a reason.');
+      if (typeof error !== 'object') {
+        throw new TypeError('An unknown, non-object error was encountered.');
+      }
+      if (Array.isArray(error))
+        throw new AggregateError(error, 'Multiple errors were encountered.');
+      if ('code' in error && error.code === 'ENOENT')
+        return false;
+      throw new Error('A `fs.access` promise was rejected with an unexpected error.', { cause: error });
+    });
+}
+
+/**
+ * See {@link https://learn.microsoft.com/en-us/nuget/consume-packages/consuming-packages-authenticated-feeds#credentials-in-environment-variables}
+ * @param source
+ * @param solutionOrProjectPath The path to the .NET solution (preferred) or project file.
+ */
+// todo check for credentials saved for a given NuGet source (i.e. registry)
+export async function _getNuGetCredentials(source: string, solutionOrProjectPath: `${string}.${'csproj' | 'fsproj' | 'sln' | 'slnx' | 'vbproj'}`) {
+  const configs = await _findNugetConfigFiles(solutionOrProjectPath);
+  return configs;
+};
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+async function _findNugetConfigFiles(solutionOrProjectPath: `${string}.${'csproj' | 'fsproj' | 'sln' | 'slnx' | 'vbproj'}`): Promise<string[]> {
+  const _platform = platform();
+  const configSln: string | undefined = await _findSolutionOrProjectConfigFile(solutionOrProjectPath);
+  const configsUser: string[] = await _findUserConfigFiles(_platform);
+  const configsSystem: string[] = await _findSystemConfigFiles(_platform);
+
+  return [
+    ...configsSystem,
+    ...configsUser,
+    configSln,
+  ].filter(v => v !== undefined);
+}
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+async function _findSolutionOrProjectConfigFile(solutionOrProjectPath: string): Promise<string | undefined> {
+  const dir: string = node_path.dirname(node_path.resolve(solutionOrProjectPath));
+  // while `dir` is not root...
+  while (dir !== node_path.dirname(dir)) {
+    const config: string = node_path.join(dir, 'NuGet.Config');
+    if (await existsAsync(config).catch(() => false))
+      return config;
+  }
+  return undefined;
+}
+
+/**
+ * Settings apply to all operations, but are overridden by any solution-level settings.
+ *
+ * - Windows: %appdata%\NuGet\NuGet.Config
+ * - Mac/Linux: ~/.config/NuGet/NuGet.Config or ~/.nuget/NuGet/NuGet.Config (varies by tooling)
+ *
+ * Additional configs are supported on all platforms. These configs cannot be edited by the tooling.
+ * - Windows: %appdata%\NuGet\config\*.Config
+ * - Mac/Linux: ~/.config/NuGet/config/*.config or ~/.nuget/config/*.config
+ *
+ * > Note: On Mac/Linux, the user config file location varies by tooling. .NET CLI
+ * uses `~/.nuget/NuGet` folder, while Mono uses `~/.config/NuGet` folder. See
+ * {@link https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior#on-maclinux-the-user-level-config-file-location-varies-by-tooling}
+ * @param _platform The return value of {@link platform}.
+ * @returns an array of existing file paths.
+ */
+async function _findUserConfigFiles(_platform: NodeJS.Platform): Promise<string[]> {
+  switch (_platform) {
+    case 'darwin':
+    case 'linux': {
+      const home = process.env['HOME'] ?? '';
+      return Array.fromAsync(glob(
+        [
+        // `${home}/.config/NuGet/NuGet.Config`,
+          `${home}/.nuget/NuGet/NuGet.Config`,
+          // `${home}/.config/NuGet/config/*.config`,
+          `${home}/.nuget/config/*.config`,
+        ],
+        { withFileTypes: false },
+      ));
+    }
+
+    case 'win32': {
+      const dir = `${String(process.env['APPDATA'])}\\NuGet\\`;
+      if (!await existsAsync(dir))
+        return [];
+
+      return Array.fromAsync(glob(
+        [
+          `${dir}\\NuGet.Config`,
+          `${dir}\\config\\*.config`,
+        ],
+        { withFileTypes: false },
+      ));
+    }
+
+    default: { throw new Error('This OS is unsupported.'); }
+  }
+};
+
+/**
+ * Settings apply to all operations on the computer, but are overridden by any user- or solution-level settings.
+ * - Windows: `%ProgramFiles(x86)%\NuGet\Config`
+ * - Mac/Linux: `/etc/opt/NuGet/Config` (Linux) or `/Library/Application Support` (Mac) by default. If `$NUGET_COMMON_APPLICATION_DATA` is neither null nor empty, then `$NUGET_COMMON_APPLICATION_DATA/NuGet/Config` instead
+ * @param _platform The return value of {@link platform}.
+ * @returns An array of system-level config file paths.
+ */
+async function _findSystemConfigFiles(_platform: NodeJS.Platform): Promise<string[]> {
+  let dir: string | undefined = getEnvVarValue('NUGET_COMMON_APPLICATION_DATA');
+
+  switch (_platform) {
+    case 'darwin': {
+      dir ??= '/Library/Application Support';
+      break;
+    }
+    case 'linux': {
+      dir ??= '/etc/opt/NuGet/Config';
+      break;
+    }
+
+    case 'win32': {
+      dir = `${getEnvVarValue('ProgramFiles(x86)') ?? ''}\\NuGet\\Config`;
+      break;
+    }
+
+    default: { throw new Error('This OS is unsupported.'); }
+  }
+
+  return await Array.fromAsync(
+    glob(
+      node_path.join(dir, '*.config'),
+      { withFileTypes: false },
+    ),
+  );
+}
+
+// #endregion nuget configs
