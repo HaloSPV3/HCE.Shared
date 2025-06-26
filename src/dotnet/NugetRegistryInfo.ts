@@ -846,6 +846,8 @@ export const NRIOpts = NRIOptsBase.merge({
   source: NRIOptsBase.get('source').default(() => defaultNugetSource),
 });
 
+// #region token censorship
+
 /**
  * Replace all occurrences of {@link token} in the {@link string} with '***'.
  * @param string The string in which a {@link token} may be found.
@@ -875,3 +877,5 @@ function _censorTokenInError(error: ExecException, token: string): ExecException
     ) as ExecException,
   );
 }
+
+// #endregion token censorship
