@@ -120,7 +120,7 @@ function getDummiesDir<T extends MSBuildProject | undefined = undefined>(project
  * their values, filtered to only those whose values are not undefined.
  * @throws {Error} when none of the provided environment variables are defined.
  */
-function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): [readonly [string, string], ...readonly [string, string][]] {
+function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): undefined | [readonly [string, string], ...readonly [string, string][]] {
   const definedTokens = Object.freeze(
     tokenEnvVars
       .map((key: string) => [key, getEnvVarValue(key)] as const)
@@ -131,16 +131,13 @@ function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): [readonly [stri
 
   if (definedTokens.length > 0)
     return definedTokens as [readonly [string, string], ...readonly [string, string][]];
-
-  throw new Error(
-    `The environment variables [${tokenEnvVars.join(', ')}] were specified as the source of the token to push a NuGet package to GitHub, but no tokens were defined in the process environment or nearest .env file.`,
-  );
+  return undefined;
 }
 
 export class NugetRegistryInfo {
   private _canPushPackagesToSource: Promise<true> | undefined = undefined;
   private readonly _project: MSBuildProject;
-  private readonly _resolvedEnvVariable: string;
+  private readonly _resolvedEnvVariable: string | undefined;
   private readonly _source: string;
 
   public static readonly DefaultTokenEnvVars: readonly ['NUGET_TOKEN']
@@ -219,9 +216,9 @@ export class NugetRegistryInfo {
      * May throw! Assign key of the first key-value pair to
      * {@link resolvedEnvVariable}
      */
-    this._resolvedEnvVariable = _GetTokenEnvVariables(
-      validOpts.tokenEnvVars,
-    )[0][0];
+    const tokenVars = _GetTokenEnvVariables(validOpts.tokenEnvVars);
+    if (tokenVars)
+      this._resolvedEnvVariable = tokenVars[0][0];
     this._source = validOpts.source;
   }
 
@@ -235,29 +232,30 @@ export class NugetRegistryInfo {
    * but impractical. You'd need to configure prepareCmd to invoke something
    * like `node customScriptFile.mjs`. It's not worth the hassle.
    * @returns `true` if the token can be used to push nupkg to the given Nuget registry
-   * @throws
-   * - {@link ReferenceError} when NugetRegistryInfo.resolvedVariable is null or undefined
-   * - {@link TypeError} when the environment variable {@link NugetRegistryInfo.resolvedEnvVariable} is undefined
-   * - {@link Error}
+   * @throws {TypeError | Error | import('../utils/execAsync.js').ChildProcessSpawnException }
+   * - {@link Error} | {@link module:utils/execAsync:ChildProcessSpawnException ChildProcessSpawnException}
    *   - The token is invalid, of the wrong token type, or lacks permission to push packages
    *   - The URL does not exist or a connection could not be established
-   * @deprecated Call during the `prepare` step of Semantic Release!
+   *   - The command line string is malformed.
+   * @deprecated Call during the `verifyConditions` step of Semantic Release! Additionally, {@link GetIsNextVersionAlreadyPublishedCommand}'s return value should be assigned to `prepareCmd` to prevent package version collision errors.
    */
   public get canPushPackagesToSource(): Promise<true> {
     if (this._canPushPackagesToSource !== undefined)
       return this._canPushPackagesToSource;
 
-    const tokenValue = NRI._GetTokenValue(this.resolvedEnvVariable);
+    let tokenValue: string | undefined;
+    if (this.resolvedEnvVariable !== undefined)
+      tokenValue = NRI._GetTokenValue(this.resolvedEnvVariable);
 
-    if (tokenValue.startsWith('github_pat_')) {
-      const errMsg = `The value of the token in ${this.resolvedEnvVariable} begins with 'github_pat_', indicating it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`;
+    if (tokenValue?.startsWith('github_pat_')) {
+      const errMsg = `The value of the token in 'resolvedEnvVariable' ${String(this.resolvedEnvVariable)} begins with 'github_pat_', indicating it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`;
       const err = new Error(errMsg);
       return this._canPushPackagesToSource = Promise.reject(err);
     }
 
     return this._canPushPackagesToSource = this.PackDummyPackage({})
       .then(async () => await this._PushDummyPackages({
-        apiKey: getEnvVarValue(this.resolvedEnvVariable),
+        apiKey: tokenValue,
       }))
       .then<true>((execAsyncReturn) => {
         ok(execAsyncReturn);
@@ -270,7 +268,7 @@ export class NugetRegistryInfo {
    * {@link _GetTokenEnvVariables} in the constructor.
    * @returns The first environment variable found to have a defined value.
    */
-  get resolvedEnvVariable(): string {
+  get resolvedEnvVariable(): string | undefined {
     return this._resolvedEnvVariable;
   }
 
@@ -509,7 +507,7 @@ but the environment variable is empty or undefined.`);
     type({
     /** If an empty string is passed, this property is overridden to `./publish` */
       root: 'string',
-      /** The API key for the server. NOTE: if `undefined`, the `dotnet nuget` client will lookup credentials set via `dotnet nuget {add|update} source`.` */
+      /** The API key for the server. NOTE: if `undefined` or an empty string, the `dotnet nuget` client will lookup credentials set via `dotnet nuget {add|update} source`. */
       'apiKey?': 'string',
       /** The NuGet configuration file (nuget.config) to use. If specified, only the settings from this file will be used. If not specified, the hierarchy of configuration files from the current directory will be used. For more information, see {@link https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior Common NuGet Configurations}. */
       'configFile?': 'string',
@@ -585,14 +583,15 @@ but the environment variable is empty or undefined.`);
       `"${node_path.join(validOpts.root, '*.nupkg')}"`,
     ];
 
-    validOpts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable);
+    if (this.resolvedEnvVariable)
+      validOpts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable);
     /**
      * If apiKey is an empty string, defer to the dotnet CLI's NuGet client
      * ability to lookup API keys saved via `dotnet nuget add source` or NuGet config
      * files.
      */
-    if (validOpts.apiKey !== '')
-      packCmdArr.push('--api-key', `"${validOpts.apiKey}"`);
+    if (validOpts.apiKey && validOpts.apiKey !== '')
+      packCmdArr.push('--api-key', validOpts.apiKey);
     if (validOpts.configFile)
       packCmdArr.push('--configfile', validOpts.configFile);
     if (validOpts.disableBuffering === true)
@@ -840,10 +839,28 @@ export const NRIOptsBase = type({
    */
   source: type.string,
   /**
+   * WARNING: If possible, set credentials via `dotnet nuget {add|update}
+   * source` as recommended by Microsoft! This is more secure than exposing
+   * credentials to the Node.JS runtime and all its loaded modules.
+   *
    * The environment variables whose values are tokens with permission to push a
    * package to the NuGet package registry.The array is iterated through until
    * one token is found.If none of the environment variables are defined,
    * {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
+   *
+   * If none of these are defined in the `.env` or process environment variables (.vault.env is impractical in CI), the `--api-key/-k` argument is excluded from `dotnet nuget push` commands.
+   * Instead, the NuGet client relies on credentials configured for the
+   * given NuGet source. If the NuGet client does not find credentials saved for the
+   * NuGet {@link NRIOptsBase.t.source source} and they are required, the command will fail.
+   *
+   * Use the `dotnet` CLI to configure credentials for existing NuGet sources
+   * ({@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-update-source `dotnet nuget update source`})
+   * -OR- configure credentials for non-default NuGet sources
+   * ({@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-add-source `dotnet nuget add source`}).\
+   * Alternatively, use the `nuget.exe` CLI to add/update sources. See
+   * {@link https://learn.microsoft.com/en-us/nuget/reference/cli-reference/cli-ref-sources `nuget sources` (NuGet CLI)}.
+   *
+   * The credentials will be validated during the `verifyConditions` step of Semantic Release.
    */
   tokenEnvVars: type.string.array().readonly(),
 });
@@ -854,7 +871,7 @@ export const NRIOptsBase = type({
 export const NRIOpts = NRIOptsBase.merge({
   /**
    * Defaults to {@link NugetRegistryInfo.DefaultTokenEnvVars}
-   * @see NRIOptsBase.inferIn.tokenEnvVars
+   * @see {@link NRIOptsBase.t.tokenEnvVars}
    */
   tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(
     () => NugetRegistryInfo.DefaultTokenEnvVars,

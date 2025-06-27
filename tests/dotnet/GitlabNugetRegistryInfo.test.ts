@@ -145,7 +145,8 @@ await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, asy
     if (GITLAB_TOKEN) process.env['GITLAB_TOKEN'] = GITLAB_TOKEN;
   });
 
-  await it('throws when custom values and no token available', () => {
+  /** NuGet Client credential failover */
+  await it('does NOT throw when custom values and no token available', () => {
     let value: GLNRI | Error;
     try {
       value = new GLNRI({
@@ -159,8 +160,7 @@ await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, asy
     catch (error) {
       value = isNativeError(error) ? error : new Error(JSON.stringify(error));
     }
-    ok(isNativeError(value));
-    ok(value.message.includes('no tokens were defined'));
+    ok(!isNativeError(value), `\`value\` should \`true\`, but it's actually ${inspect(value, true, Infinity)}`);
   });
 
   await describe('canPushPackagesToSource', async (ctx2) => {
