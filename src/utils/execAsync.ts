@@ -24,6 +24,17 @@ export async function execAsync(command: string, setStderrAsCause = false): Prom
     if (setStderrAsCause && 'stderr' in error && typeof error.stderr === 'string' && error.stderr !== '')
       error.cause ??= error.stderr;
 
+    if ('stdout' in error && typeof error.stdout === 'string') {
+      error.message
+        += '\nSTDOUT:\n'
+          + `  ${error.stdout.replaceAll('\n', '\n  ')}`;
+    }
+    if ('stderr' in error && typeof error.stderr === 'string') {
+      error.message
+        += '\nSTDERR:\n'
+          + `  ${error.stderr.replaceAll('\n', '\n  ')}`;
+    }
+
     throw new ChildProcessSpawnException(error.message, error);
   });
 }
