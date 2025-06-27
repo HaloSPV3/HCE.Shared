@@ -257,8 +257,6 @@ export class NugetRegistryInfo {
 
     return this._canPushPackagesToSource = this.PackDummyPackage({})
       .then(async () => await this._PushDummyPackages({
-        // todo: This is redundant. Make copy of PushPackagesOptionsType with readonly `root` for use by `_PushDummyPackages`, `GetPushDummyCommand`
-        root: getDummiesDir(this._project),
         apiKey: getEnvVarValue(this.resolvedEnvVariable),
       }))
       .then<true>((execAsyncReturn) => {
@@ -305,30 +303,38 @@ but the environment variable is empty or undefined.`);
 
   /**
    * The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
-   * `propertyOverrides` is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
+   *
+   * {@link NRI.PackPackagesOptionsType.t.propertyOverrides `propertyOverrides`}
+   * is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
    */
   static readonly PackPackagesOptionsType = Object.freeze(
     type({
-      propertyOverrides: type('Record<string,string>').configure({ description: 'a custom arg for handling MSBuild\'s `-property:<n>=<v>` argument for overriding MSBuild properties.' }),
-      artifactsPath: 'string',
-      configuration: '"Release" | "Debug"',
-      disableBuildServers: 'boolean',
-      force: 'boolean',
-      includeSource: 'boolean',
-      includeSymbols: 'boolean',
-      interactive: 'boolean',
-      noBuild: 'boolean',
-      noLogo: 'boolean',
-      noRestore: 'boolean',
-      output: 'string',
-      runtime: 'string',
-      serviceable: 'boolean',
-      terminalLogger: '"auto" | "on" | "off"',
-      useCurrentRuntime: 'boolean',
-      verbosity: '"quiet" | "minimal" | "normal" | "detailed" | "diagnostic"',
-      versionSuffix: 'string',
-    }).partial(),
+      /**
+       * a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties.
+       */
+      'propertyOverrides?': type('Record<string,string>'),
+      'artifactsPath?': 'string',
+      'configuration?': '"Release" | "Debug"',
+      'disableBuildServers?': 'boolean',
+      'force?': 'boolean',
+      'includeSource?': 'boolean',
+      'includeSymbols?': 'boolean',
+      'interactive?': 'boolean',
+      'noBuild?': 'boolean',
+      'noLogo?': 'boolean',
+      'noRestore?': 'boolean',
+      'output?': 'string',
+      'runtime?': 'string',
+      'serviceable?': 'boolean',
+      'terminalLogger?': '"auto" | "on" | "off"',
+      'useCurrentRuntime?': 'boolean',
+      'verbosity?': '"quiet" | "minimal" | "normal" | "detailed" | "diagnostic"',
+      'versionSuffix?': 'string',
+    }),
   );
+
+  public static readonly PackDummyPackagesOptionsType
+    = this.PackPackagesOptionsType.omit('output');
 
   /**
    * Get a `dotnet pack` command line string, outputting the package(s) to a
@@ -461,14 +467,17 @@ but the environment variable is empty or undefined.`);
    * If mixed with other nupkgs, filter for the {@link NugetProjectProperties#PackageId}
    */
   public async PackDummyPackage(
-    opts: typeof NRI.PackPackagesOptionsType.inferIn,
+    opts: typeof NRI.PackDummyPackagesOptionsType.inferIn,
   ): Promise<string[]> {
-    const validOpts = NRI.PackPackagesOptionsType.from(opts);
-
-    validOpts.output = getDummiesDir(this._project);
-    validOpts.propertyOverrides ??= {};
-    validOpts.propertyOverrides['Version'] = '0.0.1-DUMMY';
-    const packCmd: string = this.GetPackCommand(validOpts, true);
+    const packCmd: string = this.GetPackCommand(
+      {
+        ...opts,
+        force: true,
+        output: getDummiesDir(this._project),
+        propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY' },
+      },
+      true,
+    );
     /**
      * e.g.
      * ```txt
@@ -530,6 +539,15 @@ but the environment variable is empty or undefined.`);
       'timeout?': 'number',
     }),
   );
+
+  /**
+   * {@link NRI.PushPackagesOptionsType} sans {@link NRI.PushPackagesOptionsType.t.root}.
+   * The result of {@link getDummiesDir} is used, instead.
+   */
+  public static readonly PushDummyPackagesOptionsType
+    = NugetRegistryInfo.PushPackagesOptionsType.merge({
+      skipDuplicate: 'true = true',
+    }).omit('root');
 
   /**
    * Create a `dotnet nuget push` command line from the given options and
@@ -656,7 +674,7 @@ but the environment variable is empty or undefined.`);
    *   nri.GetPushDummyPackageCommand(pushOpts, false, false),
    * ].join(' && ')
    * ```
-   * @param opts the ROOT arg and options for `dotnet nuget push`. The following
+   * @param opts options for `dotnet nuget push`. The following
    * fields are overwritten:
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
@@ -664,11 +682,15 @@ but the environment variable is empty or undefined.`);
    * (created by executing {@link PackDummyPackage}) to {@link source}
    */
   GetPushDummyCommand(
-    opts: typeof NRI.PushPackagesOptionsType.inferIn,
+    opts: typeof NRI.PushDummyPackagesOptionsType.inferIn,
   ): string {
-    opts.root = getDummiesDir(this.project);
-    opts.skipDuplicate = true;
-    return this.GetPushCommand(opts, true);
+    return this.GetPushCommand(
+      {
+        ...NRI.PushDummyPackagesOptionsType.from(opts),
+        root: getDummiesDir(this._project),
+      },
+      true,
+    );
   }
 
   /**
@@ -683,7 +705,7 @@ but the environment variable is empty or undefined.`);
    * @returns The return type of {@link execAsync} i.e. a {@link Promise} resolving to `{ stdout: string; stderr: string }`.
    */
   private async _PushDummyPackages(
-    opts: typeof NRI.PushPackagesOptionsType.inferIn,
+    opts: typeof NRI.PushDummyPackagesOptionsType.inferIn,
   ): ReturnType<typeof execAsync> {
     const pushCmd: string = this.GetPushDummyCommand(opts);
     return await execAsync(pushCmd, true)

@@ -327,7 +327,7 @@ export class SemanticReleaseConfigDotnet {
       ),
     );
     const pushCommands = nupkgPaths.map(pair =>
-      pair.nri.GetPushDummyCommand({ root: pair.nupkgPath }),
+      pair.nri.GetPushDummyCommand({}),
     );
     return pushCommands.join(' && ');
   }
