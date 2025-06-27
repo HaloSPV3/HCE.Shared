@@ -34,10 +34,5 @@ export function getEnvVarValue(envVar: string, options?: Parameters<typeof loadD
   if (value.parsed?.[envVar] !== undefined)
     return value.parsed[envVar];
 
-  const err = value.error === undefined
-    ? ''
-    : `\n${value.error.stack ?? value.error.message}`;
-  console.warn(`Unable to find ${envVar} in process environment or in a .env file.` + err);
-
   return undefined;
 }
