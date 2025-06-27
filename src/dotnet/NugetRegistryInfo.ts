@@ -871,7 +871,11 @@ function _censorTokenInError(error: ExecException, token: string): ExecException
     error,
     JSON.parse(
       _censorToken(
-        JSON.stringify(error),
+        JSON.stringify({
+          ...error,
+          message: error.message,
+          stack: error.stack,
+        }),
         token,
       ),
     ) as ExecException,
