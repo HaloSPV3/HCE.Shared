@@ -450,7 +450,56 @@ export class MSBuildProject {
       );
     }
   }
+
+  public static fromJSON(json: string): MSBuildProject {
+    const parsed = T_PseudoMSBPInstance.assert(JSON.parse(json));
+
+    type.true.assert(
+      Reflect.setPrototypeOf(parsed, MSBuildProject.prototype),
+    );
+    type.true.assert(
+      Reflect.setPrototypeOf(parsed.Properties, NugetProjectProperties.prototype),
+    );
+    parsed.Properties = T_NPP.assert(parsed.Properties);
+    return T_MSBuildProject.assert(parsed);
+  }
 }
+
+const T_MSBuildProject = type.instanceOf(MSBuildProject);
+const T_NPP = type.instanceOf(NugetProjectProperties);
+const T_PseudoMSBPInstance = type({
+  Items: type({
+    '[string]': type({
+      '[string]': 'string',
+      Identity: 'string',
+      FullPath: 'string',
+      RootDir: 'string',
+      Filename: 'string',
+      Extension: 'string',
+      RelativeDir: 'string',
+      Directory: 'string',
+      RecursiveDir: 'string',
+      ModifiedTime: 'string',
+      CreatedTime: 'string',
+      AccessedTime: 'string',
+      DefiningProjectFullPath: 'string',
+      DefiningProjectDirectory: 'string',
+      DefiningProjectName: 'string',
+      DefiningProjectExtension: 'string',
+      'SubType?': ' string | undefined',
+      'TargetFrameworkIdentifier?': 'string | undefined',
+      'TargetPlatformMoniker?': 'string | undefined',
+      'CopyUpToDateMarker?': 'string | undefined',
+      'TargetPlatformIdentifier?': 'string | undefined',
+      'TargetFrameworkVersion?': 'string | undefined',
+      'ReferenceAssembly?': 'string | undefined',
+    }).array(),
+  }),
+  Properties: type.Record('string', 'string').or(T_NPP),
+  Targets: type.string.array(),
+  TargetResults: msbuildEvaluationOutput.get('TargetResults').exclude('undefined').array(),
+
+});
 
 /**
  * Resolve a path if it is not already absolute.
