@@ -33,7 +33,7 @@ await describe('MSBuildProject', async () => {
       ) {
         rmSync(pakDir, { recursive: true, force: true });
       }
-      const evalOpts: EvaluationOptions = new EvaluationOptions({
+      const evalOpts: typeof EvaluationOptions.inferOut = EvaluationOptions.from({
         FullName: deterministicNupkgProj,
         GetItem: [],
         GetProperty: [...MSBP.MatrixProperties],

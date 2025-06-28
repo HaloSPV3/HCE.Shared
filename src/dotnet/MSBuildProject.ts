@@ -110,72 +110,53 @@ class MSBuildEvaluationOutput {
   TargetResults?: typeof msbuildEvaluationOutput.infer.TargetResults;
 }
 
-export class EvaluationOptions {
-  static readonly t = Object.freeze(
-    type({
-      FullName: 'string',
-      Property: type({ '[string]': 'string' })
-        .as<{ -readonly [P in keyof MSBuildProjectProperties]: MSBuildProjectProperties[P] }>()
-        .partial(),
-      Targets: type.string.array().readonly().or('string[]'),
-      GetItem: type.string.array().readonly().or('string[]'),
-      GetProperty: type.string.array().readonly().or('string[]'),
-      GetTargetResult: type.string.array().readonly().or('string[]'),
-    }),
-  );
-
-  constructor(options: typeof EvaluationOptions.t.infer) {
-    options = EvaluationOptions.t.from(options);
-    this.FullName = options.FullName;
-    this.Property = options.Property;
-    this.GetItem = options.GetItem;
-    this.GetProperty = options.GetProperty;
-    this.Targets = options.Targets;
-    this.GetTargetResult = options.GetTargetResult;
-  }
-
-  /**
-   * The project file's full path.
-   */
-  FullName: string;
-  /**
-   * User-defined Properties and their values.
-   * { Configuration: "Release" } will cause the MSBuild to first set the
-   * Configuration property  to Release before evaluating the project
-   * or the project's Target(s).
-   * ```txt
-   *   -property:<n>=<v>  Set or override these project-level properties. <n> is
-   *                      the property name, and <v> is the property value. Use a
-   *                      semicolon or a comma to separate multiple properties, or
-   *                      specify each property separately. (Short form: -p)
-   *                      Example:
-   *                        -property:WarningLevel=2;OutDir=bin\Debug\
-   * ```
-   */
-  Property: ReturnType<typeof EvaluationOptions.t.get<'Property'>>['inferOut'];
-  /**
-   * MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
-   * including {@link MSBuild}
-   */
-  GetItem: readonly string[] | string[];
-  GetProperty: readonly string[] | string[];
-  /**
-   * The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
-   * Property values may be changed by Targets such as those provided by
-   * dependencies.
-   *
-   * ```txt
-   *   -target:<targets>  Build these targets in this project. Use a semicolon or a
-   *                      comma to separate multiple targets, or specify each
-   *                      target separately. (Short form: -t)
-   *                      Example:
-   *                        -target:Resources;Compile
-   * ```
-   * @default []
-   */
-  Targets: readonly string[] | string[] = [];
-  GetTargetResult: readonly string[] | string[];
-}
+export const EvaluationOptions = Object.freeze(
+  type({
+    /**
+     * The project file's full path.
+     */
+    FullName: 'string',
+    /**
+     * User-defined Properties and their values.
+     * { Configuration: "Release" } will cause the MSBuild to first set the
+     * Configuration property  to Release before evaluating the project
+     * or the project's Target(s).
+     * ```txt
+     *   -property:<n>=<v>  Set or override these project-level properties. <n> is
+     *                      the property name, and <v> is the property value. Use a
+     *                      semicolon or a comma to separate multiple properties, or
+     *                      specify each property separately. (Short form: -p)
+     *                      Example:
+     *                        -property:WarningLevel=2;OutDir=bin\Debug\
+     * ```
+     */
+    Property: type({ '[string]': 'string' })
+      .as<{ -readonly [P in keyof MSBuildProjectProperties]: MSBuildProjectProperties[P] }>()
+      .partial(),
+    /**
+     * The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
+     * Property values may be changed by Targets such as those provided by
+     * dependencies.
+     *
+     * ```txt
+     *   -target:<targets>  Build these targets in this project. Use a semicolon or a
+     *                      comma to separate multiple targets, or specify each
+     *                      target separately. (Short form: -t)
+     *                      Example:
+     *                        -target:Resources;Compile
+     * ```
+     * @default []
+     */
+    Targets: type.string.array().readonly().or('string[]'),
+    /**
+     * MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
+     * including {@link MSBuild}
+     */
+    GetItem: type.string.array().readonly().or('string[]'),
+    GetProperty: type.string.array().readonly().or('string[]'),
+    GetTargetResult: type.string.array().readonly().or('string[]'),
+  }),
+);
 
 export class MSBuildProject {
   /**
@@ -249,14 +230,14 @@ export class MSBuildProject {
    * returning them as an instance of {@link MSBuildProject}.\
    * Note: MSBuild will probably fail if Restore is skipped and another
    * target is specified. If you choose Pack, you must do ['Restore', 'Pack'].
-   * @param options An instance of {@link EvaluationOptions}.
+   * @param options The result of {@link EvaluationOptions.from}.
    * @returns A promised {@link MSBuildProject} instance.
    * @throws if the exec command fails -OR- the JSON parse fails -OR-
    * MSBuildProject's constructor fails.
    * @see {@link PackableProjectsToMSBuildProjects} for most use-cases.
    */
   public static async Evaluate(
-    options: EvaluationOptions,
+    options: typeof EvaluationOptions.inferOut,
   ): Promise<MSBuildProject> {
     if (
       options.GetProperty.length === 0
@@ -439,7 +420,7 @@ export class MSBuildProject {
       const getProperties = NPPGetterNames.InstanceGettersRecursive;
 
       return await MSBuildProject.Evaluate(
-        new EvaluationOptions({
+        EvaluationOptions.from({
           FullName: fullPath,
           GetItem: [],
           GetProperty: getProperties,
