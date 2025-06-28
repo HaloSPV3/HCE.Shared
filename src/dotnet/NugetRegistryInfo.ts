@@ -173,7 +173,7 @@ export class NugetRegistryInfo {
    */
   static GetDirNameForSource(source: string): string {
     return sanitizeFileName(
-      source.replaceAll(/\/index.json$/, ''),
+      source.replaceAll(/\/index.json$/g, ''),
       { replacement: '_' },
     );
   }
