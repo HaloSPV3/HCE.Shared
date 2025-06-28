@@ -304,7 +304,7 @@ await describe('MSBuildProject', async () => {
           'ValidateExecutableReferences',
           'WarnForExplicitVersions',
           'XamlPreCompile',
-        ],
+        ].sort((a, b) => a.localeCompare(b)),
         evaluation: {
           Items: {},
           Properties: {
