@@ -49,6 +49,7 @@
     "wayou.vscode-todo-highlight",
     "yeluoqiuzhi.vscode-detect-charset",
     "yoavbls.pretty-ts-errors",
-    "arktypeio.arkdark"
+    "arktypeio.arkdark",
+    "motonarola.format-selection-stub"
   ]
 }
