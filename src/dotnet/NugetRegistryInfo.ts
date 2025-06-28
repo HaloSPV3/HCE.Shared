@@ -407,7 +407,7 @@ but the environment variable is empty or undefined.`);
       packCmdArr.push(`"${assignments}"`);
     }
     // MSBuild parses everything after -o as the path.
-    packCmdArr.push(`-o "${validOpts.output}"`);
+    packCmdArr.push('-o', `"${validOpts.output}"`);
 
     return packCmdArr.join(' ');
   }
