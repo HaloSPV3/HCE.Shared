@@ -486,8 +486,8 @@ but the environment variable is empty or undefined.`);
      *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
      * ```
      */
-
     const packOutput = await execAsync(packCmd, true);
+    // todo: Is the tool restore overwriting the package creation output? Why is it gone?
     return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout);
   }
 
