@@ -562,3 +562,5 @@ mjs/
 _tsout/
 babel.config.json
 .playground.ts
+
+tests/dotnet/.projCache
