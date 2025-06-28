@@ -41,56 +41,48 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
     else delete process.env['NUGET_TOKEN'];
   });
 
-  await it('canPushPackagesToSource', async () => {
-    await it('rejects promise if token invalid', async () => {
-      process.env['INVALID_TOKEN'] = 'placeholder';
-      const value = await new NRI({
-        project: DeterministicNupkgCsproj,
-        tokenEnvVars: ['INVALID_TOKEN'],
-      })
+  await it('canPushPackagesToSource rejects promise if token invalid', async () => {
+    process.env['INVALID_TOKEN'] = 'placeholder';
+    const value = await new NRI({
+      project: DeterministicNupkgCsproj,
+      tokenEnvVars: ['INVALID_TOKEN'],
+    })
       // eslint-disable-next-line @typescript-eslint/no-deprecated
-        .canPushPackagesToSource
-        .catch((error: unknown) =>
-          isNativeError(error) ? error : new Error(JSON.stringify(error)),
-        );
-      if (value === true) {
-        notDeepStrictEqual(value, true);
-        return;
-      }
-      strictEqual('message' in value, true);
-      strictEqual('name' in value, true);
-    });
-
-    await it('resolves when token is defined, valid, and can push packages to source', async (t) => {
-      if (!predefinedToken) {
-        t.skip('NUGET_TOKEN environment variable undefined');
-        return;
-      }
-
-      const registryInfo = new NRI({
-        project: DeterministicNupkgCsproj,
-      });
-
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
-      const canPush = await registryInfo.canPushPackagesToSource.catch(
-        (error: unknown) => {
-          if (!isNativeError(error))
-            return new Error(inspect(error, { depth: 3 }));
-          else if ('stderr' in error && typeof error.stderr === 'string') {
-            // eslint-disable-next-line unicorn/prefer-spread
-            error.message = error.message.concat(
-              '\nSTDERR:\n',
-              `  ${error.stderr.replaceAll('\n', '\n  ')}`,
-              error.stack ?? '',
-            );
-          }
-
-          return error;
-        },
+      .canPushPackagesToSource
+      .catch((error: unknown) =>
+        isNativeError(error) ? error : new Error(JSON.stringify(error)),
       );
+    if (value === true) {
+      notDeepStrictEqual(value, true);
+      return;
+    }
+    strictEqual('message' in value, true);
+    strictEqual('name' in value, true);
+  });
 
-      deepStrictEqual(canPush, true);
+  await it('canPushPackagesToSource resolves when token is defined, valid, and can push packages to source', async (t) => {
+    if (!predefinedToken) {
+      t.skip('NUGET_TOKEN environment variable undefined');
+      return;
+    }
+
+    const registryInfo = new NRI({
+      project: DeterministicNupkgCsproj,
     });
+
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
+    const canPush = await registryInfo.canPushPackagesToSource.catch(
+      (error: unknown) => {
+        if (!isNativeError(error))
+          return new Error(inspect(error, { depth: 3 }));
+        return error;
+      },
+    );
+
+    if (Array.isArray(canPush))
+      throw new Error('huh?');
+
+    deepStrictEqual(canPush, true);
   });
 });
 
