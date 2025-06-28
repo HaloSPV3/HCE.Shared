@@ -76,7 +76,7 @@ await describe('GitlabNugetRegistryInfo', async () => {
   });
 });
 
-await describe('an instance of GitlabNugetRegistryInfo', { concurrency: 1 }, async () => {
+await describe('InstanceOf GitlabNugetRegistryInfo', { concurrency: 1 }, async () => {
   if (!getEnvVarValue('CI_JOB_TOKEN'))
     process.env['CI_JOB_TOKEN'] = 'placeholder';
   if (!getEnvVarValue('CI_PROJECT_ID'))
