@@ -11,7 +11,9 @@ const projects = await MSBP.PackableProjectsToMSBuildProjects([
     import.meta.dirname,
     '../../dotnet/samples/HCE.Shared.SignAfterPack/HCE.Shared.SignAfterPack.csproj',
   ),
-]).then((v: MSBP[]) => Object.freeze({
+]).then(v =>
+  Promise.all(v),
+).then((v: MSBP[]) => Object.freeze({
   DeterministicNupkgCsproj: Object.freeze(v.find(v => v.Properties.AssemblyName === 'HCE.Shared.DeterministicNupkg')
     ?? (() => { throw new Error('Unable to find/load HCE.Shared.DeterministicNupkg.csproj'); })(),
   ),

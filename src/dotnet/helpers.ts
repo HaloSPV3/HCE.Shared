@@ -258,7 +258,7 @@ export async function configurePrepareCmd(
         if (proj instanceof NugetRegistryInfo)
           return proj;
 
-        const msbpArr: MSBuildProject[] = await MSBuildProject.PackableProjectsToMSBuildProjects([proj]);
+        const msbpArr: MSBuildProject[] = await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects([proj]));
         if (msbpArr.length === 0 || msbpArr[0] === undefined) {
           throw new Error('This should be impossible!');
         }

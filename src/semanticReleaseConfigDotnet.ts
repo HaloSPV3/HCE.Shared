@@ -298,7 +298,7 @@ export class SemanticReleaseConfigDotnet {
   protected async getTokenTestingCommands(): Promise<string> {
     const promiseProjects = this.ProjectsToPackAndPush.every(nri => nri instanceof NugetRegistryInfo)
       ? this.ProjectsToPackAndPush.map(nri => nri.project)
-      : await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush);
+      : await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush));
 
     /** if a project is not in {@link EvaluatedProjects}, add it */
     for (const project of promiseProjects) {

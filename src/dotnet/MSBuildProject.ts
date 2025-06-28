@@ -368,15 +368,17 @@ export class MSBuildProject {
    * @returns A promised array of {@link MSBuildProject} instances.
    * All known MSBuild and NuGet properties are evaluated.
    * If applicable, a project's "Pack" target is evaluated.
-   * @todo consider returning Promise<MSBuildProject>[] so callers can `await MSBP.PackableProjectsToMSBuildProjects(projPaths).then(projPromises => projPromises.map(p => ...))`. This is more difficult to maintain, but can have slightly greater performance.
    */
   public static async PackableProjectsToMSBuildProjects(
     projectsToPackAndPush: string[],
-  ): Promise<MSBuildProject[]> {
+  ): Promise<Promise<MSBuildProject>[]> {
     const dirEntriesPromise = toDirEntries(typeof projectsToPackAndPush === 'string' ? [projectsToPackAndPush] : projectsToPackAndPush);
-    const projectPromises: Promise<MSBuildProject>[] = await dirEntriesPromise.then((direntArray: Dirent[]) => direntArray.map(element => convertDirentToMSBuildProject(element)));
-    const projects: Promise<MSBuildProject[]> = Promise.all(projectPromises);
-    return projects;
+    const projectPromises: Promise<MSBuildProject>[] = await dirEntriesPromise
+      .then(
+        (direntArray: Dirent[]) =>
+          direntArray.map(element => convertDirentToMSBuildProject(element)),
+      );
+    return projectPromises;
 
     /**
      * Map an array of filesystem paths to {@link Dirent} instances representing project files.
