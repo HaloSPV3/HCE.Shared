@@ -1,8 +1,9 @@
-import { ok, strictEqual } from 'node:assert/strict';
-import { describe, it, todo } from 'node:test';
+import { ok, notDeepStrictEqual, strictEqual } from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.js';
 import { getEnv, getEnvVarValue } from '../../src/utils/env.js';
 import { isNativeError } from 'node:util/types';
+import { inspect } from 'node:util';
 
 await describe('GitlabNugetRegistryInfo', async () => {
   await describe('CI_API_V4_URL', async () => {
@@ -163,12 +164,24 @@ await describe('InstanceOf GitlabNugetRegistryInfo', { concurrency: 1 }, async (
     ok(!isNativeError(value), `\`value\` should \`true\`, but it's actually ${inspect(value, true, Infinity)}`);
   });
 
-  await describe('canPushPackagesToSource', async (ctx2) => {
-    await it('has expected name', () => {
-      ok(ctx2.name in defaultWithPlaceholders);
+  await it('canPushPackagesToSource', async () => {
+    await it('returns rejected Promise when _ANY_ Error occurs', async () => {
+      process.env['INVALID_TOKEN'] = 'INVALID_TOKEN';
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const result: true | Error = await new GLNRI({ project: DeterministicNupkgCsproj, tokenEnvVars: ['INVALID_TOKEN'] }).canPushPackagesToSource
+        .catch((error: unknown) => isNativeError(error) ? error : new Error(JSON.stringify(error)));
+      notDeepStrictEqual(result, true);
     });
 
-    await todo('can...uhhhh...Sorry. Brainrot.');
+    await it('returns resolved Promise<true> when _no_ errors occur', async (t) => {
+      if (!getEnvVarValue('CI_PROJECT_ID'))
+        t.skip('CI_PROJECT_ID is undefined');
+
+      const project = new GLNRI({ project: DeterministicNupkgCsproj });
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const result: true = await project.canPushPackagesToSource;
+      strictEqual(result, true);
+    });
   });
 
   await describe('resolvedEnvVariable', async () => {
