@@ -253,7 +253,7 @@ export class MSBuildProject {
    * @returns A promised {@link MSBuildProject} instance.
    * @throws if the exec command fails -OR- the JSON parse fails -OR-
    * MSBuildProject's constructor fails.
-   * @see Consider calling {@link PackableProjectsToMSBuildProjects}, instead.
+   * @see {@link PackableProjectsToMSBuildProjects} for most use-cases.
    */
   public static async Evaluate(
     options: EvaluationOptions,
