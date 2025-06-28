@@ -361,7 +361,7 @@ but the environment variable is empty or undefined.`);
     type.boolean.assert(usePerSourceSubfolder);
     type.boolean.assert(usePerPackageIdSubfolder);
 
-    validOpts.output ??= `${cwd()}/publish`;
+    validOpts.output ??= node_path.join(cwd(), 'publish');
     if (usePerSourceSubfolder)
       validOpts.output = node_path.join(validOpts.output, NugetRegistryInfo.GetDirNameForSource(this.source), node_path.sep);
     if (usePerPackageIdSubfolder)
