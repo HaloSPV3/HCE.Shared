@@ -161,17 +161,17 @@ export async function configurePrepareCmd(
      * return publishCmdArray.join(' && ');
      */
     function getPublishArgsPermutations(proj: MSBuildProject):
-      (['PublishAll', `${typeof proj.Properties.MSBuildProjectFullPath} -t:PublishAll`])
-      | ([typeof proj.Properties.MSBuildProjectFullPath])
-      | (`${typeof proj.Properties.MSBuildProjectFullPath} --runtime ${string} --framework ${string}`)[]
-      | (`${typeof proj.Properties.MSBuildProjectFullPath} --runtime ${string}`)[]
-      | (`${typeof proj.Properties.MSBuildProjectFullPath} --framework ${string}`)[] {
+      ([`"${typeof proj.Properties.MSBuildProjectFullPath}" -t:PublishAll`])
+      | ([`"${typeof proj.Properties.MSBuildProjectFullPath}"`])
+      | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`)[]
+      | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`)[]
+      | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --framework ${string}`)[] {
       /**
        * If the project imports PublishAll to publish for each TFM-RID
        * permutation, return the appropriate command line.
        */
       if (proj.Targets.includes('PublishAll'))
-        return ['PublishAll', `${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`];
+        return [`"${proj.Properties.MSBuildProjectFullPath}" -t:PublishAll`];
 
       // #region formatFrameworksAndRuntimes
       const tfmRidPermutations: `--runtime ${string} --framework ${string}`[]
@@ -182,7 +182,7 @@ export async function configurePrepareCmd(
       const TFMs: string[] = proj.Properties.TargetFrameworks.split(';').filter(v => v !== '');
 
       if (TFMs.length === 0 && RIDs.length === 0)
-        return [proj.Properties.MSBuildProjectFullPath] as [string];
+        return [`"${proj.Properties.MSBuildProjectFullPath}"`] as [`"${string}"`];
 
       if (RIDs.length > 0) {
         if (TFMs.length > 0) {
@@ -211,14 +211,14 @@ export async function configurePrepareCmd(
 
       /** prepend each set of args with the project's path */
       return tfmRidPermutations.map(permArgs =>
-        `${proj.Properties.MSBuildProjectFullPath} ${permArgs}`,
-      ) as `${typeof proj.Properties.MSBuildProjectFullPath} --runtime ${string} --framework ${string}`[]
-      | `${typeof proj.Properties.MSBuildProjectFullPath} --runtime ${string}`[]
-      | `${typeof proj.Properties.MSBuildProjectFullPath} --framework ${string}`[];
+        `"${proj.Properties.MSBuildProjectFullPath}" ${permArgs}`,
+      ) as `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`[]
+      | `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`[]
+      | `"${typeof proj.Properties.MSBuildProjectFullPath}" --framework ${string}`[];
       // #endregion formatFrameworksAndRuntimes
     }
 
-    const publishCmds: (`dotnet publish ${string}` | `dotnet msbuild ${string} -t:PublishAll`)[] = [];
+    const publishCmds: (`dotnet publish "${string}"` | `dotnet publish "${string}" ${string}` | `dotnet msbuild "${string}" -t:PublishAll`)[] = [];
     /** convert {@link evaluatedPublishProjects} to sets of space-separated CLI args. */
     const argsSets = evaluatedPublishProjects.map(
       proj => getPublishArgsPermutations(proj),
@@ -226,15 +226,10 @@ export async function configurePrepareCmd(
     for (const args of argsSets) {
       if (typeof args === 'string')
         throw new Error(`\`args\` should not be a string!`);
-      if (args.length === 2 && args[0] === 'PublishAll') {
-        publishCmds.push(`dotnet msbuild ${args[1]}`);
-      }
-      else {
-        for (const permutation of (args as [`${string}.${string}proj`] | `${string} --runtime ${string} --framework ${string}`[] | `${string} --runtime ${string}`[] | `${string} --framework ${string}`[])) {
-          if (typeof permutation === 'string' && permutation.length === 1)
-            throw new Error('Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!');
-          publishCmds.push(`dotnet publish ${permutation}`);
-        }
+      for (const permutation of args) {
+        if (typeof permutation === 'string' && permutation.length === 1)
+          throw new Error('Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!');
+        publishCmds.push(`dotnet publish ${permutation}`);
       }
     }
 
