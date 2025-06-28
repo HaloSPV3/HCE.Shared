@@ -40,12 +40,12 @@ for (const projName in paths) {
   if (firstJson === undefined)
     throw new Error('The first item in the jsonContentArray was undefined');
 
-  writeFileSync(projPaths.json, firstJson, { encoding: 'utf16le' });
+  writeFileSync(projPaths.json, firstJson, { encoding: 'utf8' });
 }
 
 const projects = {
-  DN: MSBP.fromJSON(await readFile(paths.DN.json, 'utf16le')),
-  SAP: MSBP.fromJSON(await readFile(paths.SAP.json, 'utf16le')),
+  DN: MSBP.fromJSON(await readFile(paths.DN.json, 'utf8')),
+  SAP: MSBP.fromJSON(await readFile(paths.SAP.json, 'utf8')),
 };
 
 export const DeterministicNupkgCsproj: Readonly<MSBP> = Object.freeze(projects.DN);
