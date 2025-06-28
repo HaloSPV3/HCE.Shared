@@ -98,10 +98,15 @@ await describe('NRIOptsBase', async () => {
   await it('has expected props', () => {
     strictEqual(
       JSON.stringify(NRIOptsBase.props, undefined, 2),
-      `[
+      `\
+[
   {
     "key": "project",
     "value": "$ark.MSBuildProject"
+  },
+  {
+    "key": "source",
+    "value": "string"
   },
   {
     "key": "tokenEnvVars",
@@ -109,10 +114,6 @@ await describe('NRIOptsBase', async () => {
       "sequence": "string",
       "proto": "Array"
     }
-  },
-  {
-    "key": "source",
-    "value": "string"
   }
 ]`,
     );
@@ -120,10 +121,15 @@ await describe('NRIOptsBase', async () => {
   await it('has expected props (In)', () => {
     strictEqual(
       JSON.stringify(NRIOptsBase.in.props, undefined, 2),
-      `[
+      `\
+[
   {
     "key": "project",
     "value": "$ark.MSBuildProject"
+  },
+  {
+    "key": "source",
+    "value": "string"
   },
   {
     "key": "tokenEnvVars",
@@ -131,10 +137,6 @@ await describe('NRIOptsBase', async () => {
       "sequence": "string",
       "proto": "Array"
     }
-  },
-  {
-    "key": "source",
-    "value": "string"
   }
 ]`,
     );
@@ -142,10 +144,15 @@ await describe('NRIOptsBase', async () => {
   await it('has expected props (Out)', () => {
     strictEqual(
       JSON.stringify(NRIOptsBase.out.props, undefined, 2),
-      `[
+      `\
+[
   {
     "key": "project",
     "value": "$ark.MSBuildProject"
+  },
+  {
+    "key": "source",
+    "value": "string"
   },
   {
     "key": "tokenEnvVars",
@@ -153,10 +160,6 @@ await describe('NRIOptsBase', async () => {
       "sequence": "string",
       "proto": "Array"
     }
-  },
-  {
-    "key": "source",
-    "value": "string"
   }
 ]`,
     );
