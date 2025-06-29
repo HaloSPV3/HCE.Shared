@@ -13,6 +13,7 @@ const gitCommitMessageEditorScopes = Object.freeze(
 export default {
   ...commitlintConfig,
   rules: {
+    ...commitlintConfig.rules,
     'scope-enum': Object.freeze([
       RuleConfigSeverity.Error,
       /** @type {RuleConfigCondition} */

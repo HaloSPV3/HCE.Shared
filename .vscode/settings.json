@@ -23,6 +23,7 @@
 		"dotnet/SignAfterPack",
 		"eslint",
 		"node",
+		"package",
 		"semanticReleaseConfigDotnet",
 		"TODO",
 		"vscode"
@@ -140,6 +141,10 @@
 		{
 			"scope": "eslint",
 			"description": "Affects \"src/eslintConfig.ts\", its tests, or the repo's eslint config."
+		},
+		{
+			"scope": "package",
+			"description": "Affects \"package.json\" or its tests."
 		},
 		{
 			"scope": "semanticReleaseConfigDotnet",

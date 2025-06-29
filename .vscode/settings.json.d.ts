@@ -14,6 +14,7 @@ interface Settings {
     'dotnet/SignAfterPack',
     'eslint',
     'node',
+    'package',
     'semanticReleaseConfigDotnet',
     'TODO',
     'vscode',
@@ -109,8 +110,12 @@ interface Settings {
       description: 'Affect "src/eslintConfig.ts", its tests, or the repo\'s eslint config.'
     },
     {
+      scope: 'package',
+      description: 'Affects "package.json" or its tests.'
+    },
+    {
       scope: "semanticReleaseConfigDotnet",
-      description: "Affects \"src/semanticReleaseConfigDotnet.ts or its tests."
+      description: 'Affects "src/semanticReleaseConfigDotnet.ts" or its tests.'
     },
     {
       scope: 'TODO',
