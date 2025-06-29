@@ -14,6 +14,7 @@ interface Settings {
     'dotnet/SignAfterPack',
     'eslint',
     'node',
+    'semanticReleaseConfigDotnet',
     'TODO',
     'vscode',
   ]
@@ -104,9 +105,13 @@ interface Settings {
       description: 'Affects "./dotnet/samples/README.md".'
     },
     {
-			scope: 'eslint',
-			description: 'Affect "src/eslintConfig.ts", its tests, or the repo\'s eslint config.'
-		},
+      scope: 'eslint',
+      description: 'Affect "src/eslintConfig.ts", its tests, or the repo\'s eslint config.'
+    },
+    {
+      scope: "semanticReleaseConfigDotnet",
+      description: "Affects \"src/semanticReleaseConfigDotnet.ts or its tests."
+    },
     {
       scope: 'TODO',
       description: 'Affects TODO.md or any TODO comments.'

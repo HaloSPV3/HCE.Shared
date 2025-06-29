@@ -23,6 +23,7 @@
 		"dotnet/SignAfterPack",
 		"eslint",
 		"node",
+		"semanticReleaseConfigDotnet",
 		"TODO",
 		"vscode"
 	],
@@ -109,8 +110,8 @@
 	"sarif-viewer.connectToGithubCodeScanning": "off",
 	"gitCommitMessageEditor.intelliSense.completion.scopes": [
 		{
-      "scope": "commitlint",
-      "description": "Affects \"src/commitlintConfig.ts\", its tests, or the repo's commitlint config."
+			"scope": "commitlint",
+			"description": "Affects \"src/commitlintConfig.ts\", its tests, or the repo's commitlint config."
 		},
 		{
 			"scope": "dotnet",
@@ -138,7 +139,11 @@
 		},
 		{
 			"scope": "eslint",
-			"description": "Affect \"src/eslintConfig.ts\", its tests, or the repo's eslint config."
+			"description": "Affects \"src/eslintConfig.ts\", its tests, or the repo's eslint config."
+		},
+		{
+			"scope": "semanticReleaseConfigDotnet",
+			"description": "Affects \"src/semanticReleaseConfigDotnet.ts or its tests."
 		},
 		{
 			"scope": "TODO",
