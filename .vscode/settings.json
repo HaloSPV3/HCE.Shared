@@ -22,7 +22,7 @@
 		"dotnet/SignAfterPack",
 		"node",
 		"TODO",
-		"vscode",
+		"vscode"
 	],
 	"cSpell.words": [
 		"arktype",
