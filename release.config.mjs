@@ -95,7 +95,7 @@ await setupCommitAnalyzer();
 // #endregion COMMIT ANALYZER
 
 /**
- * @param {import('semantic-release').PluginSpec<unknown>[]} pluginsArray A Semantic Release Options object's plugins array.
+ * @param {import('semantic-release').PluginSpec[]} pluginsArray A Semantic Release Options object's plugins array.
  * @returns {number | -1} the index of the Git plugin in the array, if present. Else `-1`.
  */
 function getGitIndex(pluginsArray) {
