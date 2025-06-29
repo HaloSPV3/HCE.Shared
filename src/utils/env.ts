@@ -1,4 +1,4 @@
-import { config as loadDotenv, type DotenvConfigOptions } from 'dotenv';
+import { config as loadDotenv, type DotenvConfigOptions } from '@dotenvx/dotenvx';
 import { env } from 'node:process';
 
 /**

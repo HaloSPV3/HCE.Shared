@@ -6,7 +6,7 @@ import type { NugetProjectProperties } from './NugetProjectProperties.js';
 
 import { type } from 'arktype';
 import { detectFile, detectFileSync } from 'chardet';
-import { configDotenv } from 'dotenv';
+import { config as configDotenv } from '@dotenvx/dotenvx';
 import { ok } from 'node:assert/strict';
 import type { ExecException } from 'node:child_process';
 import { existsSync, writeFileSync } from 'node:fs';
