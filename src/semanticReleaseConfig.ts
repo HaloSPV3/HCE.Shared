@@ -32,7 +32,7 @@ export interface SRReleaseNotesGeneratorOptions {
  */
 export type PluginSpecTuple<P extends string = string, T = unknown> = [P, T];
 export type PluginSpecSRCommitAnalyzer<V extends SRCommitAnalyzerOptions = SRCommitAnalyzerOptions> = PluginSpecTuple<'@semantic-release/commit-analyzer', V>;
-export type PluginSpecSRChangelog<V extends Record<string, unknown>> = PluginSpecTuple<'@semantic-release/changelog', V>;
+export type PluginSpecSRChangelog<V extends Record<'changelogFile' | 'changelogTitle', string>> = PluginSpecTuple<'@semantic-release/changelog', V>;
 export type PluginSpecExportData<V extends Record<string, unknown> = Record<string, unknown>> = PluginSpecTuple<'semantic-release-export-data', V>;
 export type PluginSpecSRReleaseNotesGen<V extends SRReleaseNotesGeneratorOptions = SRReleaseNotesGeneratorOptions> = PluginSpecTuple<'@semantic-release/release-notes-generator', V>;
 export type PluginSpecSRExec<V extends SRExecOptions = SRExecOptions> = PluginSpecTuple<'@semantic-release/exec', V>;
@@ -72,7 +72,7 @@ const _baseConfig = {
     PluginSpecSRCommitAnalyzer,
     PluginSpecExportData,
     PluginSpecSRReleaseNotesGen,
-    PluginSpecSRChangelog<Record<string, unknown>>,
+    PluginSpecSRChangelog<Record<'changelogFile' | 'changelogTitle', string>>,
     PluginSpecSRGit<typeof DefaultOptions>,
     PluginSpecSRExec,
     PluginSpecSRGithub<{ addReleases: 'bottom'; assets: [{ path: './publish/*' }] }>,
