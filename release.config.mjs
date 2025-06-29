@@ -22,7 +22,6 @@
 import 'tsx';
 import { type } from 'arktype';
 import { ok } from 'node:assert/strict';
-import { env } from 'node:process';
 import { inspect } from 'node:util';
 
 const { default: hceSharedConfig } = await import('./src/index.ts');
@@ -116,15 +115,17 @@ if (undefined === config.plugins.find(v => v[0] === '@semantic-release/npm' || v
 
 // #region GITHUB
 
+const nullableString = type('string | undefined');
+
 /**
  * Setup GitHub plugin options
  */
 function setupGithub() {
   const SRGHOptions = type({
-    githubUrl: type('undefined | string')
-      .default(() => env['GH_URL'] ?? env['GITHUB_URL']),
-    githubApiPathPrefix: type('undefined | string')
-      .default(() => env['GH_PREFIX'] ?? env['GITHUB_PREFIX']),
+    /** May default to GH_URL or GITHUB_URL */
+    githubUrl: nullableString,
+    /** May default to GH_PREFIX or GITHUB_PREFIX */
+    githubApiPathPrefix: nullableString,
     githubApiUrl: 'string?',
     proxy: 'undefined | string | false',
     assets: type.string.or(
