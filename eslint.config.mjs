@@ -3,25 +3,26 @@ import unicorn from 'eslint-plugin-unicorn';
 import 'tsx';
 import { config } from 'typescript-eslint';
 import jsdoc from 'eslint-plugin-jsdoc';
+import { type } from 'arktype';
+
+const type_mdRecommended = type([{
+  name: '\'markdown/recommended\'',
+  files: type(['"**/*.md"']),
+  language: '\'markdown/commonmark\'',
+  plugins: type({ '@eslint/markdown': 'unknown' }),
+  rules: type({
+    'markdown/fenced-code-language': '\'error\'',
+    'markdown/heading-increment': '\'error\'',
+    'markdown/no-empty-links': '\'error\'',
+    'markdown/no-invalid-label-refs': '\'error\'',
+    'markdown/no-missing-label-refs': '\'error\'',
+  }).readonly(),
+}]);
 
 /**
  * @typedef { import('eslint').Linter.Config} ESLintConfig
- * @typedef {[{
- *  name: "markdown/recommended";
- *  files: ["**\/*.md"];
- *  language: "markdown/commonmark";
- *    plugins: {"@eslint/markdown": typeof import('@eslint/markdown').default};
- *    rules: {
- *      readonly "markdown/fenced-code-language": "error";
- *      readonly "markdown/heading-increment": "error";
- *      readonly "markdown/no-empty-links": "error";
- *      readonly "markdown/no-invalid-label-refs": "error";
- *      readonly "markdown/no-missing-label-refs": "error";
- *    };
- * }]}  markdownRecommended
- * @type {markdownRecommended[0]}
  */
-const mdRecommended = /** @type {markdownRecommended[0]} */ (md.configs.recommended[0]);
+const mdRecommended = type_mdRecommended.assert(md.configs.recommended)[0];
 const { default: hceSharedConfig } = await import('./src/eslintConfig.ts');
 /** @type {ESLintConfig} */
 const unicornRecommended = {
@@ -72,6 +73,7 @@ export default config(
   jsdocRecommended_ts,
   {
     ...mdRecommended,
+    plugins: { markdown: md },
     language: 'markdown/gfm',
   },
   unicornRecommended,
