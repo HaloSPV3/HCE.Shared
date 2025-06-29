@@ -12,6 +12,7 @@
 		"typescriptreact"
 	],
 	"conventionalCommits.scopes": [
+		"commitlint",
 		"deps-dev",
 		"deps",
 		"dotnet",
@@ -20,6 +21,7 @@
 		"dotnet/samples/HCE.Shared.SignAfterPack",
 		"dotnet.samples.README",
 		"dotnet/SignAfterPack",
+		"eslint",
 		"node",
 		"TODO",
 		"vscode"
@@ -107,6 +109,10 @@
 	"sarif-viewer.connectToGithubCodeScanning": "off",
 	"gitCommitMessageEditor.intelliSense.completion.scopes": [
 		{
+      "scope": "commitlint",
+      "description": "Affects \"src/commitlintConfig.ts\", its tests, or the repo's commitlint config."
+		},
+		{
 			"scope": "dotnet",
 			"description": "Affects files \"./dotnet\" or \"./src/dotnet\" or affects our generic GitHub reusable workflows provided for assisting dotnet CI."
 		},
@@ -129,6 +135,10 @@
 		{
 			"scope": "dotnet.samples.README",
 			"description": "Affects \"./dotnet/samples/README.md\"."
+		},
+		{
+			"scope": "eslint",
+			"description": "Affect \"src/eslintConfig.ts\", its tests, or the repo's eslint config."
 		},
 		{
 			"scope": "TODO",

@@ -3,6 +3,7 @@ interface Settings {
   '[jsonc]': { 'files.insertFinalNewline': true }
   'auto-close-tag.disableOnLanguage': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
   'conventionalCommits.scopes': [
+    'commitlint',
     'deps-dev',
     'deps',
     'dotnet',
@@ -11,6 +12,7 @@ interface Settings {
     'dotnet/samples/HCE.Shared.SignAfterPack',
     'dotnet.samples.README',
     'dotnet/SignAfterPack',
+    'eslint',
     'node',
     'TODO',
     'vscode',
@@ -74,6 +76,10 @@ interface Settings {
   'sarif-viewer.connectToGithubCodeScanning': 'off'
   'gitCommitMessageEditor.intelliSense.completion.scopes': [
     {
+      scope: 'commitlint',
+      description: 'Affects "src/commitlintConfig.ts", its tests, or the repo\'s commitlint config.'
+    },
+    {
       scope: 'dotnet'
       description: 'Affects files "./dotnet" or "./src/dotnet" or affects our generic GitHub reusable workflows provided for assisting dotnet CI.'
     },
@@ -97,6 +103,10 @@ interface Settings {
       scope: 'dotnet.samples.README',
       description: 'Affects "./dotnet/samples/README.md".'
     },
+    {
+			scope: 'eslint',
+			description: 'Affect "src/eslintConfig.ts", its tests, or the repo\'s eslint config.'
+		},
     {
       scope: 'TODO',
       description: 'Affects TODO.md or any TODO comments.'
