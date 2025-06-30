@@ -2,8 +2,10 @@
     "extends": "./baseTsconfig.json",
     "compilerOptions": {
         "allowJs": true,
+        "allowImportingTsExtensions": true,
         "checkJs": true,
-        "outDir": "_tsout"
+        "outDir": "_tsout",
+        "target":"es2020"
     },
     "include": [
         "./.vscode/settings.json",
