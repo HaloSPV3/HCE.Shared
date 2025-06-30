@@ -2,15 +2,14 @@ import { type } from 'arktype'
 import { detectFile, detectFileSync } from 'chardet'
 import { configDotenv } from 'dotenv'
 import { ok } from 'node:assert/strict'
-import { exec, fork } from 'node:child_process'
 import { existsSync, writeFileSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import node_path from 'node:path'
 import { cwd, env } from 'node:process'
-import { promisify } from 'node:util'
 import { isNativeError } from 'node:util/types'
 import { getEnvVarValue } from '../envUtils.js'
+import { execAsync } from '../utils/execAsync.js'
 import { MSBuildProject } from './MSBuildProject.js'
 
 /* JSDoc Types */
@@ -19,7 +18,6 @@ import type { NugetProjectProperties } from './NugetProjectProperties.js'
 import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet.js'
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
-const execAsync = promisify(exec)
 const tmpDirNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies')
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json'
 
@@ -389,11 +387,14 @@ but the environment variable is empty or undefined.`)
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): Promise<string[]> {
-    const packOutput = await execAsync(this.GetPackCommand(
-      opts,
-      usePerSourceSubfolder,
-      usePerPackageIdSubfolder,
-    ))
+    const packOutput = await execAsync(
+      this.GetPackCommand(
+        opts,
+        usePerSourceSubfolder,
+        usePerPackageIdSubfolder,
+      ),
+      true,
+    )
     return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
   }
 
@@ -427,7 +428,7 @@ but the environment variable is empty or undefined.`)
      *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
      * ```
      */
-    const packOutput = await execAsync(`${packCmd} -p:Version=0.0.1-DUMMY`)
+    const packOutput = await execAsync(`${packCmd} -p:Version=0.0.1-DUMMY`, true)
     return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout)
   }
 
@@ -547,11 +548,14 @@ but the environment variable is empty or undefined.`)
     usePerPackageIdSubfolder = false,
   ) {
     // const pushOutput =
-    await execAsync(this.GetPushCommand(
-      opts,
-      usePerSourceSubfolder,
-      usePerPackageIdSubfolder,
-    ))
+    await execAsync(
+      this.GetPushCommand(
+        opts,
+        usePerSourceSubfolder,
+        usePerPackageIdSubfolder,
+      ),
+      true,
+    )
   }
 
   /**
@@ -601,22 +605,7 @@ but the environment variable is empty or undefined.`)
    */
   private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.inferIn): Promise<ReturnType<typeof execAsync>> {
     const pushCmd: string = this.GetPushDummyCommand(opts)
-    return await execAsync(pushCmd)
-      .catch((err) => {
-        if (!(err instanceof Error))
-          throw new Error(String(err))
-        if ('stderr' in err && typeof err.stderr === 'string'
-          && 'stdout' in err && typeof err.stdout === 'string'
-        ) {
-          err.message = err.message.concat(
-            '\nSTDERR:\n',
-            `  ${err.stderr.replaceAll('\n', '\n  ')}`,
-            '\nSTDOUT:\n',
-            `  ${err.stdout.replaceAll('\n', '\n  ')}`,
-          )
-        }
-        throw err
-      })
+    return await execAsync(pushCmd, true)
   }
 
   // #endregion Push
@@ -657,7 +646,7 @@ but the environment variable is empty or undefined.`)
   static async IsNextVersionAlreadyPublished(source: string, packageId: string, nextVersion: string): Promise<boolean> {
     if (nextVersion === '')
       throw new Error('The value of nextVersion is empty')
-    return await execAsync(`dotnet package search --format JSON --exact-match --source ${source} --prerelease ${packageId}`)
+    return await execAsync(`dotnet package search --format JSON --exact-match --source ${source} --prerelease ${packageId}`, true)
       .then(stdPair => stdPair.stdout)
       .then(json => this._ParseNugetSearchReturn(json))
       .then((errsOrObj) => {
