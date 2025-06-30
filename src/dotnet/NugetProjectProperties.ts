@@ -1,7 +1,7 @@
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js'
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js'
 import { type } from 'arktype'
-import { isOfType, tBooleanString, type BooleanString, tEmptyOrBooleanString, type EmptyOrBooleanString } from '../utils/miscTypes.js'
+import { tBooleanString, type BooleanString, tEmptyOrBooleanString, type EmptyOrBooleanString } from '../utils/miscTypes.js'
 import { listOwnGetters } from '../utils/reflection.js'
 
 /**
@@ -100,19 +100,19 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     this._company = _getAndForget('Company')
     this._contentTargetFolders = _getAndForget('ContentTargetFolders')
     this._copyright = _getAndForget('Copyright')
-    if (isOfType(data = _getAndForget('DevelopmentDependency'), tEmptyOrBooleanString))
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('DevelopmentDependency')))
       this._developmentDependency = data
-    if (isOfType(data = _getAndForget('IncludeBuiltOutput'), tBooleanString))
+    if (tBooleanString.allows(data = _getAndForget('IncludeBuiltOutput')))
       this._includeBuiltOutput = data
-    if (isOfType(data = _getAndForget('IncludeContentInPack'), tBooleanString))
+    if (tBooleanString.allows(data = _getAndForget('IncludeContentInPack')))
       this._includeContentInPack = data
-    if (isOfType(data = _getAndForget('IncludeSource'), tEmptyOrBooleanString))
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('IncludeSource')))
       this._includeSource = data
-    if (isOfType(data = _getAndForget('IncludeSymbols'), tEmptyOrBooleanString))
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('IncludeSymbols')))
       this._includeSymbols = data
-    if (isOfType(data = _getAndForget('IsPackable'), tBooleanString))
+    if (tBooleanString.allows(data = _getAndForget('IsPackable')))
       this._isPackable = data
-    if (isOfType(data = _getAndForget('IsTool'), tEmptyOrBooleanString))
+    if (tEmptyOrBooleanString.allows(data = _getAndForget('IsTool')))
       this._isTool = data
     this._minClientVersion = _getAndForget('MinClientVersion')
     this._noPackageAnalysis = _getAndForget('NoPackageAnalysis')
@@ -128,19 +128,19 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     this._packageProjectUrl = _getAndForget('PackageProjectUrl')
     this._packageReadmeFile = _getAndForget('PackageReadmeFile')
     this._packageReleaseNotes = _getAndForget('PackageReleaseNotes')
-    if (isOfType(data = _getAndForget('PackageRequireLicenseAcceptance'), tBooleanString))
+    if (tBooleanString.allows(data = _getAndForget('PackageRequireLicenseAcceptance')))
       this._packageRequireLicenseAcceptance = data
     this._packageTags = _getAndForget('PackageTags')
     this._packageType = _getAndForget('PackageType')
     this._packageVersion = _getAndForget('PackageVersion')
     this._product = _getAndForget('Product')
     this._repositoryCommit = _getAndForget('RepositoryCommit')
-    if (isOfType(data = _getAndForget('RepositoryType'), type('""|"git"|"tfs"')))
+    if (type('""|"git"|"tfs"').allows(data = _getAndForget('RepositoryType')))
       this._repositoryType = data
     this._repositoryUrl = _getAndForget('RepositoryUrl')
-    if (isOfType(data = _getAndForget('SuppressDependenciesWhenPacking'), tBooleanString))
+    if (tBooleanString.allows(data = _getAndForget('SuppressDependenciesWhenPacking')))
       this._suppressDependenciesWhenPacking = data
-    if (isOfType(data = _getAndForget('SymbolPackageFormat'), type('"symbols.nupkg" | "snupkg"')))
+    if (type('"symbols.nupkg" | "snupkg"').allows(data = _getAndForget('SymbolPackageFormat')))
       this._symbolPackageFormat = data
     this._title = _getAndForget('Title')
   }
