@@ -1,6 +1,40 @@
 import { getEnvVarValue } from '../envUtils.js'
-import type { MSBuildProject } from './MSBuildProject.js'
-import { NugetRegistryInfo } from './NugetRegistryInfo.js'
+import {
+  NugetRegistryInfo as NugetRegistryInfo,
+  NugetRegistryInfoOptions as NRIOpts,
+  NugetRegistryInfoOptionsBase as NRIOptsBase,
+} from './NugetRegistryInfo.js'
+
+/**
+ * The Arktype definition for {@link GitlabNugetRegistryInfo}'s constructor parameter. Construct an object of this type by calling {@link GLNRIOpts.from}
+ * @static @override @readonly
+ * @param {typeof GLNRIOpts.inferIn} data
+ * @param {typeof NRIOptsBase.t.project} data.project See {@link NRIOptsBase.t.project}
+ * @param {typeof GLNRIOpts.inferIn.tokenEnvVars} [data.tokenEnvVars=DefaultGitlabTokenEnvVars] Defaults to {@link DefaultGitlabTokenEnvVars}. See {@link NRIOpts.t.tokenEnvVars}
+ * @param {typeof GLNRIOpts.inferIn.url} data.url The GitLab Nuget API URL to push packages to -OR- a keyword such as "group" or "project" used to determine URL. See {@link GLNRI.projectUrl}, {@link GLNRI.groupUrl}
+ */
+export const GitlabNugetRegistryInfoOptions = NRIOpts.and({
+  tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(() => GLNRI.DefaultGitlabTokenEnvVars),
+  url: NRIOptsBase.get('url').or('"group" | "project"').default('project'),
+}).pipe((obj) => {
+  switch (obj.url) {
+    case 'group':
+      if (GLNRI.groupUrl === undefined)
+        throw new Error('The group-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_NAMESPACE_ID) were undefined.')
+      obj.url = GLNRI.groupUrl
+      break
+    /* fall to default */
+    case 'project':
+      if (GLNRI.projectUrl === undefined)
+        throw new Error('The project-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_ID) were undefined.')
+      obj.url = GLNRI.projectUrl
+      break
+    default:
+      break
+  }
+  return obj
+})
+const GLNRIOpts = GitlabNugetRegistryInfoOptions
 
 // https://docs.gitlab.com/ee/user/packages/nuget_repository/
 export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
@@ -12,36 +46,15 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
   /** CI_PROJECT_NAMESPACE_ID */
   static get ownerId() { return getEnvVarValue('CI_PROJECT_NAMESPACE_ID') };
 
-  // static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com'
-
   static readonly DefaultGitlabTokenEnvVars = Object.freeze(['CI_JOB_TOKEN', 'GITLAB_TOKEN', 'GL_TOKEN'] as const)
 
   /**
    * Creates an instance of GitlabNugetRegistryInfo.
    * @constructor
-   * @param {string} [url] The GitLab Nuget API URL to push packages to.
-   * If {@link useGroupLevelEndpoint }, defaults to {@link GitlabNugetRegistryInfo.getGroupUrl }. Else, {@link GitlabNugetRegistryInfo.getProjectUrl }.
-   * @param {readonly string[]} [tokenEnvVars=GitlabNugetRegistryInfo.DefaultTokenEnvVars]
-   * @param {boolean} [useGroupLevelEndpoint] If `true`, the default of {@link url} is {@link GitlabNugetRegistryInfo.groupUrl}. If `false`, it's {@link GitlabNugetRegistryInfo.projectUrl}
+   * @param opts The return value of {@link GLNRIOpts}
    */
-  constructor(
-    url = '',
-    tokenEnvVars: readonly string[] = GitlabNugetRegistryInfo.DefaultGitlabTokenEnvVars,
-    dotnetProject: MSBuildProject,
-    useGroupLevelEndpoint = false,
-  ) {
-    if (url === '') {
-      const _url = useGroupLevelEndpoint
-        ? GitlabNugetRegistryInfo.groupUrl
-        : GitlabNugetRegistryInfo.projectUrl
-
-      if (!_url)
-        throw new ReferenceError('GitLab Nuget API url was not provided and neither the CI_PROJECT_ID nor the CI_PROJECT_NAMESPACE_ID (if useGroupLevelEndpoint === true) were defined in the current process\'s environment variables.')
-
-      url = _url
-    }
-
-    super(url, tokenEnvVars, dotnetProject)
+  constructor(opts: typeof GLNRIOpts.inferIn) {
+    super(GLNRIOpts.from(opts))
   }
 
   /**
@@ -66,3 +79,5 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
       : undefined
   }
 }
+
+const GLNRI = GitlabNugetRegistryInfo
