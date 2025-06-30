@@ -1,15 +1,10 @@
 import { type } from 'arktype'
-import { ok, strictEqual } from 'node:assert/strict'
+import { ok } from 'node:assert/strict'
 import { exec, fork } from 'node:child_process'
-import { createHash } from 'node:crypto'
-import { createReadStream, existsSync, type PathLike } from 'node:fs'
-import { readFile, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import { cwd } from 'node:process'
-import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
-import { dir, type DirResult, setGracefulCleanup } from 'tmp'
 import { getEnvVarValue } from '../envUtils.js'
 import { MSBuildProject } from './MSBuildProject.js'
 
@@ -145,207 +140,6 @@ export class NugetRegistryInfo {
   public get project(): MSBuildProject { return this._project }
 
   /**
-   * Execute `dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key
-   * ${tokenValue} --skip-duplicate`
-   * @param url The URL of the NuGet Source's API endpoint.
-   * @param tokenValue The value of the api key retrieved from the Environment
-   * variables.
-   * @returns The STDOUT and STDERR of the command.
-   * @remark This should run at the beginning of Semantic Release's `prepare`
-   * step.
-   * @deprecated Pushing a generic DUMMY package will not work with NuGet.org.
-   * To improve upon this, we need the actual package ID **and**  the actual
-   * package with its version set to 0.0.1-DUMMY. This will allow the NuGet
-   * Source to perform the authorization check on the actual package ID and
-   * verify the actual package is in good shape. HOWEVER, this also means a
-   * successful release will push a package to a source *twice*—once with the
-   * dummy version and again with nextVersion.
-   */
-  private static async pushDummyAsync(url: string, tokenValue: string): Promise<{ stdout: string, stderr: string }> {
-    const dummyNupkgPath = await getDummyNupkgAsync()
-    const pushResult = await execAsync(`dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key ${tokenValue} --skip-duplicate`,
-      { encoding: 'utf8' },
-    ).catch((reason: unknown) => {
-      throw reason instanceof Error && 'stdout' in reason && typeof reason.stdout === 'string'
-        ? new Error(`Command failed: dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key *** --skip-duplicate"\n${reason.stdout.replace('\r', '').replace('\n\n\n', '').split('\nUsage: dotnet nuget push [arguments] [options]')[0].trimEnd()}`)
-        : reason instanceof Error
-          ? reason
-          : new Error(String(reason))
-    })
-    return pushResult
-
-    // todo: rewrite. We no longer use static nupkgs.
-    /** returns the full path of the dummy package */
-    async function getDummyNupkgAsync(): Promise<string> {
-      // find package.json
-      const packageJson = import.meta.resolve('../../package.json')
-      if (!packageJson)
-        throw new ReferenceError('failed to get @halospv3/hce.shared-config\'s package.json and its dirname')
-      const dummyPkgPath: string = resolve(fileURLToPath(dirname(packageJson)), 'static', 'DUMMY.1.0.0.nupkg')
-      // originally implemented by F1LT3R at https://gist.github.com/F1LT3R/2e4347a6609c3d0105afce68cd101561
-      const sha256 = (path: PathLike): Promise<string> => new Promise((promise_resolve, promise_reject) => {
-        const hash = createHash('sha256')
-        const rs = createReadStream(path)
-        rs.on('error', promise_reject)
-        rs.on('data', chunk => hash.update(chunk))
-        rs.on('end', () => {
-          promise_resolve(hash.digest('hex').toUpperCase());
-        })
-      })
-
-      const expected = '65A383F09CFBE6928619C620057A17D01C5A37704C5FEF1C99C53BB6E1BB6BA2'
-
-      try {
-        strictEqual(
-          await sha256(dummyPkgPath),
-          expected,
-        )
-      }
-      catch (err) {
-        setGracefulCleanup()
-        await newDummy().then(async () =>
-          await makeNupkgDeterministic(dummyPkgPath),
-        ).then(async () =>
-          strictEqual(
-            await sha256(dummyPkgPath),
-            expected,
-            'The SHA256 of @halospv3/hce.shared-config/static/DUMMY.1.0.0.nupkg did not match! Somebody poisoned the dummy!',
-          ),
-        ).catch((reason) => {
-          throw new AggregateError(
-            [
-              err instanceof Error ? err : new Error(String(err)),
-              reason instanceof Error ? reason : new Error(String(reason)),
-            ],
-            'Multiple errors occurred while locating and verifying DUMMY.1.0.0.nupkg. The stored nupkg\'s hash did not match the stored hash. The nupkg was regenerated, determinized, and re-hashed, but the hashes still didn\'t match!',
-          )
-        })
-      }
-
-      return dummyPkgPath
-
-      async function newDummy() {
-        const tmpDirResult = await new Promise<DirResult>((resolve, reject) => {
-          dir({ unsafeCleanup: true }, (err, name, removeCallback) => {
-            if (err)
-              reject(err)
-            resolve({ name, removeCallback } as DirResult)
-          })
-        })
-        const dummyFilePath = resolve(tmpDirResult.name, 'DUMMY')
-
-        try {
-          const dummyProjPath: string = resolve(tmpDirResult.name, 'DUMMY.csproj')
-          const promiseNewProj = execAsync(`dotnet new classlib--framework net8.0 --output ${tmpDirResult.name}`)
-          const csprojContent: string = await promiseNewProj.then(async () =>
-            await readFile(dummyProjPath, { encoding: 'utf8' }),
-          )
-          const newline = csprojContent.includes('`r`n') ? '`r`n' : '`n'
-
-          // create empty Content file so we can pack without libs or deps
-          const promiseDummyFile = writeFile(dummyFilePath, '', { encoding: 'utf8' })
-          const dummyFileSize = (await promiseDummyFile.then(async () =>
-            await stat(dummyFilePath),
-          )).size
-
-          if (0 !== dummyFileSize) {
-            throw 'DUMMY file is not empty'
-          }
-
-          // include it in the project
-          const modifiedContent = csprojContent.replace(
-            '</PropertyGroup>' + newline,
-            '</PropertyGroup>' + newline
-            + newline
-            + '  <ItemGroup>' + newline
-            + '    <Content Include="DUMMY"/>' + newline
-            + '  </ItemGroup>' + newline,
-          )
-          const promiseCsprojWrite = writeFile(dummyProjPath, modifiedContent)
-
-          // Note: in .NET SDK 8 and later, `pack` sets Configuration to Release by default. Previous SDKs default to 'Debug'.This is partly due to the inclusion of SourceLink in .NET 8 and later.
-          const packResult = await promiseCsprojWrite.then(async () =>
-            await execAsync(
-              `dotnet pack ${dummyProjPath} `
-              + '-o ./ '
-              + '--no-build '
-              + '--property:Description=DUMMY '
-              + '--property:SuppressDependenciesWhenPacking=true '
-              + '--property:IncludeBuildOutput=false',
-            ),
-          )
-
-          if (packResult && existsSync(dummyPkgPath))
-            return dummyPkgPath
-          throw new Error(`DUMMY.1.0.0.nupkg was successfully recreated, but could not be found at the desired location "${dummyPkgPath}"`)
-        }
-        finally {
-          tmpDirResult.removeCallback()
-        }
-      }
-
-      async function makeNupkgDeterministic(nupkgPath: string) {
-        const packageId = 'Kuinox.NupkgDeterministicator'.toLowerCase()
-        const cmd = 'NupkgDeterministicator'
-        const deterministicResult = await getDotnetTool(packageId, cmd, true).then(async () =>
-          await execAsync(`${cmd} ${nupkgPath}`),
-        )
-
-        ok(deterministicResult)
-        return
-
-        /**
-         * check locally (./.config/dotnet-tools.json) or globally for the given dotnet tool and its command. If not found, try installing it globally.
-         * @param packageId
-         * @param cmd
-         * @returns
-         */
-        async function getDotnetTool(packageId: string, cmd: string, installIfMissing = false): Promise<void> {
-          const errors: Error[] = []
-          let found = false
-
-          try {
-            const list = await execAsync(`dotnet tool list -g ${packageId}`)
-            found = list.stdout.includes(packageId) && list.stdout.includes(cmd)
-          }
-          catch (err) {
-            errors.push(err instanceof Error ? err : new Error(String(err)))
-          }
-
-          if (!found) {
-            try {
-              // try again, but drop 'global' switch; search nearest tool file
-              const list = await execAsync(`dotnet tool list ${packageId}`)
-              found = list.stdout.includes(packageId) && list.stdout.includes(cmd)
-            }
-            catch (err) {
-              errors.push(err instanceof Error ? err : new Error(String(err)))
-            }
-          }
-
-          if (!found && installIfMissing) {
-            try {
-              const promiseInstall = execAsync(`dotnet tool install -g ${packageId}`)
-              const list = await promiseInstall.then(async () =>
-                await execAsync(`dotnet tool list -g ${packageId}`),
-              )
-              found = list.stdout.includes(packageId) && list.stdout.includes(cmd)
-            }
-            catch (err) {
-              errors.push(err instanceof Error ? err : new Error(String(err)))
-            }
-
-            if (!found)
-              throw new AggregateError(errors)
-
-            return
-          }
-        }
-      }
-    }
-  }
-
-  /**
    * This is not useful without it being executed as part of a Semantic Release
    * plugin. Deferring this to @semantic-release/exec's prepareCmd is possible,
    * but impractical. You'd need to configure prepareCmd to invoke something
@@ -372,13 +166,14 @@ export class NugetRegistryInfo {
       return this.#canPushPackagesToUrl = Promise.reject(err)
     }
 
-    const finalResult = NugetRegistryInfo.pushDummyAsync(this.url, tokenValue)
-      .then(async (execAsyncReturn) => {
-        ok(execAsyncReturn)
-        return true as const
-      })
-
-    return this.#canPushPackagesToUrl = finalResult
+    return this.#canPushPackagesToUrl = new Promise<true>(_resolve => _resolve(
+      this.PackDummyPackage({})
+        .then(async () => await this._PushDummyPackages({ root: '' }))
+        .then((execAsyncReturn) => {
+          ok(execAsyncReturn)
+          return true as const
+        }),
+    ))
   }
 
   /**
@@ -564,7 +359,7 @@ but the environment variable is empty or undefined.`)
     NRI.PackPackagesOptionsType.assert(opts)
 
     opts.output = getDummiesDir(this._project)
-    const packCmd = this.GetPackCommand(opts, true)
+    const packCmd: string = this.GetPackCommand(opts, true)
     /** e.g.
      * ```txt
      *  Determining projects to restore...
@@ -745,10 +540,9 @@ but the environment variable is empty or undefined.`)
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
    */
-  // @ts-expect-error Todo: add tests and/or publicize to dismiss this "unused" error.
-  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.t): Promise<void> {
+  private async _PushDummyPackages(opts: typeof NRI.PushPackagesOptionsType.t): Promise<{ stdout: string, stderr: string }> {
     const pushCmd: string = this.GetPushDummyCommand(opts)
-    /* const output = */ await execAsync(pushCmd)
+    return await execAsync(pushCmd)
   }
 
   // #endregion Push
