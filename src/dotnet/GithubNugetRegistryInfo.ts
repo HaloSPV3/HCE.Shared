@@ -18,19 +18,19 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
   }
 
   /**
-     * Returns `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json` or throws if GITHUB_REPOSITORY_OWNER is not defined in {@link process.env} and {@link process.cwd() $CWD}/.env
-     *
-     * @export
-     * @throws {@link ReferenceError }
-     * Explain why this error is thrown.
-     *
-     * @returns {string} If GITHUB_REPOSITORY_OWNER is defined, returns the GitHub Package Repository URL endpoint for NuGet pushes (--source).
-     */
-  static getNugetGitHubUrl(): string {
+   * Returns `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json`
+   * or (if GITHUB_REPOSITORY_OWNER is not defined in {@link process.env} nor
+   * {@link process.cwd() $CWD}/.env) `undefined`.
+   *
+   * @export
+   * @returns {string?} If GITHUB_REPOSITORY_OWNER is defined, returns the GitHub Package Repository URL endpoint for NuGet pushes (--source).\
+   * Otherwise, returns `undefined`
+   */
+  static getNugetGitHubUrl(): string | undefined {
     const owner = GithubNugetRegistryInfo.getOwner()
     if (owner)
-      return `${GithubNugetRegistryInfo.NUGET_PKG_GITHUB_COM}/${owner}/index.json`
-    throw new ReferenceError('GITHUB_REPOSITORY_OWNER is undefined! Default NuGet source for GitHub is unavailable.')
+      return `${NUGET_PKG_GITHUB_COM}/${owner}/index.json`
+    else return owner
   }
 
   /** returns the value of GITHUB_REPOSITORY_OWNER */
