@@ -9,7 +9,7 @@ const type_mdRecommended = type([{
   name: '\'markdown/recommended\'',
   files: type(['"**/*.md"']),
   language: '\'markdown/commonmark\'',
-  plugins: type({ '@eslint/markdown': 'unknown' }),
+  plugins: type({ markdown: 'unknown' }),
   rules: type({
     'markdown/fenced-code-language': '\'error\'',
     'markdown/heading-increment': '\'error\'',
