@@ -1,15 +1,15 @@
 {
-    "extends": "../baseTsconfig.json",
-    "compilerOptions": {
-        "outDir": "../_tsout/tests"
-    },
-    "include": [
-        "./**/*",
-        "../package.json"
-    ],
-    "references": [
-        {
-            "path": "../src/tsconfig.json"
-        }
-    ]
+  "extends": "../baseTsconfig.json",
+  "compilerOptions": {
+    "outDir": "../_tsout/tests"
+  },
+  "include": [
+    "./**/*",
+    "../package.json"
+  ],
+  "references": [
+    {
+      "path": "../src/tsconfig.json"
+    }
+  ]
 }

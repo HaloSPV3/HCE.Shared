@@ -1,29 +1,27 @@
 {
-    "extends": "./baseTsconfig.json",
-    "compilerOptions": {
-        "allowJs": true,
-        "allowImportingTsExtensions": true,
-        "checkJs": true,
-        "outDir": "_tsout",
-        "target":"es2020"
+  "extends": "./baseTsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "allowImportingTsExtensions": true,
+    "checkJs": true,
+    "outDir": "_tsout",
+    "target":"es2020"
+  },
+  "include": [
+    "./.vscode/settings.json",
+    "./*.cjs",
+    "./*.js",
+    "./*.mjs",
+    "./*.cts",
+    "./*.mts",
+    "./*.ts"
+  ],
+  "references": [
+    {
+      "path": "./tests/tsconfig.json"
     },
-    "include": [
-        "./.vscode/settings.json",
-        "./*.cjs",
-        "./*.js",
-        "./*.mjs",
-        "./*.cts",
-        "./*.mts",
-        "./*.ts",
-        "src/**/*.ts",
-        "tests/**/*.ts"
-    ],
-    "references": [
-        {
-            "path": "./tests/tsconfig.json"
-        },
-        {
-            "path": "./src/tsconfig.json"
-        }
-    ]
+    {
+      "path": "./src/tsconfig.json"
+    }
+  ]
 }

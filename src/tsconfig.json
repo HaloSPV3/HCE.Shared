@@ -1,10 +1,10 @@
 {
-    "extends": "../baseTsconfig.json",
-    "compilerOptions": {
-        "outDir": "../_tsout/src",
-        "target": "ES2022"
-    },
-    "include": [
-        "./**/*"
-    ]
+  "extends": "../baseTsconfig.json",
+  "compilerOptions": {
+    "outDir": "../_tsout/src",
+    "target": "ES2022"
+  },
+  "include": [
+    "./**/*"
+  ]
 }
