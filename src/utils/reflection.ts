@@ -1,5 +1,17 @@
+import {
+  type BaseClassProto,
+  type ClassLike,
+  type ClassLike_Unknown,
+  type ConstructorConstraint,
+  type SuperClassLike,
+  type WithProto,
+} from './reflection/inheritance.js';
+
 export type * from './reflection/GetterDescriptor.js';
 export type * from './reflection/FunctionLike.js';
+
+export * from './reflection/inheritance.js';
+export * from './reflection/getPrototypeOf.js';
 
 /**
  * Returns the names of the instantiated, noninherited getters derived from the
@@ -45,9 +57,6 @@ export function filterForGetters<T>(
   );
 }
 
-export type ClassLike<T extends abstract new (...args: ConstructorParameters<T>) => InstanceType<T> = abstract new (...args: readonly unknown[] | unknown[]) => unknown>
-  = abstract new (...args: ConstructorParameters<T>) => InstanceType<T>;
-
 /**
  * Get the property descriptors of the class or constructor similar to {@link Object.getOwnPropertyDescriptors}, but with more options--including recursion.
  * @param classDef A class or constructor requiring the 'new' keyword for instantiation.
@@ -57,7 +66,7 @@ export type ClassLike<T extends abstract new (...args: ConstructorParameters<T>)
  * todo: refactor!: change instanceProps to flag enum (instanceProps, staticProps, allProps)
  * @since 3.0.0
  */
-export function getOwnPropertyDescriptors<T extends ClassLike<T>>(
+export function getOwnPropertyDescriptors<T extends ClassLike<ConstructorConstraint<T> & WithProto<SuperClassLike | BaseClassProto>>>(
   classDef: T,
   instanceProps: boolean,
   recurse: boolean,
@@ -70,8 +79,8 @@ export function getOwnPropertyDescriptors<T extends ClassLike<T>>(
     ];
 
   let currentNameDesc: ReturnType<typeof Reflect.getOwnPropertyDescriptor>;
-  let current: ClassLike<T> | ClassLike = classDef;
-  let parent: ClassLike | object | null = null;
+  let current: ClassLike<T> | ClassLike_Unknown = classDef;
+  let parent: ClassLike_Unknown | object | null = null;
   const descriptors: ReturnType<typeof Object.getOwnPropertyDescriptors>[] = [];
 
   /** conditions:
@@ -130,16 +139,16 @@ export function getOwnPropertyDescriptors<T extends ClassLike<T>>(
  * Excludes default superclasses e.g. anonymous functions, native code.
  * @since 3.0.0
  */
-export function getPrototypes<T extends ClassLike<T>>(
+export function getPrototypes<T extends ClassLike<ConstructorConstraint<T> & WithProto<SuperClassLike | BaseClassProto>>>(
   classDef: ClassLike<T> | object,
   returnType: 'classes' | 'classInstances' = 'classes',
 ): typeof returnType extends 'classInstances' ? ClassLike<T>[] : ClassLike<T>['prototype'][] {
   // class definitions or their respective .prototype; exclude default superclasses.
   const returnValue: object[] = [];
-  let current: ClassLike<T> | ClassLike | object = classDef;
-  let parent: ClassLike | object | null;
+  let current: ClassLike<T> | ClassLike_Unknown | object = classDef;
+  let parent: ClassLike_Unknown | object | null = Reflect.getPrototypeOf(current);
 
-  while (undefined != (parent = Reflect.getPrototypeOf(current))) {
+  while (null != parent) {
     // current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
     if (isConstructor(current))
       returnValue.push(returnType === 'classInstances' ? current.prototype as object : current);
@@ -185,7 +194,7 @@ export function getPrototypes<T extends ClassLike<T>>(
  * @remarks Only works when targeting ES6/ES2015 or later. If your project or a dependent project is compiled to <= ES5/CJS, this function will always return `false`; classes and constructors were introduced in ES6/ES2015.
  * @see https://stackoverflow.com/a/49510834
  */
-export function isConstructor(obj: unknown): obj is ClassLike {
+export function isConstructor(obj: unknown): obj is ClassLike_Unknown {
   // Method 0 - filter
   if (typeof obj !== 'function')
     return false;
