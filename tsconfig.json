@@ -12,8 +12,7 @@
         "./*.cts",
         "./*.mts",
         "./*.ts",
-        "src/**/*.ts",
-        "tests/**/*.ts"
+        "./src/semantic-release__commit-analyzer.d.ts"
     ],
     "references": [
         {
