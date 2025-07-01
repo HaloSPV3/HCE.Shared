@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { deepStrictEqual, notStrictEqual } from "node:assert";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { packemon } from "../package.json" with { type: "json" };
+import packemonJson from "../package.json" with { type: "json" };
 // import { isMainThread, Worker } from "node:worker_threads";
 
 // #region PackemonTypes
@@ -124,7 +124,7 @@ await describe("package.json", async () => {
     ];
 
     // #region Arrays
-    const packemonArray = (Array.isArray(packemon) ? packemon : [packemon]) as PackemonPackageConfig[];
+    const packemonArray = (Array.isArray(packemonJson.packemon) ? packemonJson.packemon : [packemonJson.packemon]) as PackemonPackageConfig[];
     const packemonCjs = packemonArray.find(v => v.format === "cjs" || true === v.format?.includes("cjs"));
     const packemonMjs = packemonArray.find(v => v.format === "mjs" || true === v.format?.includes("mjs") || (v.format === undefined && v.platform === "node"));
     const results: Result[] = [];
@@ -185,7 +185,6 @@ await describe("package.json", async () => {
     const unexpectedCjs = requiredCjs.filter(v => !expectedCjs.includes(v));
     await it('...is expected to expose CJS modules and is configured to do so', () => {
         if (expectedCjs.length > 0) {
-            packemonCjs
             notStrictEqual(
                 packemonCjs?.inputs,
                 undefined,
