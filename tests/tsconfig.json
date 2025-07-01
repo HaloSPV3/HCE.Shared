@@ -4,7 +4,7 @@
         "outDir": "../_tsout/tests"
     },
     "include": [
-        "./**/*",
+        "./**/*.ts",
         "../package.json"
     ],
     "references": [
