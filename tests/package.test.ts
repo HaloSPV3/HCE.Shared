@@ -65,6 +65,7 @@ await describe('package.json', async () => {
   // #endregion Types
 
   const require = createRequire(import.meta.url);
+  // eslint-disable-next-line jsdoc/require-jsdoc
   function tryCanAction(action: Result['action'], entry: Result['entry']) {
     const result = { action, entry, validity: false } as Result;
     try {
