@@ -80,7 +80,6 @@ const scopes = {
 
 const config: UserConfig = {
   ...(commitlintConfig satisfies UserConfig),
-  // get and add all commit scopes defined in ./.vscode/settings.json for extension 'gitCommitMessageEditor'
   rules: {
     ...commitlintConfig.rules,
     'scope-enum': [
