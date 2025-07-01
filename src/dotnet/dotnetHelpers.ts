@@ -150,17 +150,17 @@ export const nugetDefault: NuGetRegistryInfo = {
  * @param pushToGitHub
  * @returns
  */
-export async function configureDotnetNugetPush(
+export function configureDotnetNugetPush(
 	nupkgDir = './publish',
 	registries: NuGetRegistryInfo[] = [nugetDefault],
 	pushToGitHub = true,
-) {
+): string {
 	if (registries.some((registry) => registry.url.trim() === ''))
 		throw new Error('The URL for one of the provided NuGet registries was empty or whitespace.');
 
 	// if user did not specify a GitHub NuGet Registry, try determine default values and add the Source.
 	if (pushToGitHub && !registries.some((reg) => reg.url.startsWith(nugetGitHubUrlBase))) {
-		const ghPair = await getGithubNugetRegistryPair();
+		const ghPair: NuGetRegistryInfo | undefined = getGithubNugetRegistryPair();
 		if (ghPair) {
 			registries.push(ghPair);
 		}

@@ -1,6 +1,5 @@
 import { notDeepStrictEqual, ok } from 'node:assert/strict';
-import { exec, type ExecException } from 'node:child_process';
-import { promisify } from 'node:util';
+import { spawnSync, type ExecException } from 'node:child_process';
 import { getEnvVarValue } from '../envUtils.js';
 import { createDummyNupkg } from './createDummyNupkg.js';
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
@@ -14,7 +13,7 @@ import type { NuGetRegistryInfo } from './dotnetHelpers.js';
  *   - The value of the token in ${tokenEnvVar} begins with 'github_pat_' which means it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.
  *   - The GitHub API response header lacked "x-oauth-scopes". This indicates the token we provided is not a workflow token nor a Personal Access Token (classic) and can never have permission to push packages.
  */
-export async function tokenCanWritePackages(tokenEnvVar: string, url?: string) {
+export function tokenCanWritePackages(tokenEnvVar: string, url?: string) {
 	/* double-check the token exists */
 	const info = isTokenDefined(tokenEnvVar);
 	ok(info.isDefined)
@@ -38,10 +37,11 @@ export async function tokenCanWritePackages(tokenEnvVar: string, url?: string) {
 		throw new Error(`The value of the token in ${tokenEnvVar} begins with 'github_pat_' which means it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`)
 
 	const dummyNupkgPath = createDummyNupkg();
-	const promiseExec = promisify(exec);
 
 	try {
-		const pushResult = await promiseExec(`dotnet nuget push ${dummyNupkgPath} --source ${url} --api-key ${tokenValue} --skip-duplicate`, { encoding: 'utf8' })
+		console.warn('When the following command fails, it WILL LEAK YOUR API TOKEN.')
+		const pushResult = spawnSync('dotnet', ['nuget', 'push', `"${dummyNupkgPath}"`, '--source', `"${url}"`, '--api-key', `"${tokenValue}"`, '--skip-duplicate'], { stdio: 'pipe', encoding: 'utf8', });
+		
 		const errNewline = pushResult.stderr.includes('\r\n') ? '\r\n' : pushResult.stdout.includes('\r') ? '\r' : '\n';
 
 		// if any *lines* start with "error: " or "Error: ", log stderr
@@ -118,10 +118,10 @@ export function isTokenDefined(tokenEnvVar = 'GITHUB_TOKEN'): { isDefined: boole
  * @returns {(NuGetRegistryInfo | undefined)} a {@link NuGetRegistryInfo} object if {@link tokenEnvVar} and {@link url} are defined. Else, `undefined`.
  * note: `url` defaults to job's repository owner's GitHub registry in GitHub Actions workflow. If GITHUB_REPOSITORY_OWNER is not defined, then an error will be logged and `undefined` will be returned.
  */
-export async function getGithubNugetRegistryPair(
+export function getGithubNugetRegistryPair(
 	tokenEnvVar: string | 'GITHUB_TOKEN' | 'GH_TOKEN' = 'GITHUB_TOKEN',
 	url: string | undefined = getNugetGitHubUrl(),
-): Promise<NuGetRegistryInfo | undefined> {
+): NuGetRegistryInfo | undefined {
 	const errors: Error[] = [];
 	const _isTokenDefinedInfo = isTokenDefined(tokenEnvVar);
 	let canTokenWritePackages = undefined;
@@ -140,7 +140,7 @@ export async function getGithubNugetRegistryPair(
 		if (_isTokenDefinedInfo.fallback)
 			tokenEnvVar = _isTokenDefinedInfo.fallback;
 		try {
-			canTokenWritePackages = await tokenCanWritePackages(tokenEnvVar, url);
+			canTokenWritePackages = tokenCanWritePackages(tokenEnvVar, url);
 		}
 		catch (err) {
 			if (err instanceof Error)
