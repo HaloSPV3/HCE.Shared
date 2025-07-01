@@ -1,7 +1,6 @@
 {
     "recommendations": [
         "aaron-bond.better-comments",
-        "adam-bender.commit-message-editor",
         "aliariff.auto-add-brackets",
         "anish.easy-npm",
         "bierner.github-markdown-preview",
@@ -14,7 +13,6 @@
         "designbyajay.typescript-snippets",
         "discretetom.string-hover",
         "dotjoshjohnson.xml",
-        "drmerfy.overtype",
         "eamodio.gitlens",
         "emilast.logfilehighlighter",
         "esbenp.prettier-vscode",
@@ -25,7 +23,6 @@
         "github.vscode-pull-request-github",
         "idered.npm",
         "iulian-radu-at.vscode-tasks-sidebar",
-        "jeff-hykin.code-eol",
         "johnsoncodehk.vscode-tsconfig-helper",
         "joshbolduc.commitlint",
         "kricsleo.vscode-package-json-inspector",
