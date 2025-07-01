@@ -1,5 +1,5 @@
 {
-  "extends": "./baseTsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "allowJs": true,
     "allowImportingTsExtensions": true,
@@ -8,7 +8,6 @@
     "target":"es2020"
   },
   "include": [
-    "./.vscode/settings.json",
     "./*.cjs",
     "./*.js",
     "./*.mjs",
