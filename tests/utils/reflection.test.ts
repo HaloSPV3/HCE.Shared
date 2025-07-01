@@ -92,17 +92,17 @@ await describe('filterForGetters', async () => {
 // oh boy don't do this
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
-type LastOf<T> =
+type LastOf<T>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  UnionToIntersection<T extends any ? () => T : never> extends () => (infer R) ? R : never;
+  = UnionToIntersection<T extends any ? () => T : never> extends () => (infer R) ? R : never;
 
 // TS4.0+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Push<T extends any[], V> = [...T, V];
 
 // TS4.1+
-type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : false> =
-  true extends N ? [] : Push<TuplifyUnion<Exclude<T, L>>, L>;
+type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : false>
+  = true extends N ? [] : Push<TuplifyUnion<Exclude<T, L>>, L>;
 
 // #endregion dangerousTypes
 await describe('getOwnPropertyDescriptors', async () => {
@@ -191,11 +191,11 @@ await describe('getOwnPropertyDescriptors', async () => {
     );
 
     const keys: NoRepetition<
-      'length' |
-      'name' |
-      'prototype' |
-      'GetFullPath' |
-      'getAndForget'
+      'length'
+      | 'name'
+      | 'prototype'
+      | 'GetFullPath'
+      | 'getAndForget'
     > = [
       ...Reflect.ownKeys(arrayOfOwnPropertyDescriptorMaps[1]) as ('getAndForget' | OwnKeyOf<typeof arrayOfOwnPropertyDescriptorMaps[1], { __proto__: undefined }>)[],
       ...Reflect.ownKeys(arrayOfOwnPropertyDescriptorMaps[0]) as OwnKeyOf<typeof arrayOfOwnPropertyDescriptorMaps[0], typeof arrayOfOwnPropertyDescriptorMaps[1]>[],
@@ -222,8 +222,8 @@ await describe('getOwnPropertyDescriptors', async () => {
 
 // https://stackoverflow.com/a/63116449/14894786
 // for TypeScript 4
-type PushFront<TailT extends unknown[], HeadT> =
-    ((head: HeadT, ...tail: TailT) => void) extends ((...array: infer ArrayT) => void) ? ArrayT : never;
+type PushFront<TailT extends unknown[], HeadT>
+    = ((head: HeadT, ...tail: TailT) => void) extends ((...array: infer ArrayT) => void) ? ArrayT : never;
 
 type NoRepetition<U extends string, ResultT extends unknown[] = []> = {
   [k in U]: PushFront<ResultT, k> | NoRepetition<Exclude<U, k>, PushFront<ResultT, k>>

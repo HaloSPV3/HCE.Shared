@@ -5,15 +5,15 @@ This target runs after "Pack" and utilizes `kuinox.nupkgdeterministicator` to ma
 Learn more about Kuinox's NupkgDeterministicator\
 [GitHub](https://github.com/Kuinox/NupkgDeterministicator) | [Nuget](https://www.nuget.org/packages/Kuinox.NupkgDeterministicator)
 
-# Install `kuinox.nupkgdeterministicator`
+## Install `kuinox.nupkgdeterministicator`
 
-## .NET CLI (Global)
+### .NET CLI (Global)
 
 ```sh
 dotnet tool install -g NupkgDeterministicator
 ```
 
-## .NET CLI (Local)
+### .NET CLI (Local)
 
 ```sh
 dotnet tool install -g NupkgDeterministicator

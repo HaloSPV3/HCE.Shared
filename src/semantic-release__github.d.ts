@@ -43,7 +43,7 @@ declare module '@semantic-release/github' {
     path: Glob;
     /**
      * The name of the downloadable file on the GitHub release.
-     * @defaultValue File name extracted from the {@link Asset.path path}.
+     * Defaults to the file name extracted from the {@link Asset.path}.
      */
     name?: string;
     /** Short description of the file displayed on the GitHub release. */
@@ -54,12 +54,12 @@ declare module '@semantic-release/github' {
   export interface Options {
     /**
      * The GitHub server endpoint.
-     * @defaultValue {@link Env.GH_URL GH_URL} or  {@link Env.GITHUB_URL GITHUB_URL} environment variables.
+     * Defaults to the values of the {@link Env.GH_URL GH_URL} or {@link Env.GITHUB_URL GITHUB_URL} environment variables.
      */
     githubUrl?: string;
     /**
      * The GitHub API prefix, relative to `githubUrl`.
-     * @defaultValue {@link Env.GH_PREFIX GH_PREFIX} or {@link Env.GITHUB_PREFIX GITHUB_PREFIX} environment variables
+     * Defaults to the values of the {@link Env.GH_PREFIX GH_PREFIX} or {@link Env.GITHUB_PREFIX GITHUB_PREFIX} environment variables
      */
     githubApiPathPrefix?: string;
     /**
@@ -82,20 +82,20 @@ declare module '@semantic-release/github' {
      * The comment to add to each issue and pull request resolved by the release.
      * Set to `false` to disable commenting on issues and pull requests.
      * See {@link https://github.com/semantic-release/github?tab=readme-ov-file#successcomment successComment}.
-     * @defaultValue `:tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](<github_release_url>)`
+     * Defaults to `:tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](<github_release_url>)`
      */
     successComment?: string | false;
     /**
      * The content of the issue created when a release fails.
      * Set to `false` to disable opening an issue when a release fails.
      * See {@link https://github.com/semantic-release/github?tab=readme-ov-file#failcomment failComment}.
-     * @defaultValue Friendly message with links to semantic-release documentation and support, with the list of errors that caused the release to fail.
+     * Defaults to a friendly message with links to semantic-release documentation and support, with the list of errors that caused the release to fail.
      */
     failComment?: string | false;
     /**
      * The title of the issue created when a release fails.
      * Set to `false` to disable opening an issue when a release fails.
-     * @defaultValue `The automated release is failing 🚨`
+     * Defaults to `The automated release is failing 🚨`
      */
     failTitle?: string | false;
     /**

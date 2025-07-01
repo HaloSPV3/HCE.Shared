@@ -78,8 +78,8 @@ export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDoten
   return envOutput.parsed;
 }
 
-type DummiesDir<T> = T extends undefined ?
-`${TmpDirNamespace_Unix}/` | `${TmpDirNamespace_Win}\\`
+type DummiesDir<T> = T extends undefined
+  ? `${TmpDirNamespace_Unix}/` | `${TmpDirNamespace_Win}\\`
   : T extends MSBuildProject
     ? `${TmpDirNamespace_Unix}/${T['Properties']['PackageId']}/` | `${TmpDirNamespace_Win}\\${T['Properties']['PackageId']}\\`
     : never;

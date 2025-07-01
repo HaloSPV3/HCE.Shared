@@ -26,10 +26,10 @@ export function getOwnPropertyDescriptors<
   classDefinition: Class,
   instanceOrStatic: _InstanceOrStatic,
 ): [_InstanceOrStatic] extends ['Instance']
-    ? InstancePropertyDescriptorMap<Class>
-    : [_InstanceOrStatic] extends ['Static']
-        ? OwnPropertyDescriptorMap<Class>
-        : never {
+  ? InstancePropertyDescriptorMap<Class>
+  : [_InstanceOrStatic] extends ['Static']
+      ? OwnPropertyDescriptorMap<Class>
+      : never {
   switch (instanceOrStatic) {
     case 'Instance': {
       return Object.getOwnPropertyDescriptors(classDefinition.prototype) as [Extract<typeof instanceOrStatic, 'Instance'>] extends ['Instance']

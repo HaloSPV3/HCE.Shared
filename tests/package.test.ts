@@ -14,18 +14,18 @@ interface PackemonPackageFeatures {
   swc?: boolean;
 }
 type CommonFormat = 'lib';
-type BrowserFormat =
-  | CommonFormat
+type BrowserFormat
+  = | CommonFormat
   // ECMAScript modules with ".js" file extension
-  | 'esm'
+    | 'esm'
   // Universal Module Definition with ".js" file extension
-  | 'umd';
-type NodeFormat =
-  | CommonFormat
+    | 'umd';
+type NodeFormat
+  = | CommonFormat
   /* CommonJS modules with ".cjs" file extension */
-  | 'cjs'
+    | 'cjs'
   /* ECMAScript modules with ".mjs" file extension */
-  | 'mjs';
+    | 'mjs';
 type Format = BrowserFormat | NodeFormat;
 type Platform = 'browser' | 'electron' | 'native' | 'node';
 

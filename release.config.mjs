@@ -66,7 +66,8 @@ async function setupCommitAnalyzer() {
     presetConfig: T_AnyRecord.optional(),
   });
 
-  /** @type {(plugins:typeof config.plugins) => T_CommitAnalyzerOpts['inferOut']} */
+  // eslint-disable-next-line jsdoc/no-undefined-types
+  /** @type {(plugins:(string | [string,object])[]) => typeof T_CommitAnalyzerOpts['inferOut']} */
   function extractCommitAnalyzerOpts(plugins) {
     const entry = plugins.find(v => v === COMMIT_ANALYZER_ID || v[0] === COMMIT_ANALYZER_ID);
     if (entry == undefined || typeof entry === 'string')
@@ -154,6 +155,7 @@ function setupGithub() {
   });
 
   const GHTuple = type(['"@semantic-release/github"', SRGHOptions]);
+  // eslint-disable-next-line jsdoc/no-undefined-types
   /** @type {typeof GHTuple.inferOut | undefined} */
   // @ts-expect-error `find` drops the narrowed type.
   const github = config.plugins.find(v => GHTuple.allows(v));

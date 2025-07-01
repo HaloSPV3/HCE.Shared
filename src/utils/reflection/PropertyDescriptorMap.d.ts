@@ -6,8 +6,8 @@
  * The `null` or the `object`-like `[[Prototype]]` of {@link T}.
  * @since 3.0.0
  */
-export type PropertyDescriptorMap<T, __proto__ extends object | null = null> =
-  __proto__ extends null
+export type PropertyDescriptorMap<T, __proto__ extends object | null = null>
+  = __proto__ extends null
     ? { [P0 in keyof T]: TypedPropertyDescriptor<T[P0]>; }
     : Omit<
       { [P0 in keyof T]: TypedPropertyDescriptor<T[P0]>; },

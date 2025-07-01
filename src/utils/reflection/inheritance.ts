@@ -46,8 +46,8 @@ interface IBaseClass {
  * Note: is `Class & ...`
  * @since 3.0.0
  */
-export type BaseClass<Class extends ConstructorConstraint<Class>> =
-  IClass<Class> & IBaseClass;
+export type BaseClass<Class extends ConstructorConstraint<Class>>
+  = IClass<Class> & IBaseClass;
 
 /**
  * A type representing any unknown constructor.
@@ -72,8 +72,8 @@ export type ConstructorConstraint<T extends abstract new (...args: ConstructorPa
  * @template [T=Constructor_Unknown]
  * @since 3.0.0
  */
-export type ConstructorLike<T = Constructor_Unknown> =
-  T extends Constructor_Unknown
+export type ConstructorLike<T = Constructor_Unknown>
+  = T extends Constructor_Unknown
     ? T extends ConstructorConstraint<T>
       ? T & ConstructorConstraint<T>
       : T & Constructor_Unknown
@@ -83,8 +83,8 @@ export type ConstructorLike<T = Constructor_Unknown> =
  * A type representing unknown {@link ClassLike} types.
  * @since 3.0.0
  */
-export type ClassLike_Unknown =
-IClass<
+export type ClassLike_Unknown
+= IClass<
   Constructor_Unknown
   & WithProto<SuperClassLike | BaseClassProto>
 >;
@@ -106,8 +106,8 @@ export type SuperClassLike = BaseClass<Constructor_Unknown> | ClassLike_Unknown;
  * @template [T=ReturnType<typeof Reflect.getPrototypeOf>] `null` or an `object`-like type.
  * @since 3.0.0
  */
-export type ProtoOrSuperClass<T extends object | null = ReturnType<typeof Reflect.getPrototypeOf>> =
-  T extends null ? null
+export type ProtoOrSuperClass<T extends object | null = ReturnType<typeof Reflect.getPrototypeOf>>
+  = T extends null ? null
     : T extends object
       ? T extends ConstructorLike<T>
         ? T extends ClassLike<T & WithProto<SuperClassLike | BaseClassProto>>
@@ -211,13 +211,13 @@ export type ProtoChainOfClassInstance<
  * @since 3.0.0
  */
 // defined as `type` because interfaces cannot extend their generic parameters
-export type IClass<Class extends ConstructorConstraint<Class>> =
-  Class
-  & {
-    prototype: InstanceType<Class>;
-    name: ConstructorConstraint<Class>['name'];
-    length: ConstructorConstraint<Class>['length'];
-  };
+export type IClass<Class extends ConstructorConstraint<Class>>
+  = Class
+    & {
+      prototype: InstanceType<Class>;
+      name: ConstructorConstraint<Class>['name'];
+      length: ConstructorConstraint<Class>['length'];
+    };
 
 /**
  * A more fleshed-out Class type.

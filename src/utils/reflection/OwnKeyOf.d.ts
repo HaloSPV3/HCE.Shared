@@ -8,8 +8,8 @@
  * OwnKeyOf<typeof NPP, null> === "prototype" | "GetFullPath"
  * @since 3.0.0
  */
-export type OwnKeyOf<T, __proto__ extends object | null> =
-  Exclude<
+export type OwnKeyOf<T, __proto__ extends object | null>
+  = Exclude<
     __proto__ extends null
       ? keyof T
       : Exclude<

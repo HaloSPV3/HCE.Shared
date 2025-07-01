@@ -5,7 +5,7 @@ import {
 import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it, todo } from 'node:test';
 import { isConstructor } from '../src/utils/reflection.js';
-import { join } from 'node:path';
+import path from 'node:path';
 import { isNativeError } from 'node:util/types';
 
 await describe('SemanticReleaseConfigDotnet', async () => {
@@ -22,7 +22,7 @@ await describe('getConfig', async () => {
   await it('does not throw when projectToPackAndPush contains at least one item', { concurrency: 1 }, async () => {
     process.env['GITHUB_REPOSITORY_OWNER'] = 'HaloSPV3';
     process.env['SKIP_TOKEN'] = 'true';
-    const DeterministicNupkgCsprojPath = join(
+    const DeterministicNupkgCsprojPath = path.join(
       import.meta.dirname,
       '../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
     );

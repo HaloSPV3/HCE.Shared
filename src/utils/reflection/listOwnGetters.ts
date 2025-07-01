@@ -21,8 +21,8 @@ import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.js';
 type OwnGetters<
   Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
   _InstanceOrStatic extends InstanceOrStatic,
-> =
-  [_InstanceOrStatic] extends ['Instance']
+>
+  = [_InstanceOrStatic] extends ['Instance']
     ? Exclude<
       (Class['__proto__'] extends BaseClassProto ? null : InstanceTypeOrSelf<Class['__proto__']>) extends null
         ? keyof InstanceType<Class>
