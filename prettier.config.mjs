@@ -1,6 +1,6 @@
-import * as pcm from 'prettier-config-moon' with { type: 'json' };
+import pcm from 'prettier-config-moon' with { type: 'json' };
 export default {
-	...pcm,
+	...{ ...pcm, $schema: undefined },
 	...{
 		overrides: [
 			{
