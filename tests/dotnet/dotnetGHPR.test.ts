@@ -43,7 +43,7 @@ await describe('dotnetGHPR', async () => {
 			ok(canWrite, 'tokenCanWritePackages determined GITHUB_TOKEN failed ');
 		})
 
-		await it('returns false when GITHUB_TOKEN is invalid', async (t) => {
+		await it('returns false when GITHUB_TOKEN is invalid', (t) => {
 			if (!getEnvVarValue('GITHUB_REPOSITORY_OWNER')) {
 				t.skip('GITHUB_REPOSITORY_OWNER is unavailable for testing.')
 				return;
@@ -56,7 +56,7 @@ await describe('dotnetGHPR', async () => {
 
 				const TOKEN_CANNOT_WRITE = 'TOKEN_CANNOT_WRITE';
 				getEnv(undefined, { TOKEN_CANNOT_WRITE })
-				const canWrite = await tokenCanWritePackages(TOKEN_CANNOT_WRITE);
+				const canWrite = tokenCanWritePackages(TOKEN_CANNOT_WRITE);
 				strictEqual(canWrite, false);
 			}
 			finally {
@@ -197,7 +197,7 @@ await describe('dotnetGHPR', async () => {
 			let canWritePackages: boolean | Error = false;
 
 			try {
-				canWritePackages = await tokenCanWritePackages(
+				canWritePackages = tokenCanWritePackages(
 					_isTokenDefinedInfo.fallback ?? tokenEnvVar);
 			}
 			catch (err) {
@@ -208,7 +208,7 @@ await describe('dotnetGHPR', async () => {
 
 			try {
 				env.GITHUB_REPOSITORY_OWNER ??= owner;
-				pair = await getGithubNugetRegistryPair();
+				pair = getGithubNugetRegistryPair();
 			} catch (err) {
 				pair = err instanceof Error ? err : new Error(String(err));
 			}
