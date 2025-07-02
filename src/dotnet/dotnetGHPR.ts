@@ -1,4 +1,4 @@
-import { notDeepStrictEqual, ok } from 'node:assert/strict';
+import { ok } from 'node:assert/strict';
 import { spawnSync, type ExecException, type SpawnSyncReturns } from 'node:child_process';
 import { getEnvVarValue } from '../envUtils.js';
 import { createDummyNupkg } from './createDummyNupkg.js';
@@ -24,8 +24,8 @@ export function tokenCanWritePackages(tokenEnvVar: string, url?: string) {
 		url = getNugetGitHubUrl();
 	}
 
-	notDeepStrictEqual(url, undefined);
-	notDeepStrictEqual(url, '');
+	if (url === undefined || url === '') 
+		throw new Error('The NuGet source is undefined or empty!')
 
 	if (info.fallback)
 		tokenEnvVar = info.fallback;
@@ -47,11 +47,11 @@ export function tokenCanWritePackages(tokenEnvVar: string, url?: string) {
 				[
 					'nuget',
 					'push',
-					`"${dummyNupkgPath}"`,
+					dummyNupkgPath,
 					'--source',
-					`"${url}"`,
+					url,
 					'--api-key',
-					`"${tokenValue}"`,
+					tokenValue,
 					'--skip-duplicate',
 					'--force-english-output'
 				],
@@ -95,12 +95,12 @@ export function tokenCanWritePackages(tokenEnvVar: string, url?: string) {
 			throw error;
 		}
 
-		const errNewline = pushResult.stderr.includes('\r\n') ? '\r\n' : pushResult.stdout.includes('\r') ? '\r' : '\n';
+		const errNewline = pushResult.stdout.includes('\r\n') ? '\r\n' : pushResult.stdout.includes('\r') ? '\r' : '\n';
 
 		// if any *lines* start with "error: " or "Error: ", log stderr
-		const errorCount = pushResult.stderr.split(errNewline).filter(line => line.trim().startsWith('error: ') || line.trim().startsWith('Error: ')).length;
+		const errorCount = pushResult.stdout.split(errNewline).filter(line => line.trim().startsWith('error: ') || line.trim().startsWith('Error: ')).length;
 		if (errorCount > 0)
-			console.error(pushResult.stderr);
+			console.error(pushResult.stdout);
 
 		// if any lines start with "warn : ", log stdout
 		const warningCount = pushResult.stdout.split(errNewline).filter(line => line.trim().startsWith('warn : ')).length;
