@@ -1,6 +1,16 @@
 import pcm from 'prettier-config-moon' with { type: 'json' };
-export default {
-	...{ ...pcm, $schema: undefined },
+
+/***
+ * stub for type validation
+ * @param {import('prettier').Config} opts
+ * @returns {import('prettier').Config}
+ */
+function config(opts) {
+	return opts;
+}
+
+export default config({
+	...{ .../** @type {import('prettier').Config} */(pcm), $schema: undefined },
 	...{
 		overrides: [
 			{
@@ -8,8 +18,9 @@ export default {
 				options: {
 					trailingComma: 'none',
 					bracketSameLine: true,
+					singleQuote: true
 				},
 			},
 		],
 	},
-};
+});
