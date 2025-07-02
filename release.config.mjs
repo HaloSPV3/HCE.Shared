@@ -30,8 +30,8 @@ const commitAnalyzerIndex = config.plugins.findIndex(pluginSpec =>
 	pluginSpec === COMMIT_ANALYZER_ID || pluginSpec[0] === COMMIT_ANALYZER_ID
 );
 
-/** 
- * @type {import('semantic-release').PluginSpec<import('@semantic-release/commit-analyzer').CommitAnalyzerConfig>} 
+/**
+ * @type {import('semantic-release').PluginSpec<import('@semantic-release/commit-analyzer').CommitAnalyzerConfig>}
  * https://github.com/semantic-release/commit-analyzer#options
  */
 let commitAnalyzer = config.plugins[commitAnalyzerIndex];
@@ -43,9 +43,8 @@ if (typeof commitAnalyzer === 'string')
 let releaseRules = commitAnalyzer[1].releaseRules;
 if (releaseRules === undefined)
 	releaseRules = [];
-if (releaseRules instanceof String)
-	// @ts-expect-error Yes, it's a string. Stop complaining.
-	releaseRules = await import(commitAnalyzer[1].releaseRules)
+if (typeof releaseRules === 'string')
+	releaseRules = await import(releaseRules).catch(() => undefined);
 if (releaseRules === undefined || typeof releaseRules === 'string')
 	throw TypeError("it's supposed to be a string[] now");
 
