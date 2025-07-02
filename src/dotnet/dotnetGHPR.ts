@@ -1,15 +1,16 @@
 import { notDeepStrictEqual, ok } from 'node:assert/strict';
-import { spawnSync, type ExecException } from 'node:child_process';
+import { spawnSync, type ExecException, type SpawnSyncReturns } from 'node:child_process';
 import { getEnvVarValue } from '../envUtils.js';
 import { createDummyNupkg } from './createDummyNupkg.js';
 import type { NuGetRegistryInfo } from './dotnetHelpers.js';
+import { isNativeError } from 'node:util/types';
 
 /**
- * @param tokenEnvVar The name of the environment variable containing the NUGET token 
+ * @param tokenEnvVar The name of the environment variable containing the NUGET token
  * @returns `true` if the token can be used to push nupkg to the given Nuget registry
  * @throws
  * - TypeError: The environment variable ${tokenEnvVar} is undefined!
- * - Error: 
+ * - Error:
  *   - The value of the token in ${tokenEnvVar} begins with 'github_pat_' which means it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.
  *   - The GitHub API response header lacked "x-oauth-scopes". This indicates the token we provided is not a workflow token nor a Personal Access Token (classic) and can never have permission to push packages.
  */
@@ -39,22 +40,74 @@ export function tokenCanWritePackages(tokenEnvVar: string, url?: string) {
 	const dummyNupkgPath = createDummyNupkg();
 
 	try {
-		console.warn('When the following command fails, it WILL LEAK YOUR API TOKEN.')
-		const pushResult = spawnSync('dotnet', ['nuget', 'push', `"${dummyNupkgPath}"`, '--source', `"${url}"`, '--api-key', `"${tokenValue}"`, '--skip-duplicate'], { stdio: 'pipe', encoding: 'utf8', });
-		
+		let pushResult: SpawnSyncReturns<string> | undefined = undefined;
+		try {
+			pushResult = spawnSync(
+				'dotnet',
+				[
+					'nuget',
+					'push',
+					`"${dummyNupkgPath}"`,
+					'--source',
+					`"${url}"`,
+					'--api-key',
+					`"${tokenValue}"`,
+					'--skip-duplicate',
+					'--force-english-output'
+				],
+				{
+					stdio: 'pipe',
+					encoding: 'utf8',
+					shell: process.platform === 'win32' && spawnSync('dotnet.exe', { windowsHide: true }).status === null
+						? 'cmd.exe'
+						: undefined,
+					windowsHide: true,
+				},
+			);
+		}
+		catch (_error) {
+				// censor token
+				const error = !isNativeError(_error)
+					? new Error(`dotnet nuget push failed. \n${String(_error)}`)
+					: _error;
+
+				const tokenPattern = new RegExp(tokenValue, 'g');
+
+				error.message = error.message.replace(tokenPattern,'***');
+
+				if (error.stack)
+						error.stack = error.stack.replace(tokenPattern, '***');
+				if ('cmd' in error && typeof error.cmd === 'string')
+						error.cmd = error.cmd.replace(tokenPattern, '***');
+				if ('stdout' in error && typeof error.stdout === 'string')
+						error.stdout = error.stdout.replace(tokenPattern, '***');
+				if ('stderr' in error&& typeof error.stderr === 'string') {
+					error.stderr = error.stderr.replace(tokenPattern, '***');
+				}
+			if ('spawnargs' in error && Array.isArray(error.spawnargs)) {
+				error.spawnargs = error.spawnargs.map(arg => {
+			return typeof arg === 'string'
+				? arg.replace(tokenPattern, '***')
+				: arg;
+				})
+			}
+
+			throw error;
+		}
+
 		const errNewline = pushResult.stderr.includes('\r\n') ? '\r\n' : pushResult.stdout.includes('\r') ? '\r' : '\n';
 
 		// if any *lines* start with "error: " or "Error: ", log stderr
-		const errorCount = pushResult.stderr.split(errNewline ?? '\n').filter(line => line.trim().startsWith('error: ') || line.trim().startsWith('Error: ')).length;
+		const errorCount = pushResult.stderr.split(errNewline).filter(line => line.trim().startsWith('error: ') || line.trim().startsWith('Error: ')).length;
 		if (errorCount > 0)
 			console.error(pushResult.stderr);
 
 		// if any lines start with "warn : ", log stdout
-		const warningCount = pushResult.stdout.split(errNewline ?? '\n').filter(line => line.trim().startsWith('warn : ')).length;
+		const warningCount = pushResult.stdout.split(errNewline).filter(line => line.trim().startsWith('warn : ')).length;
 		if (warningCount > 0)
 			console.warn(pushResult.stdout);
 
-		const hasAuthError = pushResult.stderr.includes('401 (Unauthorized)');
+		const hasAuthError = pushResult.stdout.includes('401 (Unauthorized)');
 
 		// return true is no lines contain error indicators.
 		return errorCount === 0 && hasAuthError === false;
@@ -86,7 +139,7 @@ export function getNugetGitHubUrl() {
 }
 
 /**
- * If tokenEnvVar is NOT 'GITHUB_TOKEN', then test if the token is defined and return the boolean. 
+ * If tokenEnvVar is NOT 'GITHUB_TOKEN', then test if the token is defined and return the boolean.
  * Else If tokenEnvVar is 'GITHUB_TOKEN' and defined, then return true.
  * Else If tokenEnvVar is 'GITHUB_TOKEN' and undefined, then set tokenEnvVar to 'GH_TOKEN', test if GH_TOKEN is defined, and return the boolean.
  * @param tokenEnvVar the name of the environment variable with the token's value. Defaults to 'GITHUB_TOKEN'. If environment variable 'GITHUB_TOKEN' is undefined, falls back to 'GH_TOKEN'.
