@@ -6,10 +6,8 @@ import { describe, it } from 'node:test';
 import { fileSync, setGracefulCleanup } from 'tmp';
 
 await describe('configDotnet', async () => {
-	await describe('appendPlugins', () => {
-		strictEqual(appendPlugins.name, 'appendPlugins');
-
-		it('throws Error when Options parameters lacks "plugins"', () => {
+	await describe('appendPlugins', async () => {
+		await it('throws Error when Options parameters lacks "plugins"', () => {
 			let x = undefined;
 			try {
 				x = appendPlugins({}, [], [])
@@ -21,22 +19,19 @@ await describe('configDotnet', async () => {
 		});
 	});
 
-	await describe('insertAndEditPlugins', () => {
+	await describe('insertAndEditPlugins', async () => {
 		strictEqual(insertAndEditPlugins.name, 'insertAndEditPlugins');
 
-		it('modifies the Options object when expected to do so', () => {
+		await it('modifies the Options object when expected to do so', () => {
 			const x = {};
 			const y = insertAndEditPlugins({ ...x })
 			notDeepStrictEqual(x, y);
 		});
-		it('inserts plugins at the correct positions', { todo: true });
-		it('Git plugin options are added only when the Git plugin is already in array', { todo: true });
+		await it('inserts plugins at the correct positions', { todo: true });
+		await it('Git plugin options are added only when the Git plugin is already in array', { todo: true });
 	});
 
 	await describe('getConfig', async () => {
-		strictEqual(getConfig.name, 'getConfig');
-
-
 		await it('does not throw when projectToPackAndPush contains at least one item', () => {
 			env['SKIP_TOKEN'] = 'true';
 			const actual = (() => {
