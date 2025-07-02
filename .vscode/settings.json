@@ -81,6 +81,7 @@
 		"json",
 		"jsonc",
 		"json5",
+		"markdown",
 		"typescript",
 		"typescriptreact"
 	],
