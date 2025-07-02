@@ -1,16 +1,14 @@
 import eslint from "@eslint/js";
-import { type TSESLint } from "@typescript-eslint/utils";
 import jsonc from "eslint-plugin-jsonc";
 import { createRequire } from "module";
-import tseslint from "typescript-eslint";
+import tseslint, { type ConfigWithExtends } from "typescript-eslint";
 
 // CJS compatibility; it started transpiling to a top-level await after upgrading from packemon 4.0.1 to 4.1.0
 const require = createRequire(import.meta.url);
 const globals = require("globals") as typeof import("globals", {with: {type: "json"}});
 // https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config
 // https://www.google.com/search?q=javascript+recurse+through+object+and+remove+undefined+properties
-
-const globalIgnores: TSESLint.FlatConfig.Config = {
+const globalIgnores: ConfigWithExtends = {
     name: "global ignores",
     ignores: [
         "_tsout/**/*",
@@ -58,7 +56,7 @@ export default tseslint.config(
     {
         name: "TSJS",
         extends: [
-            eslint.configs.recommended as TSESLint.FlatConfig.Config,
+            eslint.configs.recommended as ConfigWithExtends,
             ...tseslint.configs.strict,
             ...tseslint.configs.stylistic
         ],
@@ -73,14 +71,7 @@ export default tseslint.config(
         ignores: globalIgnores.ignores,
         languageOptions: {
             parserOptions: {
-                project: true,
-                // @ts-expect-error TS2322 Type '{ allowDefaultProjectForFiles: string[]; }' is not assignable to type 'boolean | undefined'.
-                EXPERIMENTAL_useProjectService: {
-                    allowDefaultProjectForFiles: [
-                        "./*.js"
-                    ],
-                    maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 32
-                }
+                useProjectService: true
             },
             globals: globals.node
         }
