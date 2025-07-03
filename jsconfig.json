@@ -3,14 +3,12 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "allowJs": true,
-    "checkJs": true,
     "isolatedDeclarations": false,
     "skipLibCheck": true
   },
-  "include": [
-    "./*.cjs",
-    "./*.js",
-    "./*.mjs"
+  "files":[
+    "./eslint.config.mjs",
+    "./release.config.mjs"
   ],
   "references": [
     {
@@ -19,11 +17,5 @@
     {
       "path": "./src/tsconfig.json"
     }
-  ],
-  "exclude": [
-    "**/node_modules",
-    "**/node_modules/**",
-    "**/tsconfig.json",
-    "**/tsconfig.*.json"
   ]
 }

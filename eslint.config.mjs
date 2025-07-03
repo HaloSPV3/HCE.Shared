@@ -1,3 +1,4 @@
+// @ts-check
 import md from '@eslint/markdown';
 import unicorn from 'eslint-plugin-unicorn';
 import 'tsx';
