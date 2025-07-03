@@ -564,3 +564,7 @@ babel.config.json
 .playground.ts
 
 tests/dotnet/.projCache
+
+# ignore dotenvx keys, act .secrets
+.env.keys
+.secrets
