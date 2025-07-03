@@ -1,5 +1,8 @@
 on: [push, pull_request]
 
+env:
+  CI_PROJECT_ID: 70884695
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,6 +19,10 @@ jobs:
           cache: 'npm'
           node-version-file: package.json
           check-latest: true
+      - uses: actions/setup-dotnet@v4
+        with:
+          cache: true
+          dotnet-version: 9
       - run: npm i -g npm@latest
       - run: npm ci
       - run: npm run pack
@@ -23,4 +30,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
-          CI_PROJECT_ID: 70884695
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}

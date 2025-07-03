@@ -9,6 +9,9 @@ permissions:
   issues: write # to be able to comment on released issues
   pull-requests: write # to be able to comment on released pull requests
 
+env:
+  CI_PROJECT_ID: 70884695
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -23,6 +26,10 @@ jobs:
           cache: 'npm'
           node-version-file: package.json # The Node.js version to use is derived from package.json's "engine.node" property.
           check-latest: true
+      - uses: actions/setup-dotnet@v4
+        with:
+          cache: true
+          dotnet-version: 9
 
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
       - run: npm ci
@@ -32,11 +39,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
-          CI_PROJECT_ID: 70884695
-
-
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
       - run: npx semantic-release # make git tag, commit updated files, release to GitHub/GitLab.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
