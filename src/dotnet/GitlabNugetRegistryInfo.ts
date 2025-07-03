@@ -20,6 +20,7 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
    * CI_PROJECT_ID - If you want to publish to your GitLab server, this needs to be set to the Id of the project you want to publish to. When running in GitLab CI this is already set to the project the pipeline runs in by GitLab.
    * This method checks the contents of your `.env` file, if present.
    * @returns The value of the environment variable `CI_PROJECT_ID` or `undefined`.
+   * @todo add URI encoded project pathname as alternative e.g. 'halospv3%2FHCE.Shared' in 'https://gitlab.com/api/v4/projects/halospv3%2FHCE.Shared'
    */
   static get projectId() {
     return getEnvVarValue('CI_PROJECT_ID');
