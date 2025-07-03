@@ -85,6 +85,7 @@
     "@commitlint/types": "^19.8.1",
     "@eslint/config-inspector": "^1.1.0",
     "@eslint/markdown": "^6.6.0",
+    "@semantic-release/gitlab": "^13.2.6",
     "@tsconfig/node20": "^20.1.6",
     "@types/debug": "^4.1.12",
     "@types/tmp": "^0.2.6",
