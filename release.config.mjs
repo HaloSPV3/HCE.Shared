@@ -234,6 +234,14 @@ const GLAssetLike = type.string
 /**
  * ### GitLab authentication
  *
+ * NOTE: If running in GitHub Actions, the git URL
+ * (`URL('https://github.com/HaloSPV3/HCE.Shared.git')`) is parsed for its
+ * `pathname` (e.g. '/HaloSPV3/HCE.Shared.git/'). The pathname is stripped down
+ * to 'HaloSPV3/HCE.Shared' and URI encoded ('halospv3%2FHCE.Shared'). It is
+ * then formatted like `${CI_API_V4_URL}/projects/${uriPathname}`. See {@link ./src/dotnet/GitlabNugetRegistryInfo.ts}.
+ * This me took over 12 hours to decipher from undocumented,
+ * barely legible code.
+ *
  * The GitLab authentication configuration is **required** and can be set via
  * [environment variables](#environment-variables).
  *
@@ -253,14 +261,18 @@ const GLAssetLike = type.string
 const SRGLOptions = type({
   /**
    * The GitLab endpoint.
-   * @default env.GL_URL??env.GITLAB_URL // environment variable or CI provided environment variables if running on GitLab CI/CD or https://gitlab.com.
+   * @see {@link ./node_modules/@semantic-release/gitlab/lib/get-project-context.js}
+   * @default env.GL_URL??env.GITLAB_URL??'https://gitlab.com' // environment variable or CI provided environment variables if running on GitLab CI/CD or https://gitlab.com.
+   * @example 'https://custom.gitlab.com' | 'https://gitlab.example.com:8080' |
+   * env.CI_SERVER_URL | 'https://gitlab.com'
    */
-  gitlabUrl: type.string,
+  'gitlabUrl?': type.string,
   /**
    *  The GitLab API prefix.
-   * @default env.GL_PREFIX??GITLAB_PREFIX // environment variable or CI provided environment variables if running on GitLab CI/CD or /api/v4.
+   * @see {@link ./node_modules/@semantic-release/gitlab/lib/get-project-context.js}
+   * @default env.GL_PREFIX??GITLAB_PREFIX??'/api/v4' // environment variable or CI provided environment variables if running on GitLab CI/CD or /api/v4.
    */
-  gitlabApiPathPrefix: type.string,
+  'gitlabApiPathPrefix?': type.string,
   /**
    * An array of files to upload to the release. Can be a glob or and Array of
    * globs and {@link GLAssetObject}s.
@@ -309,7 +321,7 @@ const SRGLOptions = type({
    * An array of milestone titles to associate to the release. See [GitLab
    * Release API](https://docs.gitlab.com/ee/api/releases/#create-a-release).
    */
-  milestones: type.string.array(),
+  'milestones?': type.string.array(),
   /**
    * The comment to add to each Issue and Merge Request resolved by the
    * release. See [successComment](#successComment).
@@ -329,7 +341,7 @@ const SRGLOptions = type({
    * | `mergeRequest` | A [GitLab API Merge Request object](https://docs.gitlab.com/ee/api/merge_requests.html#get-single-mr) the comment will be posted to, or `false` when commenting Issues. |
    * @default `:tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on ${gitlab_release_url}`
    */
-  successComment: type.string,
+  'successComment?': type.string,
   /**
    * Use this as condition, when to comment on issues or merge requests. See
    * [successCommentCondition](#successCommentCondition).
@@ -362,7 +374,7 @@ const SRGLOptions = type({
    * > check the GitLab API Merge Request object or the GitLab API Issue
    * > object for properties which can be used for the filter
    */
-  successCommentCondition: type.unknown,
+  'successCommentCondition?': type.string,
   /**
    * The content of the issue created when a release fails.
    *
@@ -384,12 +396,12 @@ const SRGLOptions = type({
    * documentation and support, with the list of errors that caused the
    * release to fail.)
    */
-  failComment: type.string,
+  'failComment?': type.string,
   /**
    * The title of the issue created when a release fails.
    * @default 'The automated release is failing 🚨'
    */
-  failTitle: type.string,
+  'failTitle?': type.string,
   /**
    * Use this as condition, when to comment on or create an issues in case of
    * failures.
@@ -417,7 +429,7 @@ const SRGLOptions = type({
    *
    * > check the [GitLab API Issue object](https://docs.gitlab.com/ee/api/issues.html#single-issue) for properties which can be used for the filter
    */
-  failCommentCondition: type.string,
+  'failCommentCondition?': type.string,
   /**
    * The [labels](https://docs.gitlab.com/ee/user/project/labels.html#labels)
    * to add to the issue created when a release fails. Set to `false` to not
@@ -426,29 +438,30 @@ const SRGLOptions = type({
    * @example 'semantic-release,bot'
    * @default 'semantic-release'
    */
-  labels: type.string,
+  'labels?': type.string,
   /**
    * The assignee to add to the issue created when a release fails.
    * @see https://docs.gitlab.com/api/boards/#update-an-issue-board
    */
-  assignee: type.bigint,
+  'assignee?': type.bigint,
   /**
    * The maximum number of retries for failing HTTP requests.
    * @default 3
    */
-  retryLimit: type.number,
+  'retryLimit?': type.number,
 });
 
 const GLTuple = type(['"@semantic-release/gitlab"', SRGLOptions]);
 
 // eslint-disable-next-line jsdoc/require-jsdoc
 function setupGitlab() {
-  // eslint-disable-next-line jsdoc/no-undefined-types
-  /** @type {typeof GLTuple.inferOut | undefined} */
-  // @ts-expect-error `find` drops the narrowed type.
-  const gitlab = config.plugins.find(v => GLTuple.allows(v));
-  if (gitlab)
-    gitlab[1].assets = ['halospv3-hce.shared-*.tgz'];
+  config.plugins = [
+    ...config.plugins,
+    GLTuple.from([
+      '@semantic-release/gitlab',
+      { assets: ['halospv3-hce.shared-*.tgz'] },
+    ]),
+  ];
 }
 setupGitlab();
 
