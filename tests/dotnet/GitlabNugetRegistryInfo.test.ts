@@ -7,11 +7,9 @@ import { inspect } from 'node:util';
 
 await describe('GitlabNugetRegistryInfo', async () => {
   await describe('CI_API_V4_URL', async () => {
-    const expectedValue = 'https://gitlab.com/api/v4';
-
     await it('has the correct default value if the environment variable is undefined', () => {
       delete process.env['CI_API_V4_URL'];
-      strictEqual(GLNRI.CI_API_V4_URL, expectedValue);
+      strictEqual(GLNRI.CI_API_V4_URL, 'https://gitlab.com/api/v4');
     });
 
     // await it("has the correct value the value is provided by the environment variable")
