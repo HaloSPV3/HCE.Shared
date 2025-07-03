@@ -20,3 +20,7 @@ jobs:
       - run: npm ci
       - run: npm run pack
       - run: npm run check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
+          CI_PROJECT_ID: 70884695

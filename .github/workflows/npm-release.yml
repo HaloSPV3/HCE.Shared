@@ -31,8 +31,12 @@ jobs:
       - run: npm run check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
+          CI_PROJECT_ID: 70884695
+
 
       - run: npx semantic-release # make git tag, commit updated files, release to GitHub/GitLab.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
