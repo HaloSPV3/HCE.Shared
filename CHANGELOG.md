@@ -21,9 +21,15 @@
 * **dotnet.helpers, dotnet.GHPR:** remove `async` modifiers and `Promise` return types from all functions affecting `semanticReleaseConfigDotnet` ([659836c](https://github.com/halospv3/hce.shared/commit/659836ca7424b434791d50585f4eafebcd78e446)), closes [#407](https://github.com/halospv3/hce.shared/issues/407)
 * **dotnet.helpers:** add missing `return` ([5998d54](https://github.com/halospv3/hce.shared/commit/5998d54438e67849b9d305ff7c15b47ff4721456))
 
+## [2.6.1-develop.3](https://github.com/halospv3/hce.shared/compare/v2.6.1-develop.2...v2.6.1-develop.3) (2025-03-19)
+
 ## [2.6.2](https://github.com/halospv3/hce.shared/compare/v2.6.1...v2.6.2) (2024-09-28)
 
+## [2.6.1-develop.2](https://github.com/halospv3/hce.shared/compare/v2.6.1-develop.1...v2.6.1-develop.2) (2024-09-20)
+
 ## [2.6.1](https://github.com/halospv3/hce.shared/compare/v2.6.0...v2.6.1) (2024-07-23)
+
+## [2.6.1-develop.1](https://github.com/halospv3/hce.shared/compare/v2.6.0...v2.6.1-develop.1) (2024-07-23)
 
 ### Bug Fixes
 
