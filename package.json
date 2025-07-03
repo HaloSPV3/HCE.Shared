@@ -63,7 +63,7 @@
     "@semantic-release/release-notes-generator": "^14.0.0",
     "@stylistic/eslint-plugin": "^5.0.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.12.12",
+    "@types/node": "^22.0.0",
     "@types/semantic-release": "^20.0.6",
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "debug": "^4.3.4",
