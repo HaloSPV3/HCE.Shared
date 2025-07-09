@@ -18,7 +18,7 @@ import { isNativeError } from 'node:util/types';
 import sanitizeFileName from 'sanitize-filename';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
-import { MSBuildProject } from './MSBuildProject.js';
+import { MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
 
 type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
 type TmpDirNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
@@ -328,6 +328,11 @@ but the environment variable is empty or undefined.`);
       'useCurrentRuntime?': 'boolean',
       'verbosity?': '"quiet" | "minimal" | "normal" | "detailed" | "diagnostic"',
       'versionSuffix?': 'string',
+      /**
+       * MSBuild evaluation option. Added to get the output Nupkgs' file paths.
+       * @todo consider adding -GetProperty, -GetTarget
+       */
+      '-GetItem?': type.string.array().readonly().or('string[]'),
     }),
   );
 
@@ -406,6 +411,10 @@ but the environment variable is empty or undefined.`);
         .map(v => `${v[0]}=${v[1]}`).join(';');
       packCmdArr.push(`"${assignments}"`);
     }
+    if (validOpts['-GetItem'] && validOpts['-GetItem'].length > 0) {
+      // -GetItem:_OutputPackItems,MyCustomItem
+      packCmdArr.push(`-GetItem:${validOpts['-GetItem'].join(',')}`);
+    }
     // MSBuild parses everything after -o as the path.
     packCmdArr.push('-o', `"${validOpts.output}"`);
 
@@ -425,6 +434,7 @@ but the environment variable is empty or undefined.`);
    * @param opts `dotnet pack` options. See `dotnet pack -h`,
    * https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack, and
    * {@link PackPackagesOptionsType}.
+   * {@link opts['-GetItem']} will _always_ have '_OutputPackItems'.
    * @param [usePerSourceSubfolder] If `true`, modify the output path to
    * include a subfolder bearing a path-safe encoding of the NuGet Source that
    * will receive the nupkg.
@@ -439,6 +449,8 @@ but the environment variable is empty or undefined.`);
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): Promise<string[]> {
+    opts['-GetItem'] = [...opts['-GetItem'] ?? [], '_OutputPackItems'];
+
     const packOutput = await execAsync(
       this.GetPackCommand(
         opts,
@@ -447,7 +459,13 @@ but the environment variable is empty or undefined.`);
       ),
       true,
     );
-    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout);
+    // may include .snupkg
+    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
+      .Items
+      ?.['outputPackItems']
+      ?.filter(item => item.Extension !== '.nuspec')
+      .map(item => item.FullPath);
+    return nupkgFullPaths ?? [];
   }
 
   /**
@@ -473,22 +491,19 @@ but the environment variable is empty or undefined.`);
         force: true,
         output: getDummiesDir(this._project),
         propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY' },
+        '-GetItem': [...opts['-GetItem'] ?? [], '_OutputPackItems'],
       },
       true,
     );
-    /**
-     * e.g.
-     * ```txt
-     *  Determining projects to restore...
-     *  All projects are up-to-date for restore.
-     *  GroupBox.Avalonia -> C:\Repos\BinToss\GroupBox.Avalonia\GroupBox.Avalonia\bin\Release\net6.0\GroupBox.Avalonia.dll
-     *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.nupkg'.
-     *  Successfully created package 'C:\Users\Noah\AppData\Local\Temp\HCE.Shared\.NET\Dummies\api.nuget.org_v3_index.json\BinToss.GroupBox.Avalonia\BinToss.GroupBox.Avalonia.1.1.0-alpha.53.snupkg'.
-     * ```
-     */
+
     const packOutput = await execAsync(packCmd, true);
-    // todo: Is the tool restore overwriting the package creation output? Why is it gone?
-    return NugetRegistryInfo._parseStdoutForNupkgs(packOutput.stdout);
+    // may include .snupkg
+    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
+      .Items
+      ?.['outputPackItems']
+      ?.filter(item => item.Extension !== '.nuspec')
+      .map(item => item.FullPath);
+    return nupkgFullPaths ?? [];
   }
 
   // #endregion Pack
