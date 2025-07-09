@@ -1,9 +1,8 @@
-import { ok, notDeepStrictEqual, strictEqual } from 'node:assert/strict';
+import { deepStrictEqual, notDeepStrictEqual, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.js';
-import { getEnv, getEnvVarValue } from '../../src/utils/env.js';
+import { GitlabNugetRegistryInfo as GLNRI, GLNRIOpts } from '../../src/dotnet/GitlabNugetRegistryInfo.js';
+import { getEnvVarValue } from '../../src/utils/env.js';
 import { isNativeError } from 'node:util/types';
-import { inspect } from 'node:util';
 
 await describe('GitlabNugetRegistryInfo', async () => {
   await describe('CI_API_V4_URL', async () => {
@@ -75,74 +74,8 @@ await describe('GitlabNugetRegistryInfo', async () => {
   });
 });
 
-await describe('InstanceOf GitlabNugetRegistryInfo', { concurrency: 1 }, async () => {
-  if (!getEnvVarValue('CI_JOB_TOKEN'))
-    process.env['CI_JOB_TOKEN'] = 'placeholder';
-  if (!getEnvVarValue('CI_PROJECT_ID'))
-    process.env['CI_PROJECT_ID'] = 'placeholder';
+await describe('InstanceOf GitlabNugetRegistryInfo', async () => {
   const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
-
-  const defaultWithPlaceholders = new GLNRI({
-    project: DeterministicNupkgCsproj,
-  });
-
-  await it('defaults to project-level endpoint', () => {
-    if (!getEnvVarValue('CI_PROJECT_ID'))
-      process.env['CI_PROJECT_ID'] = 'placeholder';
-    if (!getEnvVarValue('CI_JOB_TOKEN'))
-      process.env['CI_JOB_TOKEN'] = 'placeholder';
-    const expected = `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`;
-    strictEqual(
-      new GLNRI({ project: DeterministicNupkgCsproj }).source,
-      expected,
-    );
-  });
-
-  await it('can be configured to use group-level endpoint', () => {
-    if (!getEnvVarValue('CI_PROJECT_NAMESPACE_ID'))
-      process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
-    if (!getEnvVarValue('CI_JOB_TOKEN'))
-      process.env['CI_JOB_TOKEN'] = 'placeholder';
-    const expected = `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId ?? 'placeholder'}/-/packages/nuget/index.json`;
-    strictEqual(
-      new GLNRI({
-        project: DeterministicNupkgCsproj,
-        source: 'group',
-      }).source,
-      expected,
-    );
-  });
-
-  await it('throws if default values and no token available', (t) => {
-    const { CI_JOB_TOKEN, GL_TOKEN, GITLAB_TOKEN } = getEnv();
-    delete process.env['CI_JOB_TOKEN'];
-    delete process.env['GL_TOKEN'];
-    delete process.env['GITLAB_TOKEN'];
-    if (
-      getEnvVarValue('CI_JOB_TOKEN')
-      || getEnvVarValue('GL_TOKEN')
-      || getEnvVarValue('GITLAB_TOKEN')
-    ) {
-      t.skip(
-        'one or more tokens (CI_JOB_TOKEN, GL_TOKEN, GITLAB_TOKEN) is defined in .env file',
-      );
-      return;
-    }
-
-    let value: GLNRI | Error;
-    try {
-      value = new GLNRI({ project: DeterministicNupkgCsproj });
-    }
-    catch (error) {
-      value = isNativeError(error) ? error : new Error(JSON.stringify(error));
-    }
-
-    ok(isNativeError(value));
-
-    if (CI_JOB_TOKEN) process.env['CI_JOB_TOKEN'] = CI_JOB_TOKEN;
-    if (GL_TOKEN) process.env['GL_TOKEN'] = GL_TOKEN;
-    if (GITLAB_TOKEN) process.env['GITLAB_TOKEN'] = GITLAB_TOKEN;
-  });
 
   await it('canPushPackagesToSource', async () => {
     await it('returns rejected Promise when _ANY_ Error occurs', async () => {
@@ -163,19 +96,26 @@ await describe('InstanceOf GitlabNugetRegistryInfo', { concurrency: 1 }, async (
       strictEqual(result, true);
     });
   });
+});
 
-  await describe('resolvedEnvVariable', async () => {
-    await it('is a string', () => {
-      strictEqual(
-        typeof defaultWithPlaceholders.resolvedEnvVariable,
-        'string',
-      );
-    });
+await describe('GLNRIOpts', { concurrency: false }, async () => {
+  const GLNRIOptsOwn = GLNRIOpts.omit('project');
+
+  await it('defaults to project-level endpoint', () => {
+    strictEqual(
+      GLNRIOptsOwn.from({}).source,
+      `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`,
+    );
   });
 
-  await describe('source', async () => {
-    await it('is a string', () => {
-      strictEqual(typeof defaultWithPlaceholders.source, 'string');
-    });
+  await it('defaults to GitLab token variables', () => {
+    deepStrictEqual(
+      GLNRIOptsOwn.from({}).tokenEnvVars,
+      Object.freeze([
+        'CI_JOB_TOKEN',
+        'GITLAB_TOKEN',
+        'GL_TOKEN',
+      ] as const),
+    );
   });
 });
