@@ -167,11 +167,6 @@ await describe('NRIOpts', async () => {
 
 await describe('getGithubOutput', async () => {
   await it('returns empty object when GITHUB_OUTPUT is undefined', async () => {
-    if (process.env['GITHUB_OUTPUT'] === undefined)
-      deepStrictEqual(await getGithubOutput(), {});
-  });
-
-  await it('returns empty object when GITHUB_OUTPUT is undefined', () => {
     const ghOutputBak = process.env['GITHUB_OUTPUT'];
     process.env['GITHUB_OUTPUT'] = undefined;
     try {
