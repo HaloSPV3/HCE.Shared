@@ -1,9 +1,10 @@
 import { notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict';
-import { existsSync, writeFileSync } from 'node:fs';
-import path from 'node:path';
-import { env } from 'node:process';
 import { describe, it } from 'node:test';
 import { isNativeError } from 'node:util/types';
+import {
+  GithubNugetRegistryInfo as GHNRI,
+  GHNRIOpts,
+} from '../../src/dotnet/GithubNugetRegistryInfo.js';
 import { getEnvVarValue } from '../../src/utils/env.js';
 
 /**
@@ -11,16 +12,10 @@ import { getEnvVarValue } from '../../src/utils/env.js';
  * @returns the value of env.GITHUB_REPOSITORY_OWNER
  */
 function getOwner(): string {
-  // eslint-disable-next-line @stylistic/no-extra-parens
-  return env['GITHUB_REPOSITORY_OWNER'] ??= (getEnvVarValue('GITHUB_REPOSITORY_OWNER ') ?? 'HaloSPV3');
+  const key = 'GITHUB_REPOSITORY_OWNER';
+  const owner = getEnvVarValue(key);
+  return process.env[key] = owner ?? 'HaloSPV3';
 }
-const dotenvPath = path.resolve(path.dirname(path.dirname(import.meta.dirname)), '.env');
-if (!existsSync(dotenvPath))
-  writeFileSync(dotenvPath, '');
-
-// GHNRI will throw if imported while GITHUB_REPOSITORY_OWNER is unset!
-getOwner();
-const { GithubNugetRegistryInfo: GHNRI } = await import ('../../src/dotnet/GithubNugetRegistryInfo.js');
 
 await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
   const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
