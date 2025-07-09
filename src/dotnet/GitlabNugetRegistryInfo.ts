@@ -1,3 +1,4 @@
+import { isNativeError } from 'node:util/types';
 import { getEnvVarValue } from '../utils/env.js';
 import {
   NugetRegistryInfo,
@@ -46,32 +47,35 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
    * @param opts The input type of {@link GLNRIOpts.from}
    */
   constructor(opts: typeof GLNRIOpts.inferIn) {
-    super(GLNRIOpts.from(opts));
+    const optsOut = GLNRIOpts.from(opts);
+    if (isNativeError(optsOut.source))
+      throw optsOut.source;
+    super(optsOut as typeof optsOut & { source: string });
   }
 
   /**
    * Get the GitLab Nuget API for your project url as seen in https://docs.gitlab.com/ee/user/packages/nuget_repository/index.html#publish-a-nuget-package-by-using-cicd
    * ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json
-   * @returns If {@link projectId} is a string, a string formatted like
+   * @returns If {@link this.projectId} is a string, a string formatted like
    * `${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/nuget/index.json`.
-   * Else, `false`
+   * Else, {@link Error}.
    */
-  static get projectUrl(): string | undefined {
+  static get projectUrl(): string | Error {
     return this.projectId
       ? `${this.CI_API_V4_URL}/projects/${this.projectId}/packages/nuget/index.json`
-      : undefined;
+      : new Error('The project-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_ID) were undefined.');
   }
 
   /**
    * ${CI_API_V4_URL}/groups/${CI_PROJECT_NAMESPACE_ID}/-/packages/nuget/index.json
    * @returns If {@link ownerId} is a string, then a string formatted like
    * `${CI_API_V4_URL}/groups/${CI_PROJECT_NAMESPACE_ID}/-/packages/nuget/index.json`.
-   * Else, `false`.
+   * Else, {@link Error}.
    */
-  static get groupUrl(): string | undefined {
+  static get groupUrl(): string | Error {
     return this.ownerId
       ? `${this.CI_API_V4_URL}/groups/${this.ownerId}/-/packages/nuget/index.json`
-      : undefined;
+      : new Error('env.CI_PROJECT_NAMESPACE_ID must be defined to use its GitLab API endpoint!');
   }
 }
 const GLNRI = GitlabNugetRegistryInfo;
@@ -86,32 +90,23 @@ export const GLNRIOpts = NRIOpts.merge({
   /**
    * The GitLab Nuget API URL to push packages to -OR- a keyword such as "group"
    * or "project" used to determine URL.
+   * @default GLNRI.projectUrl
    * @see {@link GLNRI.projectUrl}, {@link GLNRI.groupUrl}
    */
   // todo: change '"group" | "project"' to '"GITLAB:PROJECT" | "GITLAB:GROUP"'
-  source: NRIOptsBase.get('source').or('"group" | "project"').default('project'),
-}).pipe((obj) => {
-  switch (obj.source) {
-    case 'group': {
-      if (GLNRI.groupUrl === undefined)
-        throw new Error(
-          'The group-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_NAMESPACE_ID) were undefined.',
-        );
-      obj.source = GLNRI.groupUrl;
-      break;
-    }
-    /* fall to default */
-    case 'project': {
-      if (GLNRI.projectUrl === undefined)
-        throw new Error(
-          'The project-type URL was specified, but one or more of the required environment variables (CI_API_V4_URL, CI_PROJECT_ID) were undefined.',
-        );
-      obj.source = GLNRI.projectUrl;
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-  return obj;
+  source: NRIOptsBase.get('source')
+    .or('"group" | "project" | Error')
+    .pipe((source: string | Error): string | Error => {
+      switch (source) {
+        case 'group': {
+          return GLNRI.groupUrl;
+        }
+        case 'project': {
+          return GLNRI.projectUrl;
+        }
+        default: {
+          return source;
+        }
+      }
+    }).default(() => GLNRI.projectUrl),
 });
