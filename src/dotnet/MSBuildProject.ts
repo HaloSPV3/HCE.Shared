@@ -77,7 +77,7 @@ const msbuildEvaluationOutput = type({
   'TargetResults?': type({ '[string]': targetSuccess.or(targetFailure) }),
 });
 
-class MSBuildEvaluationOutput {
+export class MSBuildEvaluationOutput {
   /**
    * @param rawMSBuildEvaluation The output of a CLI MSBuild project evaluation.
    * May be the UTF-8 string-encoded JSON or the object decoded from that JSON.
@@ -480,6 +480,11 @@ const T_PseudoMSBPInstance = type({
   Targets: type.string.array(),
   TargetResults: msbuildEvaluationOutput.get('TargetResults').exclude('undefined').array(),
 
+});
+
+/** ArkType type definitions for internal usage, but may be re-used elsewhere */
+export const _InternalMSBuildEvaluationTypes = type.scope({
+  msbuildEvaluationOutput,
 });
 
 /**
