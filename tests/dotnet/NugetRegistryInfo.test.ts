@@ -11,8 +11,8 @@ import { inspect } from 'node:util';
 import { isNativeError } from 'node:util/types';
 import {
   NugetRegistryInfo as NRI,
-  NRIOptsBase,
   NRIOpts,
+  NRIOptsBase,
   getGithubOutput,
   getGithubOutputSync,
 } from '../../src/dotnet/NugetRegistryInfo.js';
@@ -28,18 +28,6 @@ await describe('NugetRegistryInfo', async () => {
 await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
   const predefinedToken = getEnvVarValue('NUGET_TOKEN');
   const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
-
-  await it('defaults source to expected value', () => {
-    process.env['NUGET_TOKEN'] ??= predefinedToken ?? 'placeholder';
-
-    strictEqual(
-      NRIOpts.from({ project: DeterministicNupkgCsproj }).source,
-      'https://api.nuget.org/v3/index.json',
-    );
-
-    if (predefinedToken) process.env['NUGET_TOKEN'] = predefinedToken;
-    else delete process.env['NUGET_TOKEN'];
-  });
 
   await it('canPushPackagesToSource rejects promise if token invalid', async () => {
     process.env['INVALID_TOKEN'] = 'placeholder';
@@ -154,6 +142,25 @@ await describe('NRIOptsBase', async () => {
     }
   }
 ]`,
+    );
+  });
+});
+
+await describe('NRIOpts', async () => {
+  const NRIOptsOwn = NRIOpts.omit('project');
+
+  await it('defaults token variables', () => {
+    const opts = NRIOptsOwn.from({});
+    deepStrictEqual(opts.tokenEnvVars,
+      Object.freeze(['NUGET_TOKEN'] as const),
+    );
+  });
+
+  await it('defaults NuGet source', () => {
+    const opts = NRIOptsOwn.from({});
+    strictEqual(
+      opts.source,
+      'https://api.nuget.org/v3/index.json',
     );
   });
 });
