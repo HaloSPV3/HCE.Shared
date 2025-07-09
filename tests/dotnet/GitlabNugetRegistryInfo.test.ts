@@ -4,73 +4,57 @@ import { GitlabNugetRegistryInfo as GLNRI, GLNRIOpts } from '../../src/dotnet/Gi
 import { getEnvVarValue } from '../../src/utils/env.js';
 import { isNativeError } from 'node:util/types';
 
-await describe('GitlabNugetRegistryInfo', async () => {
-  await describe('CI_API_V4_URL', async () => {
-    await it('has the correct default value if the environment variable is undefined', () => {
-      delete process.env['CI_API_V4_URL'];
-      strictEqual(GLNRI.CI_API_V4_URL, 'https://gitlab.com/api/v4');
-    });
+await describe('GLNRI.CI_API_V4_URL', { concurrency: false }, async () => {
+  await it('has the correct default value if the environment variable is undefined', () => {
+    delete process.env['CI_API_V4_URL'];
+    strictEqual(GLNRI.CI_API_V4_URL, 'https://gitlab.com/api/v4');
+  });
+});
 
-    // await it("has the correct value the value is provided by the environment variable")
+await describe('GLNRI.groupUrl', { concurrency: false }, async () => {
+  await it('returns the expected url when CI_PROJECT_NAMESPACE_ID is defined', () => {
+    process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
+    strictEqual(
+      GLNRI.groupUrl,
+      `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId ?? 'placeholder'}/-/packages/nuget/index.json`,
+    );
+  });
+});
+
+await describe('GLNRI.projectUrl', { concurrency: false }, async () => {
+  await it('returns the expected url when CI_PROJECT_ID is defined', () => {
+    if (!getEnvVarValue('CI_PROJECT_ID'))
+      process.env['CI_PROJECT_ID'] = 'placeholder';
+    strictEqual(
+      GLNRI.projectUrl,
+      `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`,
+    );
+  });
+});
+
+await describe('GLNRI.ownerId', { concurrency: false }, async () => {
+  await it('returns undefined if CI_PROJECT_NAMESPACE_ID is undefined', () => {
+    process.env['CI_PROJECT_NAMESPACE_ID'] = 'undefined';
+    strictEqual(GLNRI.ownerId, undefined);
   });
 
-  await describe('groupUrl', async () => {
-    await it('returns the expected url when CI_PROJECT_NAMESPACE_ID is defined', () => {
+  await it('returns string if CI_PROJECT_NAMESPACE_ID is defined', () => {
+    if (!getEnvVarValue('CI_PROJECT_NAMESPACE_ID'))
       process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
-      strictEqual(
-        GLNRI.groupUrl,
-        `${GLNRI.CI_API_V4_URL}/groups/${GLNRI.ownerId ?? 'placeholder'}/-/packages/nuget/index.json`,
-      );
-    });
+    strictEqual(GLNRI.ownerId, getEnvVarValue('CI_PROJECT_NAMESPACE_ID'));
+  });
+});
+
+await describe('GLNRI.projectId', { concurrency: false }, async () => {
+  await it('returns undefined if CI_PROJECT_ID is undefined', () => {
+    process.env['CI_PROJECT_ID'] = 'undefined';
+    strictEqual(GLNRI.projectId, undefined);
   });
 
-  await describe('projectUrl', async () => {
-    await it('returns the expected url when CI_PROJECT_ID is defined', () => {
-      if (!getEnvVarValue('CI_PROJECT_ID'))
-        process.env['CI_PROJECT_ID'] = 'placeholder';
-      strictEqual(
-        GLNRI.projectUrl,
-        `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`,
-      );
-    });
-  });
-
-  await describe('ownerId', async () => {
-    await it('returns undefined if CI_PROJECT_NAMESPACE_ID is undefined', (t) => {
-      delete process.env['CI_PROJECT_NAMESPACE_ID'];
-      if (getEnvVarValue('CI_PROJECT_NAMESPACE_ID')) {
-        t.skip(
-          'This test requires CI_PROJECT_NAMESPACE_ID be undefined. It is defined in .env file and so it is too annoying to work around.',
-        );
-        return;
-      }
-      strictEqual(GLNRI.ownerId, undefined);
-    });
-
-    await it('returns string if CI_PROJECT_NAMESPACE_ID is defined', () => {
-      if (!getEnvVarValue('CI_PROJECT_NAMESPACE_ID'))
-        process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
-      strictEqual(GLNRI.ownerId, process.env['CI_PROJECT_NAMESPACE_ID']);
-    });
-  });
-
-  await describe('projectId', async () => {
-    await it('returns undefined if CI_PROJECT_ID is undefined', (t) => {
-      delete process.env['CI_PROJECT_ID'];
-      if (getEnvVarValue('CI_PROJECT_ID')) {
-        t.skip(
-          'This test requires CI_PROJECT_ID be undefined. It is defined in .env file and so it is too annoying to work around.',
-        );
-        return;
-      }
-      strictEqual(GLNRI.projectId, undefined);
-    });
-
-    await it('returns string if CI_PROJECT_ID is defined', () => {
-      if (!getEnvVarValue('CI_PROJECT_ID'))
-        process.env['CI_PROJECT_ID'] = 'placeholder';
-      strictEqual(GLNRI.projectId, process.env['CI_PROJECT_ID']);
-    });
+  await it('returns string if CI_PROJECT_ID is defined', () => {
+    if (!getEnvVarValue('CI_PROJECT_ID'))
+      process.env['CI_PROJECT_ID'] = 'placeholder';
+    strictEqual(GLNRI.projectId, getEnvVarValue('CI_PROJECT_ID'));
   });
 });
 
