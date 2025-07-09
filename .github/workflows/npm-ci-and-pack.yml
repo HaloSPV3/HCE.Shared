@@ -1,4 +1,8 @@
-on: [push, pull_request]
+on:
+  push:
+    # do not run on branches listed in npm-release.yml
+    branches-ignore: [main,  develop, next/v3.0.0]
+  pull_request:
 
 env:
   CI_PROJECT_ID: 70884695
