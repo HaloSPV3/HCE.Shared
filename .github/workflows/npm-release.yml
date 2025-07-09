@@ -40,6 +40,7 @@ jobs:
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
       - run: npx semantic-release # make git tag, commit updated files, release to GitHub/GitLab.
+        id: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
