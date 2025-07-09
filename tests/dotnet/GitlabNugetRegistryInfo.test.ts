@@ -150,6 +150,7 @@ await describe('InstanceOf GitlabNugetRegistryInfo', { concurrency: 1 }, async (
     try {
       value = new GLNRI({
         project: DeterministicNupkgCsproj,
+        source: 'placeholder',
         tokenEnvVars: [
           'UNDEFINED_TOKEN',
           'ANOTHER_UNDEFINED_TOKEN',
