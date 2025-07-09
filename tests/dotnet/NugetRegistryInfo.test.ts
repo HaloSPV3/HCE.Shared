@@ -72,6 +72,20 @@ await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
 
     deepStrictEqual(canPush, true);
   });
+
+  /** NuGet Client credential failover */
+  await it('Continues when API key unavailable', () => {
+    const nri = new NRI({
+      project: DeterministicNupkgCsproj,
+      source: 'placeholder',
+      tokenEnvVars: [
+        'UNDEFINED_TOKEN',
+        'ANOTHER_UNDEFINED_TOKEN',
+      ],
+    });
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    deepStrictEqual(nri.resolvedEnvVariable, undefined);
+  });
 });
 
 await describe('NRIOptsBase', async () => {

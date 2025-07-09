@@ -144,25 +144,6 @@ await describe('InstanceOf GitlabNugetRegistryInfo', { concurrency: 1 }, async (
     if (GITLAB_TOKEN) process.env['GITLAB_TOKEN'] = GITLAB_TOKEN;
   });
 
-  /** NuGet Client credential failover */
-  await it('does NOT throw when custom values and no token available', () => {
-    let value: GLNRI | Error;
-    try {
-      value = new GLNRI({
-        project: DeterministicNupkgCsproj,
-        source: 'placeholder',
-        tokenEnvVars: [
-          'UNDEFINED_TOKEN',
-          'ANOTHER_UNDEFINED_TOKEN',
-        ],
-      });
-    }
-    catch (error) {
-      value = isNativeError(error) ? error : new Error(JSON.stringify(error));
-    }
-    ok(!isNativeError(value), `\`value\` should \`true\`, but it's actually ${inspect(value, true, Infinity)}`);
-  });
-
   await it('canPushPackagesToSource', async () => {
     await it('returns rejected Promise when _ANY_ Error occurs', async () => {
       process.env['INVALID_TOKEN'] = 'INVALID_TOKEN';
