@@ -170,19 +170,19 @@ await describe('getGithubOutput', async () => {
     const ghOutputBak = process.env['GITHUB_OUTPUT'];
     process.env['GITHUB_OUTPUT'] = undefined;
     try {
-      deepStrictEqual(getGithubOutputSync(), {});
+      deepStrictEqual(await getGithubOutput(), {});
     }
     finally {
       process.env['GITHUB_OUTPUT'] = ghOutputBak;
     }
   }).then(async () => {
-    await it('returns non-empty object when GITHUB_OUTPUT defined and file exists', () => {
+    await it('returns non-empty object when GITHUB_OUTPUT defined and file exists', async () => {
       const tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
       if (!existsSync(tmp_GITHUB_OUTPUT_FileName))
         writeFileSync(tmp_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
       process.env['GITHUB_OUTPUT'] = tmp_GITHUB_OUTPUT_FileName;
 
-      const ghOutput = getGithubOutputSync();
+      const ghOutput = await getGithubOutput();
       deepStrictEqual(ghOutput, { 'dotnet.NRI': 'true' });
     });
   });
