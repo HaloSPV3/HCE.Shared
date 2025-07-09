@@ -1,3 +1,17 @@
+/**
+ * @file MSBuildProject.projects.ts
+ *
+ * This module checks for JSON-serialized {@link MSBP MSBuildProject} instances
+ * at './.projCache/*.json'.
+ *
+ * If not found, the sample projects (i.e. '../../dotnet/samples/*\/*.csproj')
+ * are evaluated with `dotnet msbuild` and the results are serialized to the
+ * aforementioned JSON files.
+ *
+ * Then, the JSON cache files are {@link MSBP.fromJSON deserialized} to
+ * {@link MSBP MSBuildProject} instances and exported by this module.
+ */
+
 import path from 'node:path';
 import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.js';
 import { readFile } from 'node:fs/promises';
