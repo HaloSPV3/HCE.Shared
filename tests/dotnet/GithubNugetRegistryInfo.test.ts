@@ -1,8 +1,9 @@
-import { notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict';
+import { deepStrictEqual, notDeepStrictEqual, ok, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { isNativeError } from 'node:util/types';
 import {
   GithubNugetRegistryInfo as GHNRI,
+  GHNRIOpts,
 } from '../../src/dotnet/GithubNugetRegistryInfo.js';
 import { getEnvVarValue } from '../../src/utils/env.js';
 
@@ -17,7 +18,25 @@ function getOwner(): string {
 }
 
 await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
-/** todo */
+  await it('GHNRI.DefaultGithubTokenEnvVars', () => {
+    deepStrictEqual(
+      GHNRI.DefaultGithubTokenEnvVars,
+      Object.freeze(['GITHUB_TOKEN', 'GH_TOKEN'] as const),
+    );
+  });
+  await it('NUGET_PKG_GITHUB_COM', () => {
+    strictEqual(
+      GHNRI.NUGET_PKG_GITHUB_COM,
+      'https://nuget.pkg.github.com',
+    );
+  });
+  await it('GHNRI.getNugetGitHubUrl', () => {
+    const owner = getOwner();
+    strictEqual(
+      GHNRI.getNugetGitHubUrl(),
+      `${GHNRI.NUGET_PKG_GITHUB_COM}/${owner}/index.json`,
+    );
+  });
 });
 
 await describe(
@@ -68,3 +87,14 @@ await describe(
     });
   },
 );
+
+await describe('GHNRIOpts', async () => {
+  const owner = getOwner();
+  const opts = GHNRIOpts.omit('project').from({});
+  await it('defaults to expected source', () => {
+    strictEqual(opts.source, `https://nuget.pkg.github.com/${owner}/index.json`);
+  });
+  await it('defaults tokenEnvVars', () => {
+    deepStrictEqual(opts.tokenEnvVars, Object.freeze(['GITHUB_TOKEN', 'GH_TOKEN'] as const));
+  });
+});
