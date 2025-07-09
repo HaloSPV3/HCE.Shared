@@ -1,4 +1,8 @@
-import { config as loadDotenv, type DotenvConfigOptions } from '@dotenvx/dotenvx';
+import { get,
+  config as loadDotenv,
+  type DotenvConfigOptions,
+  type GetOptions,
+} from '@dotenvx/dotenvx';
 import { env } from 'node:process';
 
 /**
@@ -21,18 +25,20 @@ export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.P
 /**
  * Get the value from the given env var in the current process or nearby .env file.
  * If found in process environment, its value is returned.
- * Else, load nearest .env file into the process environment and try again.
- * If NOT found, console.warn and return `undefined`
+ * Else, try to get it from the nearest .env file.
+ * If NOT found, return `undefined`
  * @param envVar The environment variable to lookup.
- * @param [options] Options to pass to {@link loadDotenv}
- * @returns The string value of the environment variable or `undefined`
+ * @param [options] Options to pass to {@link get}
+ * @returns The string value of the environment variable or `undefined`.
+ * `undefined` may be returned when the variable is undefined or its string is
+ * empty, whitespace, or appears to have been converted from `null` or
+ * `undefined`.
  */
-export function getEnvVarValue(envVar: string, options?: Parameters<typeof loadDotenv>[0]): string | undefined {
-  const value = env[envVar] ?? loadDotenv(options);
-  if (typeof value === 'string')
-    return value;
-  if (value.parsed?.[envVar] !== undefined)
-    return value.parsed[envVar];
-
-  return undefined;
+export function getEnvVarValue(envVar: string, options?: GetOptions): string | undefined {
+  options ??= { ignore: ['MISSING_KEY'] };
+  const value = String(env[envVar] ?? get(envVar, options)).trim();
+  // I hate this. Why is undefined converted to a string?
+  return value === '' || value === 'undefined'
+    ? undefined
+    : value;
 }
