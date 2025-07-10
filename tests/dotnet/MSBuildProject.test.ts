@@ -7,7 +7,7 @@ import {
   MSBuildProject as MSBP,
 } from '../../src/dotnet/MSBuildProject.js';
 
-await describe('MSBuildProject', async () => {
+await describe('MSBuildProject', { concurrency: true }, async () => {
   await describe('MatrixProperties', async () => {
     await it('is array of expected values', () => {
       deepStrictEqual(MSBP.MatrixProperties, [
