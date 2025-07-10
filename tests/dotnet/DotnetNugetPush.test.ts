@@ -18,47 +18,56 @@ function getGHRepoOwner(): string {
 }
 
 await describe('canPushPackagesToSource resolves when...', { concurrency: true }, async () => {
-  await it('...GITHUB_REPOSITORY_OWNER is defined and GITHUB_TOKEN or GH_TOKEN is defined, valid, and can push packages to source ', async (t) => {
-    if (process.env['GITHUB_TOKEN'] === 'placeholder')
-      delete process.env['GITHUB_TOKEN'];
-    if (process.env['GH_TOKEN'] === 'placeholder')
-      delete process.env['GH_TOKEN'];
-    if (!getEnvVarValue('GITHUB_TOKEN') && !getEnvVarValue('GH_TOKEN')) {
-      t.skip('GITHUB_TOKEN and GH_TOKEN are unavailable for testing');
-      return;
-    }
+  await it(
+    '...GITHUB_REPOSITORY_OWNER is defined and GITHUB_TOKEN or GH_TOKEN is defined, valid, and can push packages to source ',
+    { timeout: 60_000 },
+    async (t) => {
+      if (process.env['GITHUB_TOKEN'] === 'placeholder')
+        delete process.env['GITHUB_TOKEN'];
+      if (process.env['GH_TOKEN'] === 'placeholder')
+        delete process.env['GH_TOKEN'];
+      if (!getEnvVarValue('GITHUB_TOKEN') && !getEnvVarValue('GH_TOKEN')) {
+        t.skip('GITHUB_TOKEN and GH_TOKEN are unavailable for testing');
+        return;
+      }
 
-    getGHRepoOwner();
-    ok(
-      await new GHNRI({ project })
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
-        .canPushPackagesToSource,
-    );
-  });
-  await it('...CI_PROJECT_ID is defined and CI_JOB_TOKEN, GITLAB_TOKEN, or GL_TOKEN is defined, valid, and can push packages to source', async (t) => {
-    if (process.env['CI_PROJECT_ID'] === 'placeholder')
-      delete process.env['CI_PROJECT_ID'];
-    if (!getEnvVarValue('CI_PROJECT_ID', { overload: true }))
-      t.skip('CI_PROJECT_ID is undefined');
-
-    ok(
-      await new GLNRI({ project })
+      getGHRepoOwner();
+      ok(
+        await new GHNRI({ project })
         // eslint-disable-next-line @typescript-eslint/no-deprecated
-        .canPushPackagesToSource,
-    );
-  });
-  await it('NUGET_TOKEN token is defined, valid, and can push packages to source', async (t) => {
-    if (!getEnvVarValue('NUGET_TOKEN')) {
-      t.skip('NUGET_TOKEN environment variable undefined');
-      return;
-    }
+          .canPushPackagesToSource,
+      );
+    });
+  await it(
+    '...CI_PROJECT_ID is defined and CI_JOB_TOKEN, GITLAB_TOKEN, or GL_TOKEN is defined, valid, and can push packages to source',
+    { timeout: 60_000 },
+    async (t) => {
+      if (process.env['CI_PROJECT_ID'] === 'placeholder')
+        delete process.env['CI_PROJECT_ID'];
+      if (!getEnvVarValue('CI_PROJECT_ID', { overload: true }))
+        t.skip('CI_PROJECT_ID is undefined');
 
-    ok(
-      await new NRI({ project })
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
-        .canPushPackagesToSource,
-    );
-  });
+      ok(
+        await new GLNRI({ project })
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+          .canPushPackagesToSource,
+      );
+    });
+  await it(
+    'NUGET_TOKEN token is defined, valid, and can push packages to source',
+    { timeout: 60_000 },
+    async (t) => {
+      if (!getEnvVarValue('NUGET_TOKEN')) {
+        t.skip('NUGET_TOKEN environment variable undefined');
+        return;
+      }
+
+      ok(
+        await new NRI({ project })
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+          .canPushPackagesToSource,
+      );
+    });
 });
 
 await describe('canPushPackagesToSource throws when...', { concurrency: true }, async () => {
