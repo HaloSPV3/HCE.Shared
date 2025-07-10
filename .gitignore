@@ -568,3 +568,6 @@ tests/dotnet/.projCache
 # ignore dotenvx keys, act .secrets
 .env.keys
 .secrets
+
+# ignore lcov code coverage report
+lcov.txt
