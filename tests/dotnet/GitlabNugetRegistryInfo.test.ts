@@ -56,18 +56,16 @@ await describe('InstanceOf GitlabNugetRegistryInfo', async () => {
 });
 
 await describe('GLNRIOpts', { concurrency: true }, async () => {
-  const GLNRIOptsOwn = GLNRIOpts.omit('project');
-
   await it('defaults to project-level endpoint', () => {
     strictEqual(
-      GLNRIOptsOwn.from({}).source,
+      GLNRIOpts.pick('source').from({}).source,
       `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`,
     );
   });
 
   await it('defaults to GitLab token variables', () => {
     deepStrictEqual(
-      GLNRIOptsOwn.from({}).tokenEnvVars,
+      GLNRIOpts.pick('tokenEnvVars').from({}).tokenEnvVars,
       Object.freeze([
         'CI_JOB_TOKEN',
         'GITLAB_TOKEN',
