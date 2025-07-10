@@ -1,14 +1,11 @@
 import {
   deepStrictEqual,
-  notDeepStrictEqual,
   strictEqual,
 } from 'node:assert/strict';
 import { existsSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, it } from 'node:test';
-import { inspect } from 'node:util';
-import { isNativeError } from 'node:util/types';
 import {
   NugetRegistryInfo as NRI,
   NRIOpts,
@@ -16,7 +13,6 @@ import {
   getGithubOutput,
   getGithubOutputSync,
 } from '../../src/dotnet/NugetRegistryInfo.js';
-import { getEnvVarValue } from '../../src/utils/env.js';
 import { isConstructor } from '../../src/utils/reflection.js';
 
 await describe('NugetRegistryInfo', async () => {
@@ -25,53 +21,10 @@ await describe('NugetRegistryInfo', async () => {
   });
 });
 
-await describe('InstanceOf NugetRegistryInfo', { concurrency: 1 }, async () => {
-  const predefinedToken = getEnvVarValue('NUGET_TOKEN');
+await describe('InstanceOf NugetRegistryInfo', async () => {
   const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
 
-  await it('canPushPackagesToSource rejects promise if token invalid', async () => {
-    process.env['INVALID_TOKEN'] = 'placeholder';
-    const value = await new NRI({
-      project: DeterministicNupkgCsproj,
-      tokenEnvVars: ['INVALID_TOKEN'],
-    })
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
-      .canPushPackagesToSource
-      .catch((error: unknown) =>
-        isNativeError(error) ? error : new Error(JSON.stringify(error)),
-      );
-    if (value === true) {
-      notDeepStrictEqual(value, true);
-      return;
-    }
-    strictEqual('message' in value, true);
-    strictEqual('name' in value, true);
-  });
-
-  await it('canPushPackagesToSource resolves when token is defined, valid, and can push packages to source', async (t) => {
-    if (!predefinedToken) {
-      t.skip('NUGET_TOKEN environment variable undefined');
-      return;
-    }
-
-    const registryInfo = new NRI({
-      project: DeterministicNupkgCsproj,
-    });
-
-    // eslint-disable-next-line @typescript-eslint/no-deprecated
-    const canPush = await registryInfo.canPushPackagesToSource.catch(
-      (error: unknown) => {
-        if (!isNativeError(error))
-          return new Error(inspect(error, { depth: 3 }));
-        return error;
-      },
-    );
-
-    if (Array.isArray(canPush))
-      throw new Error('huh?');
-
-    deepStrictEqual(canPush, true);
-  });
+  await it('canPushPackagesToSource', { skip: 'See ./DotnetNugetPush.test.ts' });
 
   /** NuGet Client credential failover */
   await it('Continues when API key unavailable', () => {
