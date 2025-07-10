@@ -45,6 +45,8 @@ for (const projName in paths) {
   if (existsSync(projPaths.json))
     continue;
 
+  console.time(`Build Cache File "${path.basename(projPaths.json)}"`);
+
   const jsonContentArray = await MSBP.PackableProjectsToMSBuildProjects([projPaths.proj])
     .then(async promiseArray =>
       await Promise.all(promiseArray.map(async proj => JSON.stringify(await proj))),
@@ -55,6 +57,12 @@ for (const projName in paths) {
     throw new Error('The first item in the jsonContentArray was undefined');
 
   writeFileSync(projPaths.json, firstJson, { encoding: 'utf8' });
+
+  /**
+   * Build Cache File "dn.json": 2.555s
+   * Build Cache File "sap.json": 5.564s
+   */
+  console.timeEnd(`Build Cache File "${path.basename(projPaths.json)}"`);
 }
 
 const projects = {
