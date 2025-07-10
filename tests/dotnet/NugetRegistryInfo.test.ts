@@ -5,7 +5,7 @@ import {
 import { existsSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { describe, it } from 'node:test';
+import { after, before, describe, it } from 'node:test';
 import {
   NugetRegistryInfo as NRI,
   NRIOpts,
@@ -41,7 +41,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
   });
 });
 
-await describe('NRIOptsBase', async () => {
+await describe('NRIOptsBase', { concurrency: true }, async () => {
   await it('has expected props', () => {
     strictEqual(
       JSON.stringify(NRIOptsBase.props, undefined, 2),
@@ -113,7 +113,7 @@ await describe('NRIOptsBase', async () => {
   });
 });
 
-await describe('NRIOpts', async () => {
+await describe('NRIOpts', { concurrency: true }, async () => {
   const NRIOptsOwn = NRIOpts.omit('project');
 
   await it('defaults token variables', () => {
@@ -132,48 +132,45 @@ await describe('NRIOpts', async () => {
   });
 });
 
-await describe('getGithubOutput', async () => {
-  await it('returns empty object when GITHUB_OUTPUT is undefined', async () => {
-    const ghOutputBak = process.env['GITHUB_OUTPUT'];
-    process.env['GITHUB_OUTPUT'] = undefined;
-    try {
-      deepStrictEqual(await getGithubOutput(), {});
-    }
-    finally {
-      process.env['GITHUB_OUTPUT'] = ghOutputBak;
-    }
-  }).then(async () => {
-    await it('returns non-empty object when GITHUB_OUTPUT defined and file exists', async () => {
-      const tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
-      if (!existsSync(tmp_GITHUB_OUTPUT_FileName))
-        writeFileSync(tmp_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
-      process.env['GITHUB_OUTPUT'] = tmp_GITHUB_OUTPUT_FileName;
+await describe('when GITHUB_OUT is defined', { concurrency: true }, async () => {
+  await it('getGithubOutput returns non-empty object when GITHUB_OUTPUT defined and file exists', async () => {
+    const tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
+    if (!existsSync(tmp_GITHUB_OUTPUT_FileName))
+      writeFileSync(tmp_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
+    process.env['GITHUB_OUTPUT'] = tmp_GITHUB_OUTPUT_FileName;
 
-      const ghOutput = await getGithubOutput();
-      deepStrictEqual(ghOutput, { 'dotnet.NRI': 'true' });
-    });
+    const ghOutput = await getGithubOutput();
+    deepStrictEqual(ghOutput, { 'dotnet.NRI': 'true' });
+  });
+
+  await it('getGithubOutputSync returns non-empty object when GITHUB_OUTPUT defined and file exists', () => {
+    const tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
+    if (!existsSync(tmp_GITHUB_OUTPUT_FileName))
+      writeFileSync(tmp_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
+    process.env['GITHUB_OUTPUT'] = tmp_GITHUB_OUTPUT_FileName;
+
+    const ghOutput = getGithubOutputSync();
+    deepStrictEqual(ghOutput, { 'dotnet.NRI': 'true' });
   });
 });
 
-await describe('getGithubOutputSync', async () => {
-  await it('returns empty object when GITHUB_OUTPUT is undefined', () => {
-    const ghOutputBak = process.env['GITHUB_OUTPUT'];
-    process.env['GITHUB_OUTPUT'] = undefined;
-    try {
-      deepStrictEqual(getGithubOutputSync(), {});
-    }
-    finally {
-      process.env['GITHUB_OUTPUT'] = ghOutputBak;
-    }
-  }).then(async () => {
-    await it('returns non-empty object when GITHUB_OUTPUT defined and file exists', () => {
-      const tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
-      if (!existsSync(tmp_GITHUB_OUTPUT_FileName))
-        writeFileSync(tmp_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
-      process.env['GITHUB_OUTPUT'] = tmp_GITHUB_OUTPUT_FileName;
+await describe('when GITHUB_OUTPUT is undefined...', { concurrency: true }, async () => {
+  let ghOutputBak: string | undefined;
+  before(() => {
+    ghOutputBak = process.env['GITHUB_OUTPUT'];
+    process.env['GITHUB_OUTPUT'] = '';
+  });
 
-      const ghOutput = getGithubOutputSync();
-      deepStrictEqual(ghOutput, { 'dotnet.NRI': 'true' });
-    });
+  await it('getGithubOutput returns empty object when GITHUB_OUTPUT is undefined', async () => {
+    deepStrictEqual(await getGithubOutput(), {});
+  });
+
+  await it('getGithubOutputSync returns empty object when GITHUB_OUTPUT is undefined', () => {
+    deepStrictEqual(getGithubOutputSync(), {});
+  });
+
+  after(() => {
+    if (ghOutputBak)
+      process.env['GITHUB_OUTPUT'] = ghOutputBak;
   });
 });
