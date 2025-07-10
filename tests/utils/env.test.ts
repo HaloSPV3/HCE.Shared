@@ -3,7 +3,7 @@ import { strictEqual } from 'node:assert/strict';
 import { env } from 'node:process';
 import { describe, it } from 'node:test';
 
-await describe('env', async () => {
+await describe('env', { concurrency: true }, async () => {
   await describe('getEnvVarValue', async () => {
     await it('returns value of TEMP when told to do so', () => {
       strictEqual(getEnvVarValue('TEMP'), env['TEMP']);
