@@ -143,20 +143,6 @@ export class NugetRegistryInfo {
   public static readonly DefaultTokenEnvVars: readonly ['NUGET_TOKEN']
     = Object.freeze(['NUGET_TOKEN'] as const);
 
-  private static _parseStdoutForNupkgs(stdout: string): string[] {
-    return stdout
-      .replace('\r', '')
-      .split('\n')
-      .filter(
-        line => line.endsWith('.nupkg\'.') || line.endsWith('.snupkg\'.'),
-      )
-      // remove everything up to and including the first apostrophe.
-      // Pray no cultures add another apostrophe before the path.
-      .map(line => line.replace(/^[^']+'/, ''))
-      // trim the apostrophe and period from the end of the string.
-      .map(line => line.replace('\'.', ''));
-  }
-
   /**
    * Convert a URL string to a filesystem folder name.
    *
