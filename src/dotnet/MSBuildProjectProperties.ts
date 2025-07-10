@@ -57,7 +57,9 @@ export class MSBuildProjectProperties {
   // #region private
   private _msbuildProjectFullPath: string | undefined;
   private _assemblyName: string | undefined;
+  private _baseIntermediateOutputPath: string | undefined;
   private _description: string | undefined;
+  private _intermediateOutputPath: string | undefined;
   private _outputPath: string | undefined;
   private _runtimeIdentifier: string | undefined;
   private _runtimeIdentifiers: string | undefined;
@@ -133,12 +135,33 @@ export class MSBuildProjectProperties {
   }
 
   /**
+   * @returns The top-level folder where all configuration-specific intermediate output
+   * folders are created. The default value is `obj\`.
+   * @example
+   * ```xml
+   * <BaseIntermediateOutputPath>c:\xyz\obj\</BaseIntermediateOutputPath>
+   * ```
+   */
+  get BaseIntermediateOutputPath(): string {
+    return this._baseIntermediateOutputPath ??= '';
+  }
+
+  /**
    * A long description for the assembly.
    * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
    * @returns The value of the `Description` property.
    */
   get Description(): string {
     return this._description ??= '';
+  }
+
+  /**
+   * @returns The full intermediate output path as derived from
+   * {@link BaseIntermediateOutputPath}, if no path is specified.
+   * @example "obj\\debug\\"
+   */
+  get IntermediateOutput(): string {
+    return this._intermediateOutputPath ??= '';
   }
 
   /**
