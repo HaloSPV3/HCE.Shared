@@ -571,3 +571,6 @@ tests/dotnet/.projCache
 
 # ignore lcov code coverage report
 lcov.txt
+
+# ignore junit report
+junit.xml
