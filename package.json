@@ -46,8 +46,10 @@
     "semantic-release": "semantic-release",
     "test": "npm run build && npm run test:noBuild",
     "test:cacheSampleProjects": "echo \"START: Cache Sample Projects\" && tsx ./tests/dotnet/MSBuildProject.projects.ts && echo \"DONE: Cache Sample Projects\"",
-    "test:noBuild": "npm run test:cacheSampleProjects && tsx --test ./tests/**/*.test.ts",
-    "test:watch": "tsx --watch --test ./tests/**/*.test.ts",
+    "pretest:noBuild": "npm run test:cacheSampleProjects",
+    "test:noBuild": "npm run test:justTest",
+    "test:justTest": "tsx --test --experimental-test-coverage --enable-source-maps --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.txt --test-reporter=junit --test-reporter-destination=junit.xml",
+    "test:watch": "npm run test:justTest -- -- --watch",
     "type": "tsc --build",
     "validate": "packemon validate",
     "watch": "packemon watch --loadConfigs"
