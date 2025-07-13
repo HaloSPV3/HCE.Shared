@@ -312,6 +312,19 @@ export class MSBuildProject {
         .catch<undefined>(catchCsc2012);
     }
 
+    // todo: consider -getResultOutputFile:file
+    //  Redirect output from get* into a file.
+    //
+    //  Example:
+    //  -getProperty:Bar -getResultOutputFile:Biz.txt
+    //  This writes the value of property Bar into Biz.txt.
+
+    /**
+     * The following issues have triggered this code path:
+     * - BaseIntermediateOutputPath must use Unix path separators ('/') on all
+     *   platforms. Even Windows. Otherwise, MSBuild/dotnet will error-exit with
+     *   "The BaseIntermediateOutputPath must end with a trailing slash".
+     */
     if (stdio.stdout.startsWith('MSBuild version')) {
       warn(stdio.stdout);
       throw new Error(
