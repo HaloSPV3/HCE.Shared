@@ -36,7 +36,7 @@ await describe('MSBuildProject', { concurrency: true }, async () => {
       const evalOpts: typeof EvaluationOptions.inferOut = EvaluationOptions.from({
         FullName: deterministicNupkgProj,
         GetItem: [],
-        GetProperty: [...MSBP.MatrixProperties],
+        GetProperty: MSBP.MatrixProperties,
         GetTargetResult: [],
         Property: { BaseIntermediateOutputPath: `obj/test_Evaluate/` },
         Targets: ['Restore', 'Pack'],
