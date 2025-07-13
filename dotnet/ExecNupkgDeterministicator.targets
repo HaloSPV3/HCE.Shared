@@ -126,7 +126,7 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
     <Message
       Condition=" '$(_IsAlreadyDeterministic)' == 'true' "
       Text="Package up-to-date and deterministic ('$(_PackageFullPath)')"
-      Importance="Normal"
+      Importance="High"
     />
 
     <!-- determinize the snupkg -->
@@ -167,7 +167,7 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
     <Message
       Condition=" '$(IncludeSymbols)' == 'true' AND '$(_IsAlreadyDeterministic)' == 'true' "
       Text="Package up-to-date and deterministic ('$(_PackageSymbolsFullPath)')"
-      Importance="Normal"
+      Importance="High"
     />
   </Target>
 </Project>
