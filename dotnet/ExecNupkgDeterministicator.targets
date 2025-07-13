@@ -17,6 +17,7 @@
    -->
   <Target Condition="'$(Deterministic)' == 'true'" Name="ExecNupkgDeterministicator" AfterTargets="Pack">
     <PropertyGroup>
+      <_IsAlreadyDeterministic>false</_IsAlreadyDeterministic>
       <_PackageFullPathNoExt>$(PackageOutputPath)\$(PackageId).$(PackageVersion)</_PackageFullPathNoExt>
       <_PackageOutputPathIsFullyQualified>$([System.IO.Path]::IsPathFullyQualified("$(PackageOutputPath)"))</_PackageOutputPathIsFullyQualified>
       <_PackageFullPathNoExt Condition=" '$(_PackageOutputPathIsFullyQualified)' != 'true' ">$(MSBuildProjectDirectory)\$(PackageOutputPath)\$(PackageId).$(PackageVersion)</_PackageFullPathNoExt>
@@ -100,11 +101,19 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       PropertyName="_ExitCode" />
     </Exec>
 
-    <!-- Error 150 indicates that the .NET runtime required by this tool is unavailable (e.g. .NET runtime 6.0) -->
+    <CreateProperty Value="@(_ConsoleOutput, '
+')">
+      <Output TaskParameter="Value" PropertyName="_ConsoleOutput" />
+    </CreateProperty>
+    <CreateProperty Value="$(_ConsoleOutput.Contains('System.IO.Directory.Move'))">
+      <Output TaskParameter="Value" PropertyName="_IsAlreadyDeterministic" />
+    </CreateProperty>
+
+    <!-- Error 150 indicates that the .NET runtime required by this tool is unavailable (e.g. .NET runtime 6.0; Framework: 'Microsoft.NETCore.App', version '6.0.0' (x64)) -->
     <!-- Error 135 indicates an unhandled exception. In the past, this was caused by an invalid path addressed by _PackageOutputPathIsFullyQualified. -->
-    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' "
+    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_IsAlreadyDeterministic)' != 'true' "
       Code="$(_ExitCode)"
-      Text="@(_ConsoleOutput, '\n')"
+      Text="$(_ConsoleOutput)"
     />
 
     <!-- if success and exit code 0... -->
@@ -113,9 +122,9 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       Text="Determinized package '$(_PackageFullPath)'"
       Importance="High"
     />
-    <!-- else if success and exit code -532462766 (System.IO.IOException: Source and destination path must be different.) -->
+    <!-- else if (System.IO.IOException: Source and destination path must be different.) -->
     <Message
-      Condition=" '$(_ExitCode)' == '-532462766' "
+      Condition=" '$(_IsAlreadyDeterministic)' == 'true' "
       Text="Package up-to-date and deterministic ('$(_PackageFullPath)')"
       Importance="Normal"
     />
@@ -136,9 +145,17 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       ItemName="ExitCode" />
     </Exec>
 
-    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' "
+    <CreateProperty Value="@(_ConsoleOutput, '
+')">
+      <Output TaskParameter="Value" PropertyName="_ConsoleOutput" />
+    </CreateProperty>
+    <CreateProperty Value="$(_ConsoleOutput.Contains('System.IO.Directory.Move'))">
+      <Output TaskParameter="Value" PropertyName="_IsAlreadyDeterministic" />
+    </CreateProperty>
+
+    <Error Condition=" '$(_ExitCode)' != '0' AND '$(_IsAlreadyDeterministic)' != 'true' "
       Code="$(_ExitCode)"
-      Text="@(_ConsoleOutput, '\n')"
+      Text="$(_ConsoleOutput)"
     />
 
     <!-- if success and exit code 0... -->
@@ -148,7 +165,7 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
     />
     <!-- else if success and exit code -532462766 (System.IO.IOException: Source and destination path must be different.) -->
     <Message
-      Condition=" '$(IncludeSymbols)' == 'true' AND '$(_ExitCode)' == '-532462766' "
+      Condition=" '$(IncludeSymbols)' == 'true' AND '$(_IsAlreadyDeterministic)' == 'true' "
       Text="Package up-to-date and deterministic ('$(_PackageSymbolsFullPath)')"
       Importance="Normal"
     />
