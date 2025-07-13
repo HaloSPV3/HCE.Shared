@@ -38,7 +38,7 @@ await describe('MSBuildProject', { concurrency: true }, async () => {
         GetItem: [],
         GetProperty: [...MSBP.MatrixProperties],
         GetTargetResult: [],
-        Property: {},
+        Property: { BaseIntermediateOutputPath: `obj/test_Evaluate/` },
         Targets: ['Restore', 'Pack'],
       });
       const actual: MSBP = await MSBP.Evaluate(evalOpts);
