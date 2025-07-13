@@ -14,11 +14,12 @@ import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import node_path from 'node:path';
 import { cwd, env } from 'node:process';
+import { setTimeout } from 'node:timers/promises';
 import { isNativeError } from 'node:util/types';
 import sanitizeFileName from 'sanitize-filename';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
-import { MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
+import { catchCsc2012, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
 
 type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
 type TmpDirNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
@@ -437,14 +438,20 @@ but the environment variable is empty or undefined.`);
   ): Promise<string[]> {
     opts['-GetItem'] = [...opts['-GetItem'] ?? [], '_OutputPackItems'];
 
-    const packOutput = await execAsync(
-      this.GetPackCommand(
-        opts,
-        usePerSourceSubfolder,
-        usePerPackageIdSubfolder,
-      ),
-      true,
+    const packCmd = this.GetPackCommand(
+      opts,
+      usePerSourceSubfolder,
+      usePerPackageIdSubfolder,
     );
+    let packOutput: undefined | { stdout: string; stderr: string } = undefined;
+    while (packOutput === undefined) {
+      packOutput = await setTimeout(
+        1000,
+        execAsync(packCmd, true),
+      )
+        .then(async p => await p)
+        .catch<undefined>(catchCsc2012);
+    }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
       .Items
@@ -474,7 +481,6 @@ but the environment variable is empty or undefined.`);
     const packCmd: string = this.GetPackCommand(
       {
         ...opts,
-        force: true,
         output: getDummiesDir(this._project),
         propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY' },
         '-GetItem': [...opts['-GetItem'] ?? [], '_OutputPackItems'],
@@ -482,7 +488,15 @@ but the environment variable is empty or undefined.`);
       true,
     );
 
-    const packOutput = await execAsync(packCmd, true);
+    let packOutput: undefined | { stdout: string; stderr: string } = undefined;
+    while (packOutput === undefined) {
+      packOutput = await setTimeout(
+        1000,
+        execAsync(packCmd, true),
+      )
+        .then(async p => await p)
+        .catch<undefined>(catchCsc2012);
+    }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
       .Items
