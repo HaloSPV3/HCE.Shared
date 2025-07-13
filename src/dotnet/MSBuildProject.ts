@@ -290,8 +290,9 @@ export class MSBuildProject {
         : `-getTargetResult:"${options.GetTargetResult.join(',')}"`;
     const cmdLine = [
       'dotnet',
-      'build',
+      'msbuild',
       `"${options.FullName}"`,
+      '-restore',
       property,
       target,
       getItem,
