@@ -104,6 +104,8 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       PropertyName="_ExitCode" />
     </Exec>
 
+    <!-- Error 150 indicates that the .NET runtime required by this tool is unavailable (e.g. .NET runtime 6.0) -->
+    <!-- Error 135 indicates an unhandled exception. In the past, this was caused by an invalid path addressed by _PackageOutputPathIsFullyQualified. -->
     <Error Condition=" '$(_ExitCode)' != '0' AND '$(_ExitCode)' != '-532462766' "
       Code="$(_ExitCode)"
       Text="@(_ConsoleOutput, '\n')"
