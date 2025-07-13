@@ -70,17 +70,13 @@
       Text="The Exec command 'dotnet tool list -g kuinox.nupkgdeterministicator' exited with the unrecognized code '$(_ToolListGlobalExitCode)'."
     />
 
-    <PropertyGroup>
-      <_missing>
+    <!-- If NupkgDeterministicator not installed locally nor globally, Error -->
+    <Error Condition=" '$(_ToolListGlobalExitCode)' != '0' AND '$(_ToolListLocalExitCode)' != '0' "
+      Text="
 Kuinox.NupkgDeterministicator is unavailable. Run ONE of the following commands and try again:
 dotnet tool install -g Kuinox.NupkgDeterministicator
 dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
-      </_missing>
-    </PropertyGroup>
-
-    <!-- If NupkgDeterministicator not installed locally nor globally, Error -->
-    <Error Condition=" '$(_ToolListLocalExitCode)' != '0' AND '$(_ToolListLocalExitCode)' != '0' "
-      Text="$(_missing)" />
+" />
 
     <PropertyGroup>
       <_BaseCmd>NupkgDeterministicator</_BaseCmd>
