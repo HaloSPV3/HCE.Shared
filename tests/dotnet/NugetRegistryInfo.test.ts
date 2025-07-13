@@ -2,7 +2,7 @@ import {
   deepStrictEqual,
   strictEqual,
 } from 'node:assert/strict';
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { after, before, describe, it } from 'node:test';
@@ -14,6 +14,9 @@ import {
   getGithubOutputSync,
 } from '../../src/dotnet/NugetRegistryInfo.js';
 import { isConstructor } from '../../src/utils/reflection.js';
+
+if (!existsSync(path.join(tmpdir(), 'HCE.Shared')))
+  mkdirSync(path.join(tmpdir(), 'HCE.Shared'));
 
 await describe('NugetRegistryInfo', async () => {
   await it('is a class', () => {
