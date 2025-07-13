@@ -271,7 +271,7 @@ export class MSBuildProject {
         : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
     const cmdLine = [
       'dotnet',
-      'msbuild',
+      'build',
       `"${options.FullName}"`,
       property,
       target,
