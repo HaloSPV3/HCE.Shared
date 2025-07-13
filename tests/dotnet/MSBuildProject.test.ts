@@ -1,5 +1,4 @@
 import { deepStrictEqual } from 'node:assert/strict';
-import { existsSync, readdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { describe, it } from 'node:test';
 import {
@@ -24,22 +23,13 @@ await describe('MSBuildProject', { concurrency: true }, async () => {
         import.meta.dirname,
         '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
       );
-      const pakDir = path.resolve(path.dirname(deterministicNupkgProj), 'packages');
-      if (
-        existsSync(pakDir)
-        && readdirSync(pakDir).some(
-          v => v.endsWith('.nupkg') || v.endsWith('.snupkg'),
-        )
-      ) {
-        rmSync(pakDir, { recursive: true, force: true });
-      }
       const evalOpts: typeof EvaluationOptions.inferOut = EvaluationOptions.from({
         FullName: deterministicNupkgProj,
         GetItem: [],
         GetProperty: MSBP.MatrixProperties,
         GetTargetResult: [],
         Property: { BaseIntermediateOutputPath: `obj/test_Evaluate/` },
-        Targets: ['Restore', 'Pack'],
+        Targets: [],
       });
       const actual: MSBP = await MSBP.Evaluate(evalOpts);
       // lets not bother testing targets for now. It depends on both the project and the SDK.
