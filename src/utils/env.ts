@@ -35,7 +35,7 @@ export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.P
  * `undefined`.
  */
 export function getEnvVarValue(envVar: string, options?: GetOptions): string | undefined {
-  options ??= { ignore: ['MISSING_KEY'] };
+  options ??= { ignore: ['MISSING_KEY', 'MISSING_ENV_FILE'] };
   const value = String(env[envVar] ?? get(envVar, options)).trim();
   // I hate this. Why is undefined converted to a string?
   return value === '' || value === 'undefined'
