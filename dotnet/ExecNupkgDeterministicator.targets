@@ -17,12 +17,16 @@
    -->
   <Target Condition="'$(Deterministic)' == 'true'" Name="ExecNupkgDeterministicator" AfterTargets="Pack">
     <PropertyGroup>
-      <_PackageFullPathExtensionless>$(MSBuildProjectDirectory)\$(PackageOutputPath)\$(PackageId).$(PackageVersion)</_PackageFullPathExtensionless>
-      <_PackageFullPath>$(_PackageFullPathExtensionless).nupkg</_PackageFullPath>
-      <_PackageSymbolsFullPath Condition=" ('$(IncludeSymbols)' == 'true')">$(_PackageFullPathExtensionless).$(SymbolPackageFormat)</_PackageSymbolsFullPath>
+      <_PackageFullPathNoExt>$(PackageOutputPath)\$(PackageId).$(PackageVersion)</_PackageFullPathNoExt>
+      <_PackageOutputPathIsFullyQualified>$([System.IO.Path]::IsPathFullyQualified("$(PackageOutputPath)"))</_PackageOutputPathIsFullyQualified>
+      <_PackageFullPathNoExt Condition=" '$(_PackageOutputPathIsFullyQualified)' != 'true' ">$(MSBuildProjectDirectory)\$(PackageOutputPath)\$(PackageId).$(PackageVersion)</_PackageFullPathNoExt>
+      <_PackageFullPath>$(_PackageFullPathNoExt).nupkg</_PackageFullPath>
+      <_PackageSymbolsFullPath Condition=" ('$(IncludeSymbols)' == 'true')">$(_PackageFullPathNoExt).$(SymbolPackageFormat)</_PackageSymbolsFullPath>
       <_ToolListLocalExitCode>0</_ToolListLocalExitCode>
       <_ToolListGlobalExitCode>0</_ToolListGlobalExitCode>
     </PropertyGroup>
+
+    <Exec Command="dotnet --info" ConsoleToMSBuild="true" />
 
     <!-- Check if the tool is installed locally (i.e. added to './.config/dotnet-tools.json') -->
     <Exec
