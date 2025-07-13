@@ -209,6 +209,22 @@ export class MSBuildProject {
    */
   readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][];
 
+  /**
+   * @param projectPath The full path of the project file or its directory. A
+   * relative path may be passed, but will resolve relative to the current
+   * working directory.
+   * @param includeNonPublic Include conventionally internal/private MSBuild
+   * targets in the result.
+   * @returns A string array of the project's MSBuild targets.
+   * @todo consider 'file' of -targets[:file]
+   *  Prints a list of available targets without executing the
+   *  actual build process. By default the output is written to
+   *  the console window. If the path to an output file
+   *  is provided that will be used instead.
+   *  (Short form: -ts)
+   *  Example:
+   *    -ts:out.txt
+   */
   static async GetTargets(
     projectPath: string,
     includeNonPublic = false,
