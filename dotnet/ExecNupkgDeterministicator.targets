@@ -40,7 +40,8 @@
     <Exec Condition=" '$(_ToolListLocalExitCode)' == '1' "
       Command="dotnet tool list -g kuinox.nupkgdeterministicator"
       StandardOutputImportance="low"
-      ContinueOnError="true" >
+      ContinueOnError="true"
+      ConsoleToMsBuild="true" >
       <Output TaskParameter="ExitCode" PropertyName="_ToolListGlobalExitCode" />
     </Exec>
     <!-- Error codes other than 0 and 1 are unknown and cannot be handled. -->
