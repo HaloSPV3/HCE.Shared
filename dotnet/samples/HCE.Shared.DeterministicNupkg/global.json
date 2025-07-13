@@ -1,7 +1,0 @@
-{
-  "sdk": {
-    "// comment": "see included .NET Core SDK in latest Ubuntu runner https://github.com/actions/runner-images/tree/main?tab=readme-ov-file#available-images",
-    "version": "8.0.112",
-    "rollForward": "latestFeature"
-  }
-}
