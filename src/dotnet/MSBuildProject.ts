@@ -4,8 +4,9 @@ import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
+import { isNativeError } from 'node:util/types';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
-import { ChildProcessSpawnException, execAsync } from '../utils/execAsync.js';
+import { execAsync } from '../utils/execAsync.js';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
 import {
   NPPGetterNames,
@@ -281,31 +282,16 @@ export class MSBuildProject {
     ]
       .filter(v => v !== '')
       .join(' ');
+    let stdio: Awaited<ReturnType<typeof execAsync>> | undefined = undefined;
     // may throw
-    const stdio: Awaited<ReturnType<typeof execAsync>> = await execAsync(cmdLine, true)
-      .catch(async (error: unknown) => {
-        if (error instanceof ChildProcessSpawnException) {
-          let _stdio: Awaited<ReturnType<typeof execAsync>> | undefined;
-          // todo: locale-agnostic. Is the exit code reliable?
-          while (_stdio === undefined) {
-            await setTimeout(
-              10,
-              async () => {
-                try {
-                  _stdio = await execAsync(cmdLine, true);
-                }
-                catch (error) {
-                  if (error instanceof ChildProcessSpawnException && error.stderr?.includes('because it is being used by another process')) {
-                    return;
-                  }
-                };
-              },
-            ).then(async (v) => { await v(); });
-          }
-          return _stdio;
-        }
-        else throw error;
-      });
+    while (stdio === undefined) {
+      stdio = await setTimeout(
+        1000,
+        execAsync(cmdLine, true),
+      )
+        .then(async p => await p)
+        .catch<undefined>(catchCsc2012);
+    }
 
     if (stdio.stdout.startsWith('MSBuild version')) {
       warn(stdio.stdout);
@@ -494,4 +480,45 @@ export const _InternalMSBuildEvaluationTypes = type.scope({
  */
 function makeAbsolute(_path: string) {
   return path.isAbsolute(_path) ? _path : path.resolve(_path);
+}
+
+/**
+ * Use this in your catch statement or .catch call to return `undefined` when
+ * MSBuild error CSC2012 (e.g. "file in use by another process") is reported.
+ * @param error Probably an Error object
+ * @returns `undefined` if CSC2012 (file in use by another process) occurs
+ */
+export function catchCsc2012(error: unknown): undefined {
+  if (isNativeError(error)) {
+    // check for error reported when "file in use by another process" i.e. EBUSY
+    // (UNIX), NTSTATUS.ERROR_SHARING_VIOLATION == 0x20 == 32 (Windows)
+    if ('stderr' in error && typeof error.stderr === 'string'
+      && /^CSC ?:.+CS2012:/gm.test(
+        // '\uFF1A'.normalize('NFKC') === ':' === true;
+        error.stderr.normalize('NFKC'),
+      )
+    ) {
+      return undefined; /* retry */
+    }
+    /**
+     * some known warnings/errors:
+     * - warning MSB3073:
+     *   The command "dotnet tool list kuinox.nupkgdeterministicator"
+     *   exited with code 145.
+     *    > $ dotnet tool list kuinox.nupkgdeterministicator
+     *    > The command could not be loaded, possibly because:
+     *    >   * You intended to execute a .NET application:
+     *    >       The application 'tool' does not exist.
+     *    >   * You intended to execute a .NET SDK command:
+     *    >       No .NET SDKs were found.
+     *    >
+     *    > Download a .NET SDK:
+     *    > https://aka.ms/dotnet/download
+     *    >
+     *    > Learn about SDK resolution:
+     *    > https://aka.ms/dotnet/sdk-not-found
+     */
+    else throw error;
+  }
+  else throw new Error('unknown error', { cause: error });
 }
