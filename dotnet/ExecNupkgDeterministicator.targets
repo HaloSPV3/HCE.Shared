@@ -24,6 +24,13 @@
       <_PackageSymbolsFullPath Condition=" ('$(IncludeSymbols)' == 'true')">$(_PackageFullPathNoExt).$(SymbolPackageFormat)</_PackageSymbolsFullPath>
       <_ToolListLocalExitCode>0</_ToolListLocalExitCode>
       <_ToolListGlobalExitCode>0</_ToolListGlobalExitCode>
+      <!-- <PATH Condition=" '$(CI)' == 'true' AND '$(OS)' == 'Unix'">/usr/share/dotnet:$(PATH)</PATH> -->
+      <_PATH_multiline Condition=" '$(OS)' == 'Unix' ">
+        $(PATH.Replace(":", $([System.Environment]::NewLine)))
+      </_PATH_multiline>
+      <_PATH_multiline Condition=" '$(OS)' == 'Windows_NT' ">
+        $(PATH.Replace(";", $([System.Environment]::NewLine)))
+      </_PATH_multiline>
     </PropertyGroup>
 
     <Exec Command="dotnet --info" ConsoleToMSBuild="true" />
@@ -35,7 +42,17 @@
       ContinueOnError="true" >
       <Output TaskParameter="ExitCode" PropertyName="_ToolListLocalExitCode" />
     </Exec>
-    <!-- Error codes other than 0 and 1 are unknown and cannot be handled. -->
+    <!-- Check if `dotnet tool` is unavailable. Yes, this is possible. It caused a week of panic. -->
+    <!-- A. No .NET SDK could be found. Only .NET runtimes. -->
+    <!-- B. The SDK version specified in global.json is unavailable. -->
+    <Error Condition=" '$(_ToolListLocalExitCode)' == '145' " Text="
+  `dotnet tool` subcommand is unavailable: .NET SDK not found.
+  If this occurs on a GitHub Actions runner, this process's PATH may be missing the `actions/setup-dotnet` SDK path. On Ubuntu runners, this is `/usr/share/dotnet/`.
+  Alternatively, this error could may the SDK version specified in the nearest global.json is unavailable.
+  Current PATH:
+  $(_PATH_multiline)"
+    />
+    <!-- Error codes other than 0, 1, and 145 are unknown and cannot be handled. -->
     <Error Condition=" ('$(_ToolListLocalExitCode)' != '0') AND ('$(_ToolListLocalExitCode)' != '1')"
       Text="The Exec command 'dotnet tool list kuinox.nupkgdeterministicator' exited with the unrecognized code '$(_ToolListLocalExitCode)'."
     />
