@@ -5,8 +5,9 @@ import {
 import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it, todo } from 'node:test';
 import { isConstructor } from '../src/utils/reflection.js';
-import path from 'node:path';
 import { isNativeError } from 'node:util/types';
+import { DeterministicNupkgCsproj } from './dotnet/MSBuildProject.projects.js';
+import { NugetRegistryInfo } from '../src/dotnet/NugetRegistryInfo.js';
 
 await describe('SemanticReleaseConfigDotnet', async () => {
   await it('is a class', () => {
@@ -22,14 +23,10 @@ await describe('getConfig', async () => {
   await it('does not throw when projectToPackAndPush contains at least one item', { concurrency: 1 }, async () => {
     process.env['GITHUB_REPOSITORY_OWNER'] = 'HaloSPV3';
     process.env['SKIP_TOKEN'] = 'true';
-    const DeterministicNupkgCsprojPath = path.join(
-      import.meta.dirname,
-      '../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
-    );
     // this test must pass two args here
     const actual = await getConfig(
-      [DeterministicNupkgCsprojPath],
-      [DeterministicNupkgCsprojPath],
+      [DeterministicNupkgCsproj],
+      [new NugetRegistryInfo({ project: DeterministicNupkgCsproj })],
     ).catch((error: unknown) => isNativeError(error) ? error : new Error(String(error)));
 
     ok(
