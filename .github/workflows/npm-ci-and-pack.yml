@@ -49,8 +49,8 @@ jobs:
           check-latest: true
       - uses: actions/cache/restore@v4
         with:
-          path: /usr/lib/dotnet
-          key: usr-lib-dotnet
+          path: /usr/share/dotnet
+          key: usr-share-dotnet
       - uses: actions/setup-dotnet@v4
         with:
           # required by Kuinox.NupkgDeterministicator
@@ -58,8 +58,8 @@ jobs:
           global-json-file: ./global.json
       - uses: actions/cache/save@v4
         with:
-          path: /usr/lib/dotnet
-          key: usr-lib-dotnet
+          path: /usr/share/dotnet
+          key: usr-share-dotnet
 
       - run: npm i -g npm@latest
       - run: npm ci
