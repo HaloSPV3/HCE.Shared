@@ -19,21 +19,19 @@ function getGHRepoOwner(): string {
 
 await describe('canPushPackagesToSource resolves when...', { concurrency: false }, async () => {
   await it(
-    '...GITHUB_REPOSITORY_OWNER is defined and GITHUB_TOKEN or GH_TOKEN is defined, valid, and can push packages to source ',
+    '...GITHUB_REPOSITORY_OWNER and GH_TOKEN are defined, valid, and can push packages to source ',
     { timeout: 60_000 },
     async (t) => {
-      if (process.env['GITHUB_TOKEN'] === 'placeholder')
-        delete process.env['GITHUB_TOKEN'];
       if (process.env['GH_TOKEN'] === 'placeholder')
         delete process.env['GH_TOKEN'];
-      if (!getEnvVarValue('GITHUB_TOKEN') && !getEnvVarValue('GH_TOKEN')) {
+      if (!getEnvVarValue('GH_TOKEN')) {
         t.skip('GITHUB_TOKEN and GH_TOKEN are unavailable for testing');
         return;
       }
 
       getGHRepoOwner();
       ok(
-        await new GHNRI({ project })
+        await new GHNRI({ project, tokenEnvVars: ['GH_TOKEN'] })
         // eslint-disable-next-line @typescript-eslint/no-deprecated
           .canPushPackagesToSource,
       );
