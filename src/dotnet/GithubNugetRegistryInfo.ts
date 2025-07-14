@@ -12,6 +12,7 @@ const DefaultGithubTokenEnvVars = Object.freeze([
 
 export class GithubNugetRegistryInfo extends NugetRegistryInfo {
   static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
+  // todo: deduplicate definition
   static readonly DefaultGithubTokenEnvVars = Object.freeze([
     'GH_TOKEN',
     'GITHUB_TOKEN',
