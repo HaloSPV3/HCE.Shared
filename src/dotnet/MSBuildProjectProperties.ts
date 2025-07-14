@@ -165,7 +165,12 @@ export class MSBuildProjectProperties {
   }
 
   /**
-   * @returns The path of the build output.
+   * @returns The path to the output directory, relative to the project
+   * directory.
+   * @example
+   * `bin/Debug`
+   * /// non-AnyCPU builds
+   * `bin/Debug/${Platform}`
    */
   get OutputPath(): string {
     return this._outputPath ??= '';
