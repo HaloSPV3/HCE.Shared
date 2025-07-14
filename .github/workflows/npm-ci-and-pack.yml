@@ -20,9 +20,20 @@ jobs:
           cache: 'npm'
           node-version-file: package.json
           check-latest: true
+      - uses: actions/cache/restore@v4
+        with:
+          path: /usr/lib/dotnet
+          key: usr-lib-dotnet
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9
+          # required by Kuinox.NupkgDeterministicator
+          dotnet-version: 6.x
+          global-json-file: ./global.json
+      - uses: actions/cache/save@v4
+        with:
+          path: /usr/lib/dotnet
+          key: usr-lib-dotnet
+
       - run: npm i -g npm@latest
       - run: npm ci
       - run: npm run pack
