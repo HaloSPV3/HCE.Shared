@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <Description>A sample project for use by https://github.com/HaloSPV3/HCE.Shared. This package is published to test MSBuild Targets and other .NET/MSBuild capabilities.</Description>
+    <RepositoryUrl>https://github.com/HaloSPV3/HCE.Shared</RepositoryUrl>
     <DevelopmentDependency>true</DevelopmentDependency>
     <GenerateFullPaths>true</GenerateFullPaths>
     <IncludeSymbols>true</IncludeSymbols>
