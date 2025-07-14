@@ -6,15 +6,15 @@ import {
 
 const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
 const DefaultGithubTokenEnvVars = Object.freeze([
-  'GITHUB_TOKEN',
   'GH_TOKEN',
+  'GITHUB_TOKEN',
 ] as const);
 
 export class GithubNugetRegistryInfo extends NugetRegistryInfo {
   static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
   static readonly DefaultGithubTokenEnvVars = Object.freeze([
-    'GITHUB_TOKEN',
     'GH_TOKEN',
+    'GITHUB_TOKEN',
   ] as const);
 
   // GithubNugetRegistryInfo.CtorArgs(...) behaves differently than NugetRegistryInfo.CtorArgs(...)

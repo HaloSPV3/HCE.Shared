@@ -20,7 +20,7 @@ await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
   await it('GHNRI.DefaultGithubTokenEnvVars', () => {
     deepStrictEqual(
       GHNRI.DefaultGithubTokenEnvVars,
-      Object.freeze(['GITHUB_TOKEN', 'GH_TOKEN'] as const),
+      Object.freeze(['GH_TOKEN', 'GITHUB_TOKEN'] as const),
     );
   });
   await it('NUGET_PKG_GITHUB_COM', () => {
@@ -52,6 +52,6 @@ await describe('GHNRIOpts', async () => {
     strictEqual(opts.source, `https://nuget.pkg.github.com/${owner}/index.json`);
   });
   await it('defaults tokenEnvVars', () => {
-    deepStrictEqual(opts.tokenEnvVars, Object.freeze(['GITHUB_TOKEN', 'GH_TOKEN'] as const));
+    deepStrictEqual(opts.tokenEnvVars, Object.freeze(['GH_TOKEN', 'GITHUB_TOKEN'] as const));
   });
 });

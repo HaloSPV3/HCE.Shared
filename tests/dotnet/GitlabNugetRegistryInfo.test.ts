@@ -67,9 +67,9 @@ await describe('GLNRIOpts', { concurrency: true }, async () => {
     deepStrictEqual(
       GLNRIOpts.pick('tokenEnvVars').from({}).tokenEnvVars,
       Object.freeze([
-        'CI_JOB_TOKEN',
-        'GITLAB_TOKEN',
         'GL_TOKEN',
+        'GITLAB_TOKEN',
+        'CI_JOB_TOKEN',
       ] as const),
     );
   });

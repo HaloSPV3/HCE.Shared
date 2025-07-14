@@ -37,9 +37,9 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
   }
 
   static readonly DefaultGitlabTokenEnvVars = Object.freeze([
-    'CI_JOB_TOKEN',
-    'GITLAB_TOKEN',
     'GL_TOKEN',
+    'GITLAB_TOKEN',
+    'CI_JOB_TOKEN',
   ] as const);
 
   /**
