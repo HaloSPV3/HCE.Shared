@@ -69,3 +69,29 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      - id: uploadCoverageTestsArtifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'Coverage+Tests+${{ github.sha }}'
+          path: |
+            lcov.txt
+            junit.xml
+
+  upload-coverage:
+    needs: check
+
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{needs.check.outputs.TestCoverageArtifactID}}
+          run-id: ${{needs.check.result}}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          disable_search: true
+          files: ./lcov.txt,./junit.xml
+          slug: HaloSPV3/HCE.Shared
+          token: ${{ secrets.CODECOV_TOKEN }}
