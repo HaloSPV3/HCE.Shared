@@ -5,7 +5,7 @@ on:
   pull_request:
   workflow_call:
     secrets:
-      GITHUB_TOKEN:
+      GH_TOKEN:
         description: |
           This GitHub job token or Classic PAT is used to authorize `dotnet nuget push` tests.
           The required permissions are `packages: write` for job tokens and `write:packages` for Classic PATs and OAuth tokens.
@@ -13,7 +13,7 @@ on:
           - https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages
           - https://docs.github.com/en/apps/oauth-apps/`ing-oauth-apps/scopes-for-oauth-apps#available-scopes
           - https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions#publishing-a-package-using-an-action
-      GITLAB_TOKEN:
+      GL_TOKEN:
         description: |
           A GitLab API token with permission to push packages to the
           repo IDed by CI_PROJECT_ID e.g. 70884695 for HaloSPV3/HCE.Shared.
@@ -65,9 +65,9 @@ jobs:
       - run: npm run lint:check
       - run: npm run test:cacheSampleProjects
       - run: npm run test:justTest
-        env: # todo: prefer shorthand tokens just for tests
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GL_TOKEN: ${{ secrets.GL_TOKEN }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
       - id: uploadCoverageTestsArtifact
         uses: actions/upload-artifact@v4

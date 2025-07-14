@@ -11,8 +11,8 @@ jobs:
       packages: write
       contents: read # access to check out code and install dependencies
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITLAB_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
       NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
   npm-release:
     runs-on: ubuntu-latest
