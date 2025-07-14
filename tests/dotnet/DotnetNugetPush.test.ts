@@ -17,7 +17,7 @@ function getGHRepoOwner(): string {
   return process.env['GITHUB_REPOSITORY_OWNER'] ??= 'HaloSPV3';
 }
 
-await describe('canPushPackagesToSource resolves when...', { concurrency: true }, async () => {
+await describe('canPushPackagesToSource resolves when...', { concurrency: false }, async () => {
   await it(
     '...GITHUB_REPOSITORY_OWNER is defined and GITHUB_TOKEN or GH_TOKEN is defined, valid, and can push packages to source ',
     { timeout: 60_000 },
@@ -70,7 +70,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: true }
     });
 });
 
-await describe('canPushPackagesToSource throws when...', { concurrency: true }, async () => {
+await describe('canPushPackagesToSource throws when...', { concurrency: false }, async () => {
   const tokenEnvVars = ['INVALID_TOKEN'];
   process.env['INVALID_TOKEN'] = tokenEnvVars[0];
 
