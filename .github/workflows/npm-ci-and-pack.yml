@@ -8,7 +8,7 @@ env:
   CI_PROJECT_ID: 70884695
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
 
     steps:
