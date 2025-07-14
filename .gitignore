@@ -575,5 +575,6 @@ lcov.txt
 # ignore junit report
 junit.xml
 
-# ignore Act GitHub Runner Artifact Server directory
+# ignore Act Config, GitHub Runner Artifact Server directory
+.actrc
 .act-artifact-server
