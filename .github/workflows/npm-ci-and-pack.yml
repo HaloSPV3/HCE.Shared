@@ -36,6 +36,7 @@ jobs:
 
       - run: npm i -g npm@latest
       - run: npm ci
+      - run: npm audit signatures
       - run: npm run pack
       - run: npm run check
         env:
