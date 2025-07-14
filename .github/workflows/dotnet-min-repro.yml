@@ -21,16 +21,19 @@ jobs:
       DOTNET_NOLOGO: true
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
         with:
           path: /usr/lib/dotnet
           key: usr-lib-dotnet
-      - id: setup-dotnet
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           global-json-file: ./global.json
           # required by Kuinox.NupkgDeterministicator
           dotnet-version: 6.0.x
+      - uses: actions/cache/save@v4
+        with:
+          path: /usr/lib/dotnet
+          key: usr-lib-dotnet
 
       - run: which dotnet
       - run: dotnet --list-sdks
