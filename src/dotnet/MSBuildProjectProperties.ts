@@ -58,8 +58,10 @@ export class MSBuildProjectProperties {
   private _msbuildProjectFullPath: string | undefined;
   private _assemblyName: string | undefined;
   private _baseIntermediateOutputPath: string | undefined;
+  private _baseOutputPath: string | undefined;
   private _description: string | undefined;
   private _intermediateOutputPath: string | undefined;
+  private _outDir: string | undefined;
   private _outputPath: string | undefined;
   private _runtimeIdentifier: string | undefined;
   private _runtimeIdentifiers: string | undefined;
@@ -147,6 +149,17 @@ export class MSBuildProjectProperties {
   }
 
   /**
+   * @returns The base path for the output file.
+   * If it's set, MSBuild uses `OutputPath = $(BaseOutputPath)\$(Configuration)\`.
+   * @example ```xml
+   * <BaseOutputPath>c:\xyz\bin\</BaseOutputPath>
+   * ```
+   */
+  get BaseOutputPath(): string {
+    return this._baseOutputPath ??= '';
+  }
+
+  /**
    * A long description for the assembly.
    * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
    * @returns The value of the `Description` property.
@@ -162,6 +175,17 @@ export class MSBuildProjectProperties {
    */
   get IntermediateOutput(): string {
     return this._intermediateOutputPath ??= '';
+  }
+
+  /**
+   * @returns The final output location for the project or solution.
+   * When you build a solution, OutDir can be used to gather multiple project outputs in one location.
+   * In addition, OutDir is included in AssemblySearchPaths used for resolving references.
+   * @example
+   * `bin/Debug`
+   */
+  get OutDir(): string {
+    return this._outDir ??= '';
   }
 
   /**
