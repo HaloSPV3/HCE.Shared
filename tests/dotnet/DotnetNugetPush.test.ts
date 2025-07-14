@@ -54,7 +54,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: true }
       );
     });
   await it(
-    'NUGET_TOKEN token is defined, valid, and can push packages to source',
+    '...NUGET_TOKEN is defined, valid, and can push packages to source',
     { timeout: 60_000 },
     async (t) => {
       if (!getEnvVarValue('NUGET_TOKEN')) {
