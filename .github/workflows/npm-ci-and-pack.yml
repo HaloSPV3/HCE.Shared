@@ -3,13 +3,36 @@ on:
     # do not run on branches listed in npm-release.yml
     branches-ignore: [main,  develop, next/v3.0.0]
   pull_request:
-
-env:
-  CI_PROJECT_ID: 70884695
+  workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        description: |
+          This GitHub job token or Classic PAT is used to authorize `dotnet nuget push` tests.
+          The required permissions are `packages: write` for job tokens and `write:packages` for Classic PATs and OAuth tokens.
+          See:
+          - https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages
+          - https://docs.github.com/en/apps/oauth-apps/`ing-oauth-apps/scopes-for-oauth-apps#available-scopes
+          - https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions#publishing-a-package-using-an-action
+      GITLAB_TOKEN:
+        description: |
+          A GitLab API token with permission to push packages to the
+          repo IDed by CI_PROJECT_ID e.g. 70884695 for HaloSPV3/HCE.Shared.
+      NUGET_TOKEN:
+        description: 'A NugGet.org API token with permission to push to the unlisted package https://www.nuget.org/packages/HCE.Shared.DeterministicNupkg.'
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # access to check out code and install dependencies
+    env:
+      CI_PROJECT_ID: 70884695
+      DOTNET_NOLOGO: true
+      # https://stackoverflow.com/questions/75180149/how-to-cache-dotnet-installation-in-github-actions
+      DOTNET_INSTALL_DIR: /usr/lib/dotnet
+      DOTNET_ROOT: /usr/lib/dotnet
+    outputs:
+      TestCoverageArtifactID: ${{steps.uploadCoverageTestsArtifact.outputs.artifact-id}}
 
     steps:
       - uses: actions/checkout@v4
@@ -38,8 +61,11 @@ jobs:
       - run: npm ci
       - run: npm audit signatures
       - run: npm run pack
-      - run: npm run check
-        env:
+      - run: npm run type
+      - run: npm run lint:check
+      - run: npm run test:cacheSampleProjects
+      - run: npm run test:justTest
+        env: # todo: prefer shorthand tokens just for tests
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
