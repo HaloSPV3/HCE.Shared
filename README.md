@@ -1,11 +1,11 @@
 # HCE.Shared
 
-[![.github/workflows/npm-release.yml](https://github.com/HaloSPV3/HCE.Shared/actions/workflows/npm-release.yml/badge.svg?branch=next%2Fv3.0.0&event=push)](https://github.com/HaloSPV3/HCE.Shared/actions/workflows/npm-release.yml)
+[![.github/workflows/npm-release.yml](https://github.com/HaloSPV3/HCE.Shared/actions/workflows/npm-release.yml/badge.svg?branch=next%2F3.x&event=push)](https://github.com/HaloSPV3/HCE.Shared/actions/workflows/npm-release.yml)
 
 Infrastructure resources shared with other HaloSPV3 repositories.
 
 **NOTE**
-HCE.Shared's API offers convenience and flexibility not present in similar .NET/NuGet-publishing NPM packages, but this project is incredibly messy. You'll find many traces of scrapped or unfinished ideas in the form of both documentation and code. These wrinkles will be ironed out before `next/v3.0.0` is merged into `main`.
+HCE.Shared's API offers convenience and flexibility not present in similar .NET/NuGet-publishing NPM packages, but this project is incredibly messy. You'll find many traces of scrapped or unfinished ideas in the form of both documentation and code. These wrinkles will be ironed out before `3.x` is merged into `main`.
 
 ## Usage
 
