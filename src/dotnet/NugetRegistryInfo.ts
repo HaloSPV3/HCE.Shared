@@ -25,7 +25,7 @@ type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummie
 type TmpDirNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
 const tmpDirNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies') as TmpDirNamespace_Unix | TmpDirNamespace_Win;
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
-
+const key_OutputPackItems = '_OutputPackItems';
 /**
  * Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
  * If the file doesn't exist, it is created.
@@ -436,7 +436,7 @@ but the environment variable is empty or undefined.`);
     usePerSourceSubfolder = false,
     usePerPackageIdSubfolder = false,
   ): Promise<string[]> {
-    opts['-GetItem'] = [...opts['-GetItem'] ?? [], '_OutputPackItems'];
+    opts['-GetItem'] = [...opts['-GetItem'] ?? [], key_OutputPackItems];
 
     const packCmd = this.GetPackCommand(
       opts,
@@ -455,7 +455,7 @@ but the environment variable is empty or undefined.`);
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
       .Items
-      ?.['outputPackItems']
+      ?.[key_OutputPackItems]
       ?.filter(item => item.Extension !== '.nuspec')
       .map(item => item.FullPath);
     return nupkgFullPaths ?? [];
@@ -483,7 +483,7 @@ but the environment variable is empty or undefined.`);
         ...opts,
         output: getDummiesDir(this._project),
         propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY' },
-        '-GetItem': [...opts['-GetItem'] ?? [], '_OutputPackItems'],
+        '-GetItem': [...opts['-GetItem'] ?? [], key_OutputPackItems],
       },
       true,
     );
