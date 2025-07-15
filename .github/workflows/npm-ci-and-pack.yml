@@ -70,7 +70,7 @@ jobs:
       - run: npm run test:cacheSampleProjects
       - run: npm run test:justTest
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_TOKEN }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
       - id: uploadCoverageTestsArtifact
