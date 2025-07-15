@@ -37,7 +37,7 @@ const config = {
   branches: /** @type {const} */([
     ...hceSharedConfig.branches,
     /** @satisfies { import('semantic-release').BranchSpec } */
-    ({ name: 'next/3.0.0', prerelease: 'beta', range: '3.x' }),
+    ({ name: 'next/v3.0.0', prerelease: 'beta', range: '3.x' }),
   ]),
 };
 ok(config.plugins);
