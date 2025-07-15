@@ -4,6 +4,61 @@ All notable changes to this project will be documented in this file. See
 [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
 for commit guidelines.
 
+## [2.6.5](https://github.com/halospv3/hce.shared/compare/v2.6.4...v2.6.5) (2025-07-15)
+
+### Bug Fixes
+
+* **deps:** update dependency globals to v16 ([#431](https://github.com/halospv3/hce.shared/issues/431)) ([d7a440c](https://github.com/halospv3/hce.shared/commit/d7a440c19c1e28ec2678198df3ad60bcaae2ca90))
+
+## [2.6.4](https://github.com/halospv3/hce.shared/compare/v2.6.3...v2.6.4) (2025-07-03)
+
+## [2.6.4-develop.3](https://github.com/halospv3/hce.shared/compare/v2.6.4-develop.2...v2.6.4-develop.3) (2025-07-03)
+
+## [2.6.4-develop.2](https://github.com/halospv3/hce.shared/compare/v2.6.4-develop.1...v2.6.4-develop.2) (2025-07-03)
+
+### Bug Fixes
+
+* **deps:** update dependency globals to v16 ([#431](https://github.com/halospv3/hce.shared/issues/431)) ([d7a440c](https://github.com/halospv3/hce.shared/commit/d7a440c19c1e28ec2678198df3ad60bcaae2ca90))
+
+## [2.6.4-develop.1](https://github.com/halospv3/hce.shared/compare/v2.6.3...v2.6.4-develop.1) (2025-07-03)
+
+## [2.6.3](https://github.com/halospv3/hce.shared/compare/v2.6.2...v2.6.3) (2025-07-02)
+
+### Bug Fixes
+
+* **deps, deps-dev, eslint:** upgrade group "eslint" for ESLint 9 ([173db90](https://github.com/halospv3/hce.shared/commit/173db90e773f47219311280d71124c31573384ff))
+* **deps, deps-dev:** bump group "eslint" ([b4bd1a5](https://github.com/halospv3/hce.shared/commit/b4bd1a535548ce206b0b68b9cbb9b2f8830947a3))
+* **deps:** 🚑️ fix GitHub advisories ([261fcf2](https://github.com/halospv3/hce.shared/commit/261fcf253af789b99fdab47794a9efb737480851))
+* **deps:** bump @types/node to 20.19.4 ([24136f4](https://github.com/halospv3/hce.shared/commit/24136f4f69857ab431af89cd36900bb975269b25))
+* **deps:** bump `@octokit/request` to 9.2.4 ([a92bf8e](https://github.com/halospv3/hce.shared/commit/a92bf8eb77566fd85188455f43614bcd09a843c3))
+* **deps:** bump `@semantic-release/github` to 10.3.5 ([a6786fe](https://github.com/halospv3/hce.shared/commit/a6786feeeb0ccd813b569b5fd8ee848c19e5c690))
+* **deps:** bump ajv to 8.17.1 ([50bd762](https://github.com/halospv3/hce.shared/commit/50bd762740228961a63b71d00c7199af33544d73))
+* **deps:** bump globals to 15.15.0 ([8199785](https://github.com/halospv3/hce.shared/commit/8199785fa01ea937b5cdc1a2c5d6fd44375f7c79))
+* **deps:** bump group "commitlint" ([60f2fd4](https://github.com/halospv3/hce.shared/commit/60f2fd4c1bb46a64c8d963efc976fab712dc2e71))
+* **deps:** bump group "semantic-release" ([2aa0dff](https://github.com/halospv3/hce.shared/commit/2aa0dff55f8cdb64509f2b5ab7ac2194f8268fb3))
+* **deps:** bump husky to 9.1.7 ([b8b0b1e](https://github.com/halospv3/hce.shared/commit/b8b0b1e4734f8705856e76e8ac89d8f3cd702960))
+* **deps:** bump semantic-release-export-data to 2.8.1 ([1dccb43](https://github.com/halospv3/hce.shared/commit/1dccb43ed95155bb69d1d56758b7548a0fd5e31e))
+* **deps:** bump transitive dep tslib to 2.8.1 ([16b327f](https://github.com/halospv3/hce.shared/commit/16b327f4af22f5750692a53aec6938d10f5420a5))
+* **deps:** bump typescript to 5.8.3 ([19c0344](https://github.com/halospv3/hce.shared/commit/19c03443e8f2f4a5efb1f6171af6e43dc413b5f0))
+* **deps:** remove unused dep `@octokit/request` ([b000049](https://github.com/halospv3/hce.shared/commit/b0000495bdaac34f300f5d5dbc3b495615465d84))
+* **dotnet.GHPR:** un-enclose `dotnet push` args; fix error detection ([ccdce25](https://github.com/halospv3/hce.shared/commit/ccdce25aee4c27f406cb8353f98c38767d203f81))
+* **dotnet.helpers, dotnet.GHPR:** remove `async` modifiers and `Promise` return types from all functions affecting `semanticReleaseConfigDotnet` ([659836c](https://github.com/halospv3/hce.shared/commit/659836ca7424b434791d50585f4eafebcd78e446)), closes [#407](https://github.com/halospv3/hce.shared/issues/407)
+* **dotnet.helpers:** add missing `return` ([5998d54](https://github.com/halospv3/hce.shared/commit/5998d54438e67849b9d305ff7c15b47ff4721456))
+
+## [2.6.1-develop.3](https://github.com/halospv3/hce.shared/compare/v2.6.1-develop.2...v2.6.1-develop.3) (2025-03-19)
+
+## [2.6.2](https://github.com/halospv3/hce.shared/compare/v2.6.1...v2.6.2) (2024-09-28)
+
+## [2.6.1-develop.2](https://github.com/halospv3/hce.shared/compare/v2.6.1-develop.1...v2.6.1-develop.2) (2024-09-20)
+
+## [2.6.1](https://github.com/halospv3/hce.shared/compare/v2.6.0...v2.6.1) (2024-07-23)
+
+## [2.6.1-develop.1](https://github.com/halospv3/hce.shared/compare/v2.6.0...v2.6.1-develop.1) (2024-07-23)
+
+### Bug Fixes
+
+* **deps:** :ambulance: bump ws to 8.18.0 (>=8.17.1) ([d0dcf52](https://github.com/halospv3/hce.shared/commit/d0dcf527ad2b98f550840c9375c92c2d15ae1d57))
+
 ## [2.6.0](https://github.com/halospv3/hce.shared/compare/v2.5.0...v2.6.0) (2024-06-07)
 
 ### Features
