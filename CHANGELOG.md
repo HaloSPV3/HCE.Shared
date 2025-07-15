@@ -1,5 +1,15 @@
 ## [2.6.4](https://github.com/halospv3/hce.shared/compare/v2.6.3...v2.6.4) (2025-07-03)
 
+## [2.6.4-develop.3](https://github.com/halospv3/hce.shared/compare/v2.6.4-develop.2...v2.6.4-develop.3) (2025-07-03)
+
+## [2.6.4-develop.2](https://github.com/halospv3/hce.shared/compare/v2.6.4-develop.1...v2.6.4-develop.2) (2025-07-03)
+
+### Bug Fixes
+
+* **deps:** update dependency globals to v16 ([#431](https://github.com/halospv3/hce.shared/issues/431)) ([d7a440c](https://github.com/halospv3/hce.shared/commit/d7a440c19c1e28ec2678198df3ad60bcaae2ca90))
+
+## [2.6.4-develop.1](https://github.com/halospv3/hce.shared/compare/v2.6.3...v2.6.4-develop.1) (2025-07-03)
+
 ## [2.6.3](https://github.com/halospv3/hce.shared/compare/v2.6.2...v2.6.3) (2025-07-02)
 
 ### Bug Fixes
