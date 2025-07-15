@@ -29,7 +29,10 @@
   ],
   "main": "./mjs/index.mjs",
   "infra": "polyrepo",
-  "repository": "github:halospv3/hce.shared",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaloSPV3/HCE.Shared.git"
+  },
   "scripts": {
     "build": "packemon build --addExports --addFiles --declaration --loadConfigs",
     "build:clean": "npm run clean-build",
