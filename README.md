@@ -1,5 +1,7 @@
 # HCE.Shared
 
+[![.github/workflows/npm-release.yml](https://github.com/HaloSPV3/HCE.Shared/actions/workflows/npm-release.yml/badge.svg?branch=next%2Fv3.0.0&event=push)](https://github.com/HaloSPV3/HCE.Shared/actions/workflows/npm-release.yml)
+
 Infrastructure resources shared with other HaloSPV3 repositories.
 
 **NOTE**
