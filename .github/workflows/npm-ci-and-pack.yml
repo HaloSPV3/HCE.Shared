@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read # access to check out code and install dependencies
+      packages: write
     env:
       CI_PROJECT_ID: 70884695
       DOTNET_NOLOGO: true
