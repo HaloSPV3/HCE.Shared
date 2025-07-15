@@ -85,9 +85,9 @@
     "typescript-eslint": "^8.35.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.2",
-    "@babel/core": "^7.27.7",
-    "@babel/eslint-parser": "^7.27.5",
+    "@babel/cli": "^7.28.0",
+    "@babel/core": "^7.28.0",
+    "@babel/eslint-parser": "^7.28.0",
     "@commitlint/types": "^19.8.1",
     "@eslint/config-inspector": "^1.1.0",
     "@eslint/markdown": "^6.6.0",
