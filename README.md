@@ -3,7 +3,7 @@
 Infrastructure resources shared with other HaloSPV3 repositories.
 
 **NOTE**
-HCE.Shared's API offers convenience and flexibility not present in similar .NET/NuGet-publishing NPM packages, but this project is incredibly messy. You'll find many traces of scrapped or unfinished ideas in the form of both documentation and code.
+HCE.Shared's API offers convenience and flexibility not present in similar .NET/NuGet-publishing NPM packages, but this project is incredibly messy. You'll find many traces of scrapped or unfinished ideas in the form of both documentation and code. These wrinkles will be ironed out before `next/v3.0.0` is merged into `main`.
 
 ## Usage
 
