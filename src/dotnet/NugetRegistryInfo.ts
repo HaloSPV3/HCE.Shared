@@ -243,9 +243,7 @@ export class NugetRegistryInfo {
       return this._canPushPackagesToSource = Promise.reject(err);
     }
 
-    return this._canPushPackagesToSource = this.PackDummyPackage({
-      propertyOverrides: {},
-    })
+    return this._canPushPackagesToSource = this.PackDummyPackage({})
       .then(async () => await this._PushDummyPackages({
         apiKey: tokenValue,
       }))
@@ -529,6 +527,34 @@ but the environment variable is empty or undefined.`);
   public async PackDummyPackage(
     opts: typeof NRI.PackDummyPackagesOptionsType.inferIn,
   ): Promise<string[]> {
+    opts.propertyOverrides ??= {};
+    /**
+     * These overrides allow for a MSBuildProject to be dummy-packaged
+     * concurrently if each instance of the project has a different NuGet
+     * source e.g.
+     *   - two NRIs with different sources, but the same project;
+     *   - one GHNRI, one GLNRI, and one NRI
+     *
+     * You still cannot pack a single project concurrently if the only
+     * different is its MSBuild Properties...unless you also set the
+     * properties overridden below so they don't lock each other's output
+     * files.
+     */
+    /** {@link NugetProjectProperties#BaseIntermediateOutputPath} */
+    opts.propertyOverrides.BaseIntermediateOutputPath ??= node_path.join(
+      getDummiesDir(this._project),
+      NugetRegistryInfo.GetDirNameForSource(this.source),
+      'obj',
+      node_path.sep,
+    );
+    /** {@link NugetProjectProperties.BaseOutputPath} */
+    opts.propertyOverrides.BaseOutputPath ??= node_path.join(
+      getDummiesDir(this._project),
+      NugetRegistryInfo.GetDirNameForSource(this.source),
+      'bin',
+      node_path.sep,
+    );
+
     const packCmd: string = this.GetPackCommand(
       {
         ...opts,
