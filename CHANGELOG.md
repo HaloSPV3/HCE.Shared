@@ -1,3 +1,44 @@
+## [3.0.0-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.1...v3.0.0-develop.2) (2025-07-16)
+
+### ⚠ BREAKING CHANGES
+
+* manually set package version to 3.0.0
+
+### Bug Fixes
+
+* **deps, deps-dev, eslint:** upgrade group "eslint" for ESLint 9 ([173db90](https://github.com/HaloSPV3/HCE.Shared/commit/173db90e773f47219311280d71124c31573384ff))
+* **deps, deps-dev:** bump group "eslint" ([b4bd1a5](https://github.com/HaloSPV3/HCE.Shared/commit/b4bd1a535548ce206b0b68b9cbb9b2f8830947a3))
+* **deps, deps-dev:** update `@eslint/js`, `eslint` to v9.31.0 ([a3fe6e9](https://github.com/HaloSPV3/HCE.Shared/commit/a3fe6e9bb078bf5bab11008a44133e0108ec6614))
+* **deps:** :ambulance: bump ws to 8.18.0 (>=8.17.1) ([d0dcf52](https://github.com/HaloSPV3/HCE.Shared/commit/d0dcf527ad2b98f550840c9375c92c2d15ae1d57))
+* **deps:** 🚑️ fix GitHub advisories ([261fcf2](https://github.com/HaloSPV3/HCE.Shared/commit/261fcf253af789b99fdab47794a9efb737480851))
+* **deps:** bump  `@types/node` to Node.js 20.11.x ([1a0ea53](https://github.com/HaloSPV3/HCE.Shared/commit/1a0ea5391f2b1c29445262852797b448acd81e8f))
+* **deps:** bump @types/node to 20.19.4 ([24136f4](https://github.com/HaloSPV3/HCE.Shared/commit/24136f4f69857ab431af89cd36900bb975269b25))
+* **deps:** bump `@octokit/request` to 9.2.4 ([a92bf8e](https://github.com/HaloSPV3/HCE.Shared/commit/a92bf8eb77566fd85188455f43614bcd09a843c3))
+* **deps:** bump `@semantic-release/github` to 10.3.5 ([a6786fe](https://github.com/HaloSPV3/HCE.Shared/commit/a6786feeeb0ccd813b569b5fd8ee848c19e5c690))
+* **deps:** bump ajv to 8.17.1 ([50bd762](https://github.com/HaloSPV3/HCE.Shared/commit/50bd762740228961a63b71d00c7199af33544d73))
+* **deps:** bump globals to 15.15.0 ([8199785](https://github.com/HaloSPV3/HCE.Shared/commit/8199785fa01ea937b5cdc1a2c5d6fd44375f7c79))
+* **deps:** bump group "commitlint" ([60f2fd4](https://github.com/HaloSPV3/HCE.Shared/commit/60f2fd4c1bb46a64c8d963efc976fab712dc2e71))
+* **deps:** bump group "semantic-release" ([2aa0dff](https://github.com/HaloSPV3/HCE.Shared/commit/2aa0dff55f8cdb64509f2b5ab7ac2194f8268fb3))
+* **deps:** bump husky to 9.1.7 ([b8b0b1e](https://github.com/HaloSPV3/HCE.Shared/commit/b8b0b1e4734f8705856e76e8ac89d8f3cd702960))
+* **deps:** bump semantic-release-export-data to 2.8.1 ([1dccb43](https://github.com/HaloSPV3/HCE.Shared/commit/1dccb43ed95155bb69d1d56758b7548a0fd5e31e))
+* **deps:** bump transitive dep tslib to 2.8.1 ([16b327f](https://github.com/HaloSPV3/HCE.Shared/commit/16b327f4af22f5750692a53aec6938d10f5420a5))
+* **deps:** bump typescript to 5.8.3 ([19c0344](https://github.com/HaloSPV3/HCE.Shared/commit/19c03443e8f2f4a5efb1f6171af6e43dc413b5f0))
+* **deps:** remove unused dep `@octokit/request` ([b000049](https://github.com/HaloSPV3/HCE.Shared/commit/b0000495bdaac34f300f5d5dbc3b495615465d84))
+* **deps:** set `@types/node` semver range to PATCHes ([91395dd](https://github.com/HaloSPV3/HCE.Shared/commit/91395dd2408752b536c91887cc6092f0c3b0b929))
+* **deps:** update `@dotenvx/dotenvx` to v1.47.6 ([a52fd9c](https://github.com/HaloSPV3/HCE.Shared/commit/a52fd9c0719024ef00cd836dbc654c4552cea3eb))
+* **deps:** update `conventional-changelog-conventionalcommits` to v9.1.0 ([43cb289](https://github.com/HaloSPV3/HCE.Shared/commit/43cb2895345996220ec328686d0a2aa3e1f63a04))
+* **deps:** update `semantic-release` to v24.2.7 ([5ed024b](https://github.com/HaloSPV3/HCE.Shared/commit/5ed024b8eac1db8de08ff7b0b7a6d3d8cc49900d))
+* **deps:** update `typescript-eslint` to v8.37.0 ([7bb7852](https://github.com/HaloSPV3/HCE.Shared/commit/7bb78527922020b6a07302a905c4f58459bd8186))
+* **deps:** update dependency globals to v16 ([#431](https://github.com/HaloSPV3/HCE.Shared/issues/431)) ([d7a440c](https://github.com/HaloSPV3/HCE.Shared/commit/d7a440c19c1e28ec2678198df3ad60bcaae2ca90))
+* **dotnet.GHPR:** un-enclose `dotnet push` args; fix error detection ([ccdce25](https://github.com/HaloSPV3/HCE.Shared/commit/ccdce25aee4c27f406cb8353f98c38767d203f81))
+* **dotnet.helpers, dotnet.GHPR:** remove `async` modifiers and `Promise` return types from all functions affecting `semanticReleaseConfigDotnet` ([659836c](https://github.com/HaloSPV3/HCE.Shared/commit/659836ca7424b434791d50585f4eafebcd78e446)), closes [#407](https://github.com/HaloSPV3/HCE.Shared/issues/407)
+* **dotnet.helpers:** add missing `return` ([5998d54](https://github.com/HaloSPV3/HCE.Shared/commit/5998d54438e67849b9d305ff7c15b47ff4721456))
+* fix apparently case-sensitive repo url for attestation/provenance ([19e1d72](https://github.com/HaloSPV3/HCE.Shared/commit/19e1d721eaf6a3137aa721ad80200f28b58a3134))
+
+### Build System
+
+* manually set package version to 3.0.0 ([a6d7be2](https://github.com/HaloSPV3/HCE.Shared/commit/a6d7be20beee7aaf2e34eff91885684564b9ae55))
+
 ## [3.0.0-develop.1](https://github.com/halospv3/hce.shared/compare/v2.6.0...v3.0.0-develop.1) (2025-07-15)
 
 ### ⚠ BREAKING CHANGES
