@@ -41,9 +41,8 @@ await describe('semanticReleaseConfig', async () => {
           {
             addReleases: 'bottom',
             assets: [
-              {
-                path: './publish/*',
-              },
+              './publish/*',
+              '!./publish/.gitkeep',
             ],
           } as GithubOptions,
         ],
