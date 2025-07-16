@@ -135,19 +135,36 @@ const SRGHOptions = type({
       label: 'string?',
     }).array(),
   ),
-  successComment: 'undefined | string | false = ":tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](<github_release_url>)"',
+  /**
+   * @default
+   * ```ts
+   * ":tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](<github_release_url>)"
+   * ```
+   */
+  'successComment?': 'undefined | string | false',
   'failComment?': 'undefined | string | false',
-  failTitle: 'string | false = "The automated release is failing 🚨"',
-  labels: type('string[] | false')
-    .default(() => ['semantic-release']),
+  /** @default "The automated release is failing 🚨" */
+  'failTitle?': 'string | false',
+  /** @default ['semantic-release'] */
+  'labels?': 'string[] | false',
   'assignees?': 'unknown',
-  releasedLabels: type('string[]')
-    .default(() => ['released<%= nextRelease.channel ? \\` on @\\${nextRelease.channel}\\` : "" %>']),
-  addReleases: 'false | "bottom" | "top" = false',
-  draftRelease: 'boolean = false',
-  releaseNameTemplate: 'string = "<%= nextRelease.notes %>"',
-  releaseBodyTemplate: 'string = "<%= nextRelease.notes %"',
-  discussionCategoryName: 'string | false = false',
+  /**
+   * @default
+   * ```ts
+   * ['released<%= nextRelease.channel ? \\` on \@\\${nextRelease.channel}\\` : "" %>']
+   * ```
+   */
+  'releasedLabels?': 'string[]',
+  /** @default false */
+  'addReleases?': 'false | "bottom" | "top"',
+  /** @default false */
+  'draftRelease?': 'boolean',
+  /** @default "<%= nextRelease.notes %>" */
+  'releaseNameTemplate?': 'string',
+  /** @default "<%= nextRelease.notes %" */
+  'releaseBodyTemplate?': 'string',
+  /** @default false */
+  'discussionCategoryName?': 'string | false',
 });
 const GHTuple = type(['"@semantic-release/github"', SRGHOptions]);
 
