@@ -21,6 +21,7 @@ import { baseConfig } from './semanticReleaseConfig.js';
 import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js';
 import { MSBuildProject } from './dotnet/MSBuildProject.js';
 import { NPPGetterNames } from './dotnet/NugetProjectProperties.js';
+import { insertPlugin } from './insertPlugins.js';
 
 type UnArray<T> = T extends (infer U)[] ? U : T;
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
@@ -121,51 +122,7 @@ export class SemanticReleaseConfigDotnet {
     insertPluginIDs: string[],
     beforePluginsIDs: string[],
   ) {
-    const pluginIDs = this.options.plugins.map(v =>
-      typeof v === 'string' ? v : v[0],
-    );
-
-    // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
-
-    const indexOfLastAfter = afterPluginsIDs
-      .filter(v => pluginIDs.includes(v))
-      .map(v => pluginIDs.indexOf(v))
-      .sort()
-      .find((_v, i, obj) => i === obj.length - 1);
-    if (!indexOfLastAfter)
-      throw new ReferenceError(
-        'An attempt to get the last element of an array returned undefined.',
-      );
-
-    const indicesOfBefore = beforePluginsIDs
-      .filter(v => pluginIDs.includes(v))
-      .map(v => pluginIDs.indexOf(v))
-      .sort();
-
-    // This for-of collects *all* sorting errors. The resulting AggregateError
-    // notifies the API user of *all* errors in the order rather than just the
-    // first error encountered.
-    const errors: Error[] = [];
-    for (const index of indicesOfBefore) {
-      if (index <= indexOfLastAfter) {
-        errors.push(
-          new Error(
-            `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => '"' + v + '"').join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${JSON.stringify(pluginIDs[indexOfLastAfter])} comes after ${JSON.stringify(pluginIDs[index])}!`,
-          ),
-        );
-      }
-    }
-    if (errors.length > 0)
-      throw new AggregateError(errors, 'One or more errors occurred while inserting plugin configs into the Semantic Release config!');
-
-    // insert plugin(s)
-    this.options.plugins.splice(
-      indexOfLastAfter + 1,
-      0,
-      ...insertPluginIDs.map(id =>
-        [id, {}] as [string, unknown],
-      ),
-    );
+    this.options.plugins = insertPlugin(this.options.plugins, afterPluginsIDs, insertPluginIDs, beforePluginsIDs);
   }
 
   /**
