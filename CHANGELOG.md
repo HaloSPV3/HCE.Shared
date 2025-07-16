@@ -1,3 +1,9 @@
+## [3.0.0-develop.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.2...v3.0.0-develop.3) (2025-07-16)
+
+### Bug Fixes
+
+* don't forget to add the GHTuple object to the plugins list, overwriting the original GHTuple ([4b8e8a3](https://github.com/HaloSPV3/HCE.Shared/commit/4b8e8a3ec7215aa75785793006e6f0cd4a76ae60))
+
 ## [3.0.0-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.1...v3.0.0-develop.2) (2025-07-16)
 
 ### ⚠ BREAKING CHANGES
