@@ -123,33 +123,30 @@ const nullableString = type('string | undefined');
 
 const SRGHOptions = type({
   /** May default to GH_URL or GITHUB_URL */
-  githubUrl: nullableString,
+  'githubUrl?': nullableString,
   /** May default to GH_PREFIX or GITHUB_PREFIX */
-  githubApiPathPrefix: nullableString,
-  githubApiUrl: 'string?',
-  proxy: 'undefined | string | false',
-  assets: type.string.or(
+  'githubApiPathPrefix?': nullableString,
+  'githubApiUrl?': 'string',
+  'proxy?': 'undefined | string | false',
+  'assets?': type.string.or(
     type.string.or({
       path: type.string,
       name: 'string?',
       label: 'string?',
     }).array(),
-  ).optional(),
-  successComment: type('undefined | string | false')
-    .default('":tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](<github_release_url>)"'),
-  failComment: 'undefined | string | false',
+  ),
+  successComment: 'undefined | string | false = ":tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](<github_release_url>)"',
+  'failComment?': 'undefined | string | false',
   failTitle: 'string | false = "The automated release is failing 🚨"',
   labels: type('string[] | false')
     .default(() => ['semantic-release']),
-  assignees: 'unknown?',
+  'assignees?': 'unknown',
   releasedLabels: type('string[]')
     .default(() => ['released<%= nextRelease.channel ? \\` on @\\${nextRelease.channel}\\` : "" %>']),
   addReleases: 'false | "bottom" | "top" = false',
   draftRelease: 'boolean = false',
-  releaseNameTemplate: type.string
-    .default('<%= nextRelease.notes %>'),
-  releaseBodyTemplate: type.string
-    .default('<%= nextRelease.notes %'),
+  releaseNameTemplate: 'string = "<%= nextRelease.notes %>"',
+  releaseBodyTemplate: 'string = "<%= nextRelease.notes %"',
   discussionCategoryName: 'string | false = false',
 });
 const GHTuple = type(['"@semantic-release/github"', SRGHOptions]);
@@ -158,17 +155,12 @@ const GHTuple = type(['"@semantic-release/github"', SRGHOptions]);
  * Setup GitHub plugin options
  */
 function setupGithub() {
-  // eslint-disable-next-line jsdoc/no-undefined-types
-  /** @type {(typeof GHTuple.inferIn) | undefined} */
-  let github;
-  for (const plugin of config.plugins) {
-    if (GHTuple.allows(plugin)) {
-      github = plugin;
-      break;
-    }
-  }
-  if (github)
-    github[1].assets = ['halospv3-hce.shared-*.tgz'];
+  const githubIndex = config.plugins.findIndex(p =>
+    GHTuple.get('0').allows(p[0]),
+  );
+  const github = GHTuple.assert(config.plugins[githubIndex]);
+  github[1].assets = ['halospv3-hce.shared-*.tgz'];
+  config.plugins[githubIndex] = github;
 }
 setupGithub();
 // #endregion GITHUB
@@ -466,5 +458,7 @@ function setupGitlab() {
 setupGitlab();
 
 // #endregion GITLAB
+
+console.log(inspect(config, false, Infinity));
 
 export default config;
