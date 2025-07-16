@@ -20,7 +20,6 @@ import { getEnvVarValue } from './utils/env.js';
 import { baseConfig } from './semanticReleaseConfig.js';
 import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js';
 import { MSBuildProject } from './dotnet/MSBuildProject.js';
-import { NPPGetterNames } from './dotnet/NugetProjectProperties.js';
 import { insertPlugin } from './insertPlugins.js';
 
 type UnArray<T> = T extends (infer U)[] ? U : T;
@@ -127,8 +126,11 @@ export class SemanticReleaseConfigDotnet {
 
   /**
    * generate dotnet commands for \@semantic-release/exec, appending commands with ' && ' when necessary.
+   *
+   * Note: All strings in {@link this.ProjectsToPackAndPush} will be converted to basic {@link NugetRegistryInfo} instances with default values.
+   * If you need specific NRI settings or you need to push to GitLab-like or GitHub-like registries, instantiate them instead of passing their paths.
    * @todo change to builder method? e.g. static async SetupDotnetCommands(this: SemanticReleaseConfigDotnet): Promise<SemanticReleaseConfigDotnet>
-   * @async
+   * @todo Add options param to allow users to enable pushing to GitLab, GitHub, NuGet.org with default settings -OR- with entirely custom settings.
    * @see https://github.com/semantic-release/exec#usage
    */
   async setupDotnetCommands(): Promise<void> {
@@ -146,29 +148,58 @@ Appending it to the end of the array...This may cause an unexpected order of ope
     const execOptions = this.options.plugins[srExecIndex] as SRExecOptions;
 
     // ensure all packable projects are evaluated
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     this._projectsToPackAndPush = await Promise.all(
-      this.ProjectsToPackAndPush.map(async (v) => {
-        if (typeof v === 'string') {
-          const msbp = await MSBuildProject.Evaluate({
-            FullName: v,
-            GetItem: [],
-            GetProperty: [
-              ...MSBuildProject.MatrixProperties,
-              ...NPPGetterNames.InstanceGettersRecursive,
-            ],
-            GetTargetResult: [],
-            Property: {},
-            Targets: ['Restore', 'Pack'],
-          });
+      this._projectsToPackAndPush.map(async (project) => {
+        if (typeof project === 'string') {
+          const packableProjects = await Promise.all(
+            await MSBuildProject.PackableProjectsToMSBuildProjects(
+              [project],
+            ),
+          );
+          if (packableProjects.length === 0)
+            throw new Error('No MSBuildProject instances were returned!');
+          this._evaluatedProjects.push(...packableProjects);
 
-          this._evaluatedProjects.push(msbp);
-
-          return new NugetRegistryInfo({ project: msbp });
+          // if the user doesn't want a defaulted NRI, they should pass their own NRI (or derived) instance.
+          return packableProjects.map(project => new NugetRegistryInfo({ project }));
         }
-        else return v;
+        else return [project];
       }),
-    );
+    ).then(p => p.flat()) as NugetRegistryInfo[];
+
     // todo: double-check token-testing commands. Are they formatted prepended correctly?
+    const verifyConditionsCmdAppendix = await Promise.all(
+      this._projectsToPackAndPush
+        .map(async project =>
+          await project.PackDummyPackage({})
+            .then(() =>
+              project.GetPushDummyCommand({}),
+            ),
+        ),
+    ).then(cmds =>
+      cmds.join(' && '),
+    );
+    execOptions.verifyConditionsCmd
+      = execOptions.verifyConditionsCmd && execOptions.verifyConditionsCmd.trim().length > 0
+        ? `${execOptions.verifyConditionsCmd} && ${verifyConditionsCmdAppendix}`
+        : verifyConditionsCmdAppendix;
+
+    const verifyReleaseCmdAppendix = await Promise.all(
+      this.ProjectsToPackAndPush
+        .filter(project =>
+          typeof project !== 'string',
+        ).map(project =>
+          project.GetIsNextVersionAlreadyPublishedCommand(),
+        ),
+    ).then(cmds =>
+      cmds.join(' && '),
+    );
+    execOptions.verifyReleaseCmd
+      = execOptions.verifyReleaseCmd && execOptions.verifyReleaseCmd.trim().length > 0
+        ? `${execOptions.verifyReleaseCmd} && ${verifyReleaseCmdAppendix}`
+        : verifyConditionsCmdAppendix;
+
     const prepareCmdAppendix = await configurePrepareCmd(
       this._projectsToPublish,
       this._projectsToPackAndPush,
@@ -176,7 +207,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
 
     // 'ZipPublishDir' zips each publish folder to ./publish/*.zip
     execOptions.prepareCmd
-      = execOptions.prepareCmd !== undefined && execOptions.prepareCmd.length > 0
+      = execOptions.prepareCmd && execOptions.prepareCmd.trim().length > 0
         ? `${execOptions.prepareCmd} && ${prepareCmdAppendix}`
         : prepareCmdAppendix;
 
@@ -187,7 +218,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
         this._projectsToPackAndPush,
       );
       execOptions.publishCmd
-        = execOptions.publishCmd && execOptions.publishCmd.length > 0
+        = execOptions.publishCmd && execOptions.publishCmd.trim().length > 0
           ? `${execOptions.publishCmd} && ${publishCmdAppendix}`
           : publishCmdAppendix;
     }
