@@ -175,9 +175,17 @@ export class SemanticReleaseConfigDotnet {
    * @see https://github.com/semantic-release/exec#usage
    */
   async setupDotnetCommands(): Promise<void> {
-    const srExecIndex = this.options.plugins.findIndex(
+    let srExecIndex = this.options.plugins.findIndex(
       v => v[0] === '@semantic-release/exec',
     );
+    if (srExecIndex === -1) {
+      const message = `\
+Unable to find\`['@semantic-release/exec', unknown]\` in plugins array!
+Appending it to the end of the array...This may cause an unexpected order of operations!`;
+      console.warn(message);
+      srExecIndex = this.options.plugins.push(['@semantic-release/exec', {}]) - 1;
+    }
+
     const execOptions = this.options.plugins[srExecIndex] as SRExecOptions;
 
     // TODO: move configurePrepareCmd into SemanticReleaseConfigDotnet
