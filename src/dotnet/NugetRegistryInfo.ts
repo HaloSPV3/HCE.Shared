@@ -4,9 +4,9 @@ import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet
 import type { NugetProjectProperties } from './NugetProjectProperties.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
+import { config as configDotenv } from '@dotenvx/dotenvx';
 import { type } from 'arktype';
 import { detectFile, detectFileSync } from 'chardet';
-import { config as configDotenv } from '@dotenvx/dotenvx';
 import { ok } from 'node:assert/strict';
 import type { ExecException } from 'node:child_process';
 import { existsSync, writeFileSync } from 'node:fs';
