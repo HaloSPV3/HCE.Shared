@@ -1,3 +1,9 @@
+## [3.0.0-develop.4](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.3...v3.0.0-develop.4) (2025-07-16)
+
+### Bug Fixes
+
+* **deps:** force `semantic-release-export-data` to use `@actions/core@1.11.1` to mitigate CVE-2025-22150 ([1b9cd9c](https://github.com/HaloSPV3/HCE.Shared/commit/1b9cd9c34f34b656f135ed9cd128366168df97b4))
+
 ## [3.0.0-develop.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.2...v3.0.0-develop.3) (2025-07-16)
 
 ### Bug Fixes
