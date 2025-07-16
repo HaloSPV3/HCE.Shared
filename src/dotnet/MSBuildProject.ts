@@ -399,7 +399,11 @@ export class MSBuildProject {
           if (stats.isFile()) {
             entries = await readdir(path.dirname(proj), { withFileTypes: true });
             const dirent: Dirent | undefined = entries.find(v =>
-              path.resolve(v.parentPath, v.name) === proj,
+              path.join(
+                // condition required for compatibility. `.path` was deprecated, but `.parentPath` is not available in our node minversion
+                v.path as string | undefined ?? (v as unknown as Omit<typeof v, 'path'> & { parentPath: string }).parentPath,
+                v.name,
+              ) === proj,
             );
             if (dirent)
               return dirent;
@@ -428,7 +432,11 @@ export class MSBuildProject {
      * @returns An instance of {@link MSBuildProject} evaluated with the `Pack` target result, if applicable. Evaluated properties will be those whose names are returned by {@link NPPGetterNames.InstanceGettersRecursive}.
      */
     async function convertDirentToMSBuildProject(dirent: Dirent): Promise<MSBuildProject> {
-      const fullPath = path.resolve(dirent.parentPath, dirent.name);
+      const fullPath = path.join(
+        // condition required for compatibility. `.path` was deprecated, but `.parentPath` is not available in our node minversion
+        dirent.path as string | undefined ?? (dirent as unknown as Omit<typeof dirent, 'path'> & { parentPath: string }).parentPath,
+        dirent.name,
+      );
       const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath);
       const evalTargets = await projTargets.then(v =>
         v.includes('Pack') ? ['Pack'] : [],
