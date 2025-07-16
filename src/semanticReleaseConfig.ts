@@ -67,7 +67,7 @@ const _baseConfig = {
     ['@semantic-release/changelog', {}],
     ['@semantic-release/git', DefaultOptions],
     ['@semantic-release/exec', {}],
-    ['@semantic-release/github', { addReleases: 'bottom', assets: [{ path: './publish/*' }] }],
+    ['@semantic-release/github', { addReleases: 'bottom', assets: ['./publish/*', '!./publish/.gitkeep'] }],
   ] as [
     PluginSpecSRCommitAnalyzer,
     PluginSpecExportData,
