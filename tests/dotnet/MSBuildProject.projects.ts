@@ -12,10 +12,10 @@
  * {@link MSBP MSBuildProject} instances and exported by this module.
  */
 
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFile, realpath, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.js';
-import { readFile } from 'node:fs/promises';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 
 const cacheDir = path.join(import.meta.dirname, '.projCache');
 if (!existsSync(cacheDir))
@@ -37,13 +37,13 @@ const paths: Record<'DN' | 'SAP', { proj: string; json: string }> = {
     json: path.join(cacheDir, 'sap.json'),
   },
 };
-
-/** for each project, rewrite its JSON-ified MSBuildProject if the JSON file does not exist. */
-for (const projName in paths) {
-  const projPaths = paths[projName as keyof typeof paths];
-
-  if (existsSync(projPaths.json))
-    continue;
+/**
+ * Write/overwrite a project's JSON-ified MSBuildProject if the JSON file does not exist.
+ * @returns `true` when the function completes.
+ * @param keyofPaths keyof {@link paths}
+ */
+async function writeCacheFile(keyofPaths: keyof typeof paths) {
+  const projPaths = paths[keyofPaths];
 
   console.time(`Build Cache File "${path.basename(projPaths.json)}"`);
 
@@ -63,11 +63,44 @@ for (const projName in paths) {
    * Build Cache File "sap.json": 5.564s
    */
   console.timeEnd(`Build Cache File "${path.basename(projPaths.json)}"`);
+  return true;
 }
 
+/** for each project, rewrite its JSON-ified MSBuildProject if the JSON file does not exist. */
+await Promise.all(
+  (Object.keys(paths) as (keyof typeof paths)[])
+    .map(projName =>
+      existsSync(paths[projName].json)
+        ? true
+        : writeCacheFile(projName),
+    ),
+);
+
 const projects = {
-  DN: MSBP.fromJSON(await readFile(paths.DN.json, 'utf8')),
-  SAP: MSBP.fromJSON(await readFile(paths.SAP.json, 'utf8')),
+  DN: await readFile(paths.DN.json, 'utf8')
+    .then(contents => MSBP.fromJSON(contents))
+    .then(async (proj) => {
+      return await realpath(paths.DN.proj) === await realpath(proj.Properties.MSBuildProjectFullPath)
+        ? proj
+        : Promise.reject(new Error('Cache file points to non-existent project path.'));
+    }).catch(async () =>
+      await unlink(paths.DN.json)
+        .then(async () => await writeCacheFile('DN'))
+        .then(async () => await readFile(paths.DN.json, 'utf8'))
+        .then(contents => MSBP.fromJSON(contents)),
+    ),
+  SAP: await readFile(paths.SAP.json, 'utf8')
+    .then(contents => MSBP.fromJSON(contents))
+    .then(async (proj) => {
+      return await realpath(paths.SAP.proj) === await realpath(proj.Properties.MSBuildProjectFullPath)
+        ? proj
+        : Promise.reject(new Error('Cache file points to non-existent project path.'));
+    }).catch(async () =>
+      await unlink(paths.SAP.json)
+        .then(async () => await writeCacheFile('SAP'))
+        .then(async () => await readFile(paths.SAP.json, 'utf8'))
+        .then(contents => MSBP.fromJSON(contents)),
+    ),
 };
 
 export const DeterministicNupkgCsproj: Readonly<MSBP> = Object.freeze(projects.DN);
