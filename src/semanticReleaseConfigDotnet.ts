@@ -170,7 +170,7 @@ export class SemanticReleaseConfigDotnet {
 
   /**
    * generate dotnet commands for \@semantic-release/exec, appending commands with ' && ' when necessary.
-   * ?todo: change to builder method? e.g. static async SetupDotnetCommands(this: SemanticReleaseConfigDotnet): Promise<SemanticReleaseConfigDotnet>
+   * @todo change to builder method? e.g. static async SetupDotnetCommands(this: SemanticReleaseConfigDotnet): Promise<SemanticReleaseConfigDotnet>
    * @async
    * @see https://github.com/semantic-release/exec#usage
    */
