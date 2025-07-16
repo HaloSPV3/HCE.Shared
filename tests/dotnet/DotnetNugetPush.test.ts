@@ -44,10 +44,12 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
         delete process.env['CI_PROJECT_ID'];
       if (!getEnvVarValue('CI_PROJECT_ID', { overload: true }))
         t.skip('CI_PROJECT_ID is undefined');
+      if (!GLNRI.DefaultGitlabTokenEnvVars.some(key => getEnvVarValue(key) !== undefined))
+        t.skip(GLNRI.DefaultGitlabTokenEnvVars.join(', ') + 'are all unavailable for testing.');
 
       ok(
         await new GLNRI({ project })
-        // eslint-disable-next-line @typescript-eslint/no-deprecated
+          // eslint-disable-next-line @typescript-eslint/no-deprecated
           .canPushPackagesToSource,
       );
     });
