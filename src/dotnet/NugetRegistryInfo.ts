@@ -20,6 +20,7 @@ import sanitizeFileName from 'sanitize-filename';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
 import { catchCsc2012, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
+import { NPPGetterNames } from './NugetProjectProperties.js';
 import type { ObjectType } from 'arktype/internal/methods/object.ts';
 import type { Default } from 'arktype/internal/attributes.ts';
 
@@ -242,7 +243,9 @@ export class NugetRegistryInfo {
       return this._canPushPackagesToSource = Promise.reject(err);
     }
 
-    return this._canPushPackagesToSource = this.PackDummyPackage({})
+    return this._canPushPackagesToSource = this.PackDummyPackage({
+      propertyOverrides: {},
+    })
       .then(async () => await this._PushDummyPackages({
         apiKey: tokenValue,
       }))
@@ -295,7 +298,7 @@ but the environment variable is empty or undefined.`);
    * is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
    */
   static readonly PackPackagesOptionsType: ObjectType<{
-    propertyOverrides?: Record<string, string> | undefined;
+    propertyOverrides?: Partial<Record<string, string> & Record<typeof NPPGetterNames.InstanceGettersRecursive[number], string>> | undefined;
     artifactsPath?: string | undefined;
     configuration?: 'Release' | 'Debug' | undefined;
     disableBuildServers?: boolean | undefined;
@@ -319,7 +322,13 @@ but the environment variable is empty or undefined.`);
       /**
        * a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties.
        */
-      'propertyOverrides?': type('Record<string,string>'),
+      'propertyOverrides?': type('Record<string,string>')
+        .and(
+          NPPGetterNames.InstanceGettersRecursive
+            .map(k => ({ [k]: type.string } as Record<typeof k, typeof type.string>))
+            // eslint-disable-next-line unicorn/no-array-reduce
+            .reduce((a, b) => ({ ...a, ...b })),
+        ).partial(),
       'artifactsPath?': 'string',
       'configuration?': '"Release" | "Debug"',
       'disableBuildServers?': 'boolean',
@@ -436,6 +445,7 @@ but the environment variable is empty or undefined.`);
     if (validOpts.propertyOverrides) {
       /** convert propertyOverrides record to "-p:n0=v0;n1=v1;n2=v2" et cetera */
       const assignments: string = '-p:' + Object.entries(validOpts.propertyOverrides)
+        .filter((entry): entry is [string, string] => entry[1] !== undefined)
         .map(v => `${v[0]}=${v[1]}`).join(';');
       packCmdArr.push(`"${assignments}"`);
     }
