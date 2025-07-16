@@ -188,7 +188,6 @@ Appending it to the end of the array...This may cause an unexpected order of ope
 
     const execOptions = this.options.plugins[srExecIndex] as SRExecOptions;
 
-    // TODO: move configurePrepareCmd into SemanticReleaseConfigDotnet
     // ensure all packable projects are evaluated
     this._projectsToPackAndPush = await Promise.all(
       this.ProjectsToPackAndPush.map(async (v) => {
