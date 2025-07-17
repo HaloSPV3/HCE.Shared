@@ -39,7 +39,7 @@
     "format": "prettier --write",
     "lint": "eslint --cache --fix .",
     "eslint-inspector": "eslint --inspect-config",
-    "pack": "packemon pack --addExports --addFiles --declaration --loadConfigs && npm run validate",
+    "prepack": "packemon pack --addExports --addFiles --declaration --loadConfigs && npm run validate",
     "prepare": "husky",
     "presemantic-release": "npm run pack && npm run check",
     "semantic-release": "npx semantic-release",
