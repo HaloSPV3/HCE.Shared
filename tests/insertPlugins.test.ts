@@ -4,11 +4,11 @@ import { deepStrictEqual, notDeepStrictEqual } from 'node:assert';
 
 await describe('insertPlugin', async () => {
   await it('can insert plugins where specified', () => {
-    let plugins: [string, unknown][] = [['A', undefined], ['C', undefined]];
+    let plugins: [string, unknown][] = [['A', {}], ['C', {}]];
     plugins = insertPlugin(plugins, ['A'], ['B'], ['C']);
     deepStrictEqual(
       plugins,
-      ['A', ['B', {}], 'C'],
+      [['A', {}], ['B', {}], ['C', {}]],
     );
   });
   await it('never inserts plugins as strings', () => {
@@ -16,18 +16,18 @@ await describe('insertPlugin', async () => {
     plugins = insertPlugin(plugins, ['A'], ['B'], ['C']);
     notDeepStrictEqual(
       plugins,
-      ['A', 'B', 'C'],
+      [['A', undefined], 'B', ['C', undefined]],
     );
   });
   await it('throws when a sorting order is impossible', () => {
-    let plugins: [string, unknown][] = [['C', undefined], ['A', undefined]];
+    let plugins: [string, unknown][] = [['C', {}], ['A', {}]];
     try {
       plugins = insertPlugin(plugins, ['A'], ['B'], ['C']);
     }
     catch { /* empty */ }
     deepStrictEqual(
       plugins,
-      ['C', 'A'],
+      [['C', {}], ['A', {}]],
     );
   });
 });
