@@ -1,3 +1,10 @@
+## [3.0.0-develop.6](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.5...v3.0.0-develop.6) (2025-07-17)
+
+### Bug Fixes
+
+* try fixing GitLab asset label, path ([75463a0](https://github.com/HaloSPV3/HCE.Shared/commit/75463a02ce247b33c25435d1e4afa78d6748f8db))
+* try fixing GitLab assets path AGAIN ([0bee0ae](https://github.com/HaloSPV3/HCE.Shared/commit/0bee0aee71e2da6707228820cec41c4a2248c44a))
+
 ## [3.0.0-develop.5](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.4...v3.0.0-develop.5) (2025-07-17)
 
 ### Features
