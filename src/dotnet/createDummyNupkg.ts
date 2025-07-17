@@ -1,3 +1,5 @@
+/// <reference lib="ES2021.string" />
+import 'core-js/stable/string/replace-all';
 import { execSync, type ExecSyncOptionsWithStringEncoding } from 'node:child_process';
 import { existsSync, unlinkSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -19,7 +21,7 @@ export function createDummyNupkg(): string {
     execSync('dotnet new console --name DUMMY', options);
     const packOut = execSync(`dotnet pack DUMMY --configuration Release --output ${dirname(dummyPkgFullPath)}`, options);
 
-    const createdLine = packOut.replace('\r', '')
+    const createdLine = packOut.replaceAll('\r', '')
         .split('\n')
         .find(line => line.includes('Successfully created package'))?.trim();
 

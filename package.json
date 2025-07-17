@@ -66,6 +66,7 @@
     "@types/node": "^20.12.12",
     "@types/semantic-release": "^20.0.6",
     "conventional-changelog-conventionalcommits": "^8.0.0",
+    "core-js": "^3.44.0",
     "debug": "^4.3.4",
     "eslint-plugin-jsonc": "^2.15.1",
     "globals": "^16.0.0",
