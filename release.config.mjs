@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
 // @ts-check
+/// <reference path="./src/semantic-release__exec.d.ts"/>
 /**
  * # semantic-release
  *
@@ -29,6 +31,8 @@ import '@semantic-release/gitlab';
 
 const { default: hceSharedConfig } = await import('./src/index.ts');
 const { insertPlugin } = await import('./src/insertPlugins.ts');
+const { execAsync } = await import('./src/utils/execAsync.ts');
+const { getEnvVarValue } = await import('./src/utils/env.ts');
 
 /**
  * {@link hceSharedConfig} customized for this project's release pipeline
@@ -44,6 +48,22 @@ const config = {
 ok(config.plugins);
 
 console.debug(inspect(config, false, Infinity));
+
+const currentBranch = await execAsync('git branch')
+  .then(stdio =>
+    stdio.stdout.split('\n')
+      .find(line => line.startsWith('* '))
+      ?.slice(2),
+  );
+if (!currentBranch)
+  throw new Error('The current git branch could not be parsed.');
+const execPluginIndex = config.plugins.findIndex(plugin => plugin[0] === '@semantic-release/exec');
+config.plugins[execPluginIndex] = [
+  '@semantic-release/exec',
+  {
+    prepareCmd: `git push --tags https://semantic-release-tag:${getEnvVarValue('GL_TOKEN') ?? 'UNDEFINED'}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch}`,
+  },
+];
 
 // #region COMMIT ANALYZER
 /**
