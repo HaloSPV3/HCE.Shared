@@ -76,7 +76,7 @@ const _baseConfig = {
     PluginSpecSRGit<typeof DefaultOptions>,
     PluginSpecSRExec,
     PluginSpecSRGithub<{ addReleases: 'bottom'; assets: [{ path: './publish/*' }] }>,
-  ] | PluginSpec[],
+  ] | Exclude<PluginSpec, string>[],
 };
 
 /**

@@ -124,7 +124,7 @@ const NpmTuple = type(['"@semantic-release/npm"', {
 // eslint-disable-next-line jsdoc/require-jsdoc
 function setupNpm() {
   let npmIndex = config.plugins.findIndex(v =>
-    v[0] === '@semantic-release/npm' || v === '@semantic-release/npm',
+    v[0] === '@semantic-release/npm',
   );
   // assert it's not already in the plugin array
   if (npmIndex === -1) {

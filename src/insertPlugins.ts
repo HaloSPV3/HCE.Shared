@@ -59,11 +59,11 @@ declare function insertAndSortPlugins(
  * @throws {AggregateError} One or more error occurred when inserting plugins: `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => '"' + v + '"').join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${JSON.stringify(pluginIDs[indexOfLastAfter])} comes after ${JSON.stringify(pluginIDs[index])}!`
  */
 export function insertPlugin(
-  plugins: Exclude<SemanticReleaseOptions['plugins'], undefined>,
+  plugins: Exclude<PluginSpec, string>[],
   afterPluginsIDs: string[],
   insertPluginIDs: string[],
   beforePluginsIDs: string[],
-): PluginSpec[] {
+): Exclude<PluginSpec, string>[] {
   const pluginIDs = plugins.map(v =>
     typeof v === 'string' ? v : v[0],
   );

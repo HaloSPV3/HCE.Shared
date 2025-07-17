@@ -1,11 +1,10 @@
 import { describe, it } from 'node:test';
-import type { PluginSpec } from 'semantic-release';
 import { insertPlugin } from '../src/insertPlugins.js';
 import { deepStrictEqual, notDeepStrictEqual } from 'node:assert';
 
 await describe('insertPlugin', async () => {
   await it('can insert plugins where specified', () => {
-    let plugins: PluginSpec[] = ['A', 'C'];
+    let plugins: [string, unknown][] = [['A', undefined], ['C', undefined]];
     plugins = insertPlugin(plugins, ['A'], ['B'], ['C']);
     deepStrictEqual(
       plugins,
@@ -13,7 +12,7 @@ await describe('insertPlugin', async () => {
     );
   });
   await it('never inserts plugins as strings', () => {
-    let plugins: PluginSpec[] = ['A', 'C'];
+    let plugins: [string, unknown][] = [['A', undefined], ['C', undefined]];
     plugins = insertPlugin(plugins, ['A'], ['B'], ['C']);
     notDeepStrictEqual(
       plugins,
@@ -21,7 +20,7 @@ await describe('insertPlugin', async () => {
     );
   });
   await it('throws when a sorting order is impossible', () => {
-    let plugins: PluginSpec[] = ['C', 'A'];
+    let plugins: [string, unknown][] = [['C', undefined], ['A', undefined]];
     try {
       plugins = insertPlugin(plugins, ['A'], ['B'], ['C']);
     }
