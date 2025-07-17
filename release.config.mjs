@@ -500,12 +500,13 @@ function setupGitlab() {
       '@semantic-release/gitlab',
       {
         assets: [
-          {
-            label: 'halospv3-hce.shared-v${nextRelease.version}.tgz',
-            path: 'publish/halospv3-hce.shared-v${nextRelease.version}.tgz',
-            type: 'package',
-          },
-        ] },
+          'publish/*.tgz',
+          // DON'T DO THIS! It causes Semantic Release to use an ESM-to-CJS
+          // ESBuild transformer (WHY???) which obviously doesn't work because
+          // we use top-level awaits!
+          // { label: 'release', path: 'publish/*' }
+        ],
+      },
     ]),
   ];
 }
