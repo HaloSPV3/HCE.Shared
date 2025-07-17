@@ -336,7 +336,7 @@ const SRGLOptions = type({
    * globs and {@link GLAssetObject}s.
    *
    * Each entry in the `assets` `Array` is globbed individually. A [glob](https://github.com/isaacs/node-glob#glob-primer)
-   * can be a `String` (`"dist/**\/*.js"` or `"dist/mylib.js"`) or an `Array` of `String`s that will be globbed together
+   * can be a `String` (`"dist/**\/*.js"` or `"dist/myLib.js"`) or an `Array` of `String`s that will be globbed together
    * (`["dist/**", "!**\/*.css"]`).
    *
    * If a directory is configured, all the files under this directory and its children will be included.
