@@ -506,6 +506,8 @@ function setupGitlab() {
           // we use top-level awaits!
           // { label: 'release', path: 'publish/*' }
         ],
+        // bumped up from 3 (default). Probably overkill.
+        retryLimit: 12,
       },
     ]),
   ];
