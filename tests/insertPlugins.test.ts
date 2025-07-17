@@ -12,14 +12,14 @@ await describe('insertPlugin', async () => {
       ['A', ['B', {}], 'C'],
     );
   });
-  await it('never inserts plugins as strings',()=>{
+  await it('never inserts plugins as strings', () => {
     let plugins: PluginSpec[] = ['A', 'C'];
     plugins = insertPlugin(plugins, ['A'], ['B'], ['C']);
     notDeepStrictEqual(
       plugins,
       ['A', 'B', 'C'],
     );
-  })
+  });
   await it('throws when a sorting order is impossible', () => {
     let plugins: PluginSpec[] = ['C', 'A'];
     try {
