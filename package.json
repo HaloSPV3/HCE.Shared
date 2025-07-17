@@ -23,7 +23,8 @@
     "!dotnet/samples/",
     "!tests/",
     "CHANGELOG.md",
-    "dotnet/**/*",
+    "dotnet/*",
+    "dotnet/.github/**/*",
     "mjs/**/*",
     "src/**/*"
   ],
