@@ -28,6 +28,7 @@ import { inspect } from 'node:util';
 import '@semantic-release/gitlab';
 
 const { default: hceSharedConfig } = await import('./src/index.ts');
+const { insertPlugin } = await import('./src/insertPlugins.ts');
 
 /**
  * {@link hceSharedConfig} customized for this project's release pipeline
@@ -98,22 +99,51 @@ await setupCommitAnalyzer();
 
 // #endregion COMMIT ANALYZER
 
-/**
- * @param {import('semantic-release').PluginSpec[]} pluginsArray A Semantic Release Options object's plugins array.
- * @returns {number | -1} the index of the Git plugin in the array, if present. Else `-1`.
- */
-function getGitIndex(pluginsArray) {
-  return pluginsArray.findIndex(v => v[0] === '@semantic-release/git' || v === '@semantic-release/git');
-}
-
 // #region NPM
 
-// assert it's not already in the plugin array
-if (undefined === config.plugins.find(v => v[0] === '@semantic-release/npm' || v === '@semantic-release/npm')) {
-  const plugins = [...config.plugins];
-  plugins.splice(getGitIndex(plugins) + 1, 0, ['@semantic-release/npm', {}]);
-  config.plugins = plugins;
+const NpmTuple = type(['"@semantic-release/npm"', {
+  /**
+   * Whether to publish the `npm` package to the registry. If `false` the
+   * `package.json` version will still be updated.
+   * @default require('./package.json').private?false:true
+   */
+  'npmPublish?': 'boolean',
+  /**
+   * Directory to publish
+   * @default '.'
+   */
+  'pkgRoot?': 'string',
+  /**
+   * Directory path in which to write the package tarball. If `false`, the
+   * tarball is not be kept on the file system.
+   * @default false
+   */
+  'tarballDir?': 'string | false',
+}]);
+
+// eslint-disable-next-line jsdoc/require-jsdoc
+function setupNpm() {
+  let npmIndex = config.plugins.findIndex(v =>
+    v[0] === '@semantic-release/npm' || v === '@semantic-release/npm',
+  );
+  // assert it's not already in the plugin array
+  if (npmIndex === -1) {
+    config.plugins = insertPlugin(
+      config.plugins,
+      ['@semantic-release/git'],
+      ['@semantic-release/npm'],
+      []);
+    npmIndex = config.plugins.findIndex(v =>
+      v[0] === '@semantic-release/npm',
+    );
+  }
+  if (typeof config.plugins[npmIndex] === 'string')
+    config.plugins[npmIndex] = [typeof config.plugins[npmIndex], {}];
+  const npm = NpmTuple.assert(config.plugins[npmIndex]);
+  npm[1].tarballDir = 'publish';
+  config.plugins[npmIndex] = npm;
 }
+setupNpm();
 
 // #endregion NPM
 
