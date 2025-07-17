@@ -48,7 +48,7 @@ jobs:
           gitlab_url: https://gitlab.com/halospv3/HCE.Shared
           username: BinToss
           gitlab_pat: ${{ secrets.GL_SEMANTICRELEASE }}
-      - run: npx semantic-release # make git tag, commit updated files, release to GitHub/GitLab.
+      - run: npx semantic-release --debug # make git tag, commit updated files, release to GitHub/GitLab.
         id: semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
