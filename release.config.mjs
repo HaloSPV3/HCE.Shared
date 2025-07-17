@@ -21,13 +21,12 @@
  * ! WARNING! Arrays and child objects are overwritten entirely.
  * When 'plugins' is set, only commit-analyzer is added if missing.
  */
-
-import 'tsx';
+/** import to check for the dependency */
+import '@semantic-release/gitlab';
 import { type } from 'arktype';
 import { ok } from 'node:assert/strict';
 import { inspect } from 'node:util';
-// import to check for the dependency
-import '@semantic-release/gitlab';
+import 'tsx';
 
 const { default: hceSharedConfig } = await import('./src/index.ts');
 const { insertPlugin } = await import('./src/insertPlugins.ts');
