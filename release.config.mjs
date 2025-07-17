@@ -206,7 +206,7 @@ function setupGithub() {
     GHTuple.get('0').allows(p[0]),
   );
   const github = GHTuple.assert(config.plugins[githubIndex]);
-  github[1].assets = ['publish/halospv3-hce.shared-*.tgz'];
+  github[1].assets = 'publish/*.tgz';
   config.plugins[githubIndex] = github;
 }
 setupGithub();
@@ -498,7 +498,7 @@ function setupGitlab() {
     ...config.plugins,
     GLTuple.from([
       '@semantic-release/gitlab',
-      { assets: ['publish/halospv3-hce.shared-*.tgz'] },
+      { assets: 'publish/*.tgz' },
     ]),
   ];
 }
