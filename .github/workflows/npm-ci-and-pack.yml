@@ -62,7 +62,7 @@ jobs:
       - run: npm i -g npm@latest
       - run: npm ci
       - run: npm audit signatures
-      - run: npm run pack
+      - run: npm pack
       - run: npm run type
       - run: npm run lint:check
       - run: npm run test:cacheSampleProjects
