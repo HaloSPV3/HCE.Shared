@@ -37,9 +37,6 @@ jobs:
       TestCoverageArtifactID: ${{steps.uploadCoverageTestsArtifact.outputs.artifact-id}}
 
     steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
-        with:
-          config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v4
 
       - name: Use Node.js

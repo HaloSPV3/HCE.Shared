@@ -12,9 +12,6 @@ jobs:
   cpr:
     runs-on: ubuntu-latest
     steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
-        with:
-          config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: conventional-pr
         uses: Namchee/conventional-pr@v0.15.6
         with:
