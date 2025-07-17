@@ -498,7 +498,14 @@ function setupGitlab() {
     ...config.plugins,
     GLTuple.from([
       '@semantic-release/gitlab',
-      { assets: 'publish/*.tgz' },
+      {
+        assets: [
+          {
+            label: 'halospv3-hce.shared-v${nextRelease.version}.tgz',
+            path: 'publish/halospv3-hce.shared-v${nextRelease.version}.tgz',
+            type: 'package',
+          },
+        ] },
     ]),
   ];
 }
