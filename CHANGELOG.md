@@ -9,6 +9,17 @@
 * **dotnet.SemanticRelease:** append `@semantic-release/exec` plugin to plugins array if not found ([7eeafb2](https://github.com/HaloSPV3/HCE.Shared/commit/7eeafb2caab31358ecb91f8b3f1b885a11bc43b8))
 * **dotnet.SemanticRelease:** set/append dummy pack, dummy push, and INVAP commands ([88a523e](https://github.com/HaloSPV3/HCE.Shared/commit/88a523e231a821b59b72af0dee785affa9889499))
 
+## [3.0.0-develop.5](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.4...v3.0.0-develop.5) (2025-07-17)
+
+### Features
+
+* **insertPlugins:** add, export `insertPlugin`; declare internal `insertAndSortPlugins`; fix false-positive error caused by `!0` ([8971599](https://github.com/HaloSPV3/HCE.Shared/commit/8971599585dc962d5be6e7c3cc084f8c1a65d71c))
+
+### Bug Fixes
+
+* **dotnet.SemanticRelease:** append `@semantic-release/exec` plugin to plugins array if not found ([7eeafb2](https://github.com/HaloSPV3/HCE.Shared/commit/7eeafb2caab31358ecb91f8b3f1b885a11bc43b8))
+* **dotnet.SemanticRelease:** set/append dummy pack, dummy push, and INVAP commands ([88a523e](https://github.com/HaloSPV3/HCE.Shared/commit/88a523e231a821b59b72af0dee785affa9889499))
+
 ## [3.0.0-develop.4](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.3...v3.0.0-develop.4) (2025-07-16)
 
 ### Bug Fixes
