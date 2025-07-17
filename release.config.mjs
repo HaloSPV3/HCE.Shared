@@ -313,7 +313,7 @@ const SRGLOptions = type({
    */
   'gitlabApiPathPrefix?': type.string,
   /**
-   * An array of files to upload to the release. Can be a glob or and Array of
+   * An array of files to upload to the release. Can be a glob or an Array of
    * globs and {@link GLAssetObject}s.
    *
    * Each entry in the `assets` `Array` is globbed individually. A [glob](https://github.com/isaacs/node-glob#glob-primer)
