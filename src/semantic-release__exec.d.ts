@@ -1,5 +1,5 @@
 declare module '@semantic-release/exec' {
-  interface Options {
+  export interface Options {
     verifyConditionsCmd?: string;
     analyzeCommitsCmd?: string;
     verifyReleaseCmd?: string;
