@@ -40,6 +40,14 @@ jobs:
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
       - run: npm ci
       - run: npm audit signatures
+
+      # ensure GitLab is synced _before_ releasing
+      - name: Sync to GitLab
+        uses: kujov/gitlab-sync@2.1.0
+        with:
+          gitlab_url: https://gitlab.com/halospv3/HCE.Shared
+          username: BinToss
+          gitlab_pat: ${{ secrets.GL_SEMANTICRELEASE }}
       - run: npx semantic-release # make git tag, commit updated files, release to GitHub/GitLab.
         id: semantic-release
         env:
@@ -47,6 +55,7 @@ jobs:
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Now sync release commits
       - name: Sync to GitLab
         uses: kujov/gitlab-sync@2.1.0
         with:
