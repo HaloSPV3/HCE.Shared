@@ -140,7 +140,7 @@ function setupNpm() {
   if (typeof config.plugins[npmIndex] === 'string')
     config.plugins[npmIndex] = [typeof config.plugins[npmIndex], {}];
   const npm = NpmTuple.assert(config.plugins[npmIndex]);
-  npm[1].tarballDir = 'publish';
+  // npm[1].tarballDir = 'publish';
   config.plugins[npmIndex] = npm;
 }
 setupNpm();
@@ -206,7 +206,7 @@ function setupGithub() {
     GHTuple.get('0').allows(p[0]),
   );
   const github = GHTuple.assert(config.plugins[githubIndex]);
-  github[1].assets = ['halospv3-hce.shared-*.tgz'];
+  github[1].assets = ['publish/halospv3-hce.shared-*.tgz'];
   config.plugins[githubIndex] = github;
 }
 setupGithub();
@@ -498,7 +498,7 @@ function setupGitlab() {
     ...config.plugins,
     GLTuple.from([
       '@semantic-release/gitlab',
-      { assets: ['halospv3-hce.shared-*.tgz'] },
+      { assets: ['publish/halospv3-hce.shared-*.tgz'] },
     ]),
   ];
 }
