@@ -48,31 +48,6 @@ ok(config.plugins);
 
 console.debug(inspect(config, false, Infinity));
 
-// #region EXEC
-
-/** */
-async function setupExec() {
-  const currentBranch = await execAsync('git branch')
-    .then(stdio =>
-      stdio.stdout.split('\n')
-        .find(line => line.startsWith('* '))
-        ?.slice(2),
-    );
-  if (!currentBranch)
-    throw new Error('The current git branch could not be parsed.');
-  const execPluginIndex = config.plugins.findIndex(plugin => plugin[0] === '@semantic-release/exec');
-  const glToken = getEnvVarValue('GL_TOKEN') ?? 'UNDEFINED';
-  config.plugins[execPluginIndex] = [
-    '@semantic-release/exec',
-    {
-      prepareCmd: `git push --tags https://semantic-release-tag:${glToken}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch}`,
-    },
-  ];
-}
-await setupExec();
-
-// #endregion EXEC
-
 // #region COMMIT ANALYZER
 /**
  * Setup Commit Analyzer plugin options
@@ -174,6 +149,31 @@ function setupNpm() {
 setupNpm();
 
 // #endregion NPM
+
+// #region EXEC
+
+/** */
+async function setupExec() {
+  const currentBranch = await execAsync('git branch')
+    .then(stdio =>
+      stdio.stdout.split('\n')
+        .find(line => line.startsWith('* '))
+        ?.slice(2),
+    );
+  if (!currentBranch)
+    throw new Error('The current git branch could not be parsed.');
+  const execPluginIndex = config.plugins.findIndex(plugin => plugin[0] === '@semantic-release/exec');
+  const glToken = getEnvVarValue('GL_TOKEN') ?? 'UNDEFINED';
+  config.plugins[execPluginIndex] = [
+    '@semantic-release/exec',
+    {
+      prepareCmd: `git push --tags https://semantic-release-tag:${glToken}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch}`,
+    },
+  ];
+}
+await setupExec();
+
+// #endregion EXEC
 
 // #region GITHUB
 
