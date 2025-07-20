@@ -508,7 +508,10 @@ const T_PseudoMSBPInstance = type({
 
 });
 
-/** ArkType type definitions for internal usage, but may be re-used elsewhere */
+/**
+ * ArkType type definitions for internal usage, but may be re-used elsewhere
+ * @internal
+ */
 export const _InternalMSBuildEvaluationTypes = type.scope({
   msbuildEvaluationOutput,
 });
