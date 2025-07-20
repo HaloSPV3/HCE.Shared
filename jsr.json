@@ -1,0 +1,32 @@
+{
+  "name": "@halospv3/hce-shared",
+  "version": "0.0.1-DUMMY",
+  "exports": {
+    ".": "./src/index.ts",
+    "./commitlintConfig": "./src/commitlintConfig.ts",
+    "./eslintConfig": "./src/eslintConfig.ts",
+    "./insertPlugins": "./src/insertPlugins.ts",
+    "./semanticReleaseConfig": "./src/semanticReleaseConfig.ts",
+    "./semanticReleaseConfigDotnet": "./src/semanticReleaseConfigDotnet.ts",
+    "./setupGitPluginSpec": "./src/setupGitPluginSpec.ts",
+    "./dotnet": "./src/dotnet.ts",
+    "./utils/env": "./src/utils/env.ts",
+    "./utils/execAsync": "./src/utils/execAsync.ts",
+    "./utils/miscTypes": "./src/utils/miscTypes.ts",
+    "./utils/reflection": "./src/utils/reflection.ts"
+  },
+  "publish": {
+    "include": [
+      "CHANGELOG.md",
+      "LICENSE",
+      "README.md",
+      "dotnet/*",
+      "src/**/*",
+      "tsconfig.base.json"
+    ],
+    "exclude": [
+      "dotnet/.github",
+      "dotnet/samples"
+    ]
+  }
+}

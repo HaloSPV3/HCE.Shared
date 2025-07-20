@@ -545,6 +545,20 @@ setupGitlab();
 
 // #endregion GITLAB
 
+// #region JSR
+
+/** */
+function setupJSR() {
+  // eslint-disable-next-line @stylistic/no-extra-parens
+  (/** @type {[string, unknown][]} */(config.plugins)).push([
+    '@sebbo/semantic-release-jsr',
+    /** @type {import('@sebbo2002/semantic-release-jsr').PluginConfig} */({}),
+  ]);
+}
+setupJSR();
+
+// #endregion JSR
+
 console.log(inspect(config, false, Infinity));
 
 export default config;
