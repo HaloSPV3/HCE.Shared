@@ -104,6 +104,7 @@ await setupCommitAnalyzer();
 
 // #region NPM
 
+/** @see https://github.com/semantic-release/npm#options */
 const NpmTuple = type(['"@semantic-release/npm"', {
   /**
    * Whether to publish the `npm` package to the registry. If `false` the
