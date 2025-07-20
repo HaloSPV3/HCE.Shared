@@ -51,6 +51,10 @@ jobs:
       - run: npm audit signatures
       - run: npx semantic-release --debug # make git tag, commit updated files, release to GitHub/GitLab.
         id: semantic-release
+        # outputs:
+        #  - new-release-published
+        #  - new-release-version
+        #  - new-release-git-tag
         env:
           DEBUG: 'semantic-release*'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
