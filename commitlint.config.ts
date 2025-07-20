@@ -19,7 +19,7 @@ const scopes = {
   'deps-dev':
     'Affects dependencies required in the dev environment or during build time.',
   dotnet:
-    'Affects files in "dotnet/" or "src/dotnet/" not included in other scopes -OR- affects our generic GitHub reusable workflows provided for assisting dotnet CI.',
+    'Affects "src/dotnet.ts", files in "dotnet/" or "src/dotnet/" not included in other scopes, and/or our reusable GitHub workflows provided for assisting dotnet CI.',
   'dotnet.END': 'Affects "dotnet/ExecNupkgDeterministicator.targets".',
   'dotnet.GHNRI':
     'Affects "src/dotnet/GithubNugetRegistryInfo.ts" or its tests.',
