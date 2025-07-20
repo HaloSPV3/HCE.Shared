@@ -52,6 +52,7 @@ jobs:
       - run: npx semantic-release --debug # make git tag, commit updated files, release to GitHub/GitLab.
         id: semantic-release
         env:
+          DEBUG: 'semantic-release*'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
