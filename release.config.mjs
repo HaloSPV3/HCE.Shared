@@ -144,7 +144,7 @@ function setupNpm() {
   if (typeof config.plugins[npmIndex] === 'string')
     config.plugins[npmIndex] = [typeof config.plugins[npmIndex], {}];
   const npm = NpmTuple.assert(config.plugins[npmIndex]);
-  // npm[1].tarballDir = 'publish';
+  npm[1].tarballDir = 'publish';
   config.plugins[npmIndex] = npm;
 }
 setupNpm();
