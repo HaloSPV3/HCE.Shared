@@ -114,7 +114,6 @@
   },
   "engineStrict": true,
   "publishConfig": {
-    "tag": "latest",
     "provenance": true
   },
   "exports": {
