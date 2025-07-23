@@ -31,7 +31,6 @@ import 'tsx';
 const { default: hceSharedConfig } = await import('./src/index.ts');
 const { insertPlugin } = await import('./src/insertPlugins.ts');
 const { execAsync } = await import('./src/utils/execAsync.ts');
-const { getEnvVarValue } = await import('./src/utils/env.ts');
 
 /**
  * {@link hceSharedConfig} customized for this project's release pipeline
@@ -164,7 +163,7 @@ async function setupExec() {
   if (!currentBranch)
     throw new Error('The current git branch could not be parsed.');
   const execPluginIndex = config.plugins.findIndex(plugin => plugin[0] === '@semantic-release/exec');
-  const glToken = getEnvVarValue('GL_TOKEN') ?? 'UNDEFINED';
+  const glToken = process.env['GL_TOKEN'] ?? process.env['GITLAB_TOKEN'] ?? process.env['CI_JOB_TOKEN'];
   config.plugins[execPluginIndex] = [
     '@semantic-release/exec',
     {
