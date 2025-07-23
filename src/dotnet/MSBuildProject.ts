@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { type, type Scope } from 'arktype';
 import { warn } from 'node:console';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
@@ -12,6 +12,7 @@ import {
   NPPGetterNames,
   NugetProjectProperties,
 } from './NugetProjectProperties.js';
+import type { ObjectType } from 'arktype/internal/methods/object.ts';
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
@@ -72,7 +73,65 @@ const targetFailure = type({
   Items: 'never[]',
 });
 
-const msbuildEvaluationOutput = type({
+const msbuildEvaluationOutput: ObjectType<{
+  Properties?: Record<string, string> | undefined;
+  Items?: Record<string, {
+    [x: string]: string | undefined;
+    Identity: string;
+    FullPath: string;
+    RootDir: string;
+    Filename: string;
+    Extension: string;
+    RelativeDir: string;
+    Directory: string;
+    RecursiveDir: string;
+    ModifiedTime: string;
+    CreatedTime: string;
+    AccessedTime: string;
+    DefiningProjectFullPath: string;
+    DefiningProjectDirectory: string;
+    DefiningProjectName: string;
+    DefiningProjectExtension: string;
+    SubType?: string;
+    TargetFrameworkIdentifier?: string | undefined;
+    TargetPlatformMoniker?: string | undefined;
+    CopyUpToDateMarker?: string | undefined;
+    TargetPlatformIdentifier?: string | undefined;
+    TargetFrameworkVersion?: string | undefined;
+    ReferenceAssembly?: string | undefined;
+  }[]> | undefined;
+  TargetResults?: Record<string, {
+    Result: 'Success';
+    Items: {
+      [x: string]: string | undefined;
+      Identity: string;
+      FullPath: string;
+      RootDir: string;
+      Filename: string;
+      Extension: string;
+      RelativeDir: string;
+      Directory: string;
+      RecursiveDir: string;
+      ModifiedTime: string;
+      CreatedTime: string;
+      AccessedTime: string;
+      DefiningProjectFullPath: string;
+      DefiningProjectDirectory: string;
+      DefiningProjectName: string;
+      DefiningProjectExtension: string;
+      SubType?: string | undefined;
+      TargetFrameworkIdentifier?: string | undefined;
+      TargetPlatformMoniker?: string | undefined;
+      CopyUpToDateMarker?: string | undefined;
+      TargetPlatformIdentifier?: string | undefined;
+      TargetFrameworkVersion?: string | undefined;
+      ReferenceAssembly?: string | undefined;
+    }[];
+  } | {
+    Result: 'Failure';
+    Items: never[];
+  }> | undefined;
+}> = type({
   'Properties?': type({ '[string]': 'string' }),
   'Items?': type({ '[string]': interface_ItemMetadataBuiltIn.array() }),
   'TargetResults?': type({ '[string]': targetSuccess.or(targetFailure) }),
@@ -111,7 +170,30 @@ export class MSBuildEvaluationOutput {
   TargetResults?: typeof msbuildEvaluationOutput.infer.TargetResults;
 }
 
-export const EvaluationOptions = Object.freeze(
+export const EvaluationOptions: ObjectType<{
+  FullName: string;
+  Property: {
+    MSBuildProjectFullPath?: string | undefined;
+    AssemblyName?: string | undefined;
+    BaseIntermediateOutputPath?: string | undefined;
+    BaseOutputPath?: string | undefined;
+    Description?: string | undefined;
+    IntermediateOutput?: string | undefined;
+    OutDir?: string | undefined;
+    OutputPath?: string | undefined;
+    Version?: string | undefined;
+    VersionPrefix?: string | undefined;
+    VersionSuffix?: string | undefined;
+    TargetFramework?: string | undefined;
+    TargetFrameworks?: string | undefined;
+    RuntimeIdentifier?: string | undefined;
+    RuntimeIdentifiers?: string | undefined;
+  };
+  Targets: readonly string[] | string[];
+  GetItem: readonly string[] | string[];
+  GetProperty: readonly string[] | string[];
+  GetTargetResult: readonly string[] | string[];
+}> = Object.freeze(
   type({
     /**
      * The project file's full path.
@@ -512,7 +594,67 @@ const T_PseudoMSBPInstance = type({
  * ArkType type definitions for internal usage, but may be re-used elsewhere
  * @internal
  */
-export const _InternalMSBuildEvaluationTypes = type.scope({
+export const _InternalMSBuildEvaluationTypes: Scope<{
+  msbuildEvaluationOutput: {
+    Properties?: Record<string, string> | undefined;
+    Items?: Record<string, {
+      [x: string]: string | undefined;
+      Identity: string;
+      FullPath: string;
+      RootDir: string;
+      Filename: string;
+      Extension: string;
+      RelativeDir: string;
+      Directory: string;
+      RecursiveDir: string;
+      ModifiedTime: string;
+      CreatedTime: string;
+      AccessedTime: string;
+      DefiningProjectFullPath: string;
+      DefiningProjectDirectory: string;
+      DefiningProjectName: string;
+      DefiningProjectExtension: string;
+      SubType?: string | undefined;
+      TargetFrameworkIdentifier?: string | undefined;
+      TargetPlatformMoniker?: string | undefined;
+      CopyUpToDateMarker?: string | undefined;
+      TargetPlatformIdentifier?: string | undefined;
+      TargetFrameworkVersion?: string | undefined;
+      ReferenceAssembly?: string | undefined;
+    }[]> | undefined;
+    TargetResults?: Record<string, {
+      Result: 'Success';
+      Items: {
+        [x: string]: string | undefined;
+        Identity: string;
+        FullPath: string;
+        RootDir: string;
+        Filename: string;
+        Extension: string;
+        RelativeDir: string;
+        Directory: string;
+        RecursiveDir: string;
+        ModifiedTime: string;
+        CreatedTime: string;
+        AccessedTime: string;
+        DefiningProjectFullPath: string;
+        DefiningProjectDirectory: string;
+        DefiningProjectName: string;
+        DefiningProjectExtension: string;
+        SubType?: string | undefined;
+        TargetFrameworkIdentifier?: string | undefined;
+        TargetPlatformMoniker?: string | undefined;
+        CopyUpToDateMarker?: string | undefined;
+        TargetPlatformIdentifier?: string | undefined;
+        TargetFrameworkVersion?: string | undefined;
+        ReferenceAssembly?: string | undefined;
+      }[];
+    } | {
+      Result: 'Failure';
+      Items: never[];
+    }> | undefined;
+  };
+}> = type.scope({
   msbuildEvaluationOutput,
 });
 

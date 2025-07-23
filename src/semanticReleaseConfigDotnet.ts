@@ -120,7 +120,7 @@ export class SemanticReleaseConfigDotnet {
     afterPluginsIDs: string[],
     insertPluginIDs: string[],
     beforePluginsIDs: string[],
-  ) {
+  ): void {
     this.options.plugins = insertPlugin(this.options.plugins, afterPluginsIDs, insertPluginIDs, beforePluginsIDs);
   }
 

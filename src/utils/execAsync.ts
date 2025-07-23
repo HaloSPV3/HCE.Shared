@@ -1,5 +1,6 @@
 /* eslint-disable jsdoc/no-defaults */
 import { type } from 'arktype';
+import type { ObjectType } from 'arktype/internal/methods/object.ts';
 import { exec } from 'node:child_process';
 import { constants } from 'node:os';
 import { promisify } from 'node:util';
@@ -39,7 +40,18 @@ export async function execAsync(command: string, setStderrAsCause = false): Prom
   });
 }
 
-const T_ExecException = type('Error').and({
+const T_ExecException: ObjectType<{
+  name: string;
+  message: string;
+  stack?: string | undefined;
+  cause?: unknown;
+  cmd?: string | null | undefined;
+  killed?: boolean | null | undefined;
+  code?: number | null | undefined;
+  signal?: 'SIGABRT' | 'SIGALRM' | 'SIGBUS' | 'SIGCHLD' | 'SIGCONT' | 'SIGFPE' | 'SIGHUP' | 'SIGILL' | 'SIGINT' | 'SIGIO' | 'SIGIOT' | 'SIGKILL' | 'SIGPIPE' | 'SIGPOLL' | 'SIGPROF' | 'SIGPWR' | 'SIGQUIT' | 'SIGSEGV' | 'SIGSTKFLT' | 'SIGSTOP' | 'SIGSYS' | 'SIGTERM' | 'SIGTRAP' | 'SIGTSTP' | 'SIGTTIN' | 'SIGTTOU' | 'SIGUNUSED' | 'SIGURG' | 'SIGUSR1' | 'SIGUSR2' | 'SIGVTALRM' | 'SIGWINCH' | 'SIGXCPU' | 'SIGXFSZ' | 'SIGBREAK' | 'SIGLOST' | 'SIGINFO' | null | undefined;
+  stdout?: string | undefined;
+  stderr?: string | undefined;
+}> = type('Error').and({
   'cmd?': 'string | null',
   'killed?': 'boolean | null',
   'code?': 'number | null',

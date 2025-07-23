@@ -23,8 +23,9 @@ export class MSBuildProjectProperties {
    * Resolve the given path if it is not absolute. If the path exists, it is returned. Else, an Error is thrown.
    * @param path The full file path of an MSBuild project.
    * @returns The absolute path to the MSBuild project file.
+   * @throws {Error} if the path cannot be resolved to an existing file.
    */
-  static GetFullPath(path: string) {
+  static GetFullPath(path: string): string {
     if (!node_path.isAbsolute(path))
       path = node_path.resolve(path);
     if (!existsSync(path))

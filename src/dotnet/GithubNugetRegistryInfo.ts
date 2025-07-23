@@ -1,14 +1,18 @@
+import type { Type } from 'arktype';
 import { getEnvVarValue } from '../utils/env.js';
+import type { MSBuildProject, MSBuildEvaluationOutput } from './MSBuildProject.js';
+import type { NugetProjectProperties } from './NugetProjectProperties.js';
 import {
   NugetRegistryInfo,
   NRIOptsBase,
 } from './NugetRegistryInfo.js';
+import type { Default } from 'arktype/internal/attributes.ts';
 
 const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
-const DefaultGithubTokenEnvVars = Object.freeze([
+export const DefaultGithubTokenEnvVars: readonly ['GH_TOKEN', 'GITHUB_TOKEN'] = Object.freeze([
   'GH_TOKEN',
   'GITHUB_TOKEN',
-] as const);
+]);
 
 export class GithubNugetRegistryInfo extends NugetRegistryInfo {
   static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
@@ -43,13 +47,22 @@ const GHNRI = GithubNugetRegistryInfo;
  * {@link GHNRI.getNugetGitHubUrl} and will default to an empty string if the
  * environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
  */
-export const GHNRIOpts = NRIOptsBase.merge({
+export const GHNRIOpts: Type<{
+  project: MSBuildProject | {
+    readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
+    readonly Properties: Readonly<NugetProjectProperties>;
+    readonly Targets: readonly string[];
+    readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][];
+  };
+  source: Default<string, string>;
+  tokenEnvVars: Default<readonly string[], readonly ['GH_TOKEN', 'GITHUB_TOKEN']>;
+}> = NRIOptsBase.merge({
   /** @see {@link GHNRI.getNugetGitHubUrl } */
   source: NRIOptsBase.get('source')
     .default(() => GHNRI.getNugetGitHubUrl() ?? ''),
   tokenEnvVars: NRIOptsBase.get('tokenEnvVars')
     .default(
       /* must be a function. A fixed-length array is NOT a primitive type! */
-      () => DefaultGithubTokenEnvVars,
+      (): typeof DefaultGithubTokenEnvVars => DefaultGithubTokenEnvVars,
     ),
 });

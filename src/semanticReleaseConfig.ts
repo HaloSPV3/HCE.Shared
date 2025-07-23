@@ -42,7 +42,12 @@ export type PluginSpecSRGithub<V extends SRGithubOptions = SRGithubOptions> = Pl
 /**
  * @satisfies { Readonly<PluginSpec[]> }
  */
-export const defaultPlugins = Object.freeze([
+export const defaultPlugins: readonly [
+  '@semantic-release/commit-analyzer',
+  '@semantic-release/release-notes-generator',
+  '@semantic-release/npm',
+  '@semantic-release/github',
+] = Object.freeze([
   '@semantic-release/commit-analyzer',
   '@semantic-release/release-notes-generator',
   '@semantic-release/npm',

@@ -23,7 +23,7 @@ export type BaseClassProto = (() => object) & {
  * The `[[Prototype]]` of all base classes.
  * @since 3.0.0
  */
-export const baseClassProto = getPrototypeOf(Object as BaseClass<ObjectConstructor>);
+export const baseClassProto: BaseClassProto = getPrototypeOf(Object as BaseClass<ObjectConstructor>);
 
 /**
  * [INTERNAL]

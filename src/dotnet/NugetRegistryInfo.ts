@@ -20,6 +20,8 @@ import sanitizeFileName from 'sanitize-filename';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
 import { catchCsc2012, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
+import type { ObjectType } from 'arktype/internal/methods/object.ts';
+import type { Default } from 'arktype/internal/attributes.ts';
 
 type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
 type TmpDirNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
@@ -292,7 +294,27 @@ but the environment variable is empty or undefined.`);
    * {@link NRI.PackPackagesOptionsType.t.propertyOverrides `propertyOverrides`}
    * is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
    */
-  static readonly PackPackagesOptionsType = Object.freeze(
+  static readonly PackPackagesOptionsType: ObjectType<{
+    propertyOverrides?: Record<string, string> | undefined;
+    artifactsPath?: string | undefined;
+    configuration?: 'Release' | 'Debug' | undefined;
+    disableBuildServers?: boolean | undefined;
+    force?: boolean | undefined;
+    includeSource?: boolean | undefined;
+    includeSymbols?: boolean | undefined;
+    interactive?: boolean | undefined;
+    noBuild?: boolean | undefined;
+    noLogo?: boolean | undefined;
+    noRestore?: boolean | undefined;
+    output?: string | undefined;
+    runtime?: string | undefined;
+    serviceable?: boolean | undefined;
+    terminalLogger?: 'auto' | 'on' | 'off' | undefined;
+    useCurrentRuntime?: boolean | undefined;
+    verbosity?: 'quiet' | 'minimal' | 'normal' | 'detailed' | 'diagnostic' | undefined;
+    versionSuffix?: string | undefined;
+    '-GetItem'?: readonly string[] | string[] | undefined;
+  }> = Object.freeze(
     type({
       /**
        * a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties.
@@ -323,7 +345,26 @@ but the environment variable is empty or undefined.`);
     }),
   );
 
-  public static readonly PackDummyPackagesOptionsType
+  public static readonly PackDummyPackagesOptionsType: ObjectType<{
+    propertyOverrides?: Record<string, string> | undefined;
+    artifactsPath?: string | undefined;
+    configuration?: 'Release' | 'Debug' | undefined;
+    disableBuildServers?: boolean | undefined;
+    force?: boolean | undefined;
+    includeSource?: boolean | undefined;
+    includeSymbols?: boolean | undefined;
+    interactive?: boolean | undefined;
+    noBuild?: boolean | undefined;
+    noLogo?: boolean | undefined;
+    noRestore?: boolean | undefined;
+    runtime?: string | undefined;
+    serviceable?: boolean | undefined;
+    terminalLogger?: 'auto' | 'on' | 'off' | undefined;
+    useCurrentRuntime?: boolean | undefined;
+    verbosity?: 'quiet' | 'minimal' | 'normal' | 'detailed' | 'diagnostic' | undefined;
+    versionSuffix?: string | undefined;
+    '-GetItem'?: readonly string[] | string[] | undefined;
+  }>
     = this.PackPackagesOptionsType.omit('output');
 
   /**
@@ -518,7 +559,21 @@ but the environment variable is empty or undefined.`);
    * Specific to this API:
    * If you want to use this API's default root value (\`${cwd()}/publish`), assign an empty string.
    */
-  static readonly PushPackagesOptionsType = Object.freeze(
+  static readonly PushPackagesOptionsType: ObjectType<{
+    root: string;
+    apiKey?: string | undefined;
+    configFile?: string | undefined;
+    disableBuffering?: boolean | undefined;
+    forceEnglishOutput?: boolean | undefined;
+    interactive?: boolean | undefined;
+    noServiceEndpoint?: boolean | undefined;
+    noSymbols?: boolean | undefined;
+    skipDuplicate?: boolean | undefined;
+    source?: string | undefined;
+    symbolApiKey?: string | undefined;
+    symbolSource?: string | undefined;
+    timeout?: number | undefined;
+  }> = Object.freeze(
     type({
     /** If an empty string is passed, this property is overridden to `./publish` */
       root: 'string',
@@ -557,7 +612,20 @@ but the environment variable is empty or undefined.`);
    * {@link NRI.PushPackagesOptionsType} sans {@link NRI.PushPackagesOptionsType.t.root}.
    * The result of {@link getDummiesDir} is used, instead.
    */
-  public static readonly PushDummyPackagesOptionsType
+  public static readonly PushDummyPackagesOptionsType: ObjectType<{
+    apiKey?: string | undefined;
+    configFile?: string | undefined;
+    disableBuffering?: boolean | undefined;
+    forceEnglishOutput?: boolean | undefined;
+    interactive?: boolean | undefined;
+    noServiceEndpoint?: boolean | undefined;
+    noSymbols?: boolean | undefined;
+    source?: string | undefined;
+    symbolApiKey?: string | undefined;
+    symbolSource?: string | undefined;
+    timeout?: number | undefined;
+    skipDuplicate: Default<true, true>;
+  }>
     = NugetRegistryInfo.PushPackagesOptionsType.merge({
       skipDuplicate: 'true = true',
     }).omit('root');
@@ -832,13 +900,22 @@ but the environment variable is empty or undefined.`);
 }
 
 // shorthand/alias for NugetRegistryInfo
-const NRI = NugetRegistryInfo;
+const NRI: typeof NugetRegistryInfo = NugetRegistryInfo;
 
 /**
  * The base type for {@link NRIOpts} and related types. Extend this type while
  * overriding member types via {@link NRIOptsBase.merge}
  */
-export const NRIOptsBase = type({
+export const NRIOptsBase: ObjectType<{
+  project: MSBuildProject | {
+    readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
+    readonly Properties: Readonly<NugetProjectProperties>;
+    readonly Targets: readonly string[];
+    readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][];
+  };
+  source: string;
+  tokenEnvVars: readonly string[];
+}> = type({
   /**
    * The environment variables whose values are tokens with permission to push a
    * package to the NuGet package registry. The array is iterated through until
@@ -883,7 +960,16 @@ export const NRIOptsBase = type({
 /**
  * The type of the parameter for {@link NugetRegistryInfo}'s constructor.
  */
-export const NRIOpts = NRIOptsBase.merge({
+export const NRIOpts: ObjectType<{
+  project: MSBuildProject | {
+    readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
+    readonly Properties: Readonly<NugetProjectProperties>;
+    readonly Targets: readonly string[];
+    readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][];
+  };
+  tokenEnvVars: Default<readonly string[], readonly ['NUGET_TOKEN']>;
+  source: Default<string, string>;
+}> = NRIOptsBase.merge({
   /**
    * Defaults to {@link NugetRegistryInfo.DefaultTokenEnvVars}
    * @see {@link NRIOptsBase.t.tokenEnvVars}

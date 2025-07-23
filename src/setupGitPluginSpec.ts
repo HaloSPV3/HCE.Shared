@@ -8,7 +8,10 @@ export const GitPluginId = '@semantic-release/git';
  * To use, assign or create an object with the same (but mutable) properties and deeply-copy to the object
  * @satisfies { GitOptions }
  */
-export const DefaultOptions = {
+export const DefaultOptions: {
+  readonly assets: ['README.md', 'CHANGELOG.md', 'package.json', 'package-lock.json', 'npm-shrinkwrap.json'];
+  readonly message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}';
+} = {
   assets: [
     'README.md',
     'CHANGELOG.md',
