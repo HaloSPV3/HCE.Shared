@@ -580,7 +580,7 @@ setupGitlab();
 function setupJSR() {
   // eslint-disable-next-line @stylistic/no-extra-parens
   ((config.plugins)).push([
-    '@sebbo/semantic-release-jsr', {
+    '@sebbo2002/semantic-release-jsr', {
       publishArgs: process.env['CI'] === 'true' ? ['--provenance'] : undefined,
     },
   ]);
