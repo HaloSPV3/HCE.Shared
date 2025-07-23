@@ -1,6 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+  DefaultGithubTokenEnvVars,
   GithubNugetRegistryInfo as GHNRI,
   GHNRIOpts,
 } from '../../src/dotnet/GithubNugetRegistryInfo.js';
@@ -16,13 +17,16 @@ function getOwner(): string {
   return process.env[key] = owner ?? 'HaloSPV3';
 }
 
-await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
-  await it('GHNRI.DefaultGithubTokenEnvVars', () => {
+await describe('DefaultGithubTokenEnvVars', async () => {
+  await it('has expected value', () => {
     deepStrictEqual(
-      GHNRI.DefaultGithubTokenEnvVars,
+      DefaultGithubTokenEnvVars,
       Object.freeze(['GH_TOKEN', 'GITHUB_TOKEN'] as const),
     );
   });
+});
+
+await describe('GithubNugetRegistryInfo', { concurrency: 1 }, async () => {
   await it('NUGET_PKG_GITHUB_COM', () => {
     strictEqual(
       GHNRI.NUGET_PKG_GITHUB_COM,
