@@ -25,8 +25,8 @@ import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { inspect } from 'node:util';
 import type { BranchSpec } from 'semantic-release';
-import { insertPlugin } from './src/insertPlugins.ts';
-import { baseConfig } from './src/semanticReleaseConfig.ts';
+import { insertPlugin } from '@halospv3/hce.shared-config/insertPlugins';
+import { baseConfig } from '@halospv3/hce.shared-config/semanticReleaseConfig';
 
 /** check if plugins are installed and available */
 import '@sebbo2002/semantic-release-jsr';
