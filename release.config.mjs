@@ -163,12 +163,53 @@ async function setupExec() {
   if (!currentBranch)
     throw new Error('The current git branch could not be parsed.');
   const execPluginIndex = config.plugins.findIndex(plugin => plugin[0] === '@semantic-release/exec');
+  const ghToken = process.env['GH_TOKEN'] ?? process.env['GITHUB_TOKEN'];
   const glToken = process.env['GL_TOKEN'] ?? process.env['GITLAB_TOKEN'] ?? process.env['CI_JOB_TOKEN'];
+  const glProjectId = '70884695';
+
+  if (!ghToken)
+    throw new Error('GH_TOKEN or GITHUB_TOKEN must be set');
+  if (!glToken)
+    throw new Error('GL_TOKEN, GITLAB_TOKEN, or CI_JOB_TOKEN must be set');
+
   config.plugins[execPluginIndex] = [
     '@semantic-release/exec',
-    {
+    /** @type {import('@semantic-release/exec').Options} */({
+      verifyReleaseCmd: [
+        'pwsh',
+        '-nop',
+        '-noni',
+        '-c',
+        './.npmPublishToGitLabAndGitHub.ps1',
+        '-TgzPath', './publish/halospv3-hce.shared-config-${nextRelease.version}.tgz',
+        '-GLProjectId', glProjectId,
+        '-GHToken', ghToken,
+        '-GLToken', glToken,
+        // See https://github.com/semantic-release/semantic-release/blob/master/docs/developer-guide/plugin.md#verifyrelease
+        '-ReleaseChannel', '${nextRelease.channel}',
+        '-DryRun',
+      ].join(' '),
+      /*
+       * Semantic Release pushes the new tag to ORIGIN (github).
+       * It must also be pushed to GitLab before a GitLab Release can be made.
+       */
       prepareCmd: `git push --tags https://semantic-release-tag:${glToken}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch}`,
-    },
+      // see https://github.com/semantic-release/exec#publishcmd
+      // returns `{name:string, url:string}[]` which is not supported in semantic-release@24.2 (and later?)
+      publishCmd: [
+        'pwsh',
+        '-nop',
+        '-noni',
+        '-c',
+        './.npmPublishToGitLabAndGitHub.ps1',
+        '-TgzPath', './publish/halospv3-hce.shared-config-${nextRelease.version}.tgz',
+        '-GLProjectId', glProjectId,
+        '-GHToken', ghToken,
+        '-GLToken', glToken,
+        // See https://github.com/semantic-release/semantic-release/blob/master/docs/developer-guide/plugin.md#verifyrelease
+        '-ReleaseChannel', '${nextRelease.channel}',
+      ].join(' '),
+    }),
   ];
 }
 await setupExec();
