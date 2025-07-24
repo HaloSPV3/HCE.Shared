@@ -70,7 +70,7 @@ if ([string]::IsNullOrWhiteSpace((
   throw [System.ArgumentNullException]::new('Parameter -GLToken and its fallback environment variables were all $null or whitespace!')
 }
 
-[string]$ghRegistry = '//npm.pkg.github.com'
+[string]$ghRegistry = '//npm.pkg.github.com/'
 [string]$glRegistry = "//gitlab.com/api/v4/projects/$GLProjectId/packages/npm/"
 
 [string]$ghAuth = "$($ghRegistry):_authToken=$GHToken"
