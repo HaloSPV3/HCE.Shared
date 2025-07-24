@@ -3,7 +3,8 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "outDir": "_tsout",
-    "target":"es2020"
+    "target": "es2020",
+    "erasableSyntaxOnly": true
   },
   "include": [
     "./*.cts",
