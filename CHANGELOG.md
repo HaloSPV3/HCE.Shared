@@ -1,3 +1,21 @@
+## [3.0.0-develop.7](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.6...v3.0.0-develop.7) (2025-07-24)
+
+### ⚠ BREAKING CHANGES
+
+* **insertPlugins, semanticRelease:** allow only tuple `PluginSpec`
+
+### Features
+
+* export `@semantic-release/exec` `Options` interface ([331456e](https://github.com/HaloSPV3/HCE.Shared/commit/331456ed9ffe220f0270a1aefc3b34973c5ce64b))
+
+### Bug Fixes
+
+* try increasing GitLab Release retry limit ([ff1e758](https://github.com/HaloSPV3/HCE.Shared/commit/ff1e758499602cbe02bee31fc217be4e91d2b423))
+
+### Code Refactoring
+
+* **insertPlugins, semanticRelease:** allow only tuple `PluginSpec` ([e44ef67](https://github.com/HaloSPV3/HCE.Shared/commit/e44ef67fb824ddf2a74f13bd4e08a4acc27a002f))
+
 ## [3.0.0-develop.6](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.5...v3.0.0-develop.6) (2025-07-17)
 
 ### Bug Fixes
