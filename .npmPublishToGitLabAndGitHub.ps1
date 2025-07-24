@@ -4,11 +4,9 @@
 [CmdletBinding()]
 param (
   [Parameter(Mandatory = $true, HelpMessage = '## [Required]
-The full or relative file path of the .tgz created by `@semantic-release/npm`. Probably in ./publish. You will probably need a `\${nextRelease.version}` Lodash template string in the `publishCmd` to set the version in the filename.
-
 ## Examples
--TgzPath ./publish/hce.shared-config-3.0.0-develop.7.tgz')]
-  [System.IO.FileInfo]$TgzPath,
+-Version 3.0.0-develop.7')]
+  [System.Management.Automation.SemanticVersion]$Version,
 
   [Parameter(Mandatory = $true, HelpMessage = '## [Required]
 The GitLab Project ID. See
@@ -71,45 +69,51 @@ if ([string]::IsNullOrWhiteSpace((
 ) {
   throw [System.ArgumentNullException]::new('Parameter -GLToken and its fallback environment variables were all $null or whitespace!')
 }
-[string]$local:ghRegistry = '//npm.pkg.github.com'
-[string]$local:glRegistry = "//gitlab.com/api/v4/projects/$GLProjectId/packages/npm/"
 
-. {
-  [string]$local:ghAuth = "$local:ghRegistry:_authToken=$GHToken"
-  [string]$local:glAuth = "$local:glRegistry:_authToken=$GLToken"
-  [string]$local:npmrcContent = Get-Content ./.npmrc -Raw;
+[string]$ghRegistry = '//npm.pkg.github.com'
+[string]$glRegistry = "//gitlab.com/api/v4/projects/$GLProjectId/packages/npm/"
 
-  foreach ($local:authLine in ($local:ghAuth, $local:glAuth)) {
-    if (($local:npmrcContent) -notcontains $local:authLine) {
-      Out-File -File ./.npmrc $local:authLine -Append -NoNewline
-    }
+[string]$ghAuth = "$($ghRegistry):_authToken=$GHToken"
+[string]$glAuth = "$($glRegistry):_authToken=$GLToken"
+[string]$npmrcContent = Get-Content ./.npmrc -Raw;
+
+foreach ($authLine in ($ghAuth, $glAuth)) {
+  if (-not $npmrcContent.Contains("$authLine")) {
+    $authLine | Out-File -File ./.npmrc -Encoding utf8 -Append
   }
 }
 
-$provenance = if ($env:CI -eq $true) { '--provenance' }
+$provenance = if ($env:CI -ieq 'true') { '--provenance' }
+foreach ($registry in ($ghRegistry, $glRegistry)) {
+  npm publish --dry-run --tag=$ReleaseChannel --registry=https:$registry $provenance | Write-Error
 
-npm publish "`"$TgzPath`"" $provenance --dry-run --tag=$ReleaseChannel --registry="https:$local:ghRegistry" | Write-Error
-npm publish "`"$TgzPath`"" $provenance --dry-run --tag=$ReleaseChannel --registry="https:$local:glRegistry" | Write-Error
+  if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+  }
+
+}
 
 if (-not $DryRun) {
   # `--registry=URI` works, but is undocumented. This parameter may break at any time.
-  npm publish "`"$TgzPath`"" $provenance --tag=$ReleaseChannel --registry="https:$local:ghRegistry" | Write-Error
-  npm publish "`"$TgzPath`"" $provenance --tag=$ReleaseChannel --registry="https:$local:glRegistry" | Write-Error
+  foreach ($registry in ($ghRegistry, $glRegistry)) {
+    npm publish --tag=$ReleaseChannel --registry=https:$registry $provenance | Write-Error
 
-  $local:version = $TgzPath -replace ('(\.[\\/]publish[\\/]halospv3-hce\.shared-config-)(\d+\.\d+\.\d+([-\w_]+(\.\d+)?)?)(\.tgz)', '$2');
+    if ($LASTEXITCODE -ne 0) {
+      return $LASTEXITCODE
+    }
+  }
 }
 
 # Semantic Release ignores arrays. This will have no effect until semantic release allows `publish` steps to return `Release[]`. See https://github.com/semantic-release/semantic-release/blob/master/index.d.ts#L344-L387
 (
   [PSCustomObject]@{
-    name = "@halospv3/hce.shared-config@$local:version"
+    name = "@halospv3/hce.shared-config@$Version"
     url  = 'https://github.com/HaloSPV3/HCE.Shared/pkgs/npm/hce.shared-config'
   },
   [PSCustomObject]@{
-    name = "@halospv3/hce.shared-config@$local:version"
+    name = "@halospv3/hce.shared-config@$Version"
     url  = 'https://gitlab.com/halospv3/HCE.Shared/-/packages/42912953'
   }
 ) |
 ConvertTo-Json |
 Write-Output
-
