@@ -84,23 +84,13 @@ foreach ($authLine in ($ghAuth, $glAuth)) {
 }
 
 $provenance = if ($env:CI -ieq 'true') { '--provenance' }
+$dryRun = if ($DryRun) { '--dry-run' }
+# `--registry=URI` works, but is undocumented. This parameter may break at any time.
 foreach ($registry in ($ghRegistry, $glRegistry)) {
-  npm publish --dry-run --tag=$ReleaseChannel --registry=https:$registry $provenance | Write-Error
+  npm publish --tag=$ReleaseChannel --registry=https:$registry $provenance $DryRun | Write-Error
 
   if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
-  }
-
-}
-
-if (-not $DryRun) {
-  # `--registry=URI` works, but is undocumented. This parameter may break at any time.
-  foreach ($registry in ($ghRegistry, $glRegistry)) {
-    npm publish --tag=$ReleaseChannel --registry=https:$registry $provenance | Write-Error
-
-    if ($LASTEXITCODE -ne 0) {
-      return $LASTEXITCODE
-    }
+    return $LASTEXITCODE
   }
 }
 
