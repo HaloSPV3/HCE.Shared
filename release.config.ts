@@ -156,7 +156,8 @@ try {
     if (typeof config.plugins[npmIndex] === 'string')
       config.plugins[npmIndex] = [typeof config.plugins[npmIndex], {}];
     const npm = NpmTuple.assert(config.plugins[npmIndex]);
-    npm[1].tarballDir = 'publish';
+    // broken. Do not uncomment!
+    // npm[1].tarballDir = 'publish';
     config.plugins[npmIndex] = npm;
   }
   setupNpm();
@@ -200,7 +201,8 @@ try {
        * Semantic Release pushes the new tag to ORIGIN (github).
        * It must also be pushed to GitLab before a GitLab Release can be made.
        */
-        prepareCmd: `git push --tags https://semantic-release-tag:${glToken}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch}`,
+        prepareCmd: `git push --tags https://semantic-release-tag:${glToken}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch} && `
+          + 'npm pack',
         // see https://github.com/semantic-release/exec#publishcmd
         // returns `{name:string, url:string}[]` which is not supported in semantic-release@24.2 (and later?)
         publishCmd: [
