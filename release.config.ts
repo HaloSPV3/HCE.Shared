@@ -581,9 +581,7 @@ try {
   function setupJSR() {
   // eslint-disable-next-line @stylistic/no-extra-parens
     ((config.plugins)).push([
-      '@sebbo2002/semantic-release-jsr', {
-        publishArgs: process.env['CI'] === 'true' ? ['--provenance'] : undefined,
-      },
+      '@sebbo2002/semantic-release-jsr', {},
     ]);
   }
   setupJSR();
