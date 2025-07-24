@@ -49,7 +49,7 @@ jobs:
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
       - run: npm ci
       - run: npm audit signatures
-      - run: npx semantic-release --debug # make git tag, commit updated files, release to GitHub/GitLab.
+      - run: npm run semantic-release -- --debug # make git tag, commit updated files, release to GitHub/GitLab.
         id: semantic-release
         # outputs:
         #  - new-release-published
