@@ -1,3 +1,9 @@
+## [3.0.0-develop.9](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.8...v3.0.0-develop.9) (2025-07-24)
+
+### Bug Fixes
+
+* use argument splatting ([6861778](https://github.com/HaloSPV3/HCE.Shared/commit/68617788184e3b9c56afaddd8c69461b2286312c))
+
 ## [3.0.0-develop.8](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.7...v3.0.0-develop.8) (2025-07-24)
 
 ### Bug Fixes
