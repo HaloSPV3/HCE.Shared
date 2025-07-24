@@ -1,3 +1,9 @@
+## [3.0.0-develop.8](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.7...v3.0.0-develop.8) (2025-07-24)
+
+### Bug Fixes
+
+* fix typo in $ghRegistry string ([8f8de0d](https://github.com/HaloSPV3/HCE.Shared/commit/8f8de0d5a23403f11824c839dc80a98025f06b04))
+
 ## [3.0.0-develop.7](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.6...v3.0.0-develop.7) (2025-07-24)
 
 ### ⚠ BREAKING CHANGES
