@@ -70,6 +70,24 @@ if ([string]::IsNullOrWhiteSpace((
   throw [System.ArgumentNullException]::new('Parameter -GLToken and its fallback environment variables were all $null or whitespace!')
 }
 
+[string]$tgzPath = "./publish/halospv3-hce.shared-config-$Version.tgz";
+[System.IO.FileInfo]$file = (Get-Item $tgzPath)[0]
+$tgzPath = Get-RelativePath $file
+
+if ($file?.GetType() -ne [System.IO.FileInfo]) {
+  Write-Error ([System.IO.FileNotFoundException]::new(
+      "The file `"./publish/halospv3-hce.shared-config-$Version.tgz`" was not found or is not a file!"
+    ));
+
+  npm version $Version | Write-Error;
+  if ($LASTEXITCODE -ne 0)
+  { exit $LASTEXITCODE }
+
+  npm pack - | Write-Error
+  if ($LASTEXITCODE -ne 0)
+  { exit $LASTEXITCODE }
+}
+
 [string]$ghRegistry = '//npm.pkg.github.com/'
 [string]$glRegistry = "//gitlab.com/api/v4/projects/$GLProjectId/packages/npm/"
 
@@ -86,7 +104,11 @@ foreach ($authLine in ($ghAuth, $glAuth)) {
 # `--registry=URI` works, but is undocumented. This parameter may break at any time.
 foreach ($registry in ($ghRegistry, $glRegistry)) {
   [System.Collections.Generic.List[string]]$publishArgs = [System.Collections.Generic.List[string]]::new();
-  $publishArgs.AddRange("--tag=$ReleaseChannel", "--registry=https:$registry", '--ignore-scripts');
+  $publishArgs.AddRange(
+    "`"$file`"",
+    "--tag=$ReleaseChannel",
+    "--registry=https:$registry"
+  );
   if ($env:CI -ieq 'true') { $publishArgs.Add('--provenance') }
   if ($DryRun) { $publishArgs.Add('--dry-run') }
 
