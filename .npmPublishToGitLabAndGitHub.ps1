@@ -85,9 +85,10 @@ foreach ($authLine in ($ghAuth, $glAuth)) {
 
 # `--registry=URI` works, but is undocumented. This parameter may break at any time.
 foreach ($registry in ($ghRegistry, $glRegistry)) {
-  $publishArgs = @("--tag=$ReleaseChannel", "--registry=https:$registry", '--ignore-scripts')
+  [System.Collections.Generic.List[string]]$publishArgs = [System.Collections.Generic.List[string]]::new();
+  $publishArgs.AddRange("--tag=$ReleaseChannel", "--registry=https:$registry", '--ignore-scripts');
   if ($env:CI -ieq 'true') { $publishArgs.Add('--provenance') }
-  if ($DryRun) { $publishArgs.Add( '--dry-run' ) }
+  if ($DryRun) { $publishArgs.Add('--dry-run') }
 
   npm publish @publishArgs | Write-Error
 
