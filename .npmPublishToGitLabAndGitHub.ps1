@@ -90,9 +90,12 @@ foreach ($registry in ($ghRegistry, $glRegistry)) {
   if ($env:CI -ieq 'true') { $publishArgs.Add('--provenance') }
   if ($DryRun) { $publishArgs.Add('--dry-run') }
 
-  npm publish @publishArgs | Write-Error
+  $publishOutput;
+  npm publish @publishArgs | Tee-Object -Variable publishOutput | Write-Error
 
-  if ($LASTEXITCODE -ne 0) {
+  [bool]$hasDuplicatePackageError = $publishOutput -cnotcontains 'npm error 409';
+  # exit with error if it is not due to duplicate package (npm CLI does not have --skip-duplicate for `npm publish --dry-run`!)
+  if ($LASTEXITCODE -ne 0 -and ((-not $DryRun) -and $hasDuplicatePackageError)) {
     exit $LASTEXITCODE
   }
 }
