@@ -93,7 +93,7 @@ foreach ($registry in ($ghRegistry, $glRegistry)) {
   npm publish @publishArgs | Write-Error
 
   if ($LASTEXITCODE -ne 0) {
-    return $LASTEXITCODE
+    exit $LASTEXITCODE
   }
 }
 
