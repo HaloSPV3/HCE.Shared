@@ -1,3 +1,9 @@
+## [3.0.0-develop.13](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.12...v3.0.0-develop.13) (2025-07-26)
+
+### Bug Fixes
+
+* remove second gitlab-sync ([b09f6c9](https://github.com/HaloSPV3/HCE.Shared/commit/b09f6c937a295d5bedcff85e8e32a4770b369ff2))
+
 ## [3.0.0-develop.12](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.11...v3.0.0-develop.12) (2025-07-26)
 
 ### Bug Fixes
