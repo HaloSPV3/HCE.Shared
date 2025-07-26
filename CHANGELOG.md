@@ -1,3 +1,9 @@
+## [3.0.0-develop.12](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.11...v3.0.0-develop.12) (2025-07-26)
+
+### Bug Fixes
+
+* **TODO:** temporarily disable Deno/JSR publishing ([3479838](https://github.com/HaloSPV3/HCE.Shared/commit/347983862b0c19a62d1266824c75db72ef7a8917)), closes [#448](https://github.com/HaloSPV3/HCE.Shared/issues/448)
+
 ## [3.0.0-develop.11](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.10...v3.0.0-develop.11) (2025-07-26)
 
 ### Bug Fixes
