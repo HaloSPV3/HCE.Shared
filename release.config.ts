@@ -576,14 +576,15 @@ try {
   }
   setupGitlab();
 
+  // TODO: fix doc-gen and linting errors. Deno/JSR requires .ts imports; it does not evaluate the condition of "extends" boolean operator; it does not allow global references (e.g. console, process); imports from typescript-eslint need additional type imports for doc-gen; et cetera
   // eslint-disable-next-line jsdoc/require-jsdoc
-  function setupJSR() {
-  // eslint-disable-next-line @stylistic/no-extra-parens
-    ((config.plugins)).push([
-      '@sebbo2002/semantic-release-jsr', {},
-    ]);
-  }
-  setupJSR();
+  // function setupJSR() {
+  // // eslint-disable-next-line @stylistic/no-extra-parens
+  //   ((config.plugins)).push([
+  //     '@sebbo2002/semantic-release-jsr', {},
+  //   ]);
+  // }
+  // setupJSR();
 }
 catch (error: unknown) {
   console.error(inspect(error, true, Infinity));
