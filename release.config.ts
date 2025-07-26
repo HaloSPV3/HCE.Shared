@@ -25,17 +25,16 @@ import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { inspect } from 'node:util';
 import type { BranchSpec } from 'semantic-release';
-import { insertPlugin } from '@halospv3/hce.shared-config/insertPlugins';
 import { baseConfig } from '@halospv3/hce.shared-config/semanticReleaseConfig';
 
 /** check if plugins are installed and available */
+import '@amanda-mitchell/semantic-release-npm-multiple';
 import '@sebbo2002/semantic-release-jsr';
 import '@semantic-release/changelog';
 import '@semantic-release/commit-analyzer';
 import '@semantic-release/exec';
 import '@semantic-release/github';
 import '@semantic-release/gitlab';
-import '@semantic-release/npm';
 import '@semantic-release/release-notes-generator';
 
 const nullableString = type('string | undefined');
@@ -116,10 +115,11 @@ try {
   }
   setupCommitAnalyzer();
 
-  // eslint-disable-next-line jsdoc/require-jsdoc
-  function setupNpm() {
-  /** @see https://github.com/semantic-release/npm#options */
-    const NpmTuple = type(['"@semantic-release/npm"', {
+  /**
+   *
+   */
+  function replaceNpmWithMultipleNpm() {
+    const NpmOptions = type({
     /**
      * Whether to publish the `npm` package to the registry. If `false` the
      * `package.json` version will still be updated.
@@ -137,30 +137,60 @@ try {
        * @default false
        */
       'tarballDir?': 'string | false',
-    }]);
+    });
+    /** @see https://github.com/amanda-mitchell/semantic-release-npm-multiple#configuration */
+    const NpmMultipleTuple = type([
+      '"@amanda-mitchell/semantic-release-npm-multiple"',
+      { 'registries?': type.Record('string', NpmOptions) },
+    ]);
 
-    let npmIndex = config.plugins.findIndex(v =>
+    const ghToken = process.env['GITHUB_NPM_TOKEN'] ?? process.env['GH_TOKEN'] ?? process.env['GITHUB_TOKEN'];
+    const glToken = process.env['GITLAB_NPM_TOKEN'] ?? process.env['GL_TOKEN'] ?? process.env['GITLAB_TOKEN'] ?? process.env['CI_JOB_TOKEN'];
+    const publicNpmToken = process.env['PUBLIC_NPM_TOKEN'] ?? process.env['NPM_TOKEN'];
+
+    const tokenErrors: Error[] = [];
+    if (!ghToken)
+      tokenErrors.push(new Error('GITHUB_NPM_TOKEN, GH_TOKEN or GITHUB_TOKEN must be set'));
+    if (!glToken)
+      tokenErrors.push(new Error('GITLAB_NPM_TOKEN, GL_TOKEN, GITLAB_TOKEN, or CI_JOB_TOKEN must be set'));
+    if (!publicNpmToken)
+      tokenErrors.push(new Error('PUBLIC_NPM_TOKEN or NPM_TOKEN must be set'));
+    if (tokenErrors.length > 0)
+      throw new AggregateError(tokenErrors, 'One or more NPM tokens are unavailable!');
+
+    process.env['GITHUB_NPM_CONFIG_REGISTRY'] ??= 'https://npm.pkg.github.com/';
+    process.env['GITLAB_NPM_CONFIG_REGISTRY'] ??= 'https://gitlab.com/api/v4/projects/70884695/packages/npm/';
+    process.env['PUBLIC_NPM_CONFIG_REGISTRY'] ??= 'https://registry.npmjs.org';
+
+    process.env['GITHUB_NPM_TOKEN'] = ghToken;
+    process.env['GITLAB_NPM_TOKEN'] = glToken;
+    process.env['PUBLIC_NPM_TOKEN'] = publicNpmToken;
+
+    // GITHUB_NPM_CONFIG_REGISTRY=https://npm.pkg.github.com/
+    // GITHUB_NPM_TOKEN=XXXXX
+    // PUBLIC_NPM_CONFIG_REGISTRY=https://registry.npmjs.org
+    // PUBLIC_NPM_TOKEN=XXXXX
+
+    const tuple = NpmMultipleTuple.from([
+      '@amanda-mitchell/semantic-release-npm-multiple',
+      {
+        registries: {
+          github: {},
+          gitlab: {},
+          /** npmjs.org */
+          public: {},
+        },
+      },
+    ]);
+
+    const npmIndex = config.plugins.findIndex(v =>
       v[0] === '@semantic-release/npm',
     );
-    // assert it's not already in the plugin array
-    if (npmIndex === -1) {
-      config.plugins = insertPlugin(
-        config.plugins,
-        ['@semantic-release/git'],
-        ['@semantic-release/npm'],
-        []);
-      npmIndex = config.plugins.findIndex(v =>
-        v[0] === '@semantic-release/npm',
-      );
-    }
-    if (typeof config.plugins[npmIndex] === 'string')
-      config.plugins[npmIndex] = [typeof config.plugins[npmIndex], {}];
-    const npm = NpmTuple.assert(config.plugins[npmIndex]);
-    // broken. Do not uncomment!
-    // npm[1].tarballDir = 'publish';
-    config.plugins[npmIndex] = npm;
+    if (npmIndex === -1)
+      config.plugins.push(tuple);
+    else config.plugins[npmIndex] = tuple;
   }
-  setupNpm();
+  replaceNpmWithMultipleNpm();
 
   // eslint-disable-next-line jsdoc/require-jsdoc
   function setupExec() {
@@ -172,52 +202,18 @@ try {
     if (!currentBranch)
       throw new Error('The current git branch could not be parsed.');
     const execPluginIndex = config.plugins.findIndex(plugin => plugin[0] === '@semantic-release/exec');
-    const ghToken = process.env['GH_TOKEN'] ?? process.env['GITHUB_TOKEN'];
     const glToken = process.env['GL_TOKEN'] ?? process.env['GITLAB_TOKEN'] ?? process.env['CI_JOB_TOKEN'];
-    const glProjectId = '70884695';
-
-    if (!ghToken)
-      throw new Error('GH_TOKEN or GITHUB_TOKEN must be set');
     if (!glToken)
       throw new Error('GL_TOKEN, GITLAB_TOKEN, or CI_JOB_TOKEN must be set');
 
     config.plugins[execPluginIndex] = [
       '@semantic-release/exec', {
-        verifyReleaseCmd: [
-          'pwsh',
-          '-nop',
-          '-noni',
-          '-c',
-          './.npmPublishToGitLabAndGitHub.ps1',
-          '-Version ${nextRelease.version}',
-          '-GLProjectId', glProjectId,
-          '-GHToken', ghToken,
-          '-GLToken', glToken,
-          // See https://github.com/semantic-release/semantic-release/blob/master/docs/developer-guide/plugin.md#verifyrelease
-          '-ReleaseChannel', '${nextRelease.channel}',
-          '-DryRun',
-        ].join(' '),
         /*
        * Semantic Release pushes the new tag to ORIGIN (github).
        * It must also be pushed to GitLab before a GitLab Release can be made.
        */
         prepareCmd: `git push --tags https://semantic-release-tag:${glToken}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch} && `
           + 'npm pack',
-        // see https://github.com/semantic-release/exec#publishcmd
-        // returns `{name:string, url:string}[]` which is not supported in semantic-release@24.2 (and later?)
-        publishCmd: [
-          'pwsh',
-          '-nop',
-          '-noni',
-          '-c',
-          './.npmPublishToGitLabAndGitHub.ps1',
-          '-Version ${nextRelease.version}',
-          '-GLProjectId', glProjectId,
-          '-GHToken', ghToken,
-          '-GLToken', glToken,
-          // See https://github.com/semantic-release/semantic-release/blob/master/docs/developer-guide/plugin.md#verifyrelease
-          '-ReleaseChannel', '${nextRelease.channel}',
-        ].join(' '),
       },
     ];
   }

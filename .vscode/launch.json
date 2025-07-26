@@ -2,14 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "PowerShell Debug .npmPublishToGitLabAndGitHub",
-      "type": "PowerShell",
-      "request": "launch",
-      "script": ". ./.npmPublishToGitLabAndGitHub.ps1 -GLProjectId 70884695 -Version 0.0.0-DUMMY.0 -ReleaseChannel DUMMY -GHToken (dotenvx get GH_TOKEN) -GLToken (dotenvx get GL_TOKEN) -DryRun",
-      "cwd": "${cwd}",
-      "attachDotnetDebugger": true
-    },
-    {
       "name": "Attach by Process ID",
       "processId": "${command:PickProcess}",
       "request": "attach",
