@@ -122,16 +122,11 @@ foreach ($registry in ($ghRegistry, $glRegistry)) {
   }
 }
 
-# Semantic Release ignores arrays. This will have no effect until semantic release allows `publish` steps to return `Release[]`. See https://github.com/semantic-release/semantic-release/blob/master/index.d.ts#L344-L387
-(
-  [PSCustomObject]@{
-    name = "@halospv3/hce.shared-config@$Version"
-    url  = 'https://github.com/HaloSPV3/HCE.Shared/pkgs/npm/hce.shared-config'
-  },
-  [PSCustomObject]@{
-    name = "@halospv3/hce.shared-config@$Version"
-    url  = 'https://gitlab.com/halospv3/HCE.Shared/-/packages/42912953'
-  }
-) |
+# Semantic Release ignores arrays. `url2` will have no effect until semantic release allows `publish` steps to return `Release[]` or allow `url: string[]`. See https://github.com/semantic-release/semantic-release/blob/master/index.d.ts#L344-L387
+[PSCustomObject]@{
+  name = "@halospv3/hce.shared-config@$Version"
+  url  = 'https://github.com/HaloSPV3/HCE.Shared/pkgs/npm/hce.shared-config'
+  url2 = 'https://gitlab.com/halospv3/HCE.Shared/-/packages/42912953'
+} |
 ConvertTo-Json |
 Write-Output
