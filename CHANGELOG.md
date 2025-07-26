@@ -1,3 +1,9 @@
+## [3.0.0-develop.11](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.10...v3.0.0-develop.11) (2025-07-26)
+
+### Bug Fixes
+
+* move gitlab `git push --tags` to `publish` step ([5faf150](https://github.com/HaloSPV3/HCE.Shared/commit/5faf1509f8176fd530c1041ee3384b3554ca1369))
+
 ## [3.0.0-develop.10](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.9...v3.0.0-develop.10) (2025-07-26)
 
 ### Bug Fixes
