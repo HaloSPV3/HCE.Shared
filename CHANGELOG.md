@@ -1,3 +1,9 @@
+## [3.0.0-develop.10](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.9...v3.0.0-develop.10) (2025-07-26)
+
+### Bug Fixes
+
+* avoid using implicitly fixed-length arrays ([02a2c2b](https://github.com/HaloSPV3/HCE.Shared/commit/02a2c2b880025fbd5e309d330f5546c6101ce3c0))
+
 ## [3.0.0-develop.9](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.8...v3.0.0-develop.9) (2025-07-24)
 
 ### Bug Fixes
