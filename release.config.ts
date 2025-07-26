@@ -208,12 +208,13 @@ try {
 
     config.plugins[execPluginIndex] = [
       '@semantic-release/exec', {
-        /*
-       * Semantic Release pushes the new tag to ORIGIN (github).
-       * It must also be pushed to GitLab before a GitLab Release can be made.
-       */
-        prepareCmd: `git push --tags https://semantic-release-tag:${glToken}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch} && `
-          + 'npm pack',
+        /**
+         * Semantic Release pushes the new tag to ORIGIN (github).
+         * It must also be pushed to GitLab before a GitLab Release can be made.
+         *
+         * publishCmd because the tag is created during `publish`
+         */
+        publishCmd: `git push --tags https://semantic-release-tag:${glToken}@gitlab.com/halospv3/HCE.Shared.git ${currentBranch}`,
       },
     ];
   }
