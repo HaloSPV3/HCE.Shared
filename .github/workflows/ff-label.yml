@@ -21,7 +21,7 @@ jobs:
           echo "Event Payload:"
           echo "${{ toJson(github.event) }}"
       - name: Fast Forward PR
-        uses: onee-only/ff-merge@main
+        uses: onee-only/ff-merge@1ad46d4
         with:
           allowed-roles: '["maintain"]'
           GITHUB_TOKEN: ${{ secrets.FAST_FORWARD_GITHUB_TOKEN }}
