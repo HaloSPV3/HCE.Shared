@@ -1,3 +1,10 @@
+## [2.6.6](https://github.com/halospv3/hce.shared/compare/v2.6.5...v2.6.6) (2025-07-30)
+
+### Bug Fixes
+
+* **deps:** ponyfill `string.replaceAll`; add core-js ([e65882e](https://github.com/halospv3/hce.shared/commit/e65882eb176b904831d81362bd2553a7a04ffbdf))
+* **deps:** update `semantic-release-export-data` to v1.1.0; force it to resolve `@actions/core` to ^1.11.1 ([66fec8e](https://github.com/halospv3/hce.shared/commit/66fec8ed6ec602215ae657a78de6a63b79fb2fde))
+
 ## [2.6.5](https://github.com/halospv3/hce.shared/compare/v2.6.4...v2.6.5) (2025-07-15)
 
 ### Bug Fixes
