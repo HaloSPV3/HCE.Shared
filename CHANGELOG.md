@@ -1,3 +1,9 @@
+## [3.0.0-develop.15](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.14...v3.0.0-develop.15) (2025-07-31)
+
+### Bug Fixes
+
+* **dotnet.SemanticRelease:** swap out `console.debug` with colorful `debug` logging ([54029e1](https://github.com/HaloSPV3/HCE.Shared/commit/54029e1089e802ed6dcc02338b67118a67f7ecb4))
+
 ## [3.0.0-develop.14](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.13...v3.0.0-develop.14) (2025-07-31)
 
 ### Bug Fixes
