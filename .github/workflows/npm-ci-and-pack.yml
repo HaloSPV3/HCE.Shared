@@ -54,10 +54,6 @@ jobs:
           # required by Kuinox.NupkgDeterministicator
           dotnet-version: 6.x
           global-json-file: ./global.json
-      - uses: actions/cache/save@v4
-        with:
-          path: /usr/share/dotnet
-          key: usr-share-dotnet
 
       - run: npm i -g npm@latest
       - run: npm ci
