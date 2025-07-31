@@ -1,3 +1,9 @@
+## [3.0.0-develop.14](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.13...v3.0.0-develop.14) (2025-07-31)
+
+### Bug Fixes
+
+* replace `debug.log` calls with `debug` call ([1b94603](https://github.com/HaloSPV3/HCE.Shared/commit/1b946035b5732deb69ff8a446843f1c5947ca49e))
+
 ## [3.0.0-develop.13](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.12...v3.0.0-develop.13) (2025-07-26)
 
 ### Bug Fixes
