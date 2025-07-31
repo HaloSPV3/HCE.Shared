@@ -410,9 +410,8 @@ export async function getConfig(
 
   const options: Options = config.toOptions();
   if (debug.enabled) {
-    console.debug(
-      `modified plugins array:\n${inspect(options.plugins, false, Infinity)}`,
-    );
+    debug('modified plugins array:');
+    debug(inspect(options.plugins, false, Infinity));
   }
 
   return options;
