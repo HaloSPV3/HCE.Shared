@@ -2,9 +2,9 @@
 
 ## NOTICE
 
-> Activity is held up by a rewrite for the `next/3.0.0` branch.
+> The "main" branch (release channels "latest"/"2.x") in maintenance mode. Development is primarily in branch "develop" for the "develop"/"3.x" release channels. When v3 is stable, the "2.x" release channel will be deprecated and the "latest" channel will switch to "3.x" releases.
 >
-> A fix for the `2.x` branch may be feasible if all that's wrong is async functions in CJS. The `2.x` release channel will not receive feature updates, but fixes and dependency updates are acceptable.
+> [#407](https://github.com/HaloSPV3/HCE.Shared/issues/407)–the most notable bug in the 2.x release channel–has been fixed. Semantic Release configs created by the "2.x" release channel are no longer tainted by Promises.
 
 Infrastructure resources shared with other HaloSPV3 repositories.
 
