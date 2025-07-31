@@ -1,3 +1,9 @@
+## [3.0.0-develop.17](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.16...v3.0.0-develop.17) (2025-07-31)
+
+### Bug Fixes
+
+* **dotnet:** do not mix `export *` and `export type *`! ([1184896](https://github.com/HaloSPV3/HCE.Shared/commit/118489616924fdb3d62670a67b1a0ab8123ba299))
+
 ## [3.0.0-develop.16](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.15...v3.0.0-develop.16) (2025-07-31)
 
 ### Bug Fixes
