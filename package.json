@@ -23,6 +23,7 @@
     "!dotnet/samples/",
     "!tests/",
     "CHANGELOG.md",
+    "tsconfig*.json",
     "dotnet/*",
     "dotnet/.github/**/*",
     "mjs/**/*",
