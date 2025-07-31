@@ -80,7 +80,7 @@ export class SemanticReleaseConfigDotnet {
         this._projectsToPublish = p;
       }
       else if (debug.enabled) {
-        debug.log(new Error('At least one project must be published. `projectsToPackAndPush` is empty and environment variable `PROJECTS_TO_PUBLISH` is undefined or empty.'));
+        debug(new Error('At least one project must be published. `projectsToPackAndPush` is empty and environment variable `PROJECTS_TO_PUBLISH` is undefined or empty.'));
       }
     }
 
@@ -91,7 +91,7 @@ export class SemanticReleaseConfigDotnet {
         this._projectsToPackAndPush = p;
       }
       else if (debug.enabled) {
-        debug.log(new Error('projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.'));
+        debug(new Error('projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.'));
       }
     }
 
@@ -364,7 +364,7 @@ export async function getConfig(
   projectsToPackAndPush?: string[] | NugetRegistryInfo[],
 ): Promise<Options> {
   if (debug.enabled) {
-    debug.log(
+    debug(
       'hce.shared-config:\n' + inspect(baseConfig, false, Infinity, true),
     );
   }
