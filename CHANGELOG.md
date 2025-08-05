@@ -1,3 +1,9 @@
+## [3.0.0-develop.18](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.17...v3.0.0-develop.18) (2025-08-05)
+
+### Bug Fixes
+
+* **dotnet.INVAP:** execute INVAP cli only if it's the main module ([5006ab1](https://github.com/HaloSPV3/HCE.Shared/commit/5006ab1d6ff46554f5fd17d076465fcc1e2018e6)), closes [#455](https://github.com/HaloSPV3/HCE.Shared/issues/455)
+
 ## [3.0.0-develop.17](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.16...v3.0.0-develop.17) (2025-07-31)
 
 ### Bug Fixes
