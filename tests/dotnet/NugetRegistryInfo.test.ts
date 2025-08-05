@@ -153,18 +153,21 @@ await describe('when GITHUB_OUT is defined', { concurrency: true }, async () => 
   });
 });
 
-await describe('when GITHUB_OUTPUT is undefined...', { concurrency: true }, async () => {
+await describe('when GITHUB_OUTPUT file is empty...', { concurrency: true }, async () => {
   let ghOutputBak: string | undefined;
   before(() => {
     ghOutputBak = process.env['GITHUB_OUTPUT'];
-    process.env['GITHUB_OUTPUT'] = '';
+    const ghOutPath = path.join(tmpdir(), 'GITHUB_OUTPUT.empty.tmp');
+    if (!existsSync(ghOutPath))
+      writeFileSync(ghOutPath, '', { encoding: 'utf8' });
+    process.env['GITHUB_OUTPUT'] = ghOutPath;
   });
 
-  await it('getGithubOutput returns empty object when GITHUB_OUTPUT is undefined', async () => {
+  await it('getGithubOutput returns empty object', async () => {
     deepStrictEqual(await getGithubOutput(), {});
   });
 
-  await it('getGithubOutputSync returns empty object when GITHUB_OUTPUT is undefined', () => {
+  await it('getGithubOutputSync returns empty object', () => {
     deepStrictEqual(getGithubOutputSync(), {});
   });
 
