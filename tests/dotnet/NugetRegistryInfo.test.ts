@@ -136,24 +136,20 @@ await describe('NRIOpts', { concurrency: true }, async () => {
 });
 
 await describe('when GITHUB_OUT is defined', { concurrency: true }, async () => {
-  await it('getGithubOutput returns non-empty object when GITHUB_OUTPUT defined and file exists', async () => {
-    const tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
+  let tmp_GITHUB_OUTPUT_FileName: string;
+  before(() => {
+    tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
     if (!existsSync(tmp_GITHUB_OUTPUT_FileName))
       writeFileSync(tmp_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
     process.env['GITHUB_OUTPUT'] = tmp_GITHUB_OUTPUT_FileName;
+  });
 
-    const ghOutput = await getGithubOutput();
-    deepStrictEqual(ghOutput, { 'dotnet.NRI': 'true' });
+  await it('getGithubOutput returns non-empty object when GITHUB_OUTPUT defined and file exists', async () => {
+    deepStrictEqual((await getGithubOutput()), { 'dotnet.NRI': 'true' });
   });
 
   await it('getGithubOutputSync returns non-empty object when GITHUB_OUTPUT defined and file exists', () => {
-    const tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
-    if (!existsSync(tmp_GITHUB_OUTPUT_FileName))
-      writeFileSync(tmp_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
-    process.env['GITHUB_OUTPUT'] = tmp_GITHUB_OUTPUT_FileName;
-
-    const ghOutput = getGithubOutputSync();
-    deepStrictEqual(ghOutput, { 'dotnet.NRI': 'true' });
+    deepStrictEqual(getGithubOutputSync(), { 'dotnet.NRI': 'true' });
   });
 });
 
