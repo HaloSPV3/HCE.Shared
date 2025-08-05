@@ -23,11 +23,11 @@
     "!dotnet/samples/",
     "!tests/",
     "CHANGELOG.md",
-    "tsconfig*.json",
     "dotnet/*",
     "dotnet/.github/**/*",
     "mjs/**/*",
-    "src/**/*"
+    "src/**/*",
+    "tsconfig*.json"
   ],
   "main": "./mjs/index.mjs",
   "infra": "polyrepo",
