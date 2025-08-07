@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <RepoRoot Condition="'$(RepoRoot)' == '' And '$(ProjectRootDir)' != ''">$(ProjectRootDir)</RepoRoot>
-    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
-    <RepoRootPublishDir>$(RepoRoot)/publish</RepoRootPublishDir>
+    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), $([System.IO.Path]::Join('.git','index'))))</RepoRoot>
+    <RepoRootPublishDir>$([System.IO.Path]::Join("$(RepoRoot)", "publish"))</RepoRootPublishDir>
     <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(RepoRootPublishDir)</PackageOutputPath>
   </PropertyGroup>
 
@@ -41,7 +41,7 @@
            "" -->
       <_spaceVersion Condition="'$(Version)' != ''"> $(Version)</_spaceVersion>
       <!-- "C:\Repos\HaloSPV3\HXE\publish\HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
-      <DestinationFile>$(RepoRootPublishDir)/$(AssemblyName)$(_spaceVersion)$(_enclosedVArgs).zip</DestinationFile>
+      <DestinationFile>$([System.IO.Path]::Join("$(RepoRootPublishDir)", "$(AssemblyName)$(_spaceVersion)$(_enclosedVArgs).zip"))</DestinationFile>
       <!-- todo: look into .NET 8 SDK's Artifacts feature -->
     </PropertyGroup>
 
