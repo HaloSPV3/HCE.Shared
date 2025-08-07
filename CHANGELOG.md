@@ -1,3 +1,10 @@
+## [3.0.0-develop.19](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.18...v3.0.0-develop.19) (2025-08-07)
+
+### Bug Fixes
+
+* **dotnet:** fix `-t:Publish` commands starting with `dotnet publish` instead of `dotnet msbuild` ([5d6bbca](https://github.com/HaloSPV3/HCE.Shared/commit/5d6bbca822131eeb2c76e184e6b4c036e161cc15))
+* **dotnet:** fix PublishAll never running `_PublishProjectForAllFrameworksAndRuntimes` ([1717ea6](https://github.com/HaloSPV3/HCE.Shared/commit/1717ea6ac6256dcba00a61a62f0d270f0267a54d))
+
 ## [3.0.0-develop.18](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.17...v3.0.0-develop.18) (2025-08-05)
 
 ### Bug Fixes
