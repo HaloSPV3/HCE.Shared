@@ -26,10 +26,7 @@
           - RuntimeIdentifier
           -->
       <AppendVariantArgs Condition="'$(AppendVariantArgs)' == ''">true</AppendVariantArgs>
-
       <_appendVarArgs>$(AppendVariantArgs)</_appendVarArgs>
-      <RepoRootPublishDir>$(RepoRoot)/publish</RepoRootPublishDir>
-
       <!-- Only add Configuration when Debug -->
       <_dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</_dbgCfg>
       <!-- "net6.0 win7-x86"
