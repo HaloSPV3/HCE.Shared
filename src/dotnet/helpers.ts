@@ -231,7 +231,10 @@ export async function configurePrepareCmd(
       for (const permutation of args) {
         if (typeof permutation === 'string' && permutation.length === 1)
           throw new Error('Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!');
-        publishCmds.push(`dotnet publish ${permutation}`);
+        if (/".+" -t:PublishAll/.test(permutation))
+          publishCmds.push(`dotnet msbuild ${permutation as `"${string}" -t:PublishAll`}`);
+        else
+          publishCmds.push(`dotnet publish ${permutation}`);
       }
     }
 
