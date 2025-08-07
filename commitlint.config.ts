@@ -34,6 +34,7 @@ const scopes = {
     'Affects "src/dotnet/MSBuildProjectProperties.ts" or its tests.',
   'dotnet.NPP': 'Affects "src/dotnet/NugetProjectProperties.ts" or its tests.',
   'dotnet.NRI': 'Affects "src/dotnet/RegistryInfo.ts" or its tests.',
+  'dotnet.PublishAll': 'Affects "dotnet/PublishAll.targets".',
   'dotnet.samples':
     'Affects multiple sample projects. If necessary, add a new scope for a new sample project!',
   'dotnet.samples.DN':
