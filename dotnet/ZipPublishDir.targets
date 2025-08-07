@@ -55,7 +55,7 @@
   </Target>
 
   <!-- placeholder values for HCE.Shared ONLY -->
-  <PropertyGroup Condition="$([System.String]::Copy($(MSBuildProjectDirectory)).ToLowerInvariant().Contains('hce.shared'))">
+  <PropertyGroup Condition="$([System.String]::Copy($(RepoRoot)).ToLowerInvariant().Contains('hce.shared'))">
     <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <TargetFramework Condition="'$(TargetFramework)'==''">net6.0</TargetFramework>
     <RuntimeIdentifier Condition="'$(RuntimeIdentifiers)'=='' AND '$(RuntimeIdentifier)'==''">win7-x86</RuntimeIdentifier>
