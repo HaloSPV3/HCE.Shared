@@ -41,5 +41,5 @@
   </Target>
 
   <Target Name="PublishAll"
-          DependsOnTargets="_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectForAllFrameworksIfFrameworkUnset" />
+          DependsOnTargets="_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectForAllFrameworksAndRuntimes;_PublishProjectForAllFrameworksIfFrameworkUnset" />
 </Project>
