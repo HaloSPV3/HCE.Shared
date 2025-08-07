@@ -1,3 +1,10 @@
+## [3.0.0-develop.20](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.19...v3.0.0-develop.20) (2025-08-07)
+
+### Bug Fixes
+
+* **dotnet.ZPD:** beware of case-insensitive property names! Prefix private props with '_'; fix invalid condition expressions; add conditions to assignments ([60a25ce](https://github.com/HaloSPV3/HCE.Shared/commit/60a25ce54202e31003491e32016e47dd990acd4e))
+* **dotnet.ZPD:** fix placeholders PropertyGroup condition almost always evaluating to `true` ([44f2fc4](https://github.com/HaloSPV3/HCE.Shared/commit/44f2fc4af1caf3d14c4fe27ba27154d79094a7a3))
+
 ## [3.0.0-develop.19](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.18...v3.0.0-develop.19) (2025-08-07)
 
 ### Bug Fixes
