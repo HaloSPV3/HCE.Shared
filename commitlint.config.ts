@@ -43,6 +43,7 @@ const scopes = {
   'dotnet.samples.SAP': 'Affects the SignAfterPack sample project.',
   'dotnet.SAP': 'Affects "dotnet/SignAfterPack.targets".',
   'dotnet.SemanticRelease': 'Affects "src/semanticReleaseConfigDotnet.ts" or its tests.',
+  'dotnet.ZPD': 'Affects "dotnet/ZipPublishDir.targets".',
   eslint:
     'Affects "src/eslintConfig.ts", its tests, or the repo\'s ESLint config.',
   insertPlugins:
