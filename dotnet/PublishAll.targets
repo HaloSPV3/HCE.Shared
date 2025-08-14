@@ -40,6 +40,7 @@
     <MSBuild Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=%(_PublishFramework.Identity)" />
   </Target>
 
+  <!-- TODO: PublishProfileNames, PublishProfileName -->
   <Target Name="PublishAll"
           DependsOnTargets="_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectForAllFrameworksAndRuntimes;_PublishProjectForAllFrameworksIfFrameworkUnset" />
 </Project>
