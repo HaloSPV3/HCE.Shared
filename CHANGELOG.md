@@ -1,3 +1,9 @@
+## [3.0.0-develop.21](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.20...v3.0.0-develop.21) (2025-08-14)
+
+### Bug Fixes
+
+* **dotnet, dotnet.PublishAll:** append `-p:Configuration=Release` to PublishAll commands ([3ebe7be](https://github.com/HaloSPV3/HCE.Shared/commit/3ebe7be14568f60005a894b465352b7c65cea00e))
+
 ## [3.0.0-develop.20](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.19...v3.0.0-develop.20) (2025-08-07)
 
 ### Bug Fixes
