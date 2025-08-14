@@ -67,7 +67,7 @@ export async function configurePrepareCmd(
    * paths.
    * @returns A Promise of a string. This string contains one or more `dotnet publish`
    * commands conjoined by " && ". It may also include one or more
-   * `dotnet msbuild ${...} -t:PublishAll` commands.
+   * `dotnet msbuild ${...} -t:PublishAll -p:Configuration=Release` commands.
    */
   async function formatDotnetPublish(
     projectsToPublish: string[] | MSBuildProject[],
@@ -138,7 +138,7 @@ export async function configurePrepareCmd(
      * runtime-framework combinations.
      * @returns If {@link proj} imports {@link ../../dotnet/PublishAll.targets}...
      * ```
-     * [`${proj.Properties.MSBuildProjectFullPath} -t:PublishAll`]
+     * [`${proj.Properties.MSBuildProjectFullPath} -t:PublishAll -p:Configuration=Release`]
      * ```
      * Else, an array of `dotnet publish` arguments permutations e.g.
      * ```
@@ -163,7 +163,7 @@ export async function configurePrepareCmd(
      * return publishCmdArray.join(' && ');
      */
     function getPublishArgsPermutations(proj: MSBuildProject):
-      ([`"${typeof proj.Properties.MSBuildProjectFullPath}" -t:PublishAll`])
+      ([`"${typeof proj.Properties.MSBuildProjectFullPath}" -t:PublishAll -p:Configuration=Release`])
       | ([`"${typeof proj.Properties.MSBuildProjectFullPath}"`])
       | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`)[]
       | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`)[]
@@ -173,7 +173,7 @@ export async function configurePrepareCmd(
        * permutation, return the appropriate command line.
        */
       if (proj.Targets.includes('PublishAll'))
-        return [`"${proj.Properties.MSBuildProjectFullPath}" -t:PublishAll`];
+        return [`"${proj.Properties.MSBuildProjectFullPath}" -t:PublishAll -p:Configuration=Release`];
 
       // #region formatFrameworksAndRuntimes
       const tfmRidPermutations: `--runtime ${string} --framework ${string}`[]
@@ -220,7 +220,7 @@ export async function configurePrepareCmd(
       // #endregion formatFrameworksAndRuntimes
     }
 
-    const publishCmds: (`dotnet publish "${string}"` | `dotnet publish "${string}" ${string}` | `dotnet msbuild "${string}" -t:PublishAll`)[] = [];
+    const publishCmds: (`dotnet publish "${string}"` | `dotnet publish "${string}" ${string}` | `dotnet msbuild "${string}" -t:PublishAll -p:Configuration=Release`)[] = [];
     /** convert {@link evaluatedPublishProjects} to sets of space-separated CLI args. */
     const argsSets = evaluatedPublishProjects.map(
       proj => getPublishArgsPermutations(proj),
@@ -231,8 +231,8 @@ export async function configurePrepareCmd(
       for (const permutation of args) {
         if (typeof permutation === 'string' && permutation.length === 1)
           throw new Error('Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!');
-        if (/".+" -t:PublishAll/.test(permutation))
-          publishCmds.push(`dotnet msbuild ${permutation as `"${string}" -t:PublishAll`}`);
+        if (/".+" -t:PublishAll -p:Configuration=Release/.test(permutation))
+          publishCmds.push(`dotnet msbuild ${permutation as `"${string}" -t:PublishAll -p:Configuration=Release`}`);
         else
           publishCmds.push(`dotnet publish ${permutation}`);
       }

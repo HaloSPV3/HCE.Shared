@@ -1,4 +1,4 @@
-<!-- `dotnet -t:PublishAll` will publish all permutations derived from TargetFrameworks and RuntimeIdentifiers
+<!-- `dotnet -t:PublishAll -p:Configuration=Release` will publish all permutations derived from TargetFrameworks and RuntimeIdentifiers
      !Beware: No compatibility checks are performed! 
      netstandard2.0 + PublishSingleFile may cause errors! Weirdly, net480 + linux-x64 builds AND runs on both WSL and Windows...
 
