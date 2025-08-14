@@ -145,7 +145,7 @@ await describe('when GITHUB_OUT is defined', { concurrency: true }, async () => 
   });
 
   await it('getGithubOutput returns non-empty object when GITHUB_OUTPUT defined and file exists', async () => {
-    deepStrictEqual((await getGithubOutput()), { 'dotnet.NRI': 'true' });
+    deepStrictEqual(await getGithubOutput(), { 'dotnet.NRI': 'true' });
   });
 
   await it('getGithubOutputSync returns non-empty object when GITHUB_OUTPUT defined and file exists', () => {
