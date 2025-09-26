@@ -37,6 +37,8 @@ const unicornRecommended = {
     'unicorn/switch-case-braces': 'warn',
     'unicorn/catch-error-name': 'warn',
     'unicorn/prefer-node-protocol': 'warn',
+    // more often than not, in-place sorting is preferable over `toSorted` cloned sort.
+    'unicorn/no-array-sort': 'off',
   },
   files: [
     '**/*.cjs',
