@@ -31,7 +31,7 @@ await describe('getConfig', async () => {
 
     ok(
       !isNativeError(actual),
-      '`actual` should not be an Error.\n' + String((actual as Error).stack ?? (actual as Error).message),
+      '`actual` should not be an Error.\n' + ((actual as Error).stack ?? (actual as Error).message),
     );
   });
 
