@@ -47,10 +47,11 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
       if (!GLNRI.DefaultGitlabTokenEnvVars.some(key => getEnvVarValue(key) !== undefined))
         t.skip(GLNRI.DefaultGitlabTokenEnvVars.join(', ') + 'are all unavailable for testing.');
 
+      const glnri = new GLNRI({ project });
+
       ok(
-        await new GLNRI({ project })
-          // eslint-disable-next-line @typescript-eslint/no-deprecated
-          .canPushPackagesToSource,
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        await glnri.canPushPackagesToSource,
       );
     });
   await it(
