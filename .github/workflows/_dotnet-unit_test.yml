@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -19,14 +19,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - run: corepack enable # enable corepack before setup-node
       - uses: actions/setup-node@v6
         with:
-          cache: npm
+          cache: yarn
           check-latest: true
           node-version-file: package.json
-      - run: npm i -g npm@latest
 
-      - run: npm ci
+      - run: yarn
 
       - uses: actions/setup-dotnet@v5
         with:

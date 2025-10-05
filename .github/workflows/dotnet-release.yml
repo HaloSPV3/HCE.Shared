@@ -6,19 +6,19 @@ name: .NET Release
 
 on:
   workflow_call:
-  # push:
-  #   branches: [ main, develop ]
-  #   paths-ignore:
-  #   - ".github/**/*.*"
-  #   - "**/*.md"
-  #   - "**/*.txt"
+    # push:
+    #   branches: [ main, develop ]
+    #   paths-ignore:
+    #   - ".github/**/*.*"
+    #   - "**/*.md"
+    #   - "**/*.txt"
 
 jobs:
   ci:
     name: CI # run test.yml. If it fails, this job fails.
     uses: ./.github/workflows/dotnet-ci.yml
   release:
-    needs: [ci] # start 'release' if 'ci' completes successfully
+    needs: [ ci ] # start 'release' if 'ci' completes successfully
     runs-on: ubuntu-latest
     permissions:
       contents: write # to be able to publish a GitHub release
@@ -31,21 +31,21 @@ jobs:
         with:
           fetch-depth: 0 # Required by GitVersion, Semantic Release
           submodules: recursive
+      - run: corepack enable # enable corepack before setup-node
 
       - uses: actions/setup-node@v6
         with:
-          cache: npm
+          cache: yarn
           check-latest: true
           node-version-file: package.json
           node-version: lts/*
-      - run: npm i -g npm@latest
 
       - uses: actions/setup-dotnet@v5
         with:
           cache: dotnet
 
-      - name: NPM - Clean Install
-        run: npm ci # Required for Semantic Release
+      - run: yarn # Required for Semantic Release
+      #- run: yarn audit signatures
 
       ################
       # RELEASE
@@ -56,4 +56,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-        run: npx semantic-release
+        run: yarn semantic-release

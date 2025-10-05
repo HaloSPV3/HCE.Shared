@@ -118,6 +118,7 @@ try {
   /**
    *
    */
+  // todo: is there an equivalent for yarn?
   function replaceNpmWithMultipleNpm() {
     const NpmOptions = type({
     /**

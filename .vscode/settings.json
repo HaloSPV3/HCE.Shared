@@ -76,10 +76,11 @@
       ]
     }
   ],
-  "typescript.implementationsCodeLens.enabled": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "js/ts.implementationsCodeLens.enabled": true,
+  "js/ts.tsdk.path": ".yarn/sdks/typescript/lib",
   "yaml.format.singleQuote": true,
   "eslint.format.enable": true,
+  "eslint.nodePath": ".yarn/sdks",
   "eslint.probe": [
     "javascript",
     "javascriptreact",
@@ -131,7 +132,10 @@
       "italic": false
     },
     {
-      "tag": [ "!", "# !" ],
+      "tag": [
+        "!",
+        "# !"
+      ],
       "color": "#FF2D00",
       "strikethrough": false,
       "underline": false,
@@ -158,7 +162,12 @@
       "italic": false
     },
     {
-      "tag": [ "todo", "to-do", "@todo", "TODO" ],
+      "tag": [
+        "todo",
+        "to-do",
+        "@todo",
+        "TODO"
+      ],
       "color": "#FF8C00",
       "strikethrough": false,
       "underline": false,
@@ -214,5 +223,10 @@
     "**/eslint.config.{js,cjs,mjs}"
   ],
   "dotnet.defaultSolution": "dotnet/HCE.Shared.slnx",
-  "deno.enable": false
+  "deno.enable": false,
+  "easynpm.packageManager": "yarn",
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  }
 }

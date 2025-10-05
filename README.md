@@ -15,6 +15,10 @@ This project is packaged and published via NPM. As such...
 
 ```sh
 npm install --save-dev @halospv3/hce.shared-config
+# or
+pnpm install --save-dev @halospv3/hce.shared-config
+# or
+yarn add --dev @halospv3/hce.shared-config
 ```
 
 ### 2. Customize Semantic Release
@@ -145,6 +149,7 @@ module.exports = {
 ```json
 // package.json
 // `npm install --save-dev cross-env`
+// `yarn --dev cross-env`
 {
   "scripts": {
     "release": "cross-env PROJECTS_TO_PUBLISH=\"./Library/Library.csproj;./Sample/Sample.csproj\" semantic-release"
@@ -209,13 +214,36 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 
 ```xml
 <Project>
-  <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.targets"/>
-
-  <PropertyGroup>
+  <PropertyGroup Label="HCE.Shared Common Properties">
     <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
-    <HCESharedDir Condition="'$(HCESharedDir)' == ''">$(RepoRoot)node_modules/@halospv3/hce.shared-config/</HCESharedDir>
+    <_nm_hceShared>node_modules/@halospv3/hce.shared-config/</_nm_hceShared>
+    <HCESharedDir Condition="'$(HCESharedDir)' == ''">$(RepoRoot)$(_nm_hceShared)</HCESharedDir>
+
+    <!-- Using Yarn? You'll need to `yarn unplug @halospv3/hce.shared-config` -->
+    <_yarnLock>$(RepoRoot)yarn.lock</_yarnLock>
+    <_yarnUsingYarn>$([System.IO.Path]::Exists("$(_yarnLock)"))</_yarnUsingYarn>
+    <_yarnUnplugged>$(RepoRoot).yarn/unplugged</_yarnUnplugged>
+    <_yarnUnplugged Condition="!Exists($(_yarnUnplugged))"></_yarnUnplugged>
+
+    <!-- If `true`, prefer the last directory matching `$(RepoRoot)/.yarn/unplugged/@halospv3-hce.shared-config* -->
+    <YarnHCESharedPreferLast>false</YarnHCESharedPreferLast>
+    <_yarnUnpluggedPackages Condition="Exists($(_yarnUnplugged))">$([System.IO.Directory]::GetDirectories(`$(_yarnUnplugged)`, '@halospv3-hce.shared-config*'))</_yarnUnpluggedPackages>
+    <_yarnUnpluggedPackagesLastIndex>$([MSBuild]::Subtract($(_yarnUnpluggedPackages.Split(';').Length), 1))</_yarnUnpluggedPackagesLastIndex>
+    <!-- First result. "" if none.
+      Could be the lowest HCE.Shared version available. -->
+    <_yarnUnpluggedHceShared Condition="'$(_yarnUnpluggedPackages)' != ''">
+      $(_yarnUnpluggedPackages.Split(';')[0])</_yarnUnpluggedHceShared>
+    <!-- (If YarnHCESharedPreferLast) Last result. "" if none.
+      Could be a Yarn `patch` or the highest HCE.Shared version available. -->
+    <_yarnUnpluggedHceShared Condition="'$(_yarnUnpluggedPackages)' != '' AND '$(YarnHCESharedPreferLast)' == 'true'">
+      $(_yarnUnpluggedPackages.Split(';')[`$(_yarnUnpluggedPackagesLastIndex)`])</_yarnUnpluggedHceShared>
+    <HCESharedDir Condition="'$(_yarnUnpluggedPackages)' != ''">$(_yarnUnpluggedHceShared)/$(_nm_hceShared)</HCESharedDir>
+
     <!--<GitVersion_Path Condition="'$(GitVersion_Path)' == ''">Path/To/Your/GitVersion.yml</GitVersion_Path>-->
   </PropertyGroup>
+
+  <!-- HCESharedDir is valid only _after_ "HCE.Shared Common Properties"-->
+  <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.targets"/>
 </Project>
 ```
 
@@ -225,6 +253,8 @@ These may evaluate to the following:
 | -------------- | ------------------------------------------------------------------------ |
 | `RepoRootDir`  | `c:\Repos\HaloSPV3\HCE.Shared\`                                          |
 | `HCESharedDir` | `c:\Repos\HaloSPV3\HCE.Shared\node_modules\@halospv3\hce.shared-config\` |
+|                | or for yarn-berry plug-n-play...                                         |
+|                | `c:\Repos\HaloSPV3\HCE.Shared\.yarn\unplugged\@halospv3-hce.shared-config-npm-3.0.0-develop.21-84ef4c5461\node_modules\@halospv3\hce.shared-config\` |
 
 #### CI/CD-Only Properties
 
@@ -300,7 +330,12 @@ If you want to use this information in other Semantic Release steps, you'll need
 Run the following to preview the version:
 
 ```sh
+# npm
 npx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"
+# or pnpm
+pnpx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"
+# or yarn
+yarn dlx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"
 ```
 
 If the first plugin doesn't run into any issues and infers a version bump from unreleased commits,
