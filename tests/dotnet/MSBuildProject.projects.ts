@@ -71,7 +71,7 @@ await Promise.all(
   (Object.keys(paths) as (keyof typeof paths)[])
     .map(projName =>
       existsSync(paths[projName].json)
-        ? true
+        ? Promise.resolve(true)
         : writeCacheFile(projName),
     ),
 );
