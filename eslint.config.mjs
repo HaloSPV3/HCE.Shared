@@ -2,7 +2,7 @@
 import md from '@eslint/markdown';
 import unicorn from 'eslint-plugin-unicorn';
 import 'tsx';
-import { config } from 'typescript-eslint';
+import { defineConfig } from 'eslint/config';
 import jsdoc from 'eslint-plugin-jsdoc';
 import { type } from 'arktype';
 
@@ -69,8 +69,8 @@ const jsdocRecommended_ts = {
     '**/*.tsx',
   ],
 };
-
-export default config(
+/** @type {ESLintConfig[]} */
+const config = defineConfig(
   ...hceSharedConfig,
   jsdocRecommended_js,
   jsdocRecommended_ts,
@@ -88,3 +88,5 @@ export default config(
     },
   },
 );
+
+export default config;
