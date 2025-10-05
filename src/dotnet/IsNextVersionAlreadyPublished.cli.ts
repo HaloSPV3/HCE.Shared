@@ -3,7 +3,7 @@ import esMain from 'es-main';
 
 /**
  * @returns if successful
- * @throws if...
+ * @throws {Error} if...
  * - {@link process.argv} does not include...
  *   - `--packageId [string]`
  *   - `--source [string]`
@@ -15,14 +15,14 @@ async function main(): Promise<0> {
   const args = process.argv.slice(2);
   // Parse command-line arguments - https://stackoverflow.com/a/76298476/14894786
   const options: {
-    packageId?: string;
-    source?: string;
-  } & Record<string, string> = {};
+    packageId: string | undefined;
+    source: string | undefined;
+  } & Record<string, string | undefined> = { packageId: undefined, source: undefined };
   for (let i = 0; i < args.length; i += 2) {
     const argName = args[i];
     const argValue = args[i + 1];
-    if (argValue !== undefined && argName?.startsWith('--') === true && options[argName.slice(2)] !== undefined) {
-      options[argName] = argValue;
+    if (argValue !== undefined && argName?.startsWith('--') === true) {
+      options[argName.slice(2)] = argValue;
     }
   }
 
