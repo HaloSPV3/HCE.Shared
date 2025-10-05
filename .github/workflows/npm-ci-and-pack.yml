@@ -39,10 +39,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - run: corepack enable # enable corepack before setup-node
       - name: Use Node.js
         uses: actions/setup-node@v5
         with:
-          cache: 'npm'
+          cache: 'yarn'
           node-version-file: package.json
           check-latest: true
       - uses: actions/cache/restore@v4
@@ -55,14 +56,14 @@ jobs:
           dotnet-version: 6.x
           global-json-file: ./global.json
 
-      - run: npm i -g npm@latest
-      - run: npm ci
-      - run: npm audit signatures
-      - run: npm pack
-      - run: npm run type
-      - run: npm run lint:check
-      - run: npm run test:cacheSampleProjects
-      - run: npm run test --ignore-scripts
+      - run: yarn
+      # Waiting for https://github.com/yarnpkg/berry/issues/6487
+      # - run: yarn npm audit signatures
+      - run: yarn pack
+      - run: yarn type
+      - run: yarn lint
+      - run: yarn test:cacheSampleProjects
+      - run: yarn test:only
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_TOKEN }}
