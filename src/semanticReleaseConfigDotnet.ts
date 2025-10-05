@@ -185,16 +185,13 @@ Appending it to the end of the array...This may cause an unexpected order of ope
         ? `${execOptions.verifyConditionsCmd} && ${verifyConditionsCmdAppendix}`
         : verifyConditionsCmdAppendix;
 
-    const verifyReleaseCmdAppendix = await Promise.all(
-      this.ProjectsToPackAndPush
+    const verifyReleaseCmdAppendix
+      = this.ProjectsToPackAndPush
         .filter(project =>
           typeof project !== 'string',
         ).map(project =>
           project.GetIsNextVersionAlreadyPublishedCommand(),
-        ),
-    ).then(cmds =>
-      cmds.join(' && '),
-    );
+        ).join(' && ');
     execOptions.verifyReleaseCmd
       = execOptions.verifyReleaseCmd && execOptions.verifyReleaseCmd.trim().length > 0
         ? `${execOptions.verifyReleaseCmd} && ${verifyReleaseCmdAppendix}`
