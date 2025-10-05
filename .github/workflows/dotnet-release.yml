@@ -31,21 +31,21 @@ jobs:
         with:
           fetch-depth: 0 # Required by GitVersion, Semantic Release
           submodules: 'recursive'
+      - run: corepack enable # enable corepack before setup-node
 
       - uses: actions/setup-node@v6
         with:
-          cache: 'npm'
+          cache: 'yarn'
           check-latest: true
           node-version-file: package.json
           node-version: lts/*
-      - run: npm i -g npm@latest
 
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.x'
 
-      - name: NPM - Clean Install
-        run: npm ci # Required for Semantic Release
+      - run: yarn # Required for Semantic Release
+      #- run: yarn audit signatures
 
       ################
       # RELEASE
@@ -56,4 +56,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-        run: npx semantic-release
+        run: yarn semantic-release

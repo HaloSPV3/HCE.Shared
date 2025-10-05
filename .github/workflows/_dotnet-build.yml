@@ -16,15 +16,14 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 0
 
+      - run: corepack enable # enable corepack before setup-node
       - uses: actions/setup-node@v6
         with:
-          cache: 'npm'
+          cache: 'yarn'
           check-latest: true
           node-version-file: package.json
           node-version: lts/*
-      - run: npm i -g npm@latest
-      - run: npm i -g husky
-      - run: npm ci
+      - run: yarn
 
       - uses: actions/setup-dotnet@v5
         with:
@@ -34,8 +33,35 @@ jobs:
       - name: For each Solution/Project, `dotnet build` Release, Debug
         shell: pwsh
         run: |
+          $nm_hceShared_dotnetBuild = 'node_modules/@halospv3/hce.shared-config/dotnet/dotnet-build.ps1';
           if (Test-Path "node_modules") {
-            . ./node_modules/@halospv3/hce.shared-config/dotnet/dotnet-build.ps1
+            . "./$nm_hceShared_dotnetBuild"
+          }
+          # if Yarn PnP, it's complicated.
+          elseif (Test-Path ".yarn/unplugged") {
+            $chosenOne = '';
+            # relative '.' may resolve to pwsh's *first* $PWD instead of its current $PWD.
+            $searchPath = Join-Path $PWD '/.yarn/unplugged/@halospv3-hce.shared-config*'
+            if ($searchPath.StartsWith('/.yarn/unplugged/@halospv3-hce.shared-config*')) {
+              throw 'Gosh Yarn it! $PWD is an empty string.';
+            }
+
+            $unpluggedEntries = Resolve-Path $searchPath;
+            if ($unpluggedEntries.Count -eq 0) {
+              Write-Error 'Gosh Yarn it! @halospv3/hce.shared-config is not unplugged!';
+            }
+            elseif ($unpluggedEntries.Count -eq 1) {
+              $chosenOne = $unpluggedEntries[0].Path;
+            }
+            elseif ($unpluggedEntries.Count -gt 1) {
+              $chosenOne = $unpluggedEntries[($unpluggedEntries.Count - 1)]
+            }
+            else {
+              $typeofUnpluggedEntries = ($unpluggedEntries)?.GetType().Name ?? 'NULL';
+              throw 'Gosh Yarn it! Type of $unpluggedEntries (' + $typeofUnpluggedEntries + ') was unexpected.';
+            }
+
+            . (Join-Path $chosenOne $nm_hceShared_dotnetBuild)
           }
           elseif ($env:SLN_OR_PROJ_FILES -ne $null) {
             $env:SLN_OR_PROJ_FILE -split ';' | ForEach-Object { dotnet build  (Get-Item $_).FullName }

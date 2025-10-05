@@ -29,9 +29,10 @@ jobs:
         with:
           submodules: 'recursive'
           fetch-depth: 0
+      - run: corepack enable # enable corepack before setup-node
       - uses: actions/setup-node@v6
         with:
-          cache: 'npm'
+          cache: 'yarn'
           node-version: '>=24.0.0'
           # see https://github.com/actions/setup-node/blob/main/src/main.ts#L85:~:text=function-,resolveVersionInput():,-string%20%7B
           node-version-file: package.json
@@ -46,10 +47,10 @@ jobs:
           gitlab_pat: ${{ secrets.GL_SEMANTICRELEASE }}
       - name: List commits since last tag
         run: git log $(git describe --tags --abbrev=0)..HEAD --no-merges --oneline
-      - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
-      - run: npm ci
-      - run: npm audit signatures
-      - run: npm run semantic-release -- --debug # make git tag, commit updated files, release to GitHub/GitLab.
+      - run: yarn
+      # Waiting for https://github.com/yarnpkg/berry/issues/6487
+      #- run: npm audit signatures
+      - run: yarn semantic-release -- --debug # make git tag, commit updated files, release to GitHub/GitLab.
         id: semantic-release
         # outputs:
         #  - new-release-published

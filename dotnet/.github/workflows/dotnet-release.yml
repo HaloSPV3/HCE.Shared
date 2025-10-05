@@ -32,9 +32,11 @@ jobs:
           fetch-depth: 0 # Required by GitVersion, Semantic Release
           submodules: 'recursive' # submodule fetch depth unknown
       - uses: actions/setup-dotnet@v5
+      - run: corepack enable # enable corepack before setup-node
       - uses: actions/setup-node@v6
-      - run: npm install -g npm@latest
-      - run: npm ci # Required by Semantic Release
+        with:
+          cache: 'yarn'
+      - run: yarn # Required by Semantic Release
 
       ################
       # RELEASE
@@ -44,7 +46,7 @@ jobs:
       ################
       # https://github.com/semantic-release/semantic-release
       - name: Semantic Release
-        run: npx semantic-release
+        run: yarn dlx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}

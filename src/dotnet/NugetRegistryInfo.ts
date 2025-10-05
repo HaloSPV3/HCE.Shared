@@ -883,8 +883,10 @@ but the environment variable is empty or undefined.`);
   GetIsNextVersionAlreadyPublishedCommand(): string {
     // if GITHUB_OUTPUT unset or its file does not exist, create it. ''
     getGithubOutputSync();
-    // The script will run
-    return `node ${node_path.join(import.meta.dirname, './IsNextVersionAlreadyPublished.cli.js')} --packageId ${this._project.Properties.PackageId} --source ${this.source}`;
+    const cmd = `${node_path.join(import.meta.dirname, './IsNextVersionAlreadyPublished.cli.js')} --packageId ${this._project.Properties.PackageId} --source ${this.source}`;
+    return existsSync(node_path.join(cwd(), '.yarnrc.yml'))
+      ? `yarn node ${cmd}`
+      : `node ${cmd}`;
   }
 
   /*

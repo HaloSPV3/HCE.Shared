@@ -50,6 +50,8 @@
     "yoavbls.pretty-ts-errors",
     "arktypeio.arkdark",
     "motonarola.format-selection-stub",
-    "sanjulaganepola.github-local-actions"
+    "sanjulaganepola.github-local-actions",
+    "arcanis.vscode-zipfs",
+    "dbaeumer.vscode-eslint"
   ]
 }

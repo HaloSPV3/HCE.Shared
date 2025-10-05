@@ -77,7 +77,7 @@
     }
   ],
   "typescript.implementationsCodeLens.enabled": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "yaml.format.singleQuote": true,
   "eslint.format.enable": true,
   "eslint.probe": [
@@ -182,5 +182,11 @@
     "**/src/eslintConfig.ts",
     "**/.eslintrc.{js,cjs,mjs,yaml,yml,json}",
     "**/eslint.config.{js,cjs,mjs}"
-  ]
+  ],
+  "easynpm.packageManager": "yarn",
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "eslint.nodePath": ".yarn/sdks"
 }

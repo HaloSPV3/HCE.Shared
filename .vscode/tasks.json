@@ -3,12 +3,10 @@
   "tasks": [
     {
       "type": "shell",
-      "command": "npm",
-      "args": [
-        "\"install\""
-      ],
+      "command": "yarn",
+      "args": [],
       "detail": "install dependencies from package",
-      "label": "npm install on open",
+      "label": "yarn install on open",
       "presentation": {
         "reveal": "silent",
         "focus": false,
