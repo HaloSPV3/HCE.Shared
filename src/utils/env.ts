@@ -5,6 +5,9 @@ import { get,
 } from '@dotenvx/dotenvx';
 import { env } from 'node:process';
 
+/** `get` can return `undefined`. It can also return a `Record`, but that's internal. */
+type Get = (key: string, options?: GetOptions) => string | undefined;
+
 /**
  * A thin wrapper for {@link loadDotenv}. Loads a .env file from {@link process.cwd()} with the given options (or defaults), returns the new value of {@link process.env} with optional overrides.
  * @param [dotenvOptions] An optional {@link DotenvConfigOptions} object to pass to {@link loadDotenv}.
@@ -36,7 +39,10 @@ export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.P
  */
 export function getEnvVarValue(envVar: string, options?: GetOptions): string | undefined {
   options ??= { ignore: ['MISSING_KEY', 'MISSING_ENV_FILE'] };
-  const value = String(env[envVar] ?? get(envVar, options)).trim();
+  let value = env[envVar];
+  const x = (get as Get)(envVar, options);
+  if (typeof x === 'string')
+    value = x;
   // I hate this. Why is undefined converted to a string?
   return value === '' || value === 'undefined'
     ? undefined
