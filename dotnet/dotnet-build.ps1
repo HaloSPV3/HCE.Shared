@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 # input: SLN_OR_PROJ_FILES
 # Comma-separated. May be relative or absolute.
 
