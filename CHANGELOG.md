@@ -1,3 +1,10 @@
+## [3.0.0-develop.22](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.21...v3.0.0-develop.22) (2025-10-05)
+
+### Bug Fixes
+
+* **dotnet.INVAP:** assign arg values to real props in `options` ([4af543d](https://github.com/HaloSPV3/HCE.Shared/commit/4af543d4f2d27cbff4a32ba464d94c1cb01aa302))
+* **dotnet.SemanticRelease:** do not `await string[]` ([f56cc94](https://github.com/HaloSPV3/HCE.Shared/commit/f56cc949dbec7ac9953b3d0a90de1db7c43db2b3))
+
 ## [3.0.0-develop.21](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.20...v3.0.0-develop.21) (2025-08-14)
 
 ### Bug Fixes
