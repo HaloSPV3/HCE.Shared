@@ -331,7 +331,7 @@ export class MSBuildProject {
    * target is specified. If you choose Pack, you must do ['Restore', 'Pack'].
    * @param options The result of {@link EvaluationOptions.from}.
    * @returns A promised {@link MSBuildProject} instance.
-   * @throws if the exec command fails -OR- the JSON parse fails -OR-
+   * @throws {Error} if the exec command fails -OR- the JSON parse fails -OR-
    * MSBuildProject's constructor fails.
    * @see {@link PackableProjectsToMSBuildProjects} for most use-cases.
    */
