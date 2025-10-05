@@ -1,7 +1,7 @@
 import eslint from '@eslint/js';
-import { defineConfig } from 'eslint/config';
+import { defineConfig, globalIgnores as setGlobalIgnores } from 'eslint/config';
+import { type Linter } from 'eslint';
 import stylistic, { type RuleOptions } from '@stylistic/eslint-plugin';
-import type { TSESLint } from '@typescript-eslint/utils';
 import jsonc from 'eslint-plugin-jsonc';
 import globals from 'globals/globals.json' with { type: 'json' };
 import tseslint from 'typescript-eslint';
@@ -9,25 +9,22 @@ import tseslint from 'typescript-eslint';
 // https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config
 // https://www.google.com/search?q=javascript+recurse+through+object+and+remove+undefined+properties
 
-const globalIgnores: ReturnType<typeof defineConfig>[number] = {
-  name: 'global ignores',
-  ignores: [
-    '_tsout/**/*',
-    '_tsout/*',
-    '_tsout/',
-    'cjs/**/*',
-    'cjs/*/*',
-    'cjs/*',
-    'mjs/**/*',
-    'mjs/*',
-    'mjs/',
-    'node_modules/**/*',
-    '**/node_modules/**/*',
-    '**/*.tsbuildinfo',
-    '**/bin/**/*',
-    '**/obj/**/*',
-  ],
-};
+const globalIgnores: ReturnType<typeof setGlobalIgnores> = setGlobalIgnores([
+  '_tsout/**/*',
+  '_tsout/*',
+  '_tsout/',
+  'cjs/**/*',
+  'cjs/*/*',
+  'cjs/*',
+  'mjs/**/*',
+  'mjs/*',
+  'mjs/',
+  'node_modules/**/*',
+  '**/node_modules/**/*',
+  '**/*.tsbuildinfo',
+  '**/bin/**/*',
+  '**/obj/**/*',
+]);
 
 const json_json = {
   /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
@@ -63,18 +60,20 @@ const json_jsonc = {
   ignores: globalIgnores.ignores,
 };
 
-const stylisticWarn = stylistic.configs.customize({
+const stylisticWarn: Linter.Config = stylistic.configs.customize({
   quoteProps: 'as-needed',
   semi: true,
   indent: 2,
-}) as TSESLint.FlatConfig.Config & { rules: { [K in keyof RuleOptions]: TSESLint.SharedConfig.RuleLevel | [TSESLint.SharedConfig.RuleLevel, ...RuleOptions[K]] } };
-// change all stylistic error-severity to warn-severity. Style violations should not denote code errors.
+});
+stylisticWarn.rules ??= {};
+
+// change all stylistic error-severity to warn-severity. Style violations should not imply code errors.
 for (const key in stylisticWarn.rules) {
   const element = stylisticWarn.rules[key];
   if (Array.isArray(element) && (element[0] === 2 || element[0] === 'error'))
     element[0] = 'warn';
   else if (element === 2 || element === 'error') {
-    stylisticWarn.rules[key] = 'warn' satisfies TSESLint.SharedConfig.RuleLevel;
+    stylisticWarn.rules[key] = 'warn';
   }
 }
 
@@ -85,7 +84,7 @@ stylisticWarn.rules['@stylistic/no-extra-parens'] = [
     allowParensAfterCommentPattern: '@type|@satisfies',
     nestedBinaryExpressions: false,
   },
-];
+] satisfies Linter.RuleEntry<RuleOptions['@stylistic/no-extra-parens']>;
 
 stylisticWarn.rules['@stylistic/semi'] = [
   'warn',
@@ -94,7 +93,7 @@ stylisticWarn.rules['@stylistic/semi'] = [
     omitLastInOneLineBlock: false,
     omitLastInOneLineClassBody: false,
   },
-] satisfies TSESLint.SharedConfig.RuleEntry | [TSESLint.SharedConfig.RuleLevelAndOptions, RuleOptions['@stylistic/semi'][0], RuleOptions['@stylistic/semi'][1]];
+] satisfies Linter.RuleEntry<RuleOptions['@stylistic/semi']>;
 
 const config: ReturnType<typeof defineConfig> = defineConfig(
   json_json,
