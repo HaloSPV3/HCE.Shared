@@ -7,6 +7,7 @@ import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js'
 import { getEnvVarValue } from '../../src/utils/env.js';
 import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.js';
 import { inspect } from 'node:util';
+import { execAsync } from '../../src/utils/execAsync.js';
 
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
@@ -15,6 +16,15 @@ import { inspect } from 'node:util';
 function getGHRepoOwner(): string {
   getEnvVarValue('GITHUB_REPOSITORY_OWNER');
   return process.env['GITHUB_REPOSITORY_OWNER'] ??= 'HaloSPV3';
+}
+
+/** */
+async function trySetCI_PROJECT_ID(): Promise<void> {
+  const remoteIsUpstream = await execAsync('git remote get-url origin')
+    .then(({ stdout }) => stdout.toLowerCase().includes('halospv3/hce.shared'))
+    .catch(() => false);
+  if (remoteIsUpstream)
+    process.env['CI_PROJECT_ID'] = '70884695';
 }
 
 await describe('canPushPackagesToSource resolves when...', { concurrency: false }, async () => {
@@ -40,6 +50,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     '...CI_PROJECT_ID is defined and CI_JOB_TOKEN, GITLAB_TOKEN, or GL_TOKEN is defined, valid, and can push packages to source',
     { timeout: 60_000 },
     async (t) => {
+      await trySetCI_PROJECT_ID();
       if (process.env['CI_PROJECT_ID'] === 'placeholder')
         delete process.env['CI_PROJECT_ID'];
       if (!getEnvVarValue('CI_PROJECT_ID', { overload: true }))
@@ -86,6 +97,7 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
     ok(isNativeError(canPush));
   });
   await it('GLNRI token is invalid', async () => {
+    await trySetCI_PROJECT_ID();
     const canPush: true | Error = await new GLNRI({ project, tokenEnvVars })
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       .canPushPackagesToSource
