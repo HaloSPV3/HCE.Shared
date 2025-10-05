@@ -1,4 +1,5 @@
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import stylistic, { type RuleOptions } from '@stylistic/eslint-plugin';
 import type { TSESLint } from '@typescript-eslint/utils';
 import jsonc from 'eslint-plugin-jsonc';
@@ -8,7 +9,7 @@ import tseslint from 'typescript-eslint';
 // https://eslint.org/docs/latest/use/configure/migration-guide#using-eslintrc-configs-in-flat-config
 // https://www.google.com/search?q=javascript+recurse+through+object+and+remove+undefined+properties
 
-const globalIgnores: TSESLint.FlatConfig.Config = {
+const globalIgnores: ReturnType<typeof defineConfig>[number] = {
   name: 'global ignores',
   ignores: [
     '_tsout/**/*',
@@ -95,7 +96,7 @@ stylisticWarn.rules['@stylistic/semi'] = [
   },
 ] satisfies TSESLint.SharedConfig.RuleEntry | [TSESLint.SharedConfig.RuleLevelAndOptions, RuleOptions['@stylistic/semi'][0], RuleOptions['@stylistic/semi'][1]];
 
-const config: TSESLint.FlatConfig.ConfigArray = tseslint.config(
+const config: ReturnType<typeof defineConfig> = defineConfig(
   json_json,
   json_json5,
   json_jsonc,
