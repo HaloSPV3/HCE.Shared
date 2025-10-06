@@ -1,3 +1,9 @@
+## [3.0.0-develop.23](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.22...v3.0.0-develop.23) (2025-10-06)
+
+### Bug Fixes
+
+* **deps:** update commitlint monorepo to v20 ([247558f](https://github.com/HaloSPV3/HCE.Shared/commit/247558f50593020cee13dc75e06647f36204eacc))
+
 ## [3.0.0-develop.22](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.21...v3.0.0-develop.22) (2025-10-05)
 
 ### Bug Fixes
