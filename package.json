@@ -59,8 +59,8 @@
     "watch": "packemon watch --loadConfigs"
   },
   "dependencies": {
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@dotenvx/dotenvx": "^1.47.6",
     "@eslint/js": "^9.31.0",
     "@semantic-release/changelog": "^6.0.3",
@@ -91,7 +91,7 @@
     "@babel/cli": "^7.28.0",
     "@babel/core": "^7.28.0",
     "@babel/eslint-parser": "^7.28.0",
-    "@commitlint/types": "^19.8.1",
+    "@commitlint/types": "^20.0.0",
     "@eslint/config-inspector": "^1.1.0",
     "@eslint/markdown": "^7.0.0",
     "@sebbo2002/semantic-release-jsr": "^3.0.0",
