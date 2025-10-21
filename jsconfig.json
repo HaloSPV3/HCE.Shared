@@ -6,9 +6,9 @@
     "isolatedDeclarations": false,
     "skipLibCheck": true
   },
-  "files":[
-    "./eslint.config.mjs",
-    "./release.config.mjs"
+  "files": [
+    "./.pnp.cjs",
+    "./.pnp.loader.mjs"
   ],
   "references": [
     {
