@@ -1,24 +1,95 @@
-on: push
+on:
+  push:
+    # do not run on branches listed in npm-release.yml
+    branches-ignore: [main, develop, 3.x]
+  pull_request:
+  workflow_call:
+    secrets:
+      GH_TOKEN:
+        description: |
+          This GitHub job token or Classic PAT is used to authorize `dotnet nuget push` tests.
+          The required permissions are `packages: write` for job tokens and `write:packages` for Classic PATs and OAuth tokens.
+          See:
+          - https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages
+          - https://docs.github.com/en/apps/oauth-apps/`ing-oauth-apps/scopes-for-oauth-apps#available-scopes
+          - https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions#publishing-a-package-using-an-action
+      GL_TOKEN:
+        description: |
+          A GitLab API token with permission to push packages to the
+          repo IDed by CI_PROJECT_ID e.g. 70884695 for HaloSPV3/HCE.Shared.
+      NUGET_TOKEN:
+        description: 'A NugGet.org API token with permission to push to the unlisted package https://www.nuget.org/packages/HCE.Shared.DeterministicNupkg.'
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: read # access to check out code and install dependencies
+      packages: write
+    env:
+      CI_PROJECT_ID: 70884695
+      DOTNET_NOLOGO: true
+      # https://stackoverflow.com/questions/75180149/how-to-cache-dotnet-installation-in-github-actions
+      # access to "usr/lib/dotnet" is denied
+      DOTNET_INSTALL_DIR: /usr/share/dotnet
+      DOTNET_ROOT: /usr/share/dotnet
+    outputs:
+      TestCoverageArtifactID: ${{steps.uploadCoverageTestsArtifact.outputs.artifact-id}}
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
-          fetch-depth: 0
+      - uses: actions/checkout@v5
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          cache: "npm"
+          cache: 'npm'
           node-version-file: package.json
           check-latest: true
+      - uses: actions/cache/restore@v4
+        with:
+          path: /usr/share/dotnet
+          key: usr-share-dotnet
+      - uses: actions/setup-dotnet@v5
+        with:
+          # required by Kuinox.NupkgDeterministicator
+          dotnet-version: 6.x
+          global-json-file: ./global.json
+
       - run: npm i -g npm@latest
       - run: npm ci
+      - run: npm audit signatures
       - run: npm pack
-      - run: npm run check
+      - run: npm run type
+      - run: npm run lint:check
+      - run: npm run test:cacheSampleProjects
+      - run: npm run test --ignore-scripts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GL_TOKEN: ${{ secrets.GL_TOKEN }}
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+      - id: uploadCoverageTestsArtifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'Coverage+Tests+${{ github.sha }}'
+          path: |
+            lcov.txt
+            junit.xml
+
+  upload-coverage:
+    needs: check
+
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          artifact-ids: ${{needs.check.outputs.TestCoverageArtifactID}}
+          run-id: ${{needs.check.result}}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          disable_search: true
+          files: ./lcov.txt,./junit.xml
+          slug: HaloSPV3/HCE.Shared
+          token: ${{ secrets.CODECOV_TOKEN }}

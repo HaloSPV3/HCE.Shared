@@ -5,7 +5,7 @@
 # uses: HaloSPV3/HCE.Shared/.github/workflows/dotnet-ci.yml@{tag}
 # uses: HaloSPV3/HCE.Shared/.github/workflows/dotnet-ci.yml@{commit}
 
-name: CI
+name: dotnet-ci
 
 on:
   # push:
@@ -16,7 +16,7 @@ on:
   workflow_call:
 
 env:
-  DOTNET_ROLL_FORWARD: "Major"
+  DOTNET_ROLL_FORWARD: 'Major'
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: 1

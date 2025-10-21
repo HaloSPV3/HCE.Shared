@@ -1,4 +1,4 @@
-<!-- `dotnet -t:PublishAll` will publish all permutations derived from TargetFrameworks and RuntimeIdentifiers
+<!-- `dotnet -t:PublishAll -p:Configuration=Release` will publish all permutations derived from TargetFrameworks and RuntimeIdentifiers
      !Beware: No compatibility checks are performed! 
      netstandard2.0 + PublishSingleFile may cause errors! Weirdly, net480 + linux-x64 builds AND runs on both WSL and Windows...
 
@@ -13,6 +13,8 @@
       Multi-runtimes?
       Only useful if you need Self-Contained i.e. include the runtime with your project.
       If you want to publish Single-File, you don't *need* Self-Contained. Just inform users they must install a particular runtime/framework beforehand.
+
+      Note: "PlatformTarget" (CPU arch) is overridden by RuntimeIdentifier.
   -->
 <Project>
 
@@ -38,6 +40,7 @@
     <MSBuild Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=%(_PublishFramework.Identity)" />
   </Target>
 
+  <!-- TODO: PublishProfileNames, PublishProfileName -->
   <Target Name="PublishAll"
-          DependsOnTargets="_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectForAllFrameworksIfFrameworkUnset" />
+          DependsOnTargets="_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectForAllFrameworksAndRuntimes;_PublishProjectForAllFrameworksIfFrameworkUnset" />
 </Project>

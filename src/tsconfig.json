@@ -1,10 +1,10 @@
 {
-    "extends": "../tsconfig.base.json",
-    "compilerOptions": {
-        "outDir": "../_tsout/src",
-        "target": "ES5"
-    },
-    "include": [
-        "./**/*"
-    ]
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../_tsout/src",
+    "isolatedDeclarations": true
+  },
+  "include": [
+    "./**/*"
+  ]
 }

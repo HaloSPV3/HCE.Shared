@@ -1,0 +1,42 @@
+on:
+  push:
+    paths:
+      - dotnet/*
+      - global.json
+      - .config/dotnet-tools.json
+      - .github/workflows/dotnet-min-repo
+  pull_request:
+    paths:
+      - dotnet/*
+      - global.json
+      - .config/dotnet-tools.json
+      - .github/workflows/dotnet-min-repo
+  workflow_dispatch:
+jobs:
+  dotnet-min-repro:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # access to check out code and install dependencies
+    env:
+      DOTNET_NOLOGO: true
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/cache/restore@v4
+        with:
+          path: /usr/share/dotnet
+          key: usr-share-dotnet
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: ./global.json
+          # required by Kuinox.NupkgDeterministicator
+          dotnet-version: 6.0.x
+      - uses: actions/cache/save@v4
+        with:
+          path: /usr/share/dotnet
+          key: usr-share-dotnet
+
+      - run: which dotnet
+      - run: dotnet --list-sdks
+      - run: dotnet tool list
+      - run: dotnet clean ./dotnet/HCE.Shared.sln
+      - run: dotnet pack ./dotnet/samples/HCE.Shared.DeterministicNupkg --verbosity diag

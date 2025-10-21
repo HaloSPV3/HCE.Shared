@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <RepoRoot Condition="'$(RepoRoot)' == '' And '$(ProjectRootDir)' != ''">$(ProjectRootDir)</RepoRoot>
-    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
-    <RepoRootPublishDir>$(RepoRoot)/publish</RepoRootPublishDir>
+    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), $([System.IO.Path]::Join('.git','index'))))</RepoRoot>
+    <RepoRootPublishDir>$([System.IO.Path]::Join("$(RepoRoot)", "publish"))</RepoRootPublishDir>
     <PackageOutputPath Condition="'$(PackageOutputPath)' == ''">$(RepoRootPublishDir)</PackageOutputPath>
   </PropertyGroup>
 
@@ -26,25 +26,22 @@
           - RuntimeIdentifier
           -->
       <AppendVariantArgs Condition="'$(AppendVariantArgs)' == ''">true</AppendVariantArgs>
-
-      <appendVarArgs>$(AppendVariantArgs)</appendVarArgs>
-      <RepoRootPublishDir>$(RepoRoot)/publish</RepoRootPublishDir>
-
+      <_appendVarArgs>$(AppendVariantArgs)</_appendVarArgs>
       <!-- Only add Configuration when Debug -->
-      <dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</dbgCfg>
+      <_dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</_dbgCfg>
       <!-- "net6.0 win7-x86"
            "Debug net6.0 win7-x86" -->
-      <spaceArgs Condition="'$(VariantArgs)' != ''">$(VariantArgs.Replace(";"," ").Trim())</spaceArgs>
-      <spaceArgs Condition="'$(spaceArgs)' == ''">$([System.String]::Join(' ',$(dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</spaceArgs>
+      <_spaceArgs Condition="'$(VariantArgs)' != ''">$(VariantArgs.Replace(";"," ").Trim())</_spaceArgs>
+      <_spaceArgs Condition="'$(_spaceArgs)' == ''">$([System.String]::Join(' ',$(_dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</_spaceArgs>
       <!-- " (Debug net6.0 win7-x86)"
            " (net6.0 win7-x86)"
            "" -->
-      <enclosedVArgs Condition="$(appendVarArgs) And '$(spaceArgs)' != ''"> ($(spaceArgs))</enclosedVArgs>
+      <_enclosedVArgs Condition="$(_appendVarArgs) And '$(_spaceArgs)' != ''"> ($(_spaceArgs))</_enclosedVArgs>
       <!-- " 1.2.3-preview.4"
            "" -->
-      <version Condition="'$(Version)' != ''"> $(Version)</version>
+      <_spaceVersion Condition="'$(Version)' != ''"> $(Version)</_spaceVersion>
       <!-- "C:\Repos\HaloSPV3\HXE\publish\HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
-      <DestinationFile>$(RepoRootPublishDir)/$(AssemblyName)$(version)$(enclosedVArgs).zip</DestinationFile>
+      <DestinationFile>$([System.IO.Path]::Join("$(RepoRootPublishDir)", "$(AssemblyName)$(_spaceVersion)$(_enclosedVArgs).zip"))</DestinationFile>
       <!-- todo: look into .NET 8 SDK's Artifacts feature -->
     </PropertyGroup>
 
@@ -54,33 +51,31 @@
       DestinationFile="$(DestinationFile)"
       Overwrite="true" />
 
-      <Message Text="Publish assets zipped to '$(DestinationFile)'." Importance="high"/>
+    <Message Text="Publish assets zipped to '$(DestinationFile)'." Importance="high"/>
   </Target>
 
   <!-- placeholder values for HCE.Shared ONLY -->
-  <PropertyGroup Condition="$([System.String]::Copy($(MSBuildProjectDirectory)).ToLowerInvariant().Contains('hce.shared'))">
-    <Configuration>Release</Configuration>
-    <TargetFramework>net6.0</TargetFramework>
-    <RuntimeIdentifier>win7-x86</RuntimeIdentifier>
-    <RuntimeIdentifiers>;;;win7-x86;win7-x64;;;</RuntimeIdentifiers>
-    <ZipPublishDir_AppendVariantArgs>true</ZipPublishDir_AppendVariantArgs>
+  <PropertyGroup Condition="$([System.String]::Copy($(RepoRoot)).ToLowerInvariant().Contains('hce.shared'))">
+    <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
+    <TargetFramework Condition="'$(TargetFramework)'==''">net6.0</TargetFramework>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifiers)'=='' AND '$(RuntimeIdentifier)'==''">win7-x86</RuntimeIdentifier>
+    <RuntimeIdentifiers Condition="'$(RuntimeIdentifiers)'==''">win7-x86;win7-x64</RuntimeIdentifiers>
+    <ZipPublishDir_AppendVariantArgs Condition="'$(ZipPublishDir_AppendVariantArgs)'==''">true</ZipPublishDir_AppendVariantArgs>
     <!-- <VariantArgs>$(MSBuildProjectName);$(Configuration)</VariantArgs> -->
 
     <!--  -->
 
-    <appendVarArgs>$(ZipPublishDir_AppendVariantArgs)</appendVarArgs>
-    <dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</dbgCfg>
+    <_appendVarArgs>$(ZipPublishDir_AppendVariantArgs)</_appendVarArgs>
+    <_dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</_dbgCfg>
     <!-- "net6.0 win7-x86" -->
-    <spaceArgs Condition="'$(VariantArgs)' != ''">$(VariantArgs.Replace(";"," ").Trim())</spaceArgs>
-    <spaceArgs Condition="'$(spaceArgs)' == ''">$([System.String]::Join(' ',$(dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</spaceArgs>
+    <_spaceArgs Condition="'$(VariantArgs)'!=''">$(VariantArgs.Replace(";"," ").Trim())</_spaceArgs>
+    <_spaceArgs Condition="'$(_spaceArgs)'==''">$([System.String]::Join(' ',$(_dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</_spaceArgs>
     <!-- " (net6.0 win7-x86)" -->
-    <enclosedVArgs Condition="$(appendVarArgs) And '$(spaceArgs)' != ''"> ($(spaceArgs))</enclosedVArgs>
+    <_enclosedVArgs Condition="'$(_appendVarArgs)' == 'true' And '$(_spaceArgs)' != ''"> ($(_spaceArgs))</_enclosedVArgs>
     <!-- "win7-x86 win7-x64" -->
-    <spaceSeparatedRIDs Condition="$(RuntimeIdentifiers) != ''">$(RuntimeIdentifiers.ToString().Replace(";"," ").Trim())</spaceSeparatedRIDs>
+    <_spaceSeparatedRIDs Condition="$(RuntimeIdentifiers) != ''">$(RuntimeIdentifiers.ToString().Replace(";"," ").Trim())</_spaceSeparatedRIDs>
     <!-- " (win7-x86 win7-x64)" -->
-    <enclosedRIDs Condition="$(appendVarArgs) And '$(spaceSeparatedRIDs)' != ''"> ($(spaceSeparatedRIDs))</enclosedRIDs>
-    <Version>1.0.0</Version>
-    <version Condition="'$(Version)' != ''"> $(Version)</version>
-
+    <enclosedRIDs Condition="'$(_appendVarArgs)' == 'true' And '$(_spaceSeparatedRIDs)' != ''"> ($(_spaceSeparatedRIDs))</enclosedRIDs>
+    <_spaceVersion Condition="'$(Version)' == ''"> 1.0.0</_spaceVersion>
   </PropertyGroup>
 </Project>

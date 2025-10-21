@@ -1,99 +1,186 @@
 {
-	"[json]": {
-		"files.insertFinalNewline": true
-	},
-	"[jsonc]": {
-		"files.insertFinalNewline": true
-	},
-	"auto-close-tag.disableOnLanguage": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact"
-	],
-	"conventionalCommits.scopes": [
-		"dotnet",
-		"node",
-		"vscode",
-		"deps",
-		"deps-dev"
-	],
-	"cSpell.words": [
-		"conventionalcommits",
-		"GHPR",
-		"globbed",
-		"GLPR",
-		"halospv3",
-		"nameof",
-		"packemon",
-		"polyrepo",
-		"tseslint",
-		"tsout"
-	],
-	"files.readonlyInclude": {
-		"_tsout/**": true,
-		"node_modules/**": true,
-		"cjs/**": true,
-		"mjs/**": true
-	},
-	"nodejs-testing.include": [
-		"./",
-		"./tests/",
-		"./tests/dotnet/",
-		"./tests/package.test.ts"
-	],
-	"nodejs-testing.extensions": [
-		{
-			"extensions": [
-				"mts",
-				"cts",
-				"ts"
-			],
-			"parameters": [
-				"--import",
-				"tsx"
-			]
-		}
-	],
-	"nodeTdd.glob": "{src,test}/**/*.{js,ts,jsx,tsx,mts}",
-	"prettier.configPath": "prettier.config.js",
-	"typescript.implementationsCodeLens.enabled": true,
-	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"yaml.format.singleQuote": true,
-	"yaml.schemas": {
-		"https://json.schemastore.org/semantic-release.json": "**/.releaserc.yml"
-	},
-	"eslint.probe": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact",
-		"html",
-		"vue",
-		"markdown",
-		"json",
-		"jsonc",
-		"json5"
-	],
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"json",
-		"jsonc",
-		"json5",
-		"markdown",
-		"typescript",
-		"typescriptreact"
-	],
-	"typescript.tsserver.experimental.enableProjectDiagnostics": true,
-	"typescript.tsserver.web.projectWideIntellisense.enabled": true,
-	"git.allowNoVerifyCommit": true,
-	"nodeTdd.showCoverage": true,
-	"markiscodecoverage.enableDecorations": true,
-	"nodeTdd.buildOnActivation": true,
-	"nodeTdd.buildOnCreate": true,
-	"nodeTdd.buildOnDelete": true,
-	"eslint.format.enable": true,
-	"eslint.useFlatConfig": true,
-	"eslint.lintTask.enable": true
+  "[json]": {
+    "files.insertFinalNewline": true
+  },
+  "[jsonc]": {
+    "files.insertFinalNewline": true
+  },
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "files.autoSave": "onFocusChange",
+  "auto-close-tag.disableOnLanguage": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "cSpell.words": [
+    "arktype",
+    "commonmark",
+    "conventionalcommits",
+    "determinize",
+    "determinized",
+    "dotenvx",
+    "FHCE",
+    "GHNRI",
+    "GHPR",
+    "GLNRI",
+    "globbed",
+    "GLPR",
+    "halospv3",
+    "INVAP",
+    "IPDM",
+    "ITOSPDM",
+    "Kuinox",
+    "MSBPP",
+    "nameof",
+    "nupkgdeterministicator",
+    "OGDM",
+    "OPDM",
+    "packemon",
+    "polyrepo",
+    "runbook",
+    "SRGH",
+    "SRGL",
+    "tseslint",
+    "TSJS",
+    "tsout",
+    "Tuplify"
+  ],
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "files.readonlyInclude": {
+    "_tsout/**": true,
+    "node_modules/**": true,
+    "cjs/**": true,
+    "mjs/**": true
+  },
+  "nodejs-testing.include": [
+    "./",
+    "./tests/",
+    "./tests/dotnet/",
+    "./tests/package.test.ts"
+  ],
+  "nodejs-testing.extensions": [
+    {
+      "extensions": [
+        "mts",
+        "cts",
+        "ts"
+      ],
+      "parameters": [
+        "--import",
+        "tsx"
+      ]
+    }
+  ],
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "yaml.format.singleQuote": true,
+  "eslint.format.enable": true,
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown",
+    "json",
+    "jsonc",
+    "json5"
+  ],
+  "eslint.useFlatConfig": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "json5",
+    "typescript",
+    "typescriptreact"
+  ],
+  "git.allowNoVerifyCommit": true,
+  "markiscodecoverage.enableDecorations": true,
+  "sarif-viewer.connectToGithubCodeScanning": "off",
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnType": false
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnType": false
+  },
+  "better-comments.tags": [
+    {
+      "tag": "# !",
+      "color": "#FF2D00",
+      "strikethrough": false,
+      "underline": true,
+      "backgroundColor": "transparent",
+      "bold": true,
+      "italic": false
+    },
+    {
+      "tag": "!",
+      "color": "#FF2D00",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "?",
+      "color": "#3498DB",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "//",
+      "color": "#474747",
+      "strikethrough": true,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "todo",
+      "color": "#FF8C00",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "@todo",
+      "color": "#FF8C00",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "*",
+      "color": "#98C379",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    }
+  ],
+  "autoRestart.fileGlobForESLint": [
+    "**/src/eslintConfig.ts",
+    "**/.eslintrc.{js,cjs,mjs,yaml,yml,json}",
+    "**/eslint.config.{js,cjs,mjs}"
+  ]
 }

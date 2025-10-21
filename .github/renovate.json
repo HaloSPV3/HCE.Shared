@@ -1,11 +1,29 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":preserveSemverRanges"],
-  "baseBranchPatterns": ["develop"],
+  "extends": [
+    "github>bintoss/renovate-config"
+  ],
   "semanticCommitType": "build",
   "packageRules": [
     {
-      "matchDepTypes": ["devDependencies"],
+      "matchDepTypes": [
+        "dependencies"
+      ],
+      "matchCategories": [
+        "js"
+      ],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchCategories": [
+        "js"
+      ],
+      "semanticCommitType": "build",
+      "semanticCommitScope": "deps-dev",
       "automerge": true
     }
   ]

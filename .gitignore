@@ -561,3 +561,20 @@ lib/
 mjs/
 _tsout/
 babel.config.json
+.playground.ts
+
+tests/dotnet/.projCache
+
+# ignore dotenvx keys, act .secrets
+.env.keys
+.secrets
+
+# ignore lcov code coverage report
+lcov.txt
+
+# ignore junit report
+junit.xml
+
+# ignore Act Config, GitHub Runner Artifact Server directory
+.actrc
+.act-artifact-server

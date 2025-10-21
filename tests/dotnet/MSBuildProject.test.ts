@@ -1,37 +1,57 @@
-import { deepStrictEqual, ok } from 'node:assert';
-import { describe, it, todo } from 'node:test';
+import { deepStrictEqual } from 'node:assert/strict';
+import path from 'node:path';
+import { describe, it } from 'node:test';
 import {
-	MSBuildEvaluatedProjects,
-	MSBuildProject,
-	MSBuildProjectPreDefinedProperties,
-} from '@halospv3/hce.shared-config/dotnet/MSBuildProject';
+  EvaluationOptions,
+  MSBuildProject as MSBP,
+} from '../../src/dotnet/MSBuildProject.js';
 
-await describe('MSBuildProject', async () => {
-	await describe('MSBuildEvaluatedProjects', async () => {
-		await it('is empty by default', () => {
-			ok(Array.isArray(MSBuildEvaluatedProjects) && MSBuildEvaluatedProjects.length === 0);
-		});
-	});
+await describe('MSBuildProject', { concurrency: true }, async () => {
+  await describe('MatrixProperties', async () => {
+    await it('is array of expected values', () => {
+      deepStrictEqual(MSBP.MatrixProperties, [
+        'TargetFramework',
+        'TargetFrameworks',
+        'RuntimeIdentifier',
+        'RuntimeIdentifiers',
+      ]);
+    });
+  });
+  await describe('Evaluate', async () => {
+    await it('may return expected object (HCE.Shared.DeterministicNupkg)', { concurrency: 1 }, async () => {
+      const deterministicNupkgProj = path.resolve(
+        import.meta.dirname,
+        '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
+      );
+      const evalOpts: typeof EvaluationOptions.inferOut = EvaluationOptions.from({
+        FullName: deterministicNupkgProj,
+        GetItem: [],
+        GetProperty: MSBP.MatrixProperties,
+        GetTargetResult: [],
+        Property: { BaseIntermediateOutputPath: `obj/test_Evaluate/` },
+        Targets: [],
+      });
+      const actual: MSBP = await MSBP.Evaluate(evalOpts);
+      // lets not bother testing targets for now. It depends on both the project and the SDK.
+      const actual_targets = await MSBP.GetTargets(evalOpts.FullName);
+      const expected = new MSBP({
+        fullPath: deterministicNupkgProj,
+        projTargets: actual_targets,
+        evaluation: {
+          Items: {},
+          Properties: {
+            TargetFramework: 'netstandard2.0',
+            TargetFrameworks: '',
+            RuntimeIdentifier: '',
+            RuntimeIdentifiers: '',
+          },
+        },
+      });
 
-	await describe('MSBuildProject', async () => {
-		await it('has f', () => {
-			ok('evaluateProperties' in MSBuildProject);
-		})
-
-		await todo('custom properties?');
-	});
-
-	await describe('MSBuildPreDefinedProperties', () => {
-		deepStrictEqual(
-			MSBuildProjectPreDefinedProperties,
-			[
-				'TargetFramework',
-				'TargetFrameworks',
-				'RuntimeIdentifier',
-				'RuntimeIdentifiers'
-			]
-		);
-	});
+      deepStrictEqual(actual.Items, expected.Items);
+      deepStrictEqual(actual.Properties, expected.Properties);
+      deepStrictEqual(actual.Targets, expected.Targets);
+      deepStrictEqual(actual, expected);
+    });
+  });
 });
-
-

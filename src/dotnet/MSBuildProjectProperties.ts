@@ -1,28 +1,294 @@
+import { strictEqual } from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import { basename, isAbsolute, resolve } from 'node:path';
+import node_path from 'node:path';
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
+import type { BaseClass, ClassLike } from '../utils/reflection.js';
 
 /**
  * Known properties. Additional properties may be added upon request.
+ *
+ * todo: add Reserved properties, Well-Known properties, Common properties, and more. Maybe as sub classes.
+ * See:
+ * - {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2022 MSBuild Reserved and Well-known Properties}
+ * - {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2022 Common MSBuild project properties}
+ * - {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props Microsoft.NET.Sdk}
+ * - {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/web-sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json#properties Microsoft.NET.Sdk.Web}
+ * - {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json Microsoft.NET.Sdk.Razor}
+ * - {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop Microsoft.NET.Sdk.Desktop}
  */
 export class MSBuildProjectProperties {
-	[Property: string]: string;
+  // #region static
 
-	FullPath = '';
+  /**
+   * Resolve the given path if it is not absolute. If the path exists, it is returned. Else, an Error is thrown.
+   * @param path The full file path of an MSBuild project.
+   * @returns The absolute path to the MSBuild project file.
+   * @throws {Error} if the path cannot be resolved to an existing file.
+   */
+  static GetFullPath(path: string): string {
+    if (!node_path.isAbsolute(path))
+      path = node_path.resolve(path);
+    if (!existsSync(path))
+      throw new Error(`${node_path.basename(path)} could not be found at "${path}"`);
+    return path;
+  }
 
-	TargetFramework = '';
+  /**
+   * Note: This method may remove elements from {@link properties}.\
+   * Try to get an element from {@link properties} by its {@link key}.
+   * If an element is found, it is removed and the value of the element is returned.
+   * Otherwise, `undefined` is returned.
+   * @param properties The CaseInsensitiveMap of properties passed to the constructor.
+   * @param key The key of the property to get from {@link properties}
+   * @returns If found, the value of the `[string, string]` tuple found in {@link properties}. Else, `undefined`.
+   */
+  protected static getAndForget(
+    properties: CaseInsensitiveMap<string, string>,
+    key: string,
+  ): string | undefined {
+    const v: string | undefined = properties.get(key);
+    if (v !== undefined)
+      properties.delete(key);
+    return v;
+  }
 
-	TargetFrameworks = '';
+  // #endregion static
+  // #endregion static
 
-	RuntimeIdentifier = '';
+  // #region private
+  private _msbuildProjectFullPath: string | undefined;
+  private _assemblyName: string | undefined;
+  private _baseIntermediateOutputPath: string | undefined;
+  private _baseOutputPath: string | undefined;
+  private _description: string | undefined;
+  private _intermediateOutputPath: string | undefined;
+  private _outDir: string | undefined;
+  private _outputPath: string | undefined;
+  private _runtimeIdentifier: string | undefined;
+  private _runtimeIdentifiers: string | undefined;
+  private _targetFramework: string | undefined;
+  private _targetFrameworks: string | undefined;
+  private _version: string | undefined;
+  private _versionPrefix: string | undefined;
+  private _versionSuffix: string | undefined;
+  // #endregion private
 
-	RuntimeIdentifiers = '';
+  constructor(
+    msbuildProjectFullPath: string,
+    properties: CaseInsensitiveMap<string, string>,
+  ) {
+    // runtime type checks
+    strictEqual(
+      typeof msbuildProjectFullPath,
+      'string',
+      new TypeError(
+        `msbuildProjectFullPath should be a string, not ${typeof msbuildProjectFullPath}!`,
+      ),
+    );
+    strictEqual(
+      properties instanceof CaseInsensitiveMap,
+      true,
+      `arg 'properties' should be instanceof ${CaseInsensitiveMap.name}`,
+    );
+    strictEqual(
+      [...properties.keys()].every((v): v is string => typeof v === 'string'),
+      true,
+      'all keys in arg \'properties\' should be strings',
+    );
 
-	constructor(fullPath: string, exists = true) {
-		this.FullPath = fullPath;
-		if (!isAbsolute(this.FullPath)) this.FullPath = resolve(this.FullPath);
-		if (!existsSync(this.FullPath) && exists)
-			throw new Error(
-				`Project ${basename(this.FullPath)} could not be found at "${this.FullPath}"`,
-			);
-	}
+    this._msbuildProjectFullPath = MPP.GetFullPath(msbuildProjectFullPath);
+    this._assemblyName = MPP.getAndForget(properties, 'AssemblyName');
+    this._description = MPP.getAndForget(properties, 'Description');
+    this._outputPath = MPP.getAndForget(properties, 'OutputPath');
+    this._runtimeIdentifier = MPP.getAndForget(properties, 'RuntimeIdentifier');
+    this._runtimeIdentifiers = MPP.getAndForget(
+      properties,
+      'RuntimeIdentifiers',
+    );
+    this._targetFramework = MPP.getAndForget(properties, 'TargetFramework');
+    this._targetFrameworks = MPP.getAndForget(properties, 'TargetFrameworks');
+    this._version = MPP.getAndForget(properties, 'Version');
+    this._versionPrefix = MPP.getAndForget(properties, 'VersionPrefix');
+    this._versionSuffix = MPP.getAndForget(properties, 'VersionSuffix');
+    // rest
+    for (const key of properties.keys()) {
+      const value = MPP.getAndForget(properties, key);
+      if (value !== undefined) {
+        Object.defineProperty(this, key, {
+          value: value,
+          writable: false,
+          enumerable: true,
+          configurable: true,
+        });
+      }
+    }
+  }
+
+  get MSBuildProjectFullPath(): string {
+    return this._msbuildProjectFullPath ??= '';
+  }
+
+  /**
+   * @returns The name of the assembly.
+   *
+   * Default: {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties#:~:text=MSBuildProjectDirectory,-Reserved MSBuildProjectDirectory}
+   */
+  get AssemblyName(): string {
+    return this._assemblyName ??= '';
+  }
+
+  /**
+   * @returns The top-level folder where all configuration-specific intermediate output
+   * folders are created. The default value is `obj\`.
+   * @example
+   * ```xml
+   * <BaseIntermediateOutputPath>c:\xyz\obj\</BaseIntermediateOutputPath>
+   * ```
+   */
+  get BaseIntermediateOutputPath(): string {
+    return this._baseIntermediateOutputPath ??= '';
+  }
+
+  /**
+   * @returns The base path for the output file.
+   * If it's set, MSBuild uses `OutputPath = $(BaseOutputPath)\$(Configuration)\`.
+   * @example ```xml
+   * <BaseOutputPath>c:\xyz\bin\</BaseOutputPath>
+   * ```
+   */
+  get BaseOutputPath(): string {
+    return this._baseOutputPath ??= '';
+  }
+
+  /**
+   * A long description for the assembly.
+   * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
+   * @returns The value of the `Description` property.
+   */
+  get Description(): string {
+    return this._description ??= '';
+  }
+
+  /**
+   * @returns The full intermediate output path as derived from
+   * {@link BaseIntermediateOutputPath}, if no path is specified.
+   * @example "obj\\debug\\"
+   */
+  get IntermediateOutput(): string {
+    return this._intermediateOutputPath ??= '';
+  }
+
+  /**
+   * @returns The final output location for the project or solution.
+   * When you build a solution, OutDir can be used to gather multiple project outputs in one location.
+   * In addition, OutDir is included in AssemblySearchPaths used for resolving references.
+   * @example
+   * `bin/Debug`
+   */
+  get OutDir(): string {
+    return this._outDir ??= '';
+  }
+
+  /**
+   * @returns The path to the output directory, relative to the project
+   * directory.
+   * @example
+   * `bin/Debug`
+   * /// non-AnyCPU builds
+   * `bin/Debug/${Platform}`
+   */
+  get OutputPath(): string {
+    return this._outputPath ??= '';
+  }
+
+  /**
+   * Set Version -OR- VersionPrefix.
+   * @returns The value of the `Version` property.
+   *
+   * Default: `"1.0.0"`
+   */
+  get Version(): string {
+    return this._version ??= '1.0.0';
+  }
+
+  /**
+   * Set Version -OR- VersionPrefix.\
+   * Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
+   * @returns The MAJOR.MINOR.PATCH string of the version.
+   * @see {@link VersionSuffix}
+   */
+  get VersionPrefix(): string {
+    return this._versionPrefix ??= '';
+  }
+
+  /**
+   * The effect of this property on the package version depends on the values of the Version and VersionPrefix properties, as shown in the following table:
+   * | Properties with values | Package version |
+   * | ---------------------- | --------------- |
+   * | None                   | 1.0.0           |
+   * | Version                | $(Version)      |
+   * | VersionPrefix only     | $(VersionPrefix) |
+   * | VersionSuffix only     | 1.0.0-$(VersionSuffix) |
+   * | VersionPrefix and VersionSuffix | $(VersionPrefix)-$(VersionSuffix) |
+   * \
+   * Setting {@link PackageVersion} overwrites {@link VersionSuffix}
+   * @returns The string appended to the end of the MAJOR.MINOR.PATCH semver string (i.e. {@link VersionPrefix})
+   */
+  get VersionSuffix(): string {
+    return this._versionSuffix ??= '';
+  }
+
+  /**
+   * @returns The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframework Target Framework}
+   * @see
+   * https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
+   * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
+   */
+  get TargetFramework(): string {
+    return this._targetFramework ??= '';
+  }
+
+  /**
+   * @returns The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframeworks Target Frameworks} (plural)
+   * @see
+   * https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
+   * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
+   */
+  get TargetFrameworks(): string {
+    return this._targetFrameworks ??= '';
+  }
+
+  /**
+   * @returns
+   * > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier `Runtime Identifier`} property lets you specify a single runtime
+   * > identifier (RID) for the project. The RID enables publishing a
+   * > self-contained deployment.
+   * @see
+   * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
+   */
+  get RuntimeIdentifier(): string {
+    return this._runtimeIdentifier ??= '';
+  }
+
+  /**
+   * @returns
+   * > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifiers `RuntimeIdentifiers`} property lets you specify a
+   * > semicolon-delimited list of runtime identifiers (RIDs) for the project.
+   * > Use this property if you need to publish for multiple runtimes.
+   * > `RuntimeIdentifiers` is used at restore time to ensure the right assets
+   * > are in the graph.
+   * @see
+   * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
+   */
+  get RuntimeIdentifiers(): string {
+    return this._runtimeIdentifiers ??= '';
+  }
 }
+
+const MPP = MSBuildProjectProperties;
+export type Class_MSBPP = ClassLike<BaseClass<typeof MSBuildProjectProperties & {
+  // @ts-expect-error Property 'getAndForget' is protected and only accessible within class 'MSBuildProjectProperties' and its subclasses. ts(2445)
+  getAndForget: ProtectedMember<typeof MSBuildProjectProperties.getAndForget>;
+}>>;
+
+type ProtectedMember<T> = T;

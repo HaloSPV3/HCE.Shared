@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>A sample project for use by https://github.com/HaloSPV3/HCE.Shared. This package is published to test MSBuild Targets and other .NET/MSBuild capabilities.</Description>
+    <RepositoryUrl>https://github.com/HaloSPV3/HCE.Shared</RepositoryUrl>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- This is a throwaway certificate used only for test-signing this project's nupkg.
+    Never `git add *.pfx` nor `git add` a password. -->
+    <DotnetNugetSignCertificatePassword>0</DotnetNugetSignCertificatePassword>
+    <DotnetNugetSignCertificatePath>./sampleCert.samplepfx</DotnetNugetSignCertificatePath>
+    <DotnetNugetSignOverwrite>true</DotnetNugetSignOverwrite>
+  </PropertyGroup>
+  <Import Project="../../SignAfterPack.targets" />
+</Project>

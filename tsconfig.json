@@ -1,25 +1,22 @@
 {
-    "extends": "./tsconfig.base.json",
-    "compilerOptions": {
-        "allowJs": true,
-        "checkJs": true,
-        "outDir": "_tsout"
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "outDir": "_tsout",
+    "target": "es2020",
+    "erasableSyntaxOnly": true
+  },
+  "include": [
+    "./*.cts",
+    "./*.mts",
+    "./*.ts"
+  ],
+  "references": [
+    {
+      "path": "./tests/tsconfig.json"
     },
-    "include": [
-        "./*.cjs",
-        "./*.js",
-        "./*.mjs",
-        "./*.cts",
-        "./*.mts",
-        "./*.ts",
-        "./src/semantic-release__commit-analyzer.d.ts"
-    ],
-    "references": [
-        {
-            "path": "./tests/tsconfig.json"
-        },
-        {
-            "path": "./src/tsconfig.json"
-        }
-    ]
+    {
+      "path": "./src/tsconfig.json"
+    }
+  ]
 }
