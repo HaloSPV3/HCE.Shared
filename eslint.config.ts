@@ -1,32 +1,17 @@
-// @ts-check
-import md from '@eslint/markdown';
-import unicorn from 'eslint-plugin-unicorn';
-import 'tsx';
-import { defineConfig } from 'eslint/config';
+import js from "@eslint/js";
+import json from "@eslint/json";
+import markdown from "@eslint/markdown";
 import jsdoc from 'eslint-plugin-jsdoc';
-import { type } from 'arktype';
+import unicorn from 'eslint-plugin-unicorn';
+import { defineConfig } from "eslint/config";
+import globals from "globals";
+import 'tsx';
+import tseslint from "typescript-eslint";
+import type { Linter } from "eslint";
 
-const type_mdRecommended = type([{
-  name: '\'markdown/recommended\'',
-  files: type(['"**/*.md"']),
-  language: '\'markdown/commonmark\'',
-  plugins: type({ markdown: 'unknown' }),
-  rules: type({
-    'markdown/fenced-code-language': '\'error\'',
-    'markdown/heading-increment': '\'error\'',
-    'markdown/no-empty-links': '\'error\'',
-    'markdown/no-invalid-label-refs': '\'error\'',
-    'markdown/no-missing-label-refs': '\'error\'',
-  }).readonly(),
-}]);
-
-/**
- * @typedef { import('eslint').Linter.Config} ESLintConfig
- */
-const mdRecommended = type_mdRecommended.assert(md.configs.recommended)[0];
 const { default: hceSharedConfig } = await import('./src/eslintConfig.ts');
-/** @type {ESLintConfig} */
-const unicornRecommended = {
+
+const unicornRecommended: Linter.Config = {
   ...unicorn.configs.recommended,
   rules: {
     ...unicorn.configs.recommended.rules,
@@ -69,24 +54,19 @@ const jsdocRecommended_ts = {
     '**/*.tsx',
   ],
 };
-/** @type {ESLintConfig[]} */
-const config = defineConfig(
+const config:Linter.Config[] = defineConfig(
+  { files: ["**/*.{js,mjs,cjs,ts,mts,cts}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: globals.node } },
   ...hceSharedConfig,
+  tseslint.configs.recommended,
+  unicornRecommended,
   jsdocRecommended_js,
   jsdocRecommended_ts,
-  {
-    ...mdRecommended,
-    plugins: { markdown: md },
-    language: 'markdown/gfm',
-  },
-  unicornRecommended,
-  {
-    name: 'stylistic excludes',
-    files: ['**/*.md'],
-    rules: {
-      '@stylistic/indent': 'off',
-    },
-  },
+  { files: ["**/*.md"], plugins: { markdown }, language: 'markdown/gfm', extends:[markdown.configs.recommended] },
+  { name: 'stylistic excludes', files: ['**/*.md'], rules: { '@stylistic/indent': 'off' } },
+  { files: ["**/*.json"], plugins: { json }, language: "json/json", extends: [json.configs.recommended] },
+  { files: ["**/*.jsonc"], plugins: { json }, language: "json/jsonc", extends: [json.configs.recommended] },
+  { files: ["**/*.json5"], plugins: { json }, language: "json/json5", extends: [json.configs.recommended] },
+  {ignores:['.yarn/sdks/**']}
 );
 
 export default config;
