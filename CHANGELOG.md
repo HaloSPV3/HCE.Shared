@@ -1,3 +1,10 @@
+## [3.0.0-develop.25](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.24...v3.0.0-develop.25) (2025-10-21)
+
+### Bug Fixes
+
+* **deps:** ponyfill `string.replaceAll`; add core-js ([e65882e](https://github.com/HaloSPV3/HCE.Shared/commit/e65882eb176b904831d81362bd2553a7a04ffbdf))
+* **deps:** update `semantic-release-export-data` to v1.1.0; force it to resolve `@actions/core` to ^1.11.1 ([66fec8e](https://github.com/HaloSPV3/HCE.Shared/commit/66fec8ed6ec602215ae657a78de6a63b79fb2fde))
+
 ## [3.0.0-develop.24](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.23...v3.0.0-develop.24) (2025-10-21)
 
 ### Bug Fixes
