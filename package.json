@@ -114,6 +114,7 @@
     "eslint": "^9.31.0",
     "eslint-plugin-jsdoc": "^61.0.0",
     "eslint-plugin-unicorn": "^62.0.0",
+    "jiti": "^2.6.1",
     "packemon": "^4.1.2",
     "pinst": "^3.0.0",
     "tmp": "^0.2.3",
