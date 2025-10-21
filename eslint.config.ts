@@ -45,6 +45,8 @@ const config: Config[] = defineConfig(
       '@stylistic/indent': 'off',
     },
   },
+  { ignores: ['.yarn/sdks/**', '.pnp.cjs', '.pnp.loader.mjs'] },
+
 );
 
 export default config;
