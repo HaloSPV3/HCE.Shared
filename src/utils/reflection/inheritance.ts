@@ -84,10 +84,10 @@ export type ConstructorLike<T = Constructor_Unknown>
  * @since 3.0.0
  */
 export type ClassLike_Unknown
-= IClass<
-  Constructor_Unknown
-  & WithProto<SuperClassLike | BaseClassProto>
->;
+  = IClass<
+    Constructor_Unknown
+    & WithProto<SuperClassLike | BaseClassProto>
+  >;
 
 /**
  * A subset of {@link ProtoOrSuperClass} suitable for a class's `[[Prototype]]`
