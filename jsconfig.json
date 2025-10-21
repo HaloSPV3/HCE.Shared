@@ -6,10 +6,7 @@
     "isolatedDeclarations": false,
     "skipLibCheck": true
   },
-  "files": [
-    "./.pnp.cjs",
-    "./.pnp.loader.mjs"
-  ],
+  "files": [],
   "references": [
     {
       "path": "./tests/tsconfig.json"

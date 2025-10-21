@@ -68,7 +68,7 @@ const config: Linter.Config[] = defineConfig(
   { files: ['**/*.json'], plugins: { json }, language: 'json/json', extends: [json.configs.recommended] },
   { files: ['**/*.jsonc'], plugins: { json }, language: 'json/jsonc', extends: [json.configs.recommended] },
   { files: ['**/*.json5'], plugins: { json }, language: 'json/json5', extends: [json.configs.recommended] },
-  { ignores: ['.yarn/sdks/**'] },
+  { ignores: ['.yarn/sdks/**', '.pnp.cjs', '.pnp.loader.mjs'] },
 );
 
 export default config;
