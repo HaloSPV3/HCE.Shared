@@ -2179,6 +2179,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/json@npm:^0.13.2":
+  version: 0.13.2
+  resolution: "@eslint/json@npm:0.13.2"
+  dependencies:
+    "@eslint/core": "npm:^0.15.2"
+    "@eslint/plugin-kit": "npm:^0.3.5"
+    "@humanwhocodes/momoa": "npm:^3.3.9"
+    natural-compare: "npm:^1.4.0"
+  checksum: 10c0/1e024e33687a2cb26261856f0c5d459d06100b2e09718d6b1e8b63f6595e879fea6a7944f97abd07309b937773fc75c7dc4d61f4fc070422a0c8740c40334774
+  languageName: node
+  linkType: hard
+
 "@eslint/markdown@npm:^7.0.0":
   version: 7.3.0
   resolution: "@eslint/markdown@npm:7.3.0"
@@ -2228,6 +2240,7 @@ __metadata:
     "@dotenvx/dotenvx": "npm:^1.47.6"
     "@eslint/config-inspector": "npm:^1.1.0"
     "@eslint/js": "npm:^9.31.0"
+    "@eslint/json": "npm:^0.13.2"
     "@eslint/markdown": "npm:^7.0.0"
     "@sebbo2002/semantic-release-jsr": "npm:^3.0.0"
     "@semantic-release/changelog": "npm:^6.0.3"
@@ -2292,6 +2305,13 @@ __metadata:
   version: 1.0.1
   resolution: "@humanwhocodes/module-importer@npm:1.0.1"
   checksum: 10c0/909b69c3b86d482c26b3359db16e46a32e0fb30bd306a3c176b8313b9e7313dba0f37f519de6aa8b0a1921349e505f259d19475e123182416a506d7f87e7f529
+  languageName: node
+  linkType: hard
+
+"@humanwhocodes/momoa@npm:^3.3.9":
+  version: 3.3.10
+  resolution: "@humanwhocodes/momoa@npm:3.3.10"
+  checksum: 10c0/b80a99f517195ca11d9c3c19431ec5b1b9f4cd21437ed463b2db7e5244a0cdde70148b419e4721baa689b86b8bef2adbb6d1b2c1d140938f1af4640682e3b6d6
   languageName: node
   linkType: hard
 

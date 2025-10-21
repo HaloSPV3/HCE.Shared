@@ -102,6 +102,7 @@
     "@commitlint/load": "^20.1.0",
     "@commitlint/types": "^19.8.1",
     "@eslint/config-inspector": "^1.1.0",
+    "@eslint/json": "^0.13.2",
     "@eslint/markdown": "^7.0.0",
     "@sebbo2002/semantic-release-jsr": "^3.0.0",
     "@semantic-release/gitlab": "^13.2.6",
