@@ -1,3 +1,9 @@
+## [3.0.0-develop.24](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.23...v3.0.0-develop.24) (2025-10-21)
+
+### Bug Fixes
+
+* **deps:** update semantic-release monorepo ([3c87c63](https://github.com/HaloSPV3/HCE.Shared/commit/3c87c638ed7784f41eb12f6dc3246675096e242e))
+
 ## [3.0.0-develop.23](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0-develop.22...v3.0.0-develop.23) (2025-10-06)
 
 ### Bug Fixes
