@@ -78,6 +78,7 @@
   ],
   "js/ts.implementationsCodeLens.enabled": true,
   "js/ts.tsdk.path": ".yarn/sdks/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
   "yaml.format.singleQuote": true,
   "eslint.format.enable": true,
   "eslint.nodePath": ".yarn/sdks",
