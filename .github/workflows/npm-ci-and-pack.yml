@@ -71,7 +71,7 @@ jobs:
         with:
           fail_ci_if_error: true # optional (default = false)
           disable_search: true
-          files: ./lcov.txt,./junit.xml
+          files: ./lcov.txt
           report_type: test_results
           slug: HaloSPV3/HCE.Shared
           use_oidc: true
