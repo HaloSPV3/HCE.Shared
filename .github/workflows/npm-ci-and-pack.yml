@@ -90,6 +90,7 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
+          fail_ci_if_error: true # optional (default = false)
           disable_search: true
           files: ./lcov.txt,./junit.xml
           slug: HaloSPV3/HCE.Shared
