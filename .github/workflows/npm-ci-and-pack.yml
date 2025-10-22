@@ -93,5 +93,7 @@ jobs:
           fail_ci_if_error: true # optional (default = false)
           disable_search: true
           files: ./lcov.txt,./junit.xml
+          report_type: test_results
           slug: HaloSPV3/HCE.Shared
           token: ${{ secrets.CODECOV_TOKEN }}
+          use_oidc: true
