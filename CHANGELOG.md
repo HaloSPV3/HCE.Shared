@@ -1,3 +1,9 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See
+[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
+for commit guidelines.
+
 ## [3.0.0](https://github.com/HaloSPV3/HCE.Shared/compare/v2.6.6...v3.0.0) (2025-10-21)
 
 ### ⚠ BREAKING CHANGES
@@ -592,12 +598,6 @@
 * bump @semantic-release/github to v11.0.1 ([c7f068d](https://github.com/halospv3/hce.shared/commit/c7f068d822be6f4c610e98b9de784a9173568daa))
 * increase TypeScript target from ES5 to ES2022 ([339ebc6](https://github.com/halospv3/hce.shared/commit/339ebc6be89d76cce15d8817840dd5e251e57e1e))
 * migrate main export to mjs ([76345e8](https://github.com/halospv3/hce.shared/commit/76345e81735ad0115d16b9d97a71ccdb1587a5bb))
-
-# Changelog
-
-All notable changes to this project will be documented in this file. See
-[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
-for commit guidelines.
 
 ## [2.6.6](https://github.com/halospv3/hce.shared/compare/v2.6.5...v2.6.6) (2025-07-30)
 
