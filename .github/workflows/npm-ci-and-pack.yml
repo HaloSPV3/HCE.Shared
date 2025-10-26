@@ -44,10 +44,6 @@ jobs:
           cache: 'npm'
           node-version-file: package.json
           check-latest: true
-      - uses: actions/cache/restore@v4
-        with:
-          path: /usr/share/dotnet
-          key: usr-share-dotnet
       - uses: actions/setup-dotnet@v5
         with:
           # required by Kuinox.NupkgDeterministicator
