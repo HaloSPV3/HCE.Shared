@@ -61,6 +61,7 @@ const scopes = {
   'utils.env': 'Affects "src/utils/env.ts" or its tests.',
   'utils.Exact': 'Affects "src/utils/Exact.ts" or its tests.',
   'utils.execAsync': 'Affects "src/utils/execAsync.ts" or its tests.',
+  'utils.isError': 'Affects "src/utils/isError.ts or its tests.',
   'utils.GracefulRecursion': 'Affects "src/utils/GracefulRecursion.d.ts" or its tests.',
   'utils.miscTypes': 'Affects "src/utils/miscTypes.ts" or its tests.',
   'utils.reflection': 'Affects "src/utils/reflection.ts" or its tests.',

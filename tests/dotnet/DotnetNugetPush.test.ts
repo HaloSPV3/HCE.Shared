@@ -1,10 +1,10 @@
 import { ok, notStrictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { isNativeError } from 'node:util/types';
 import { GithubNugetRegistryInfo as GHNRI } from '../../src/dotnet/GithubNugetRegistryInfo.js';
 import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.js';
 import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js';
 import { getEnvVarValue } from '../../src/utils/env.js';
+import { isError } from '../../src/utils/isError.js';
 import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.js';
 import { inspect } from 'node:util';
 import { execAsync } from '../../src/utils/execAsync.js';
@@ -92,9 +92,9 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       .canPushPackagesToSource
       .catch((error: unknown) =>
-        isNativeError(error) ? error : new Error(JSON.stringify(error)),
+        isError(error) ? error : new Error(JSON.stringify(error)),
       );
-    ok(isNativeError(canPush));
+    ok(isError(canPush));
   });
   await it('GLNRI token is invalid', async () => {
     await trySetCI_PROJECT_ID();
@@ -103,7 +103,7 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
       .canPushPackagesToSource
       .catch(
         (error: unknown) =>
-          isNativeError(error)
+          isError(error)
             ? error
             : new Error(JSON.stringify(error)),
       );
@@ -114,10 +114,10 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       .canPushPackagesToSource
       .catch((error: unknown) =>
-        isNativeError(error)
+        isError(error)
           ? error
           : new Error(inspect(error, { depth: 3 })),
       );
-    ok(isNativeError(canPush));
+    ok(isError(canPush));
   });
 });

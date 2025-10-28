@@ -15,7 +15,7 @@ import { tmpdir } from 'node:os';
 import node_path from 'node:path';
 import { cwd, env } from 'node:process';
 import { setTimeout } from 'node:timers/promises';
-import { isNativeError } from 'node:util/types';
+import { isError } from '../utils/isError.js';
 import sanitizeFileName from 'sanitize-filename';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
@@ -48,7 +48,7 @@ export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>
     processEnv: {},
   });
 
-  if (isNativeError(envOutput.error))
+  if (isError(envOutput.error))
     throw envOutput.error;
   return envOutput.parsed;
 }
@@ -729,7 +729,7 @@ but the environment variable is empty or undefined.`);
       ),
       true,
     ).catch((error: unknown) => {
-      const _error: Error = isNativeError(error) ? error : new Error(JSON.stringify(error));
+      const _error: Error = isError(error) ? error : new Error(JSON.stringify(error));
       throw opts.apiKey
         ? _censorTokenInError(_error, opts.apiKey)
         : _error;
@@ -791,7 +791,7 @@ but the environment variable is empty or undefined.`);
     const pushCmd: string = this.GetPushDummyCommand(opts);
     return await execAsync(pushCmd, true)
       .catch((error: unknown) => {
-        const _error: Error = isNativeError(error) ? error : new Error(String(error));
+        const _error: Error = isError(error) ? error : new Error(String(error));
         throw opts.apiKey
           ? _censorTokenInError(_error, opts.apiKey)
           : _error;

@@ -1,5 +1,5 @@
-import { isNativeError } from 'node:util/types';
 import { getEnvVarValue } from '../utils/env.js';
+import { isError } from '../utils/isError.js';
 import {
   NugetRegistryInfo,
   NRIOpts,
@@ -52,7 +52,7 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
    */
   constructor(opts: typeof GLNRIOpts.inferIn) {
     const optsOut = GLNRIOpts.from(opts);
-    if (isNativeError(optsOut.source))
+    if (isError(optsOut.source))
       throw optsOut.source;
     super(optsOut as typeof optsOut & { source: string });
   }

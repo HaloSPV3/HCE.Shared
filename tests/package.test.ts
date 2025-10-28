@@ -2,8 +2,8 @@ import { deepStrictEqual, notStrictEqual } from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { describe, it } from 'node:test';
-import { isNativeError } from 'node:util/types';
 import packageJson from '../package.json' with { type: 'json' };
+import { isError } from '../src/utils/isError.js';
 const { packemon } = packageJson;
 
 // #region PackemonTypes
@@ -95,7 +95,7 @@ await describe('package.json', async () => {
       return result;
     }
     catch (error) {
-      if (isNativeError(error)) result.validity = error;
+      if (isError(error)) result.validity = error;
       else if (typeof error === 'string') result.validity = new Error(error);
       else result.validity = new Error(String(error));
       return result;
@@ -134,7 +134,7 @@ await describe('package.json', async () => {
 
   const importedEsm: string[] = [];
   for (const result of results) {
-    if (!isNativeError(result.validity)) {
+    if (!isError(result.validity)) {
       if (result.action === 'import')
         importedEsm.push(result.entry.name);
       else throw new Error(`unexpected validation action '${result.action}'.`);
@@ -148,7 +148,7 @@ await describe('package.json', async () => {
       validity: Error;
     }
     const errored = results.filter(
-      v => isNativeError(v.validity),
+      v => isError(v.validity),
     ) as ErrorResult[];
     for (const v of errored) {
       console.debug(v);

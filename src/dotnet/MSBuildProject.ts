@@ -4,9 +4,9 @@ import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
-import { isNativeError } from 'node:util/types';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
 import { execAsync } from '../utils/execAsync.js';
+import { isError } from '../utils/isError.js';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
 import {
   NPPGetterNames,
@@ -673,7 +673,7 @@ function makeAbsolute(_path: string) {
  * @returns `undefined` if CSC2012 (file in use by another process) occurs
  */
 export function catchCsc2012(error: unknown): undefined {
-  if (isNativeError(error)) {
+  if (isError(error)) {
     // check for error reported when "file in use by another process" i.e. EBUSY
     // (UNIX), NTSTATUS.ERROR_SHARING_VIOLATION == 0x20 == 32 (Windows)
     if ('stderr' in error && typeof error.stderr === 'string'

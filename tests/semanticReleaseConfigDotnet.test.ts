@@ -2,10 +2,10 @@ import {
   getConfig,
   SemanticReleaseConfigDotnet,
 } from '../src/semanticReleaseConfigDotnet.js';
+import { isError } from '../src/utils/isError.js';
 import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it, todo } from 'node:test';
 import { isConstructor } from '../src/utils/reflection.js';
-import { isNativeError } from 'node:util/types';
 import { DeterministicNupkgCsproj } from './dotnet/MSBuildProject.projects.js';
 import { NugetRegistryInfo } from '../src/dotnet/NugetRegistryInfo.js';
 
@@ -27,10 +27,10 @@ await describe('getConfig', async () => {
     const actual = await getConfig(
       [DeterministicNupkgCsproj],
       [new NugetRegistryInfo({ project: DeterministicNupkgCsproj })],
-    ).catch((error: unknown) => isNativeError(error) ? error : new Error(String(error)));
+    ).catch((error: unknown) => isError(error) ? error : new Error(String(error)));
 
     ok(
-      !isNativeError(actual),
+      !isError(actual),
       '`actual` should not be an Error.\n' + ((actual as Error).stack ?? (actual as Error).message),
     );
   });
@@ -44,7 +44,7 @@ await describe('getConfig', async () => {
       actual = error as Error;
     }
 
-    ok(isNativeError(actual));
+    ok(isError(actual));
     ok(
       actual.message.includes(
         'projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path.',

@@ -3,7 +3,7 @@ import { type, type Type } from 'arktype';
 import { exec } from 'node:child_process';
 import { constants } from 'node:os';
 import { promisify } from 'node:util';
-import { isNativeError } from 'node:util/types';
+import { isError } from './isError.js';
 
 /**
  * A `promisify(exec)` wrapper to optionally assign the child process's STDERR as the {@link Error.prototype.cause}.
@@ -18,7 +18,7 @@ export async function execAsync(command: string, setStderrAsCause = false): Prom
   stderr: string;
 }> {
   return await promisify(exec)(command).catch((error: unknown): never => {
-    if (!isNativeError(error))
+    if (!isError(error))
       throw new Error(JSON.stringify(error));
 
     if (setStderrAsCause && 'stderr' in error && typeof error.stderr === 'string' && error.stderr !== '')
