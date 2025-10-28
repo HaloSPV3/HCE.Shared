@@ -47,7 +47,7 @@
     "eslint-inspector": "eslint --inspect-config",
     "prepack": "packemon pack --addExports --addFiles --declaration --loadConfigs",
     "pack": "echo 'You should use `npm pack`' && exit 1",
-    "prepare": "husky",
+    "prepare": "nvm install && husky",
     "presemantic-release": "npm pack",
     "semantic-release": "semantic-release",
     "pretest": "npm run build && npm run test:cacheSampleProjects",
@@ -110,8 +110,9 @@
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
+  "//engines.node": "See file://./.nvmrc, https://github.com/nvm-sh/nvm#nvmrc. Supporting the lowest version possible is a PITA. Just support LTS. ",
   "engines": {
-    "node": "^22.14.0 || >=24.10.0",
+    "node": ">=24.10.0",
     "npm": ">=10.5.0"
   },
   "engineStrict": true,
