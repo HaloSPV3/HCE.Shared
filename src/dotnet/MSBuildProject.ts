@@ -482,7 +482,7 @@ export class MSBuildProject {
             const dirent: Dirent | undefined = entries.find(v =>
               path.join(
                 // condition required for compatibility. `.path` was deprecated, but `.parentPath` is not available in our node minversion
-                v.path as string | undefined ?? (v as unknown as Omit<typeof v, 'path'> & { parentPath: string }).parentPath,
+                ('path' in v ? v.path as string | undefined : undefined) ?? (v as unknown as Omit<typeof v, 'path'> & { parentPath: string }).parentPath,
                 v.name,
               ) === proj,
             );
@@ -515,7 +515,7 @@ export class MSBuildProject {
     async function convertDirentToMSBuildProject(dirent: Dirent): Promise<MSBuildProject> {
       const fullPath = path.join(
         // condition required for compatibility. `.path` was deprecated, but `.parentPath` is not available in our node minversion
-        dirent.path as string | undefined ?? (dirent as unknown as Omit<typeof dirent, 'path'> & { parentPath: string }).parentPath,
+        ('path' in dirent ? dirent.path as string | undefined : undefined) ?? (dirent as unknown as Omit<typeof dirent, 'path'> & { parentPath: string }).parentPath,
         dirent.name,
       );
       const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath);
