@@ -1,7 +1,6 @@
 import { type, type Type } from 'arktype';
-import type { StringType } from 'arktype/internal/methods/string.ts';
 
-export const tBooleanString: StringType<'false' | 'true'> = type('"true" | "false"');
+export const tBooleanString: Type<'false' | 'true'> = type('"true" | "false"');
 export type BooleanString = typeof tBooleanString.infer;
 
 export const tEmptyOrBooleanString: Type<'' | 'false' | 'true'> = type(tBooleanString.or('""'));

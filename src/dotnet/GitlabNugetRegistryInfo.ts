@@ -5,9 +5,8 @@ import {
   NRIOpts,
   NRIOptsBase,
 } from './NugetRegistryInfo.js';
-import type { Out } from 'arktype';
+import type { Out, Type } from 'arktype';
 import type { Default } from 'arktype/internal/attributes.ts';
-import type { ObjectType } from 'arktype/internal/methods/object.ts';
 import type { MSBuildProject, MSBuildEvaluationOutput } from './MSBuildProject.js';
 import type { NugetProjectProperties } from './NugetProjectProperties.js';
 
@@ -88,7 +87,7 @@ const GLNRI = GitlabNugetRegistryInfo;
 /**
  * The Arktype definition for {@link GitlabNugetRegistryInfo}'s constructor parameter. Construct an object of this type by calling {@link GLNRIOpts.from}
  */
-export const GLNRIOpts: ObjectType<{
+export const GLNRIOpts: Type<{
   project: MSBuildProject | {
     readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
     readonly Properties: Readonly<NugetProjectProperties>;

@@ -1,6 +1,5 @@
 /* eslint-disable jsdoc/no-defaults */
-import { type } from 'arktype';
-import type { ObjectType } from 'arktype/internal/methods/object.ts';
+import { type, type Type } from 'arktype';
 import { exec } from 'node:child_process';
 import { constants } from 'node:os';
 import { promisify } from 'node:util';
@@ -40,7 +39,7 @@ export async function execAsync(command: string, setStderrAsCause = false): Prom
   });
 }
 
-const T_ExecException: ObjectType<{
+const T_ExecException: Type<{
   name: string;
   message: string;
   stack?: string | undefined;

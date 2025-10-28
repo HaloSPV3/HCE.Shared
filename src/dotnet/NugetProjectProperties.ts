@@ -14,10 +14,9 @@ import {
   type WithProto,
 } from '../utils/reflection.js';
 import { MSBuildProjectProperties, type Class_MSBPP } from './MSBuildProjectProperties.js';
-import type { StringType } from 'arktype/internal/methods/string.ts';
 
-const Type_RepositoryType: StringType<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
-const Type_SymbolPackageFormat: StringType<'symbols.nupkg' | 'snupkg'> = type('"symbols.nupkg" | "snupkg"');
+const Type_RepositoryType: type<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
+const Type_SymbolPackageFormat: type<'symbols.nupkg' | 'snupkg'> = type('"symbols.nupkg" | "snupkg"');
 
 /**
  * A readonly record of a .csproj or .fsproj with NuGet configuration properties in

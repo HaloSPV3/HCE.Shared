@@ -5,7 +5,7 @@ import type { NugetProjectProperties } from './NugetProjectProperties.js';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 import { config as configDotenv } from '@dotenvx/dotenvx';
-import { type } from 'arktype';
+import { type, type Type } from 'arktype';
 import { detectFile, detectFileSync } from 'chardet';
 import { ok } from 'node:assert/strict';
 import type { ExecException } from 'node:child_process';
@@ -20,7 +20,6 @@ import sanitizeFileName from 'sanitize-filename';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
 import { catchCsc2012, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
-import type { ObjectType } from 'arktype/internal/methods/object.ts';
 import type { Default } from 'arktype/internal/attributes.ts';
 
 type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
@@ -294,7 +293,7 @@ but the environment variable is empty or undefined.`);
    * {@link NRI.PackPackagesOptionsType.t.propertyOverrides `propertyOverrides`}
    * is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
    */
-  static readonly PackPackagesOptionsType: ObjectType<{
+  static readonly PackPackagesOptionsType: Type<{
     propertyOverrides?: Record<string, string> | undefined;
     artifactsPath?: string | undefined;
     configuration?: 'Release' | 'Debug' | undefined;
@@ -345,7 +344,7 @@ but the environment variable is empty or undefined.`);
     }),
   );
 
-  public static readonly PackDummyPackagesOptionsType: ObjectType<{
+  public static readonly PackDummyPackagesOptionsType: Type<{
     propertyOverrides?: Record<string, string> | undefined;
     artifactsPath?: string | undefined;
     configuration?: 'Release' | 'Debug' | undefined;
@@ -559,7 +558,7 @@ but the environment variable is empty or undefined.`);
    * Specific to this API:
    * If you want to use this API's default root value (\`${cwd()}/publish`), assign an empty string.
    */
-  static readonly PushPackagesOptionsType: ObjectType<{
+  static readonly PushPackagesOptionsType: Type<{
     root: string;
     apiKey?: string | undefined;
     configFile?: string | undefined;
@@ -612,7 +611,7 @@ but the environment variable is empty or undefined.`);
    * {@link NRI.PushPackagesOptionsType} sans {@link NRI.PushPackagesOptionsType.t.root}.
    * The result of {@link getDummiesDir} is used, instead.
    */
-  public static readonly PushDummyPackagesOptionsType: ObjectType<{
+  public static readonly PushDummyPackagesOptionsType: Type<{
     apiKey?: string | undefined;
     configFile?: string | undefined;
     disableBuffering?: boolean | undefined;
@@ -906,7 +905,7 @@ const NRI: typeof NugetRegistryInfo = NugetRegistryInfo;
  * The base type for {@link NRIOpts} and related types. Extend this type while
  * overriding member types via {@link NRIOptsBase.merge}
  */
-export const NRIOptsBase: ObjectType<{
+export const NRIOptsBase: Type<{
   project: MSBuildProject | {
     readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
     readonly Properties: Readonly<NugetProjectProperties>;
@@ -960,7 +959,7 @@ export const NRIOptsBase: ObjectType<{
 /**
  * The type of the parameter for {@link NugetRegistryInfo}'s constructor.
  */
-export const NRIOpts: ObjectType<{
+export const NRIOpts: Type<{
   project: MSBuildProject | {
     readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
     readonly Properties: Readonly<NugetProjectProperties>;

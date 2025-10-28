@@ -1,4 +1,4 @@
-import { type, type Scope } from 'arktype';
+import { type, type Scope, type Type } from 'arktype';
 import { warn } from 'node:console';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
@@ -12,7 +12,6 @@ import {
   NPPGetterNames,
   NugetProjectProperties,
 } from './NugetProjectProperties.js';
-import type { ObjectType } from 'arktype/internal/methods/object.ts';
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
@@ -73,7 +72,7 @@ const targetFailure = type({
   Items: 'never[]',
 });
 
-const msbuildEvaluationOutput: ObjectType<{
+const msbuildEvaluationOutput: Type<{
   Properties?: Record<string, string> | undefined;
   Items?: Record<string, {
     [x: string]: string | undefined;
@@ -170,7 +169,7 @@ export class MSBuildEvaluationOutput {
   TargetResults?: typeof msbuildEvaluationOutput.infer.TargetResults;
 }
 
-export const EvaluationOptions: ObjectType<{
+export const EvaluationOptions: Type<{
   FullName: string;
   Property: {
     MSBuildProjectFullPath?: string | undefined;

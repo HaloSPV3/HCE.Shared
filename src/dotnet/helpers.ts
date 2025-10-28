@@ -1,11 +1,10 @@
-import { type } from 'arktype';
+import { type, type Type } from 'arktype';
 import path from 'node:path';
 import { cwd } from 'node:process';
 import { MSBuildProject } from './MSBuildProject.js';
 import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
 import { NugetRegistryInfo } from './NugetRegistryInfo.js';
 import type { Default } from 'arktype/internal/attributes.ts';
-import type { ObjectType } from 'arktype/internal/methods/object.ts';
 
 const ourDefaultPubDir = path.join('.', 'publish') as `.${'/' | '\\'}publish`;
 
@@ -369,7 +368,7 @@ function formatDotnetNugetSign(
   }
 }
 
-const DotnetNugetSignOptions: ObjectType<
+const DotnetNugetSignOptions: Type<
   {
     timestamper: Default<string, 'https://rfc3161.ai.moda/'>;
     certificatePassword?: string | undefined;
