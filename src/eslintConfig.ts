@@ -24,6 +24,9 @@ const globalIgnores: ReturnType<typeof setGlobalIgnores> = setGlobalIgnores([
   '**/*.tsbuildinfo',
   '**/bin/**/*',
   '**/obj/**/*',
+  '.pnp.cjs',
+  '.pnp.loader.mjs',
+  '.yarn/sdks/**',
 ]);
 
 const json_json = {
