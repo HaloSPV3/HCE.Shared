@@ -2,7 +2,7 @@ import eslint from '@eslint/js';
 import { defineConfig, globalIgnores as setGlobalIgnores } from 'eslint/config';
 import { type Linter } from 'eslint';
 import stylistic, { type RuleOptions } from '@stylistic/eslint-plugin';
-import jsonc from 'eslint-plugin-jsonc';
+import json from '@eslint/json';
 import globals from 'globals/globals.json' with { type: 'json' };
 import tseslint from 'typescript-eslint';
 
@@ -28,40 +28,6 @@ const globalIgnores: ReturnType<typeof setGlobalIgnores> = setGlobalIgnores([
   '.pnp.loader.mjs',
   '.yarn/sdks/**',
 ]);
-
-const json_json = {
-  /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
-  ...jsonc.configs['flat/recommended-with-json']
-    .map(v => v as JsoncCfgReducerIn)
-    .flatMap(a => jsonCfgReducer(a, {}))
-    // eslint-disable-next-line unicorn/no-array-reduce
-    .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {} as JsoncCfgReducerOut),
-  name: 'flat/recommended-with-json - https://github.com/ota-meshi/eslint-plugin-jsonc' as const,
-  files: ['*.json', '**/*.json'] as ['*.json', '**/*.json'],
-  ignores: globalIgnores.ignores,
-};
-const json_json5 = {
-  /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
-  ...jsonc.configs['flat/recommended-with-json5']
-    .map(v => v as JsoncCfgReducerIn)
-    .flatMap(a => jsonCfgReducer(a, {}))
-    // eslint-disable-next-line unicorn/no-array-reduce
-    .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {} as JsoncCfgReducerOut),
-  name: 'flat/recommended-with-json5 - https://github.com/ota-meshi/eslint-plugin-jsonc' as const,
-  files: ['*.json5', '**/*.json5'] as ['*.json5', '**/*.json5'],
-  ignores: globalIgnores.ignores,
-};
-const json_jsonc = {
-  /** jsonc config union types are a pain to work with. Each union member is mutually exclusive to the others */
-  ...jsonc.configs['flat/recommended-with-jsonc']
-    .map(v => v as JsoncCfgReducerIn)
-    .flatMap(a => jsonCfgReducer(a, {}))
-    // eslint-disable-next-line unicorn/no-array-reduce
-    .reduce((accumulator, element) => jsonCfgReducer(accumulator, element), {} as JsoncCfgReducerOut),
-  name: 'flat/recommended-with-jsonc - https://github.com/ota-meshi/eslint-plugin-jsonc' as const,
-  files: ['*.jsonc', '**/*.jsonc'] as ['*.jsonc', '**/*.jsonc'],
-  ignores: globalIgnores.ignores,
-};
 
 const stylisticWarn: Linter.Config = stylistic.configs.customize({
   quoteProps: 'as-needed',
@@ -99,9 +65,10 @@ stylisticWarn.rules['@stylistic/semi'] = [
 ] satisfies Linter.RuleEntry<RuleOptions['@stylistic/semi']>;
 
 const config: ReturnType<typeof defineConfig> = defineConfig(
-  json_json,
-  json_json5,
-  json_jsonc,
+  { ...json.configs.recommended, name: 'JSON Recommended', files: ['**/*.json'], language: 'json/json' },
+  { name: 'JSON - Allow empty keys in package-lock.json', files: ['**/package-lock.json'], rules: { 'json/no-empty-keys': 'off' } },
+  { ...json.configs.recommended, name: 'JSONC Recommended', files: ['**/*.jsonc'], language: 'json/jsonc' },
+  { ...json.configs.recommended, name: 'JSON5 Recommended', files: ['**/*.json5'], language: 'json/json5' },
   {
     name: 'TSJS',
     extends: [
@@ -131,56 +98,3 @@ const config: ReturnType<typeof defineConfig> = defineConfig(
   globalIgnores,
 );
 export default config;
-
-type JsoncCfgReducerIn = Partial<typeof jsonc.configs['flat/recommended-with-jsonc'][number]>
-  | Partial<typeof jsonc.configs['flat/recommended-with-json5'][number]>;
-
-interface JsoncCfgReducerOut {
-  files: NonNullable<(typeof jsonc.configs)['flat/base'][number]['files']> | ['*.json', '**/*.json', '*.json5', '**/*.json5', '*.jsonc', '**/*.jsonc'];
-  plugins: typeof jsonc.configs['flat/base'][number]['plugins'];
-  languageOptions: {
-    parser: typeof import('jsonc-eslint-parser');
-  };
-  rules: NonNullable<
-    typeof jsonc['configs']['flat/recommended-with-json5'][number]['rules']
-    | typeof jsonc.configs['flat/recommended-with-jsonc'][number]['rules']
-  >;
-}
-
-/**
- * Merge erroneously mutually-exclusive configs from `eslint-plugin-jsonc`.
- * @param a A config exported by `eslint-plugin-jsonc` -OR- the output of this function.
- * @param b A config exported by `eslint-plugin-jsonc` -OR- the output of this function.
- * @returns A merged combination of {@link a} and {@link b}.
- */
-function jsonCfgReducer(
-  a: JsoncCfgReducerIn | JsoncCfgReducerOut,
-  b: JsoncCfgReducerIn | JsoncCfgReducerOut,
-): JsoncCfgReducerOut {
-  const baseRules = jsonc.configs['flat/base']
-    .find(
-      v => v.rules !== undefined,
-    )?.rules ?? (() => { throw new Error('Unable to find jsonc base rules'); })();
-
-  return {
-    files: jsonc.configs['flat/base']
-      .filter(v => v.files !== undefined)
-      .flatMap(v => v.files),
-    plugins: {
-      jsonc: jsonc.configs['flat/base']
-        .find(v =>
-          v.plugins?.jsonc !== undefined,
-        )?.plugins?.jsonc ?? (() => { throw new Error('Unable to find jsonc plugin'); })(),
-    },
-    languageOptions: {
-      parser: jsonc.configs['flat/base']
-        .find(v => v.languageOptions?.parser)
-        ?.languageOptions?.parser ?? (() => { throw new Error('Unable to find jsonc parser'); })(),
-    },
-    rules: {
-      ...a.rules,
-      ...b.rules,
-      ...baseRules,
-    },
-  };
-}
