@@ -33,18 +33,9 @@ const stylisticWarn: Linter.Config = stylistic.configs.customize({
   quoteProps: 'as-needed',
   semi: true,
   indent: 2,
+  severity: 'warn',
 });
 stylisticWarn.rules ??= {};
-
-// change all stylistic error-severity to warn-severity. Style violations should not imply code errors.
-for (const key in stylisticWarn.rules) {
-  const element = stylisticWarn.rules[key];
-  if (Array.isArray(element) && (element[0] === 2 || element[0] === 'error'))
-    element[0] = 'warn';
-  else if (element === 2 || element === 'error') {
-    stylisticWarn.rules[key] = 'warn';
-  }
-}
 
 stylisticWarn.rules['@stylistic/no-extra-parens'] = [
   'warn',
