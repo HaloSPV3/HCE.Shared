@@ -1,0 +1,20 @@
+{
+  "name": "@halospv3/hce.shared-commitlint-config",
+  "version": "1.0.0",
+  "description": "The Commitlint shareable config of @halospv3/hce.shared-config",
+  "keywords": [ "commitlint", "config" ],
+  "homepage": "https://github.com/HaloSPV3/HCE.Shared#readme",
+  "bugs": { "url": "https://github.com/HaloSPV3/HCE.Shared/issues" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaloSPV3/HCE.Shared.git"
+  },
+  "license": "MIT",
+  "author": "Noah Sherwin",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsx --test --experimental-test-coverage --enable-source-maps --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.txt --test-reporter=junit --test-reporter-destination=junit.xml"
+  }
+}
+

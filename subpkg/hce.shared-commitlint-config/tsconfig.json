@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [ "./index.ts", "../../src/commitlintConfig.ts" ],
+  "compilerOptions": { "outDir": "./dist" }
+}
