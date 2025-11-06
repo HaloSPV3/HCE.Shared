@@ -19,8 +19,8 @@
 <Project>
 
   <Target Name="_PublishProjectIfFrameworkSetAndNotMultiRuntime"
-          DependsOnTargets="Publish"
-          Condition="'$(RuntimeIdentifiers)' == '' And '$(TargetFramework)' != '' " />
+          Condition="'$(RuntimeIdentifiers)' == '' And '$(TargetFramework)' != '' "
+          DependsOnTargets="Publish" />
 
   <Target Name="_PublishProjectForAllFrameworksAndRuntimes"
           Condition=" '$(TargetFramework)' == '' And '$(RuntimeIdentifiers)' != '' ">
