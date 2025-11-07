@@ -21,29 +21,51 @@
     <Configuration Condition="'$(PublishRelease)' == 'true'">Release</Configuration>
   </PropertyGroup>
 
-  <Target Name="_PublishProjectIfFrameworkSetAndNotMultiRuntime"
-          Condition="'$(RuntimeIdentifiers)' == '' And '$(TargetFramework)' != '' "
-          DependsOnTargets="Publish" />
-
-  <Target Name="_PublishProjectForAllFrameworksAndRuntimes"
-          Condition=" '$(TargetFramework)' == '' And '$(RuntimeIdentifiers)' != '' ">
+  <!-- If !TargetFramework, iterate through TargetFrameworks -->
+  <Target Name="_PublishAll_AllFrameworks"
+          Condition=" '$(TargetFramework)' == '' ">
     <ItemGroup>
       <_PublishFramework Include="$(TargetFrameworks)" />
-      <_PublishRuntime Include="$(RuntimeIdentifiers)" />
     </ItemGroup>
 
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=%(_PublishFramework.Identity);RuntimeIdentifier=%(_PublishRuntime.Identity)" />
+    <Message Text="_PublishAll_AllFrameworks:
+    TargetFramework: $(TargetFramework)
+    TargetFrameworks: $(TargetFrameworks)
+    _PublishFramework: $(_PublishFramework)
+    RuntimeIdentifier: $(RuntimeIdentifier)
+    RuntimeIdentifiers: $(RuntimeIdentifiers)" />
+
+    <Error Condition=" '$(TargetFrameworks)' == '' " Text="Both TargetFramework and TargetFrameworks are undefined!" />
+
+    <MSBuild Projects="$(MSBuildProjectFile)" Targets="_PublishAll_OneFramework" Properties="TargetFramework=%(_PublishFramework.Identity)" />
   </Target>
 
-  <Target Name="_PublishProjectForAllFrameworksIfFrameworkUnset" 
-          Condition=" '$(TargetFramework)' == '' And '$(RuntimeIdentifiers)' == '' ">
+  <!-- If TargetFramework, iterate through RuntimeIdentifiers or RuntimeIdentifier -->
+  <Target Name="_PublishAll_OneFramework"
+          Condition=" '$(TargetFramework)' != ''">
     <ItemGroup>
-      <_PublishFramework Include="$(TargetFrameworks)" />
+      <_PublishRuntime Condition=" '$(RuntimeIdentifier)' != '' " Include="$(RuntimeIdentifier)"/>
+      <_PublishRuntime Condition=" '$(_PublishRuntime)' == '' " Include="$(RuntimeIdentifiers)" />
     </ItemGroup>
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=%(_PublishFramework.Identity)" />
+
+    <Message Text="_PublishAll_OneFramework:
+    TargetFramework: $(TargetFramework)
+    TargetFrameworks: $(TargetFrameworks)
+    _PublishFramework: $(_PublishFramework)
+    RuntimeIdentifier: %(_PublishRuntime.Identity)
+    RuntimeIdentifiers: $(RuntimeIdentifiers)
+    _PublishRuntime: @(_PublishRuntime)" />
+
+    <Error Condition="'$(RuntimeIdentifier)' == '' AND '$(RuntimeIdentifiers)' == ''"
+      Text="Both RuntimeIdentifier and RuntimeIdentifiers are undefined!" />
+
+    <MSBuild Condition=" `@(_PublishRuntime->'%(Identity)')` != '' "
+      Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=$(TargetFramework);RuntimeIdentifier=%(_PublishRuntime.Identity)" />
+    <MSBuild Condition=" `@(_PublishRuntime->'%(Identity)')` == '' "
+      Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=$(TargetFramework)" />
   </Target>
 
   <!-- TODO: PublishProfileNames, PublishProfileName -->
   <Target Name="PublishAll"
-          DependsOnTargets="_PublishProjectIfFrameworkSetAndNotMultiRuntime;_PublishProjectForAllFrameworksAndRuntimes;_PublishProjectForAllFrameworksIfFrameworkUnset" />
+          DependsOnTargets="_PublishAll_AllFrameworks;_PublishAll_OneFramework" />
 </Project>
