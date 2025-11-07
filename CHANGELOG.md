@@ -1,3 +1,11 @@
+## [3.1.0-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.0-develop.1...v3.1.0-develop.2) (2025-11-07)
+
+### Bug Fixes
+
+* **dotnet.PublishAll:** rewrite internal targets ([#501](https://github.com/HaloSPV3/HCE.Shared/issues/501)) ([f1634f2](https://github.com/HaloSPV3/HCE.Shared/commit/f1634f2b8b89488e9c32d94564c510135b53b91c))
+* **dotnet.PublishAll:** rewrite internal targets to fix TFM-RID publish matrix ([523cc59](https://github.com/HaloSPV3/HCE.Shared/commit/523cc59f2abb2936bf174673fe5b8e73c17b44b1))
+* **dotnet.PublishAll:** set Configuration to "Release" if PublishRelease ([f1fe5f7](https://github.com/HaloSPV3/HCE.Shared/commit/f1fe5f74183fb1ccdd00997f9a1d2448b2a93060))
+
 ## [3.1.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0...v3.1.0-develop.1) (2025-11-07)
 
 ### Features
