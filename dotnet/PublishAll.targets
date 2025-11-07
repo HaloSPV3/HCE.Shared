@@ -17,6 +17,9 @@
       Note: "PlatformTarget" (CPU arch) is overridden by RuntimeIdentifier.
   -->
 <Project>
+  <PropertyGroup>
+    <Configuration Condition="'$(PublishRelease)' == 'true'">Release</Configuration>
+  </PropertyGroup>
 
   <Target Name="_PublishProjectIfFrameworkSetAndNotMultiRuntime"
           Condition="'$(RuntimeIdentifiers)' == '' And '$(TargetFramework)' != '' "
