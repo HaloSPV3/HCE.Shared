@@ -1,10 +1,10 @@
 <!-- `dotnet -t:PublishAll -p:Configuration=Release` will publish all permutations derived from TargetFrameworks and RuntimeIdentifiers
-     !Beware: No compatibility checks are performed! 
+     !Beware: No compatibility checks are performed!
      netstandard2.0 + PublishSingleFile may cause errors! Weirdly, net480 + linux-x64 builds AND runs on both WSL and Windows...
 
       Based on https://stackoverflow.com/a/43951971/14894786
       Licensed under CC BY-SA 3.0
- 
+
       ?Ask yourself "Do I *really* need multi-targeting?"
       If you want to target netstandard2.0, then just do that. It's forward-compatible.
       If you want that AND you want conditional access to .NET 5+ stuff, then multi-target.
