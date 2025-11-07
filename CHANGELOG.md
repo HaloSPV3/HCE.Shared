@@ -1,3 +1,21 @@
+## [3.1.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0...v3.1.0-develop.1) (2025-11-07)
+
+### Features
+
+* **utils.isError:** add `isError` compatibility wrapper ([1d7c6f3](https://github.com/HaloSPV3/HCE.Shared/commit/1d7c6f3f2097f409a0064043c5f5ecec94be30df))
+
+### Bug Fixes
+
+* **deps, eslint:** replace 'eslint-plugin-jsonc' with '@eslint/json' ([fc6846a](https://github.com/HaloSPV3/HCE.Shared/commit/fc6846ab2228789c244aef5616044a5b0b599dab))
+* **deps:** bump `@types/node` to 24.9.2 ([0adbe56](https://github.com/HaloSPV3/HCE.Shared/commit/0adbe563c3bc4a58f5ec51d9c99db581f1b69385))
+* **deps:** update arktype@2.1.23 to 2.1.25 ([89f2288](https://github.com/HaloSPV3/HCE.Shared/commit/89f2288be066c0ed0c71986b1570861498a27d65))
+* **deps:** update chardet to 2.1.1 ([0606670](https://github.com/HaloSPV3/HCE.Shared/commit/0606670db9197c13efcae5102363626e4952f047))
+* **eslint:** ignore yarn PnP modules ([5f05ea1](https://github.com/HaloSPV3/HCE.Shared/commit/5f05ea1f1d125e35c8508870971ef6bec6672cf0))
+
+### Reverts
+
+* do not call nvm in package scripts ([eac118a](https://github.com/HaloSPV3/HCE.Shared/commit/eac118a5c098fc453e6e7ad72e1bcd5c14c76866))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See
