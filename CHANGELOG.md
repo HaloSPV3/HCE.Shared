@@ -1,3 +1,9 @@
+## [3.1.1-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.0...v3.1.1-develop.1) (2025-11-08)
+
+### Bug Fixes
+
+* **deps:** upgrade @types/node to 24.10.0 ([922ba9d](https://github.com/HaloSPV3/HCE.Shared/commit/922ba9d43355718c5fe8718b24818be07053b3ae))
+
 ## [3.1.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0...v3.1.0) (2025-11-08)
 
 ### Features
