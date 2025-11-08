@@ -1,3 +1,25 @@
+## [3.1.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.0.0...v3.1.0) (2025-11-08)
+
+### Features
+
+* **utils.isError:** add `isError` compatibility wrapper ([1d7c6f3](https://github.com/HaloSPV3/HCE.Shared/commit/1d7c6f3f2097f409a0064043c5f5ecec94be30df))
+
+### Bug Fixes
+
+* **deps, eslint:** replace 'eslint-plugin-jsonc' with '@eslint/json' ([fc6846a](https://github.com/HaloSPV3/HCE.Shared/commit/fc6846ab2228789c244aef5616044a5b0b599dab))
+* **deps:** bump `@types/node` to 24.9.2 ([0adbe56](https://github.com/HaloSPV3/HCE.Shared/commit/0adbe563c3bc4a58f5ec51d9c99db581f1b69385))
+* **deps:** update arktype@2.1.23 to 2.1.25 ([89f2288](https://github.com/HaloSPV3/HCE.Shared/commit/89f2288be066c0ed0c71986b1570861498a27d65))
+* **deps:** update chardet to 2.1.1 ([0606670](https://github.com/HaloSPV3/HCE.Shared/commit/0606670db9197c13efcae5102363626e4952f047))
+* **deps:** update dependency @eslint/json to ^0.14.0 ([26da95a](https://github.com/HaloSPV3/HCE.Shared/commit/26da95aa74977618fc70c31143eef957b116b3d6))
+* **dotnet.PublishAll:** rewrite internal targets ([#501](https://github.com/HaloSPV3/HCE.Shared/issues/501)) ([f1634f2](https://github.com/HaloSPV3/HCE.Shared/commit/f1634f2b8b89488e9c32d94564c510135b53b91c))
+* **dotnet.PublishAll:** rewrite internal targets to fix TFM-RID publish matrix ([523cc59](https://github.com/HaloSPV3/HCE.Shared/commit/523cc59f2abb2936bf174673fe5b8e73c17b44b1))
+* **dotnet.PublishAll:** set Configuration to "Release" if PublishRelease ([f1fe5f7](https://github.com/HaloSPV3/HCE.Shared/commit/f1fe5f74183fb1ccdd00997f9a1d2448b2a93060))
+* **eslint:** ignore yarn PnP modules ([5f05ea1](https://github.com/HaloSPV3/HCE.Shared/commit/5f05ea1f1d125e35c8508870971ef6bec6672cf0))
+
+### Reverts
+
+* do not call nvm in package scripts ([eac118a](https://github.com/HaloSPV3/HCE.Shared/commit/eac118a5c098fc453e6e7ad72e1bcd5c14c76866))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See
