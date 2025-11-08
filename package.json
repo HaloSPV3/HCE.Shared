@@ -111,7 +111,7 @@
     "@types/tmp": "^0.2.6",
     "@typescript-eslint/utils": "^8.45.0",
     "conventional-changelog-preset-loader": "^5.0.0",
-    "eslint": "^9.31.0",
+    "eslint": "^9.39.1",
     "eslint-plugin-jsdoc": "^61.0.0",
     "eslint-plugin-unicorn": "^62.0.0",
     "jiti": "^2.6.1",
