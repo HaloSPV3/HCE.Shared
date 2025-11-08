@@ -1,3 +1,9 @@
+## [3.1.0-develop.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.0-develop.2...v3.1.0-develop.3) (2025-11-08)
+
+### Bug Fixes
+
+* **deps:** update dependency @eslint/json to ^0.14.0 ([26da95a](https://github.com/HaloSPV3/HCE.Shared/commit/26da95aa74977618fc70c31143eef957b116b3d6))
+
 ## [3.1.0-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.0-develop.1...v3.1.0-develop.2) (2025-11-07)
 
 ### Bug Fixes
