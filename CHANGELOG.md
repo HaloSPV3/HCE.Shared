@@ -1,3 +1,9 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See
+[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
+for commit guidelines.
+
 ## [3.1.0-develop.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.0-develop.2...v3.1.0-develop.3) (2025-11-08)
 
 ### Bug Fixes
@@ -29,12 +35,6 @@
 ### Reverts
 
 * do not call nvm in package scripts ([eac118a](https://github.com/HaloSPV3/HCE.Shared/commit/eac118a5c098fc453e6e7ad72e1bcd5c14c76866))
-
-# Changelog
-
-All notable changes to this project will be documented in this file. See
-[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
-for commit guidelines.
 
 ## [3.0.0](https://github.com/HaloSPV3/HCE.Shared/compare/v2.6.6...v3.0.0) (2025-10-21)
 
