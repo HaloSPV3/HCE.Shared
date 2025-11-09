@@ -56,12 +56,9 @@
     RuntimeIdentifiers: $(RuntimeIdentifiers)
     _PublishRuntime: @(_PublishRuntime)" />
 
-    <Error Condition="'$(RuntimeIdentifier)' == '' AND '$(RuntimeIdentifiers)' == ''"
-      Text="Both RuntimeIdentifier and RuntimeIdentifiers are undefined!" />
-
-    <MSBuild Condition=" `@(_PublishRuntime->'%(Identity)')` != '' "
+    <MSBuild Condition=" '$(RuntimeIdentifiers)' != '' "
       Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=$(TargetFramework);RuntimeIdentifier=%(_PublishRuntime.Identity)" />
-    <MSBuild Condition=" `@(_PublishRuntime->'%(Identity)')` == '' "
+    <MSBuild Condition=" '$(RuntimeIdentifiers)' == '' "
       Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=$(TargetFramework)" />
   </Target>
 
