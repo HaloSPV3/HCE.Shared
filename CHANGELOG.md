@@ -1,3 +1,9 @@
+## [3.2.0-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.2.0-develop.1...v3.2.0-develop.2) (2025-11-09)
+
+### Bug Fixes
+
+* **dotnet.PublishAll:** fix invalid conditions; remove erroneous Error ([73f984f](https://github.com/HaloSPV3/HCE.Shared/commit/73f984f96770cafaafcc0448cc1a3c4a4fd9a119))
+
 ## [3.2.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.1-develop.1...v3.2.0-develop.1) (2025-11-09)
 
 ### Features
