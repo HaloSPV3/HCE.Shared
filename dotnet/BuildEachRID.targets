@@ -1,0 +1,13 @@
+<Project>
+  <!-- https://github.com/dotnet/sdk/issues/9795#issuecomment-2021271237 -->
+  <Target Name="BuildEachRID" AfterTargets="PostBuildEvent"
+          Condition=" '$(TargetFramework)' != ''
+            AND '$(RuntimeIdentifier)' == ''
+            AND '$(RuntimeIdentifiers)' != '' ">
+    <ItemGroup>
+      <_RuntimeIdentifier Include="$(RuntimeIdentifiers)" />
+    </ItemGroup>
+    <MSBuild Projects="$(MSBuildProjectFile)"
+             Properties="TargetFramework=$(TargetFramework);RuntimeIdentifier=%(_RuntimeIdentifier.Identity)" />
+  </Target>
+</Project>
