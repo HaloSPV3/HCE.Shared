@@ -1,3 +1,9 @@
+## [3.2.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.1-develop.1...v3.2.0-develop.1) (2025-11-09)
+
+### Features
+
+* **dotnet.BuildEachRID:** add `BuildEachRID` .NET Target ([8f684e3](https://github.com/HaloSPV3/HCE.Shared/commit/8f684e31b607faad5f1994292175585e5943d4e3))
+
 ## [3.1.1-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.0...v3.1.1-develop.1) (2025-11-08)
 
 ### Bug Fixes
