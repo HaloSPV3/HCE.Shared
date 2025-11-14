@@ -40,7 +40,7 @@ interface PluginInsertRuleSet {
 declare function insertAndSortPlugins(
   plugins: Exclude<SemanticReleaseOptions['plugins'], undefined>,
   // eslint-disable-next-line @typescript-eslint/no-deprecated
-  inserts: PluginInsertRuleSet[]
+  inserts: PluginInsertRuleSet[],
 ): PluginSpec[];
 
 /**

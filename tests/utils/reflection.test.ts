@@ -94,7 +94,7 @@ await describe('filterForGetters', async () => {
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
 type LastOf<T>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  = UnionToIntersection<T extends any ? () => T : never> extends () => (infer R) ? R : never;
+  = UnionToIntersection<T extends any ? () => T : never> extends () => infer R ? R : never;
 
 // TS4.0+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -223,7 +223,7 @@ await describe('getOwnPropertyDescriptors', async () => {
 // https://stackoverflow.com/a/63116449/14894786
 // for TypeScript 4
 type PushFront<TailT extends unknown[], HeadT>
-    = ((head: HeadT, ...tail: TailT) => void) extends ((...array: infer ArrayT) => void) ? ArrayT : never;
+  = ((head: HeadT, ...tail: TailT) => void) extends ((...array: infer ArrayT) => void) ? ArrayT : never;
 
 type NoRepetition<U extends string, ResultT extends unknown[] = []> = {
   [k in U]: PushFront<ResultT, k> | NoRepetition<Exclude<U, k>, PushFront<ResultT, k>>
@@ -355,7 +355,7 @@ const __RecursedPropertyDescriptorMapArray_NPP_Instance: _RecursedPropertyDescri
   RecursedPropertyDescriptorMap<Class_NPP, 'Instance'>,
   RecursedPropertyDescriptorMap<Class_MSBPP, 'Instance'>,
 ] ? true : false
-= true;
+    = true;
 ok(__RecursedPropertyDescriptorMapArray_NPP_Instance);
 
 type _RecursedPropertyDescriptorMapArray_NPP_Static = RecursedPropertyDescriptorMapArray<Class_NPP, 'Static'>;
@@ -363,21 +363,21 @@ const __RecursedPropertyDescriptorMapArray_NPP_Static: _RecursedPropertyDescript
   RecursedPropertyDescriptorMap<Class_NPP, 'Static'>,
   RecursedPropertyDescriptorMap<Class_MSBPP, 'Static'>,
 ] ? true : false
-= true;
+    = true;
 ok(__RecursedPropertyDescriptorMapArray_NPP_Static);
 
 type _PropertyDescriptorMap_NPP_Instance = PropertyDescriptorMap<NugetProjectProperties>;
 const __PropertyDescriptorMap_NPP_Instance: _PropertyDescriptorMap_NPP_Instance extends PropertyDescriptorMap<NugetProjectProperties>
   ? true
   : false
-= true;
+    = true;
 ok(__PropertyDescriptorMap_NPP_Instance);
 
 type _PropertyDescriptorMap_NPP_Instance_Own = PropertyDescriptorMap<NugetProjectProperties, MSBPP>;
 const __PropertyDescriptorMap_NPP_Instance_Own: _PropertyDescriptorMap_NPP_Instance_Own extends PropertyDescriptorMap<NugetProjectProperties, MSBPP>
   ? true
   : false
-= true;
+    = true;
 ok(__PropertyDescriptorMap_NPP_Instance_Own);
 
 type _PickOwnGetters<T extends object, S extends ProtoOrSuperClass> = Pick<PropertyDescriptorMap<T, S>, keyof OwnGetterDescriptorMap<T, S>>;
@@ -385,7 +385,7 @@ const __PickOwnGetters_NPP_Instance: _PickOwnGetters<NugetProjectProperties, MSB
   readonly IsPackable: TypedPropertyDescriptor<BooleanString>;
 } ? true
   : false
-= true;
+    = true;
 ok(__PickOwnGetters_NPP_Instance);
 
 /**
@@ -401,7 +401,7 @@ const __POG_MSBPP: _PickOwnGetters_MSBPP extends {
   GetFullPath: TypedPropertyDescriptor<(path: string) => string>;
 } ? true
   : false
-= true;
+    = true;
 ok(__POG_MSBPP);
 
 /**
