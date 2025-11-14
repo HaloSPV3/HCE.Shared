@@ -47,7 +47,7 @@
     "eslint-inspector": "eslint --inspect-config",
     "prepack": "packemon pack --addExports --addFiles --declaration --loadConfigs",
     "pack": "echo 'You should use `npm pack`' && exit 1",
-    "prepare": "husky",
+    "postinstall": "husky",
     "presemantic-release": "npm pack",
     "semantic-release": "semantic-release",
     "pretest": "npm run build && npm run test:cacheSampleProjects",
