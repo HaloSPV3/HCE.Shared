@@ -1,3 +1,9 @@
+## [3.2.0-develop.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.2.0-develop.2...v3.2.0-develop.3) (2025-11-14)
+
+### Bug Fixes
+
+* **deps:** eviscerate npm's bundleDeps; update tar ([35531ae](https://github.com/HaloSPV3/HCE.Shared/commit/35531ae1cb5f6d8e9acd674f6d022bef59dc97d5)), closes [#495](https://github.com/HaloSPV3/HCE.Shared/issues/495)
+
 ## [3.2.0-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.2.0-develop.1...v3.2.0-develop.2) (2025-11-09)
 
 ### Bug Fixes
