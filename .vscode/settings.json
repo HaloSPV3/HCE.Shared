@@ -92,7 +92,6 @@
     "jsonc",
     "json5"
   ],
-  "eslint.useFlatConfig": true,
   "eslint.validate": [
     "javascript",
     "javascriptreact",
