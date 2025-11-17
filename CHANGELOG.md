@@ -1,3 +1,15 @@
+## [3.2.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.0...v3.2.0) (2025-11-17)
+
+### Features
+
+* **dotnet.BuildEachRID:** add `BuildEachRID` .NET Target ([8f684e3](https://github.com/HaloSPV3/HCE.Shared/commit/8f684e31b607faad5f1994292175585e5943d4e3))
+
+### Bug Fixes
+
+* **deps:** eviscerate npm's bundleDeps; update tar ([35531ae](https://github.com/HaloSPV3/HCE.Shared/commit/35531ae1cb5f6d8e9acd674f6d022bef59dc97d5)), closes [#495](https://github.com/HaloSPV3/HCE.Shared/issues/495)
+* **deps:** upgrade @types/node to 24.10.0 ([922ba9d](https://github.com/HaloSPV3/HCE.Shared/commit/922ba9d43355718c5fe8718b24818be07053b3ae))
+* **dotnet.PublishAll:** fix invalid conditions; remove erroneous Error ([73f984f](https://github.com/HaloSPV3/HCE.Shared/commit/73f984f96770cafaafcc0448cc1a3c4a4fd9a119))
+
 ## [3.2.0-develop.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.2.0-develop.2...v3.2.0-develop.3) (2025-11-14)
 
 ### Bug Fixes
