@@ -27,7 +27,7 @@ jobs:
       id-token: write # to enable use of OIDC for npm provenance
       packages: write # for pushing GitHub Nuget packages
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Required by GitVersion, Semantic Release
           submodules: 'recursive'
