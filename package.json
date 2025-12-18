@@ -85,7 +85,7 @@
     "semantic-release": "^25.0.0",
     "semantic-release-export-data": "^1.1.0",
     "ts-essentials": "^10.1.1",
-    "typescript-eslint": "^8.37.0"
+    "typescript-eslint": "^8.50.0"
   },
   "devDependencies": {
     "@amanda-mitchell/semantic-release-npm-multiple": "^3.16.0",
@@ -97,7 +97,7 @@
     "@eslint/markdown": "^7.0.0",
     "@sebbo2002/semantic-release-jsr": "^3.0.0",
     "@semantic-release/gitlab": "^13.2.6",
-    "@tsconfig/node24": "^24.0.0",
+    "@tsconfig/node24": "^24.0.3",
     "@types/debug": "^4.1.12",
     "@types/tmp": "^0.2.6",
     "conventional-changelog-preset-loader": "^5.0.0",
