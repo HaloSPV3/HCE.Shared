@@ -23,7 +23,7 @@
     }
   },
   "compileOnSave": true,
-  "extends": "./node_modules/@tsconfig/node20/tsconfig.json",
+  "extends": "./node_modules/@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
     "composite": true,
     "declarationMap": true,
