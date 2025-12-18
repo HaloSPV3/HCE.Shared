@@ -1,3 +1,9 @@
+## [3.2.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.2.0...v3.2.1) (2025-12-18)
+
+### Bug Fixes
+
+* **deps:** :ambulance: bump npm to 11.7.0; mitigate CVE-2025-64756 ([a277a00](https://github.com/HaloSPV3/HCE.Shared/commit/a277a00ea00ddb5d12a15c2bd28f8e8cc6fc788a))
+
 ## [3.2.1-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.2.0...v3.2.1-develop.1) (2025-12-18)
 
 ### Bug Fixes
