@@ -54,3 +54,10 @@ jobs:
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      ### Post-Release Actions
+      - uses: fabi-ai/repository-mirroring-action@v1
+        with:
+          target_repo_url: git@gitlab.com:halospv3/HCE.Shared.git
+          ssh_private_key: # <-- use 'secrets' to pass credential information.
+            ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
