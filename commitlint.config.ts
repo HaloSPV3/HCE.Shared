@@ -38,6 +38,7 @@ const scopes = {
   'dotnet.PublishAll': 'Affects "dotnet/PublishAll.targets".',
   'dotnet.samples':
     'Affects multiple sample projects. If necessary, add a new scope for a new sample project!',
+  'dotnet.samples.AMT': 'Affects the HCE.Shared.AvaloniaMultiTarget" sample project.',
   'dotnet.samples.DN':
     'Affects the HCE.Shared.DeterministicNupkg sample project.',
   'dotnet.samples.README': 'Affects "dotnet/samples/README.md".',
