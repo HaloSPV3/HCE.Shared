@@ -18,4 +18,7 @@
     <DotnetNugetSignOverwrite>true</DotnetNugetSignOverwrite>
   </PropertyGroup>
   <Import Project="../../SignAfterPack.targets" />
+  <Import Project="../../BuildEachRID.targets" />
+  <Import Project="../../PublishAll.targets" />
+  <Import Project="../../ZipPublishDir.targets" />
 </Project>
