@@ -8,6 +8,8 @@
   <Import Project="./ZipPublishDir.targets" />
   <!-- Must be explicitly targeted via 'dotnet msbuild project.csproj -t:PublishAll'. May lead to incompatibility errors -->
   <Import Project="./PublishAll.targets" />
-  <!-- Must be explicitly targeted via 'dotnet msbuild project.csproj' -->
+  <!-- Auto-runs after 'dotnet build' if (TargetFramework != '') AND (RuntimeIdentifier == '') AND (RuntimeIdentifiers != '');
+    The SDK iterates through TargetFrameworks for each TFM. We iterate each TFM's RIDs.
+    Intended for ensuring RID-dependent build permutations are successful before attempting PublishAll. -->
   <Import Project="./BuildEachRID.targets" />
 </Project>
