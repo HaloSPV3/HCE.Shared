@@ -59,7 +59,7 @@
     <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <TargetFramework Condition="'$(TargetFramework)'==''">net6.0</TargetFramework>
     <RuntimeIdentifier Condition="'$(RuntimeIdentifiers)'=='' AND '$(RuntimeIdentifier)'==''">win7-x86</RuntimeIdentifier>
-    <RuntimeIdentifiers Condition="'$(RuntimeIdentifiers)'==''">win7-x86;win7-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers Condition="'$(RuntimeIdentifiers)'=='' AND '$(TargetFramework)'=='net6.0'">win7-x86;win7-x64</RuntimeIdentifiers>
     <ZipPublishDir_AppendVariantArgs Condition="'$(ZipPublishDir_AppendVariantArgs)'==''">true</ZipPublishDir_AppendVariantArgs>
     <!-- <VariantArgs>$(MSBuildProjectName);$(Configuration)</VariantArgs> -->
 
