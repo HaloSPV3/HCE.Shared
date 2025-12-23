@@ -8,4 +8,6 @@
   <Import Project="./ZipPublishDir.targets" />
   <!-- Must be explicitly targeted via 'dotnet msbuild project.csproj -t:PublishAll'. May lead to incompatibility errors -->
   <Import Project="./PublishAll.targets" />
+  <!-- Must be explicitly targeted via 'dotnet msbuild project.csproj' -->
+  <Import Project="./BuildEachRID.targets" />
 </Project>
