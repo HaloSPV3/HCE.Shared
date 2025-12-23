@@ -6,6 +6,6 @@
   <Import Project="./ExecNupkgDeterministicator.targets" />
   <Import Project="./HCE.Shared.CI.props" />
   <Import Project="./ZipPublishDir.targets" />
-  <!-- Must be explicitly targeted via 'dotnet project.csproj -t:PublishAll'. May lead to incompatibility errors -->
+  <!-- Must be explicitly targeted via 'dotnet msbuild project.csproj -t:PublishAll'. May lead to incompatibility errors -->
   <Import Project="./PublishAll.targets" />
 </Project>
