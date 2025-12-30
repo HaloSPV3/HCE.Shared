@@ -58,7 +58,7 @@
   <PropertyGroup Condition="$([System.String]::Copy($(RepoRoot)).ToLowerInvariant().Contains('hce.shared')) AND '$(CI)' == ''">
     <Configuration Condition="'$(Configuration)'==''">Release</Configuration>
     <TargetFramework Condition="'$(TargetFramework)'==''">net6.0</TargetFramework>
-    <RuntimeIdentifier Condition="'$(RuntimeIdentifiers)'=='' AND '$(RuntimeIdentifier)'==''">win7-x86</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(TargetFramework)'=='net6.0' AND '$(RuntimeIdentifiers)'=='' AND '$(RuntimeIdentifier)'==''">win7-x86</RuntimeIdentifier>
     <RuntimeIdentifiers Condition="'$(RuntimeIdentifiers)'=='' AND '$(TargetFramework)'=='net6.0'">win7-x86;win7-x64</RuntimeIdentifiers>
     <ZipPublishDir_AppendVariantArgs Condition="'$(ZipPublishDir_AppendVariantArgs)'==''">true</ZipPublishDir_AppendVariantArgs>
     <!-- <VariantArgs>$(MSBuildProjectName);$(Configuration)</VariantArgs> -->
