@@ -1,3 +1,20 @@
+## [3.3.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.2.1...v3.3.0-develop.1) (2026-01-21)
+
+### Features
+
+* **dotnet:** add BuildEachRID.targets to HCE.Shared.targets ([9fa91b8](https://github.com/HaloSPV3/HCE.Shared/commit/9fa91b8d8f15a0f0fa9ed3704dbc61eb80a7d40a))
+
+### Bug Fixes
+
+* **dotnet.BuildEachRID:** enable parallel builds ([5411509](https://github.com/HaloSPV3/HCE.Shared/commit/541150941c01ce2f0f9a138e28b15accac1922c0)), closes [/github.com/dotnet/sdk/issues/9795#issuecomment-3617533141](https://github.com/HaloSPV3//github.com/dotnet/sdk/issues/9795/issues/issuecomment-3617533141)
+* **dotnet.BuildEachRID:** spread `_ProjectsToBuild` with `@` ([0ebcea1](https://github.com/HaloSPV3/HCE.Shared/commit/0ebcea1596a7d31eec2ca5bb3c4e9243ed80050f))
+* **dotnet.SemanticRelease:** fix execOptions config ([5ec2829](https://github.com/HaloSPV3/HCE.Shared/commit/5ec2829d68f4a8cda8c0b0fc234b46472f57259e))
+* **dotnet.ZPD:** disallow placeholder values in CI ([168fa96](https://github.com/HaloSPV3/HCE.Shared/commit/168fa967c3f8b0a27e5a4472b4c96adcdcad766b)), closes [#535](https://github.com/HaloSPV3/HCE.Shared/issues/535)
+
+### Performance Improvements
+
+* **dotnet.PublishAll:** attempt tp parallelize PublishAll.targets ([76202f2](https://github.com/HaloSPV3/HCE.Shared/commit/76202f2968cbe1922f77f1b8a31dd72bf145d134))
+
 ## [3.2.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.2.0...v3.2.1) (2025-12-18)
 
 ### Bug Fixes
