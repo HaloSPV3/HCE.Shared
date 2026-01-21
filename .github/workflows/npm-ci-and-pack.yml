@@ -1,3 +1,4 @@
+name: Node.js CI
 on:
   push:
     # do not run on branches listed in npm-release.yml

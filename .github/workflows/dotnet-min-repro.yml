@@ -1,3 +1,5 @@
+# check for issues in dotnet.DN upon every Push, Pull Request
+name: .NET Minimum Reproduction
 on:
   push:
     paths:

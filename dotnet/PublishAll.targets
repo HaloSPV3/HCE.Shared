@@ -26,6 +26,9 @@
           Condition=" '$(TargetFramework)' == '' ">
     <ItemGroup>
       <_PublishFramework Include="$(TargetFrameworks)" />
+      <_PublishProjects_AllFrameworks 
+        Include="$(MSBuildProjectFile)"
+        AdditionalProperties="TargetFramework=%(_PublishFramework.Identity)" />
     </ItemGroup>
 
     <Message Text="_PublishAll_AllFrameworks:
@@ -37,15 +40,25 @@
 
     <Error Condition=" '$(TargetFrameworks)' == '' " Text="Both TargetFramework and TargetFrameworks are undefined!" />
 
-    <MSBuild Projects="$(MSBuildProjectFile)" Targets="_PublishAll_OneFramework" Properties="TargetFramework=%(_PublishFramework.Identity)" />
+    <MSBuild BuildInParallel="true"
+      Projects="@(_PublishProjects_AllFrameworks)"
+      Targets="_PublishAll_OneFramework" />
   </Target>
 
   <!-- If TargetFramework, iterate through RuntimeIdentifiers or RuntimeIdentifier -->
   <Target Name="_PublishAll_OneFramework"
           Condition=" '$(TargetFramework)' != ''">
     <ItemGroup>
-      <_PublishRuntime Condition=" '$(RuntimeIdentifier)' != '' " Include="$(RuntimeIdentifier)"/>
+      <_PublishRuntime Condition=" '$(RuntimeIdentifier)' != '' " Include="$(RuntimeIdentifier)" />
       <_PublishRuntime Condition=" '$(_PublishRuntime)' == '' " Include="$(RuntimeIdentifiers)" />
+      <_PublishProjects_OneFramework
+        Condition=" '$(RuntimeIdentifiers)' != '' "
+        Include="$(MSBuildProjectFile)"
+        AdditionalProperties="TargetFramework=$(TargetFramework);RuntimeIdentifier=%(_PublishRuntime.Identity)" />
+      <_PublishProjects_OneFramework
+        Condition=" '$(RuntimeIdentifiers)' == '' "
+        Include="$(MSBuildProjectFile)"
+        AdditionalProperties="TargetFramework=$(TargetFramework)" />
     </ItemGroup>
 
     <Message Text="_PublishAll_OneFramework:
@@ -56,10 +69,9 @@
     RuntimeIdentifiers: $(RuntimeIdentifiers)
     _PublishRuntime: @(_PublishRuntime)" />
 
-    <MSBuild Condition=" '$(RuntimeIdentifiers)' != '' "
-      Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=$(TargetFramework);RuntimeIdentifier=%(_PublishRuntime.Identity)" />
-    <MSBuild Condition=" '$(RuntimeIdentifiers)' == '' "
-      Projects="$(MSBuildProjectFile)" Targets="Publish" Properties="TargetFramework=$(TargetFramework)" />
+    <MSBuild BuildInParallel="true"
+      Projects="@(_PublishProjects_OneFramework)"
+      Targets="Publish" />
   </Target>
 
   <!-- TODO: PublishProfileNames, PublishProfileName -->

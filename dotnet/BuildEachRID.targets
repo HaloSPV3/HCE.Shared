@@ -6,8 +6,8 @@
             AND '$(RuntimeIdentifiers)' != '' ">
     <ItemGroup>
       <_RuntimeIdentifier Include="$(RuntimeIdentifiers)" />
+      <_ProjectsToBuild Include="$(MSBuildProjectFile)" AdditionalProperties="RuntimeIdentifier=%(_RuntimeIdentifier.Identity)" />
     </ItemGroup>
-    <MSBuild Projects="$(MSBuildProjectFile)"
-             Properties="TargetFramework=$(TargetFramework);RuntimeIdentifier=%(_RuntimeIdentifier.Identity)" />
+    <MSBuild Projects="@(_ProjectsToBuild)" BuildInParallel="true" />
   </Target>
 </Project>

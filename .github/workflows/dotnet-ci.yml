@@ -5,7 +5,7 @@
 # uses: HaloSPV3/HCE.Shared/.github/workflows/dotnet-ci.yml@{tag}
 # uses: HaloSPV3/HCE.Shared/.github/workflows/dotnet-ci.yml@{commit}
 
-name: dotnet-ci
+name: .NET CI
 
 on:
   # push:
