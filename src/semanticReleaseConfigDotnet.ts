@@ -145,7 +145,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       srExecIndex = this.options.plugins.push(['@semantic-release/exec', {}]) - 1;
     }
 
-    const execOptions = this.options.plugins[srExecIndex] as SRExecOptions;
+    const plugin = this.options.plugins[srExecIndex] as ['@semantic-release/exec', SRExecOptions];
+    const execOptions: SRExecOptions = plugin[1];
 
     // ensure all packable projects are evaluated
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
