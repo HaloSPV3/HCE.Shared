@@ -1,4 +1,5 @@
 # inspired by https://github.com/GitTools/GitVersion/blob/main/.github/workflows/_unit_tests.yml
+name: .NET Unit Tests
 on:
   workflow_call:
 env:
