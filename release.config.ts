@@ -28,7 +28,7 @@ import type { BranchSpec } from 'semantic-release';
 import { baseConfig } from '@halospv3/hce.shared-config/semanticReleaseConfig';
 
 /** check if plugins are installed and available */
-import '@amanda-mitchell/semantic-release-npm-multiple';
+import '@bintoss/semantic-release-npm-multiple';
 import '@sebbo2002/semantic-release-jsr';
 import '@semantic-release/changelog';
 import '@semantic-release/commit-analyzer';
@@ -138,9 +138,9 @@ try {
        */
       'tarballDir?': 'string | false',
     });
-    /** @see https://github.com/amanda-mitchell/semantic-release-npm-multiple#configuration */
+    /** @see https://github.com/bintoss/semantic-release-npm-multiple#configuration */
     const NpmMultipleTuple = type([
-      '"@amanda-mitchell/semantic-release-npm-multiple"',
+      '"@bintoss/semantic-release-npm-multiple"',
       { 'registries?': type.Record('string', NpmOptions) },
     ]);
 
@@ -172,7 +172,7 @@ try {
     // PUBLIC_NPM_TOKEN=XXXXX
 
     const tuple = NpmMultipleTuple.from([
-      '@amanda-mitchell/semantic-release-npm-multiple',
+      '@bintoss/semantic-release-npm-multiple',
       {
         registries: {
           github: {},
