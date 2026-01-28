@@ -112,6 +112,14 @@
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnType": false
   },
+  "files.associations": {
+    "*.ts": "typescriptreact",
+    "*.mts": "typescriptreact"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnType": false
+  },
   "better-comments.tags": [
     {
       "tag": "#",
