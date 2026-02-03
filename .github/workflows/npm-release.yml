@@ -37,7 +37,7 @@ jobs:
           # see https://github.com/actions/setup-node/blob/main/src/main.ts#L85:~:text=function-,resolveVersionInput():,-string%20%7B
           node-version-file: package.json
           check-latest: true
-
+      - run: unset NODE_AUTH_TOKEN
       - name: List commits since last tag
         run: git log $(git describe --tags --abbrev=0)..HEAD --no-merges --oneline
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
@@ -54,4 +54,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
