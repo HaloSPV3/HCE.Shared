@@ -38,6 +38,14 @@ jobs:
           node-version-file: package.json
           check-latest: true
       - run: unset NODE_AUTH_TOKEN
+
+      # ensure GitLab is synced _before_ releasing
+      - name: Sync to GitLab
+        uses: kujov/gitlab-sync@2.1.0
+        with:
+          gitlab_url: https://gitlab.com/halospv3/HCE.Shared
+          username: BinToss
+          gitlab_pat: ${{ secrets.GL_SEMANTICRELEASE }}
       - name: List commits since last tag
         run: git log $(git describe --tags --abbrev=0)..HEAD --no-merges --oneline
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
