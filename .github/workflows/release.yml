@@ -41,7 +41,7 @@ jobs:
 
       # ensure GitLab is synced _before_ releasing
       - name: Sync to GitLab
-        uses: kujov/gitlab-sync@2.1.0
+        uses: kujov/gitlab-sync@2.1.3
         with:
           gitlab_url: https://gitlab.com/halospv3/HCE.Shared
           username: BinToss
