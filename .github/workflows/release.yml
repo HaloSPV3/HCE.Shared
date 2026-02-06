@@ -20,7 +20,7 @@ jobs:
     needs: npm-checks
     permissions:
       contents: write # to be able to publish a GitHub release
-      id-token: write # to enable use of OIDC for npm provenance
+      id-token: write # to enable use of OIDC for npm provenance and Trusted Publishing
       issues: write # to be able to comment on released issues
       packages: write
       pull-requests: write # to be able to comment on released pull requests
