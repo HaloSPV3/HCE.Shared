@@ -1,3 +1,18 @@
+## [3.3.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.3.0...v3.3.1) (2026-02-06)
+
+### Bug Fixes
+
+* **deps, deps-dev:** upgrade npm to v11.9.0 ([627bded](https://github.com/HaloSPV3/HCE.Shared/commit/627bdedbc06b37bf07cb7d3c1a87cabee50ae3e2)), closes [#555](https://github.com/HaloSPV3/HCE.Shared/issues/555) [#559](https://github.com/HaloSPV3/HCE.Shared/issues/559) [#549](https://github.com/HaloSPV3/HCE.Shared/issues/549) [#550](https://github.com/HaloSPV3/HCE.Shared/issues/550) [#556](https://github.com/HaloSPV3/HCE.Shared/issues/556) [#562](https://github.com/HaloSPV3/HCE.Shared/issues/562) [#575](https://github.com/HaloSPV3/HCE.Shared/issues/575)
+* **deps:** update dependency @eslint/json to v1 ([ecf1163](https://github.com/HaloSPV3/HCE.Shared/commit/ecf11635def84b59d0ae50540f5ee5192031d9c8))
+* **deps:** update undici to v7.20.0 ([95208bc](https://github.com/HaloSPV3/HCE.Shared/commit/95208bc21b5d3a843f2592dc5bf359489989e7f9))
+* **deps:** update vulnerable deps ([f68fe10](https://github.com/HaloSPV3/HCE.Shared/commit/f68fe10433f03e5d3288f86256e198bcf8f9c6f0))
+* **dotnet.NRI:** check MSBuild Pack output for `_OutputPackItems` ([46e0170](https://github.com/HaloSPV3/HCE.Shared/commit/46e017027175ca2cb1d8ae728e77deb4fc9038f4))
+* **dotnet:** override GitVersion's versions when packing dummies ([0eb9e47](https://github.com/HaloSPV3/HCE.Shared/commit/0eb9e475b52eeb5ce257196b52a220f5e45848d6))
+
+### Reverts
+
+* **deps-dev:** re-add kujov/gitLab-sync ([e340b5c](https://github.com/HaloSPV3/HCE.Shared/commit/e340b5c631e2676df6afd14f42df075f591d5079))
+
 ## [3.3.1-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.3.0...v3.3.1-develop.1) (2026-02-06)
 
 ### Bug Fixes
