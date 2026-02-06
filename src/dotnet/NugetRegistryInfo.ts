@@ -522,7 +522,7 @@ but the environment variable is empty or undefined.`);
       {
         ...opts,
         output: getDummiesDir(this._project),
-        propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY' },
+        propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY', UpdateVersionProperties: 'false' },
         '-GetItem': [...opts['-GetItem'] ?? [], key_OutputPackItems],
       },
       true,
