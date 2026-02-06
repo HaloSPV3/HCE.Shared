@@ -540,7 +540,7 @@ but the environment variable is empty or undefined.`);
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
       .Items
-      ?.['outputPackItems']
+      ?.[key_OutputPackItems]
       ?.filter(item => item.Extension !== '.nuspec')
       .map(item => item.FullPath);
     return nupkgFullPaths ?? [];
