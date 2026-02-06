@@ -158,7 +158,7 @@ try {
 
     process.env['GITHUB_NPM_CONFIG_REGISTRY'] ??= 'https://npm.pkg.github.com/';
     process.env['GITLAB_NPM_CONFIG_REGISTRY'] ??= 'https://gitlab.com/api/v4/projects/70884695/packages/npm/';
-    process.env['PUBLIC_NPM_CONFIG_REGISTRY'] ??= 'https://registry.npmjs.org';
+    process.env['PUBLIC_NPM_CONFIG_REGISTRY'] ??= 'https://registry.npmjs.org/';
 
     process.env['GITHUB_NPM_TOKEN'] = ghToken;
     process.env['GITLAB_NPM_TOKEN'] = glToken;
