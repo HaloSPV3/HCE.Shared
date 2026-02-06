@@ -153,8 +153,6 @@ try {
       tokenErrors.push(new Error('GITHUB_NPM_TOKEN, GH_TOKEN or GITHUB_TOKEN must be set'));
     if (!glToken)
       tokenErrors.push(new Error('GITLAB_NPM_TOKEN, GL_TOKEN, GITLAB_TOKEN, or CI_JOB_TOKEN must be set'));
-    if (!publicNpmToken)
-      tokenErrors.push(new Error('PUBLIC_NPM_TOKEN or NPM_TOKEN must be set'));
     if (tokenErrors.length > 0)
       throw new AggregateError(tokenErrors, 'One or more NPM tokens are unavailable!');
 
