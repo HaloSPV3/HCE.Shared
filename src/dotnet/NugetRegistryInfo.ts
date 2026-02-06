@@ -522,7 +522,7 @@ but the environment variable is empty or undefined.`);
       {
         ...opts,
         output: getDummiesDir(this._project),
-        propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY' },
+        propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY', UpdateVersionProperties: 'false' },
         '-GetItem': [...opts['-GetItem'] ?? [], key_OutputPackItems],
       },
       true,
@@ -540,7 +540,7 @@ but the environment variable is empty or undefined.`);
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
       .Items
-      ?.['outputPackItems']
+      ?.[key_OutputPackItems]
       ?.filter(item => item.Extension !== '.nuspec')
       .map(item => item.FullPath);
     return nupkgFullPaths ?? [];

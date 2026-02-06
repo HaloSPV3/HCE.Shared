@@ -1,4 +1,4 @@
-name: Node.js Release
+name: Release
 on:
   workflow_dispatch:
   push:
@@ -20,7 +20,7 @@ jobs:
     needs: npm-checks
     permissions:
       contents: write # to be able to publish a GitHub release
-      id-token: write # to enable use of OIDC for npm provenance
+      id-token: write # to enable use of OIDC for npm provenance and Trusted Publishing
       issues: write # to be able to comment on released issues
       packages: write
       pull-requests: write # to be able to comment on released pull requests
@@ -37,7 +37,15 @@ jobs:
           # see https://github.com/actions/setup-node/blob/main/src/main.ts#L85:~:text=function-,resolveVersionInput():,-string%20%7B
           node-version-file: package.json
           check-latest: true
+      - run: unset NODE_AUTH_TOKEN
 
+      # ensure GitLab is synced _before_ releasing
+      - name: Sync to GitLab
+        uses: kujov/gitlab-sync@2.1.3
+        with:
+          gitlab_url: https://gitlab.com/halospv3/HCE.Shared
+          username: BinToss
+          gitlab_pat: ${{ secrets.GL_SEMANTICRELEASE }}
       - name: List commits since last tag
         run: git log $(git describe --tags --abbrev=0)..HEAD --no-merges --oneline
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
@@ -54,4 +62,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

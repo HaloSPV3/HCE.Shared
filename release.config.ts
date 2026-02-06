@@ -28,7 +28,7 @@ import type { BranchSpec } from 'semantic-release';
 import { baseConfig } from '@halospv3/hce.shared-config/semanticReleaseConfig';
 
 /** check if plugins are installed and available */
-import '@amanda-mitchell/semantic-release-npm-multiple';
+import '@bintoss/semantic-release-npm-multiple';
 import '@sebbo2002/semantic-release-jsr';
 import '@semantic-release/changelog';
 import '@semantic-release/commit-analyzer';
@@ -138,9 +138,9 @@ try {
        */
       'tarballDir?': 'string | false',
     });
-    /** @see https://github.com/amanda-mitchell/semantic-release-npm-multiple#configuration */
+    /** @see https://github.com/bintoss/semantic-release-npm-multiple#configuration */
     const NpmMultipleTuple = type([
-      '"@amanda-mitchell/semantic-release-npm-multiple"',
+      '"@bintoss/semantic-release-npm-multiple"',
       { 'registries?': type.Record('string', NpmOptions) },
     ]);
 
@@ -153,14 +153,12 @@ try {
       tokenErrors.push(new Error('GITHUB_NPM_TOKEN, GH_TOKEN or GITHUB_TOKEN must be set'));
     if (!glToken)
       tokenErrors.push(new Error('GITLAB_NPM_TOKEN, GL_TOKEN, GITLAB_TOKEN, or CI_JOB_TOKEN must be set'));
-    if (!publicNpmToken)
-      tokenErrors.push(new Error('PUBLIC_NPM_TOKEN or NPM_TOKEN must be set'));
     if (tokenErrors.length > 0)
       throw new AggregateError(tokenErrors, 'One or more NPM tokens are unavailable!');
 
     process.env['GITHUB_NPM_CONFIG_REGISTRY'] ??= 'https://npm.pkg.github.com/';
     process.env['GITLAB_NPM_CONFIG_REGISTRY'] ??= 'https://gitlab.com/api/v4/projects/70884695/packages/npm/';
-    process.env['PUBLIC_NPM_CONFIG_REGISTRY'] ??= 'https://registry.npmjs.org';
+    process.env['PUBLIC_NPM_CONFIG_REGISTRY'] ??= 'https://registry.npmjs.org/';
 
     process.env['GITHUB_NPM_TOKEN'] = ghToken;
     process.env['GITLAB_NPM_TOKEN'] = glToken;
@@ -172,7 +170,7 @@ try {
     // PUBLIC_NPM_TOKEN=XXXXX
 
     const tuple = NpmMultipleTuple.from([
-      '@amanda-mitchell/semantic-release-npm-multiple',
+      '@bintoss/semantic-release-npm-multiple',
       {
         registries: {
           github: {},

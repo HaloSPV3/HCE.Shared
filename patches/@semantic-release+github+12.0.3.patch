@@ -1,0 +1,12 @@
+diff --git a/node_modules/@semantic-release/github/lib/fail.js b/node_modules/@semantic-release/github/lib/fail.js
+index b5b43a3..91b147d 100644
+--- a/node_modules/@semantic-release/github/lib/fail.js
++++ b/node_modules/@semantic-release/github/lib/fail.js
+@@ -59,7 +59,6 @@ export default async function fail(pluginConfig, context, { Octokit }) {
+     const [srIssue] = await findSRIssues(
+       octokit,
+       logger,
+-      failTitle,
+       labels,
+       owner,
+       repo,
