@@ -1,3 +1,13 @@
+## [3.4.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.3.1...v3.4.0) (2026-02-07)
+
+### Features
+
+* add func `catchEBUSY`; deprecate `catchCsc2012` ([4c64d72](https://github.com/HaloSPV3/HCE.Shared/commit/4c64d72f5d9b9e5e63aa17ec36bf04895fdee09b)), closes [#578](https://github.com/HaloSPV3/HCE.Shared/issues/578)
+
+### Bug Fixes
+
+* **dotnet.MSBP:** remove _all_ carriage returns in MSBuild GetTargets output ([70d8a66](https://github.com/HaloSPV3/HCE.Shared/commit/70d8a66b969db3190c68ba1f1e788ee3e7eaa7eb))
+
 ## [3.4.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.3.1...v3.4.0-develop.1) (2026-02-07)
 
 ### Features
