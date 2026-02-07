@@ -19,7 +19,7 @@ import { isError } from '../utils/isError.js';
 import sanitizeFileName from 'sanitize-filename';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
-import { catchCsc2012, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
+import { catchEBUSY, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
 import type { Default } from 'arktype/internal/attributes.ts';
 
 type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
@@ -216,7 +216,7 @@ export class NugetRegistryInfo {
 
   /**
    * This is not useful without it being executed as part of a Semantic Release
-   * plugin. Deferring this to @semantic-release/exec's prepareCmd is possible,
+   * plugin. Deferring this to `@semantic-release/exec`'s prepareCmd is possible,
    * but impractical. You'd need to configure prepareCmd to invoke something
    * like `node customScriptFile.mjs`. It's not worth the hassle.
    * @returns `true` if the token can be used to push nupkg to the given Nuget registry
@@ -490,7 +490,7 @@ but the environment variable is empty or undefined.`);
         execAsync(packCmd, true),
       )
         .then(async p => await p)
-        .catch<undefined>(catchCsc2012);
+        .catch<undefined>(catchEBUSY);
     }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
@@ -535,7 +535,7 @@ but the environment variable is empty or undefined.`);
         execAsync(packCmd, true),
       )
         .then(async p => await p)
-        .catch<undefined>(catchCsc2012);
+        .catch<undefined>(catchEBUSY);
     }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)

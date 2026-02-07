@@ -67,7 +67,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
   /**
    * Initialize a readonly record of an MSBuild project's properties, including those related to NuGet.
-   * @param msbuildProjectFullPath @inheritdoc {@link NugetProjectProperties.MSBuildProjectFullPath}
+   * @param msbuildProjectFullPath See {@link NugetProjectProperties.MSBuildProjectFullPath}
    * @param properties The dictionary returned by MSBuild's `-getProperty:propname,...` argument
    */
   constructor(
