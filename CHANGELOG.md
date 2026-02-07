@@ -1,3 +1,9 @@
+## [3.4.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.0...v3.4.1) (2026-02-07)
+
+### Bug Fixes
+
+* **dotnet.BuildEachRID:** remove duplicate import in HCE.Shared.targets ([0a8573d](https://github.com/HaloSPV3/HCE.Shared/commit/0a8573d92b09867922cf21023c9bc6ab9a9cb53f))
+
 ## [3.4.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.3.1...v3.4.0) (2026-02-07)
 
 ### Features
