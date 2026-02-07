@@ -19,7 +19,7 @@ import { isError } from '../utils/isError.js';
 import sanitizeFileName from 'sanitize-filename';
 import { getEnvVarValue } from '../utils/env.js';
 import { execAsync } from '../utils/execAsync.js';
-import { catchCsc2012, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
+import { catchEBUSY, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
 import type { Default } from 'arktype/internal/attributes.ts';
 
 type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
@@ -490,7 +490,7 @@ but the environment variable is empty or undefined.`);
         execAsync(packCmd, true),
       )
         .then(async p => await p)
-        .catch<undefined>(catchCsc2012);
+        .catch<undefined>(catchEBUSY);
     }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
@@ -535,7 +535,7 @@ but the environment variable is empty or undefined.`);
         execAsync(packCmd, true),
       )
         .then(async p => await p)
-        .catch<undefined>(catchCsc2012);
+        .catch<undefined>(catchEBUSY);
     }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)

@@ -390,7 +390,7 @@ export class MSBuildProject {
         execAsync(cmdLine, true),
       )
         .then(async p => await p)
-        .catch<undefined>(catchCsc2012);
+        .catch<undefined>(catchEBUSY);
     }
 
     // todo: consider -getResultOutputFile:file
@@ -668,9 +668,54 @@ function makeAbsolute(_path: string) {
 
 /**
  * Use this in your catch statement or .catch call to return `undefined` when
+ * a "file in use by another process" (i.e. EBUSY/ERROR_SHARING_VIOLATION) error is reported.
+ * @param error Probably an Error object
+ * @returns `undefined` if file in use by another process
+ */
+export function catchEBUSY(error: unknown): undefined {
+  if (isError(error)) {
+    if ('stderr' in error && typeof error.stderr === 'string') {
+      // Normalize colon-like chars: '\uFF1A'.normalize('NFKC') === ':' === true;
+      const normalizedStderr = error.stderr.normalize('NFKC');
+      const patternEN = /The process cannot access the file '[^']+' because it is being used by another process\./gm;
+      const hasErrMsgPattern = patternEN.test(normalizedStderr);
+      const isCS2012 = /^CSC ?:.+CS2012:/gm.test(normalizedStderr);
+      // generic error code; error message must be checked.
+      const isAVLN9999 = /AVLN9999:/gm.test(normalizedStderr)
+        && hasErrMsgPattern;
+      if (isCS2012 || isAVLN9999 || hasErrMsgPattern)
+        return undefined; /* retry */
+    }
+    /**
+     * some known warnings/errors:
+     * - warning MSB3073:
+     *   The command "dotnet tool list kuinox.nupkgdeterministicator"
+     *   exited with code 145.
+     *    > $ dotnet tool list kuinox.nupkgdeterministicator
+     *    > The command could not be loaded, possibly because:
+     *    >   * You intended to execute a .NET application:
+     *    >       The application 'tool' does not exist.
+     *    >   * You intended to execute a .NET SDK command:
+     *    >       No .NET SDKs were found.
+     *    >
+     *    > Download a .NET SDK:
+     *    > https://aka.ms/dotnet/download
+     *    >
+     *    > Learn about SDK resolution:
+     *    > https://aka.ms/dotnet/sdk-not-found
+     */
+    else throw error;
+  }
+  else throw new Error('unknown error', { cause: error });
+}
+
+/**
+ *
+ * Use this in your catch statement or .catch call to return `undefined` when
  * MSBuild error CSC2012 (e.g. "file in use by another process") is reported.
  * @param error Probably an Error object
  * @returns `undefined` if CSC2012 (file in use by another process) occurs
+ * @deprecated Use {@link catchEBUSY}.
  */
 export function catchCsc2012(error: unknown): undefined {
   if (isError(error)) {
