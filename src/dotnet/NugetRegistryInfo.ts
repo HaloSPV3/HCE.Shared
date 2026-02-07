@@ -216,7 +216,7 @@ export class NugetRegistryInfo {
 
   /**
    * This is not useful without it being executed as part of a Semantic Release
-   * plugin. Deferring this to @semantic-release/exec's prepareCmd is possible,
+   * plugin. Deferring this to `@semantic-release/exec`'s prepareCmd is possible,
    * but impractical. You'd need to configure prepareCmd to invoke something
    * like `node customScriptFile.mjs`. It's not worth the hassle.
    * @returns `true` if the token can be used to push nupkg to the given Nuget registry
