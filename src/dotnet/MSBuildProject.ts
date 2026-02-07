@@ -315,7 +315,7 @@ export class MSBuildProject {
         const targets = v.stdout
           .split('\n')
           .filter((v, index) => v !== '' && index !== 0)
-          .map(v => v.replace('\r', ''))
+          .map(v => v.replaceAll('\r', ''))
           .sort((a, b) => a.localeCompare(b));
         return includeNonPublic
           ? targets
