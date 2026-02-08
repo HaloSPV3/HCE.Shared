@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj" />
+    <Project Path="samples/HCE.Shared.SignAfterPack/HCE.Shared.SignAfterPack.csproj" />
+  </Folder>
+</Solution>

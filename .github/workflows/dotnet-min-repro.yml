@@ -40,5 +40,5 @@ jobs:
       - run: which dotnet
       - run: dotnet --list-sdks
       - run: dotnet tool list
-      - run: dotnet clean ./dotnet/HCE.Shared.sln
+      - run: dotnet clean ./dotnet/HCE.Shared.slnx
       - run: dotnet pack ./dotnet/samples/HCE.Shared.DeterministicNupkg --verbosity diag
