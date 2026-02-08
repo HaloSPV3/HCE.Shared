@@ -1,3 +1,9 @@
+## [3.4.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.1...v3.4.2) (2026-02-08)
+
+### Bug Fixes
+
+* **dotnet.GitVersion:** conform GitVersion to angular commit convention ([80589d7](https://github.com/HaloSPV3/HCE.Shared/commit/80589d7ea6e87f6b0262a3bc3c01cc6f68d822ee))
+
 ## [3.4.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.0...v3.4.1) (2026-02-07)
 
 ### Bug Fixes
