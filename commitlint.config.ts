@@ -26,6 +26,7 @@ const scopes = {
     'Affects "src/dotnet/GithubNugetRegistryInfo.ts" or its tests.',
   'dotnet.GLNRI':
     'Affects "src/dotnet/GitlabNugetRegistryInfo.ts" or its tests.',
+  'dotnet.GitVersion': 'Affects the GitVersion YAML configs e.g. "dotnet/GitVersion.yml".',
   'dotnet.helpers': 'Affects "src/dotnet/helpers.ts" or its tests.',
   'dotnet.INVAP':
     'Affects "src/dotnet/IsNextVersionAlreadyPublished.cli.ts" or its tests.',
