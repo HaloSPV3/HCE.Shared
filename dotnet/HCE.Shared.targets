@@ -2,13 +2,13 @@
     Import all other .props and .targets in this directory
     If you import this, you don't need to import anything else. -->
 <Project Label="All HCE.Shared Properties and Targets">
-  <Import Project="./ExecNupkgDeterministicator.targets" />
-  <Import Project="./HCE.Shared.CI.props" />
-  <Import Project="./ZipPublishDir.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)ExecNupkgDeterministicator.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)HCE.Shared.CI.props" />
+  <Import Project="$(MSBuildThisFileDirectory)ZipPublishDir.targets" />
   <!-- Must be explicitly targeted via 'dotnet msbuild project.csproj -t:PublishAll'. May lead to incompatibility errors -->
-  <Import Project="./PublishAll.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)PublishAll.targets" />
   <!-- Auto-runs after 'dotnet build' if (TargetFramework != '') AND (RuntimeIdentifier == '') AND (RuntimeIdentifiers != '');
     The SDK iterates through TargetFrameworks for each TFM. We iterate each TFM's RIDs.
     Intended for ensuring RID-dependent build permutations are successful before attempting PublishAll. -->
-  <Import Project="./BuildEachRID.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)BuildEachRID.targets" />
 </Project>
