@@ -1,3 +1,10 @@
+## [3.4.3-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.2...v3.4.3-develop.1) (2026-02-10)
+
+### Bug Fixes
+
+* **dotnet.GitVersion:** rework GitVersion configs ([2dc7f43](https://github.com/HaloSPV3/HCE.Shared/commit/2dc7f43f4d46a7da1f135eef40ab53f5840338cb))
+* **dotnet:** use MSBuildThisFileDirectory instead of ./ ([b799104](https://github.com/HaloSPV3/HCE.Shared/commit/b7991044cb87f9fd9d8edb8c4e01038364828f08))
+
 ## [3.4.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.1...v3.4.2) (2026-02-08)
 
 ### Bug Fixes

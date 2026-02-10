@@ -5,10 +5,15 @@
  * extends {@link baseConfig }
  *
  * <-- TABLE OF CONTENTS -->
- * - configureDotnetRelease
- * - Insert-Edit Plugins
- * - Append Plugins
  *
+ * EASY: {@link getConfig}
+ * Just provide the paths of the project file(s) and keep your API tokens ready.
+ * ADVANCED: {@link SemanticReleaseConfigDotnet}
+ * Allows for a hands-on customization if {@link getConfig} doesn't meet your needs.
+ * Use a copy of {@link getConfig} as the starting point of a new function and make changes from there.
+ *   - {@link SemanticReleaseConfigDotnet#splicePlugin splicePlugin (insert/edit plugins)}
+ *   - {@link SemanticReleaseConfigDotnet#setupDotnetCommands setupDotnetCommands}
+ *   - {@link SemanticReleaseConfigDotnet#getTokenTestingCommands getTokenTestingCommands}
  */
 
 import { inspect } from 'node:util';
@@ -27,8 +32,6 @@ interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
   plugins: (UnArray<typeof baseConfig.plugins> | [string, unknown])[];
 }
 
-/**
- */
 export class SemanticReleaseConfigDotnet {
   private readonly options: SRConfigDotnetOptions;
   private readonly _projectsToPublish: string[] | MSBuildProject[];
@@ -116,6 +119,8 @@ export class SemanticReleaseConfigDotnet {
     return this._evaluatedProjects;
   }
 
+  // eslint-disable-next-line jsdoc/require-param
+  /** @deprecated Superseded by {@link splicePlugin} */
   insertPlugin(
     afterPluginsIDs: string[],
     insertPluginIDs: string[],
@@ -226,7 +231,6 @@ Appending it to the end of the array...This may cause an unexpected order of ope
 
   /**
    * Insert a plugin into the plugins array.
-   * @deprecated EXPERIMENTAL: needs thorough tests implemented before use in production!
    * @param insertAfterPluginIDs Plugins which should appear BEFORE
    * {@link insertPluginIDs}.
    * @param insertPluginIDs The plugin(s) to insert into the plugins array.
