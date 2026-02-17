@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.x
+          cache: dotnet
 
       - name: NPM - Clean Install
         run: npm ci # Required for Semantic Release
