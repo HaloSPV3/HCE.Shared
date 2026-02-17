@@ -6,7 +6,7 @@ on:
 
 jobs:
   npm-checks:
-    uses: './.github/workflows/npm-ci-and-pack.yml'
+    uses: ./.github/workflows/npm-ci-and-pack.yml
     permissions:
       id-token: write # to enable use of OIDC for npm provenance; Upload coverage reports to Codecov
       packages: write
@@ -28,11 +28,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          submodules: 'recursive'
+          submodules: recursive
           fetch-depth: 0
       - uses: actions/setup-node@v6
         with:
-          cache: 'npm'
+          cache: npm
           node-version: '>=24.0.0'
           # see https://github.com/actions/setup-node/blob/main/src/main.ts#L85:~:text=function-,resolveVersionInput():,-string%20%7B
           node-version-file: package.json
@@ -58,7 +58,7 @@ jobs:
         #  - new-release-version
         #  - new-release-git-tag
         env:
-          DEBUG: 'semantic-release*'
+          DEBUG: semantic-release*
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}

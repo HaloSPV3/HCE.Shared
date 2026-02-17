@@ -7,19 +7,19 @@ on:
       directory:
         type: string
 env:
-  DOTNET_ROLL_FORWARD: 'Major'
+  DOTNET_ROLL_FORWARD: Major
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
-          submodules: 'recursive'
+          submodules: recursive
           fetch-depth: 0
 
       - uses: actions/setup-node@v6
         with:
-          cache: 'npm'
+          cache: npm
           check-latest: true
           node-version-file: package.json
           node-version: lts/*

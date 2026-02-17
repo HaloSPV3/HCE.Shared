@@ -30,11 +30,11 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Required by GitVersion, Semantic Release
-          submodules: 'recursive'
+          submodules: recursive
 
       - uses: actions/setup-node@v6
         with:
-          cache: 'npm'
+          cache: npm
           check-latest: true
           node-version-file: package.json
           node-version: lts/*
@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '8.x'
+          dotnet-version: 8.x
 
       - name: NPM - Clean Install
         run: npm ci # Required for Semantic Release

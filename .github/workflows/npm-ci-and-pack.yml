@@ -19,7 +19,7 @@ on:
           A GitLab API token with permission to push packages to the
           repo IDed by CI_PROJECT_ID e.g. 70884695 for HaloSPV3/HCE.Shared.
       NUGET_TOKEN:
-        description: 'A NugGet.org API token with permission to push to the unlisted package https://www.nuget.org/packages/HCE.Shared.DeterministicNupkg.'
+        description: A NugGet.org API token with permission to push to the unlisted package https://www.nuget.org/packages/HCE.Shared.DeterministicNupkg.
 
 jobs:
   check:
@@ -42,7 +42,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
-          cache: 'npm'
+          cache: npm
           node-version-file: package.json
           check-latest: true
       - uses: actions/setup-dotnet@v5
