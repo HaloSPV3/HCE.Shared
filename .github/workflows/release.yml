@@ -51,6 +51,11 @@ jobs:
       - run: npm i -g npm@latest # Ensures the latest NPM CLI is used
       - run: npm ci
       - run: npm audit signatures
+      - uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: nToss
+
       - run: npm run semantic-release -- --debug # make git tag, commit updated files, release to GitHub/GitLab.
         id: semantic-release
         # outputs:
@@ -61,4 +66,4 @@ jobs:
           DEBUG: semantic-release*
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
-          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+          NUGET_TOKEN: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
