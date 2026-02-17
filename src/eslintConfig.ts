@@ -56,7 +56,7 @@ stylisticWarn.rules['@stylistic/semi'] = [
 ] satisfies Linter.RuleEntry<RuleOptions['@stylistic/semi']>;
 
 const config: ReturnType<typeof defineConfig> = defineConfig(
-  { ...json.configs.recommended, name: 'JSON Recommended', files: ['**/*.json'], language: 'json/json' },
+  { ...json.configs.recommended, name: 'JSON Recommended', files: ['**/*.json', '!**/.vscode/*.json'], language: 'json/json' },
   { name: 'JSON - Allow empty keys in package-lock.json', files: ['**/package-lock.json'], rules: { 'json/no-empty-keys': 'off' } },
   { ...json.configs.recommended, name: 'JSONC Recommended', files: ['**/*.jsonc','**/.vscode/*.json'], language: 'json/jsonc' },
   { ...json.configs.recommended, name: 'JSON5 Recommended', files: ['**/*.json5'], language: 'json/json5' },
