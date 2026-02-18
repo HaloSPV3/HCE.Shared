@@ -54,7 +54,7 @@ const scopes = {
   packemon:
     'Affects Packemon\'s configurations: "package.json#packemon", "packemon.config.ts"',
   README: 'Affects "README.md".',
-  release: 'Only for release commits.',
+  release: 'Reserved for release commits.',
   renovate: 'Affects "./.github/renovate.json".',
   semanticRelease: 'Affects "release.config.mjs" or "src/semanticReleaseConfig.ts" or its tests.',
   setupGitPluginSpec: 'Affects "src/setupGitPluginSpec.ts" or its tests.',
