@@ -90,28 +90,11 @@
   },
   "peerDependencies": {
     "@bintoss/semantic-release-npm-multiple": "^3.0.0 || >= 3.0.0",
-    "@commitlint/cli": "^20.0.0 || >= 20.0.0",
-    "@commitlint/config-conventional": "^20.0.0 || >= 20.0.0",
     "@commitlint/types": "^20.0.0 || >= 20.0.0",
-    "@eslint/js": "^9.39.2 || >= 10.0.0",
-    "@eslint/json": "^1.0.1 || >= 1.0.0",
-    "@semantic-release/exec": "^7.0.0 || >= 7.0.0",
-    "@semantic-release/git": "^10.0.0 || >= 10.0.0",
-    "@semantic-release/github": "^12.0.0 || >= 12.0.0",
     "@semantic-release/gitlab": "^13.0.0 || >= 13.0.0",
-    "@semantic-release/npm": "^13.0.0 || >= 13.0.0",
-    "@semantic-release/release-notes-generator": "^14.0.0 || >= 14.0.0",
-    "@stylistic/eslint-plugin": "^5.8.0 || >= 5.0.0",
     "@tsconfig/node24": "^24.0.3",
-    "@types/node": "^24.0.4",
-    "conventional-changelog-conventionalcommits": "^9.0.0 || >= 9.0.0",
     "eslint": "^9.39.2 || >= 10.0.0",
-    "globals": "^17.0.0 || >= 17.0.0",
-    "husky": "^9.0.0 || >= 9.0.0",
-    "semantic-release": "^25.0.0 || >= 25.0.0",
-    "semantic-release-export-data": "^1.0.0 || >= 1.0.0 ",
-    "typescript": "^5.0.0 || >=5.0.0",
-    "typescript-eslint": "^8.56.0 || >= 8.56.0"
+    "typescript": "^5.0.0 || >=5.0.0"
   },
   "peerDependenciesMeta": {
     "@bintoss/semantic-release-npm-multiple": {
