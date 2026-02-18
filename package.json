@@ -144,6 +144,21 @@
     "./*": {
       "types": "./mjs/*.d.ts",
       "import": "./mjs/*.mjs"
+    },
+    "./*.d": {
+      "types": "./src/*.d.ts",
+      "import": "./mjs/*.mjs"
+    },
+    "./utils/reflection/*.d": {
+      "types": "./src/utils/reflection/*.d.ts",
+      "import": "./mjs/*.mjs"
+    },
+    "./utils/*.d": {
+      "types": "./src/utils/*.d.ts",
+      "import": "./mjs/*.mjs"
+    },
+    "./semantic_release__*": {
+      "types": "./src/semantic_release__*.d.ts"
     }
   },
   "types": "./mjs/index.d.ts",
