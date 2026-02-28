@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-if [[ "${GIT_REFLOG_ACTION}" =~ "rebase".*"reword" ]]; then
-    exit 0
-fi
-# npm run check
