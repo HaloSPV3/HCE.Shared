@@ -1,9 +1,14 @@
-import { get,
-  config as loadDotenv,
+import dotenvx, {
   type DotenvConfigOptions,
   type GetOptions,
 } from '@dotenvx/dotenvx';
 import { env } from 'node:process';
+
+// I hate importing CommonJS modules with their broken default exports
+const {
+  get,
+  config: loadDotenv,
+} = dotenvx;
 
 /** `get` can return `undefined`. It can also return a `Record`, but that's internal. */
 type Get = (key: string, options?: GetOptions) => string | undefined;
