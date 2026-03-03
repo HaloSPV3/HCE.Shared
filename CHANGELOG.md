@@ -1,3 +1,18 @@
+## [3.4.4](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.3...v3.4.4) (2026-03-03)
+
+### Bug Fixes
+
+* correctly exclude VSCode JSONC files ([acf0ac1](https://github.com/HaloSPV3/HCE.Shared/commit/acf0ac108c1d7905b6d4b4ee4c19411a1a909f46)), closes [#602](https://github.com/HaloSPV3/HCE.Shared/issues/602)
+* **deps, deps-dev:** bump ESLint dependency group ([0d36cd5](https://github.com/HaloSPV3/HCE.Shared/commit/0d36cd530c800589a238698259f8718ed592ce2f))
+* **deps, deps-dev:** bump semantic release dependency group ([90580ff](https://github.com/HaloSPV3/HCE.Shared/commit/90580ff2b1fccb0cb91d5a028c0729451e4dad13))
+* **deps:** add peerDependencies ([b6c8046](https://github.com/HaloSPV3/HCE.Shared/commit/b6c80468d0473f7fac53764cc9d3a01da73b406f))
+* **deps:** bump commitlint dependency group ([cccff9c](https://github.com/HaloSPV3/HCE.Shared/commit/cccff9c532d6f540e2b8fd1a3d53a89a4fc91bd4))
+* **deps:** bump conventional-changelog-conventionalcommits to v9.2.0 ([bc01cf6](https://github.com/HaloSPV3/HCE.Shared/commit/bc01cf63543f99cb1b393590a38e659724259f07))
+* **deps:** bump globals to v17.4.0 ([8f19978](https://github.com/HaloSPV3/HCE.Shared/commit/8f19978ee7b6ac7688a57cf20aa78b5f94a99cef))
+* **eslint:** do not include vscode JSONC files in JSON4 linting ([61f2d09](https://github.com/HaloSPV3/HCE.Shared/commit/61f2d0918fefba3e6b41f0ca4845c8ed33ab144a))
+* **eslint:** treat .vscode JSON files as JSONC ([606166c](https://github.com/HaloSPV3/HCE.Shared/commit/606166c3ca38cd99b242509750f12c49078af0d1))
+* import dotenvx w/ CJS syntax ([eb19c17](https://github.com/HaloSPV3/HCE.Shared/commit/eb19c17a33c9516448e1b5cb873dacd023da6601))
+
 ## [3.4.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.2...v3.4.3) (2026-02-10)
 
 ### Bug Fixes
