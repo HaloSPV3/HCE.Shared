@@ -1,3 +1,9 @@
+## [3.4.5](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.4...v3.4.5) (2026-03-03)
+
+### Bug Fixes
+
+* **deps:** update node.js to v24.14.0 ([551c465](https://github.com/HaloSPV3/HCE.Shared/commit/551c465d64282cac2ae2d134c21abc5c94b22b36))
+
 ## [3.4.4](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.3...v3.4.4) (2026-03-03)
 
 ### Bug Fixes
