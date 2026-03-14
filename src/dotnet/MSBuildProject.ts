@@ -413,7 +413,7 @@ export class MSBuildProject {
       );
     }
 
-    let rawOutput = undefined;
+    let rawOutput: ConstructorParameters<typeof MSBuildEvaluationOutput>[0];
     if (stdio.stdout.startsWith('{')) {
       /** stdout is JSON string */
       rawOutput = stdio.stdout;
