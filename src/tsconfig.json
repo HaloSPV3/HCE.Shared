@@ -1,8 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../_tsout/src",
-    "isolatedDeclarations": true
+    "outDir": "../_tsout/src"
   },
   "include": [
     "./**/*"
