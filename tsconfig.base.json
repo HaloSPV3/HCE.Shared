@@ -25,6 +25,7 @@
   "compileOnSave": true,
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
