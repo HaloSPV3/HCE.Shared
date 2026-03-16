@@ -1,3 +1,10 @@
+## [3.4.6](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.5...v3.4.6) (2026-03-16)
+
+### Bug Fixes
+
+* **deps:** update dependency @types/node to ~24.12.0 ([57a434c](https://github.com/HaloSPV3/HCE.Shared/commit/57a434c8ad3412158a2ecfa16844cf42e6313f8a))
+* **deps:** update eslint monorepo to v10 ([ae3252e](https://github.com/HaloSPV3/HCE.Shared/commit/ae3252ef4b3256f7190fd53589d550d5ec83cd3f))
+
 ## [3.4.6-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.5...v3.4.6-develop.1) (2026-03-14)
 
 ### Bug Fixes
