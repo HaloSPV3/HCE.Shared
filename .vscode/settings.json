@@ -213,5 +213,6 @@
     "**/.eslintrc.{js,cjs,mjs,yaml,yml,json}",
     "**/eslint.config.{js,cjs,mjs}"
   ],
-  "dotnet.defaultSolution": "dotnet/HCE.Shared.slnx"
+  "dotnet.defaultSolution": "dotnet/HCE.Shared.slnx",
+  "deno.enable": true
 }
