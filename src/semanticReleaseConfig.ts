@@ -3,7 +3,7 @@ import type { Options as SRExecOptions } from '@semantic-release/exec';
 import type { Options as SRGitOptions } from '@semantic-release/git';
 import type { Options as SRGithubOptions } from '@semantic-release/github';
 import type { Options, PluginSpec } from 'semantic-release';
-import { DefaultOptions } from './setupGitPluginSpec.js';
+import { DefaultOptions } from './setupGitPluginSpec.default.ts';
 
 export interface SRReleaseNotesGeneratorOptions {
   /**
