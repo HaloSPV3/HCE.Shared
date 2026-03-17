@@ -1,14 +1,13 @@
 {
   "name": "@halospv3/hce.shared-config",
   "version": "0.0.1-DUMMY",
-  "description": "Automate commit message quality, changelogs, and CI/CD releases. Exports a semantic-release shareable configuration deserialized from this package's '.releaserc.yml'. Shared resources for .NET projects are also distributed with this package.",
+  "description": "Automate commit message quality, changelogs, and CI/CD releases. Its `main` entry point is a Semantic Release config. Functions and classes are exposed for customization. An ESLint config, a Commitlint config, and addl. resources for .NET projects are also provided.",
   "keywords": [
-    "halo",
-    "halo-ce",
     "semantic-release",
     "semantic-release-config",
     "commitlint",
-    "commitlint-config"
+    "commitlint-config",
+    "eslint-config"
   ],
   "type": "module",
   "homepage": "https://github.com/halospv3/hce.shared#readme",
