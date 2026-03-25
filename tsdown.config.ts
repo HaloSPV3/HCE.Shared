@@ -14,7 +14,6 @@ const _config: UserConfig = defineConfig({
   },
   attw: { profile: 'esm-only' },
   checks: { circularDependency: true },
-  copy: ['./src/**/*.d.ts', { from: './src/**/*.d.ts', to: './mjs/**/*.d.ts' }],
   deps: { skipNodeModulesBundle: true },
   exports: {
     all: true,
