@@ -1,5 +1,6 @@
+// @ts-types="./semantic-release__git.d.ts"
 import type { AssetEntry, Options as GitOptions } from '@semantic-release/git';
-import type { PluginSpecSRGit, PluginSpecTuple } from './semanticReleaseConfig.js';
+import type { PluginSpecSRGit, PluginSpecTuple } from './semanticReleaseConfig.ts';
 import { DefaultOptions } from './setupGitPluginSpec.default.ts';
 
 export const GitPluginId = '@semantic-release/git';

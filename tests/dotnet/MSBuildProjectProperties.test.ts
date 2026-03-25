@@ -1,8 +1,8 @@
 import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { tmpNameSync } from 'tmp';
-import { MSBuildProjectProperties as MPP } from '../../src/dotnet/MSBuildProjectProperties.js';
-import { CaseInsensitiveMap } from './../../src/CaseInsensitiveMap.js';
+import { MSBuildProjectProperties as MPP } from '../../src/dotnet/MSBuildProjectProperties.ts';
+import { CaseInsensitiveMap } from './../../src/CaseInsensitiveMap.ts';
 
 await describe('MSBuildProjectProperties', async () => {
   const emptyMap = new CaseInsensitiveMap<string, string>();

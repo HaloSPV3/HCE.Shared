@@ -1,7 +1,7 @@
-import type { Increment } from '../GracefulRecursion.js';
-import type { InstanceOrStatic, Integer } from '../miscTypes.js';
-import { getOwnPropertyDescriptors } from './getOwnPropertyDescriptors.js';
-import { getPrototypesChainOf } from './getPrototypeChainOf.js';
+import type { Increment } from '../GracefulRecursion.d.ts';
+import type { InstanceOrStatic, Integer } from '../miscTypes.ts';
+import { getOwnPropertyDescriptors } from './getOwnPropertyDescriptors.ts';
+import { getPrototypesChainOf } from './getPrototypeChainOf.ts';
 import type {
   BaseClass,
   BaseClassProto,
@@ -11,17 +11,17 @@ import type {
   ProtoChainOfClass,
   SuperClassLike,
   WithProto,
-} from './inheritance.js';
-import type { InstanceTypeOrSelfPropertyDescriptorMap } from './InstanceTypeOrSelfPropertyDescriptorMap.js';
-import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.js';
-/* eslint-disable jsdoc/check-tag-names */
+} from './inheritance.ts';
+import type { InstanceTypeOrSelfPropertyDescriptorMap } from './InstanceTypeOrSelfPropertyDescriptorMap.d.ts';
+import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
 /**
  * JSDoc type imports
- * @typedef {import('./getPrototypeOf.js').getPrototypeOf} getPrototypeOf
- * @typedef {import('./listOwnGetters.js').listOwnGetters} listOwnGetters
- * @typedef {import('./InstancePropertyDescriptorMap.js').InstancePropertyDescriptorMap} InstancePropertyDescriptorMap
  */
-/* eslint-enable jsdoc/check-tag-names */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { getPrototypeOf as _getPrototypeOf } from './getPrototypeOf.ts';
+import type { listOwnGetters as _listOwnGetters } from './listOwnGetters.ts';
+import type { InstancePropertyDescriptorMap as _InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * A conditional wrapper for {@link InstanceTypeOrSelfPropertyDescriptorMap} and

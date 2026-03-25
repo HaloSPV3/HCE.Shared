@@ -1,5 +1,6 @@
 // note: @types/debug is incorrect. There is no .log function!
 import createDebugger, { type Debugger } from 'debug';
+import * as process from 'node:process';
 
 const _debug = createDebugger('@halospv3/hce.shared-config') as Debugger & { log: never };
 

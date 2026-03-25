@@ -1,10 +1,11 @@
 import { deepStrictEqual } from 'node:assert/strict';
-import path from 'node:path';
+// eslint-disable-next-line unicorn/import-style
+import * as path from 'node:path';
 import { describe, it } from 'node:test';
 import {
   EvaluationOptions,
   MSBuildProject as MSBP,
-} from '../../src/dotnet/MSBuildProject.js';
+} from '../../src/dotnet/MSBuildProject.ts';
 
 await describe('MSBuildProject', { concurrency: true }, async () => {
   await describe('MatrixProperties', async () => {

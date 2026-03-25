@@ -3,7 +3,7 @@ import { type, type Type } from 'arktype';
 import { exec } from 'node:child_process';
 import { constants } from 'node:os';
 import { promisify } from 'node:util';
-import { isError } from './isError.js';
+import { isError } from './isError.ts';
 
 /**
  * A `promisify(exec)` wrapper to optionally assign the child process's STDERR as the {@link Error.prototype.cause}.

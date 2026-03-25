@@ -1,1 +1,1 @@
-export * from './dotnet/index.js';
+export * from './dotnet/index.ts';

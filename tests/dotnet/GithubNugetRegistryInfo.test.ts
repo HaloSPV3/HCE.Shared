@@ -1,11 +1,12 @@
 import { deepStrictEqual, strictEqual } from 'node:assert/strict';
+import * as process from 'node:process';
 import { describe, it } from 'node:test';
 import {
   DefaultGithubTokenEnvVars,
   GithubNugetRegistryInfo as GHNRI,
   GHNRIOpts,
-} from '../../src/dotnet/GithubNugetRegistryInfo.js';
-import { getEnvVarValue } from '../../src/utils/env.js';
+} from '../../src/dotnet/GithubNugetRegistryInfo.ts';
+import { getEnvVarValue } from '../../src/utils/env.ts';
 
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".

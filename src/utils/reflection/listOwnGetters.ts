@@ -1,6 +1,6 @@
-import type { InstanceOrStatic } from '../miscTypes.js';
-import { filterForGetters } from './filterForGetters.js';
-import { getOwnPropertyDescriptors } from './getOwnPropertyDescriptors.js';
+import type { InstanceOrStatic } from '../miscTypes.ts';
+import { filterForGetters } from './filterForGetters.ts';
+import { getOwnPropertyDescriptors } from './getOwnPropertyDescriptors.ts';
 import type {
   BaseClassProto,
   ClassLike,
@@ -8,9 +8,9 @@ import type {
   InstanceTypeOrSelf,
   SuperClassLike,
   WithProto,
-} from './inheritance.js';
-import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.js';
-import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.js';
+} from './inheritance.ts';
+import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
+import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
 
 /**
  * Description placeholder

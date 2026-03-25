@@ -1,4 +1,4 @@
-import { setupGitPluginSpec } from '../src/setupGitPluginSpec.js';
+import { setupGitPluginSpec } from '../src/setupGitPluginSpec.ts';
 import { deepStrictEqual, notDeepStrictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 

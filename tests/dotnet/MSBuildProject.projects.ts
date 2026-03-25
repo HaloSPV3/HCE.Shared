@@ -14,8 +14,10 @@
 
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { readFile, realpath, unlink } from 'node:fs/promises';
-import path from 'node:path';
-import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.js';
+import * as console from 'node:console';
+// eslint-disable-next-line unicorn/import-style
+import * as path from 'node:path';
+import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.ts';
 
 const cacheDir = path.join(import.meta.dirname, '.projCache');
 if (!existsSync(cacheDir))

@@ -1,13 +1,14 @@
-import { ok, notStrictEqual } from 'node:assert/strict';
+import { notStrictEqual, ok } from 'node:assert/strict';
+import * as process from 'node:process';
 import { describe, it } from 'node:test';
-import { GithubNugetRegistryInfo as GHNRI } from '../../src/dotnet/GithubNugetRegistryInfo.js';
-import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.js';
-import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.js';
-import { getEnvVarValue } from '../../src/utils/env.js';
-import { isError } from '../../src/utils/isError.js';
-import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.js';
 import { inspect } from 'node:util';
-import { execAsync } from '../../src/utils/execAsync.js';
+import { GithubNugetRegistryInfo as GHNRI } from '../../src/dotnet/GithubNugetRegistryInfo.ts';
+import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.ts';
+import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.ts';
+import { getEnvVarValue } from '../../src/utils/env.ts';
+import { execAsync } from '../../src/utils/execAsync.ts';
+import { isError } from '../../src/utils/isError.ts';
+import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.ts';
 
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".

@@ -1,4 +1,5 @@
 /// <reference file="./semantic-release__git.d.ts">
+// @ts-types="./semantic-release__git.d.ts"
 import type { Options as GitOptions } from '@semantic-release/git';
 /**
  * As specified at https://github.com/semantic-release/git#options

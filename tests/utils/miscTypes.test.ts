@@ -5,7 +5,7 @@ import {
   tBooleanString,
   tEmptyOrBooleanString,
   type TupleIndices,
-} from '../../src/utils/miscTypes.js';
+} from '../../src/utils/miscTypes.ts';
 
 await describe('tBooleanString', async () => {
   await it('matches literal string "true"', () => {

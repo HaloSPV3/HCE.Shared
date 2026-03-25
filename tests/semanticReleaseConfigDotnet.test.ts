@@ -1,13 +1,14 @@
 import {
   getConfig,
   SemanticReleaseConfigDotnet,
-} from '../src/semanticReleaseConfigDotnet.js';
-import { isError } from '../src/utils/isError.js';
+} from '../src/semanticReleaseConfigDotnet.ts';
+import { isError } from '../src/utils/isError.ts';
 import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it, todo } from 'node:test';
-import { isConstructor } from '../src/utils/reflection.js';
-import { DeterministicNupkgCsproj } from './dotnet/MSBuildProject.projects.js';
-import { NugetRegistryInfo } from '../src/dotnet/NugetRegistryInfo.js';
+import { isConstructor } from '../src/utils/reflection.ts';
+import { DeterministicNupkgCsproj } from './dotnet/MSBuildProject.projects.ts';
+import { NugetRegistryInfo } from '../src/dotnet/NugetRegistryInfo.ts';
+import * as process from 'node:process';
 
 await describe('SemanticReleaseConfigDotnet', async () => {
   await it('is a class', () => {

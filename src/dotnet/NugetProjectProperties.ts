@@ -1,19 +1,19 @@
 import { type } from 'arktype';
-import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.ts';
 import {
   tBooleanString,
   tEmptyOrBooleanString,
   type BooleanString,
   type EmptyOrBooleanString,
-} from '../utils/miscTypes.js';
+} from '../utils/miscTypes.ts';
 import {
   getPrototypesChainOf,
   listOwnGetters,
   type ClassLike,
   type ProtoChainOfClass,
   type WithProto,
-} from '../utils/reflection.js';
-import { MSBuildProjectProperties, type Class_MSBPP } from './MSBuildProjectProperties.js';
+} from '../utils/reflection.ts';
+import { MSBuildProjectProperties, type Class_MSBPP } from './MSBuildProjectProperties.ts';
 
 const Type_RepositoryType: type<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
 const Type_SymbolPackageFormat: type<'symbols.nupkg' | 'snupkg'> = type('"symbols.nupkg" | "snupkg"');

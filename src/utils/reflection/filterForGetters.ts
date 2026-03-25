@@ -6,11 +6,11 @@ import type {
   InstanceTypeOrSelf,
   SuperClassLike,
   WithProto,
-} from './inheritance.js';
-import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.js';
-import type { OwnGetterDescriptorMap } from './OwnGetterDescriptorMap.js';
-import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.js';
-import type { PropertyDescriptorMap } from './PropertyDescriptorMap.js';
+} from './inheritance.ts';
+import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
+import type { OwnGetterDescriptorMap } from './OwnGetterDescriptorMap.d.ts';
+import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
+import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
 
 export function filterForGetters<
   Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | typeof baseClassProto>>,

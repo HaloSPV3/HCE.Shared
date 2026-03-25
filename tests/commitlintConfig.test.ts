@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import commitLintConventional from '@commitlint/config-conventional';
 import load from '@commitlint/load';
 import { RuleConfigSeverity, type QualifiedRuleConfig } from '@commitlint/types';
-import rawConfig from '../src/commitlintConfig.js';
+import rawConfig from '../src/commitlintConfig.ts';
 import { loadPreset } from 'conventional-changelog-preset-loader';
 
 await describe('rawConfig', async () => {

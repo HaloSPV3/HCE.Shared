@@ -1,5 +1,5 @@
 import { describe, it } from 'node:test';
-import { insertPlugin } from '../src/insertPlugins.js';
+import { insertPlugin } from '../src/insertPlugins.ts';
 import { deepStrictEqual, notDeepStrictEqual } from 'node:assert';
 
 await describe('insertPlugin', async () => {

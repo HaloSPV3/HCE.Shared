@@ -1,5 +1,5 @@
 import { describe, it } from 'node:test';
-import { CaseInsensitiveMap } from '../src/CaseInsensitiveMap.js';
+import { CaseInsensitiveMap } from '../src/CaseInsensitiveMap.ts';
 import { deepStrictEqual, ok, strictEqual } from 'node:assert';
 
 const cim = new CaseInsensitiveMap([['KEY0', 'value']]);

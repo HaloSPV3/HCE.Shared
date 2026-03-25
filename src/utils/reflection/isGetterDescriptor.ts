@@ -1,4 +1,4 @@
-import type { GetterDescriptor } from './GetterDescriptor.js';
+import type { GetterDescriptor } from './GetterDescriptor.d.ts';
 
 /**
  * A function for inferring a {@link TypedPropertyDescriptor} is a {@link GetterDescriptor}

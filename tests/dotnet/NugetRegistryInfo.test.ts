@@ -4,7 +4,8 @@ import {
 } from 'node:assert/strict';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import path from 'node:path';
+// eslint-disable-next-line unicorn/import-style
+import * as path from 'node:path';
 import { after, before, describe, it } from 'node:test';
 import {
   NugetRegistryInfo as NRI,
@@ -12,8 +13,9 @@ import {
   NRIOptsBase,
   getGithubOutput,
   getGithubOutputSync,
-} from '../../src/dotnet/NugetRegistryInfo.js';
-import { isConstructor } from '../../src/utils/reflection.js';
+} from '../../src/dotnet/NugetRegistryInfo.ts';
+import { isConstructor } from '../../src/utils/reflection/isConstructor.ts';
+import * as process from 'node:process';
 
 if (!existsSync(path.join(tmpdir(), 'HCE.Shared')))
   mkdirSync(path.join(tmpdir(), 'HCE.Shared'));
@@ -25,7 +27,7 @@ await describe('NugetRegistryInfo', async () => {
 });
 
 await describe('InstanceOf NugetRegistryInfo', async () => {
-  const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.js');
+  const { DeterministicNupkgCsproj } = await import('./MSBuildProject.projects.ts');
 
   await it('canPushPackagesToSource', { skip: 'See ./DotnetNugetPush.test.ts' });
 

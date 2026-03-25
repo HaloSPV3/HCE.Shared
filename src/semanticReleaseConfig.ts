@@ -1,6 +1,10 @@
+// @ts-types="./semantic-release__commit-analyzer.d.ts"
 import type { Options as SRCommitAnalyzerOptions } from '@semantic-release/commit-analyzer';
+// @ts-types="./semantic-release__exec.d.ts"
 import type { Options as SRExecOptions } from '@semantic-release/exec';
+// @ts-types="./semantic-release__git.d.ts"
 import type { Options as SRGitOptions } from '@semantic-release/git';
+// @ts-types="./semantic-release__github.d.ts"
 import type { Options as SRGithubOptions } from '@semantic-release/github';
 import type { Options, PluginSpec } from 'semantic-release';
 import { DefaultOptions } from './setupGitPluginSpec.default.ts';
