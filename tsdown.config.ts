@@ -2,6 +2,10 @@ import { defineConfig, type UserConfig } from 'tsdown';
 import * as process from 'node:process';
 
 const _config: UserConfig = defineConfig({
+  dts: {
+    build: true,
+    sourcemap: true,
+  },
   entry: {
     main: './src/index.ts',
     // todo: remove as breaking change
