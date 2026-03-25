@@ -309,7 +309,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       p => new NugetRegistryInfo({ project: p }),
     );
     const nupkgPaths = await Promise.all(
-      regInfos.map(async nri =>
+      regInfos.map(nri =>
         nri.PackDummyPackage({}).then((nupkgs) => {
           // this is a full file path.
           const mainNupkg = nupkgs.find(nupkg =>
