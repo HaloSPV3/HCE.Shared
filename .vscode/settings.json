@@ -214,5 +214,5 @@
     "**/eslint.config.{js,cjs,mjs}"
   ],
   "dotnet.defaultSolution": "dotnet/HCE.Shared.slnx",
-  "deno.enable": true
+  "deno.enable": false
 }
