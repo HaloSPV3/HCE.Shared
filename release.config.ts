@@ -1,7 +1,7 @@
 /**
  * # semantic-release
  *
- * After HCE.Shared's Shareable Configuration (see 'static/.releaserc.yml', https://semantic-release.gitbook.io/semantic-release/usage/configuration#extends)
+ * After HCE.Shared's Shareable Configuration (see './src/semanticReleaseConfig.ts', https://semantic-release.gitbook.io/semantic-release/usage/configuration#extends)
  * is loaded, the following semantic-release configuration is merged
  * into the configuration object, overriding existing values.
  * Later, when a release is triggered, semantic-release will
