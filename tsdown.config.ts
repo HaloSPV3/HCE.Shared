@@ -7,7 +7,6 @@ const _config: UserConfig = defineConfig({
     sourcemap: true,
   },
   entry: {
-    main: './src/index.ts',
     // todo: remove as breaking change
     index: './src/index.ts',
     commitlintConfig: './src/commitlintConfig.ts',
