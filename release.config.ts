@@ -192,10 +192,7 @@ try {
 
   // eslint-disable-next-line jsdoc/require-jsdoc
   function setupExec() {
-    const currentBranch = execSync('git branch', { encoding: 'utf8' })
-      .split('\n')
-      .find(line => line.startsWith('* '))
-      ?.slice(2);
+    const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' });
 
     if (!currentBranch)
       throw new Error('The current git branch could not be parsed.');
