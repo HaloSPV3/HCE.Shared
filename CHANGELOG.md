@@ -1,3 +1,9 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See
+[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
+for commit guidelines.
+
 ## [3.4.6-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.6-develop.1...v3.4.6-develop.2) (2026-03-26)
 
 ### Bug Fixes
@@ -6,6 +12,13 @@
 * **deps, deps-dev:** update eslint deps ([24a382b](https://github.com/HaloSPV3/HCE.Shared/commit/24a382be93d4479ec2fb3b1d80b7f626da4264b6))
 * **deps:** update `sanitize-filename` to 1.6.4 ([9a97a04](https://github.com/HaloSPV3/HCE.Shared/commit/9a97a047acaea0ad575177419cb76d2d78c5c027))
 * **deps:** update dotenvx to 1.57.2 ([8185184](https://github.com/HaloSPV3/HCE.Shared/commit/8185184cc12112042c757e676e0015d8e48bc37f))
+
+## [3.4.6](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.5...v3.4.6) (2026-03-16)
+
+### Bug Fixes
+
+* **deps:** update dependency @types/node to ~24.12.0 ([57a434c](https://github.com/HaloSPV3/HCE.Shared/commit/57a434c8ad3412158a2ecfa16844cf42e6313f8a))
+* **deps:** update eslint monorepo to v10 ([ae3252e](https://github.com/HaloSPV3/HCE.Shared/commit/ae3252ef4b3256f7190fd53589d550d5ec83cd3f))
 
 ## [3.4.6-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.5...v3.4.6-develop.1) (2026-03-14)
 
@@ -213,12 +226,6 @@
 ### Reverts
 
 * do not call nvm in package scripts ([eac118a](https://github.com/HaloSPV3/HCE.Shared/commit/eac118a5c098fc453e6e7ad72e1bcd5c14c76866))
-
-# Changelog
-
-All notable changes to this project will be documented in this file. See
-[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
-for commit guidelines.
 
 ## [3.1.0-develop.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.1.0-develop.2...v3.1.0-develop.3) (2025-11-08)
 
