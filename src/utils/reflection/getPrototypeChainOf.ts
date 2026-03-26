@@ -46,7 +46,7 @@ export function getPrototypesChainOf<
   let index: TupleIndices<typeof returnValue> = 0 as TupleIndices<typeof returnValue>;
 
   while (baseClassProto !== current) {
-    parent = getPrototypeOf<typeof current>(current);
+    parent = getPrototypeOf(current);
     // current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
     if (!isConstructor(current))
       break;
