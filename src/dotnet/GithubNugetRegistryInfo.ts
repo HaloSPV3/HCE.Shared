@@ -1,11 +1,11 @@
 import type { Type } from 'arktype';
-import { getEnvVarValue } from '../utils/env.js';
-import type { MSBuildProject, MSBuildEvaluationOutput } from './MSBuildProject.js';
-import type { NugetProjectProperties } from './NugetProjectProperties.js';
+import { getEnvVarValue } from '../utils/env.ts';
+import type { MSBuildProject, MSBuildEvaluationOutput } from './MSBuildProject.ts';
+import type { NugetProjectProperties } from './NugetProjectProperties.ts';
 import {
   NugetRegistryInfo,
   NRIOptsBase,
-} from './NugetRegistryInfo.js';
+} from './NugetRegistryInfo.ts';
 import type { Default } from 'arktype/internal/attributes.ts';
 
 const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';

@@ -1,4 +1,4 @@
-import type { ProtoOrSuperClass, WithProto } from './inheritance.js';
+import type { ProtoOrSuperClass, WithProto } from './inheritance.ts';
 
 /**
  * A nearly useless wrapper for {@link Reflect.getPrototypeOf}

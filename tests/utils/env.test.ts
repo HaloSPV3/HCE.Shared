@@ -1,4 +1,4 @@
-import { getEnv, getEnvVarValue } from '../../src/utils/env.js';
+import { getEnv, getEnvVarValue } from '../../src/utils/env.ts';
 import { strictEqual } from 'node:assert/strict';
 import { env } from 'node:process';
 import { describe, it } from 'node:test';

@@ -1,4 +1,4 @@
-import eslintConfig from '../src/eslintConfig.js';
+import eslintConfig from '../src/eslintConfig.ts';
 import { ok } from 'node:assert/strict';
 import { describe, it, todo } from 'node:test';
 

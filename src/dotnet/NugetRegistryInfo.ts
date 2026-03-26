@@ -1,7 +1,7 @@
 /* JSDoc Types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { SemanticReleaseConfigDotnet } from '../semanticReleaseConfigDotnet.js';
-import type { NugetProjectProperties } from './NugetProjectProperties.js';
+import type { SemanticReleaseConfigDotnet as _srcd } from '../semanticReleaseConfigDotnet.ts';
+import type { NugetProjectProperties } from './NugetProjectProperties.ts';
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 import { config as configDotenv } from '@dotenvx/dotenvx';
@@ -12,14 +12,15 @@ import type { ExecException } from 'node:child_process';
 import { existsSync, writeFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import node_path from 'node:path';
+// eslint-disable-next-line unicorn/import-style
+import * as node_path from 'node:path';
 import { cwd, env } from 'node:process';
 import { setTimeout } from 'node:timers/promises';
-import { isError } from '../utils/isError.js';
+import { isError } from '../utils/isError.ts';
 import sanitizeFileName from 'sanitize-filename';
-import { getEnvVarValue } from '../utils/env.js';
-import { execAsync } from '../utils/execAsync.js';
-import { catchEBUSY, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.js';
+import { getEnvVarValue } from '../utils/env.ts';
+import { execAsync } from '../utils/execAsync.ts';
+import { catchEBUSY, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.ts';
 import type { Default } from 'arktype/internal/attributes.ts';
 
 type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
@@ -451,7 +452,7 @@ but the environment variable is empty or undefined.`);
   /**
    * !Not ready for use! Remove private modifier and commit as `feat(dotnet)` when ready for release!
    * Blocking Issue: convert all dotnet-related functionality to a Semantic Release plugin!
-   * The current {@link SemanticReleaseConfigDotnet} leverages
+   * The current {@link _srcd SemanticReleaseConfigDotnet} leverages
    * `@semantic-release/exec` to invoke dotnet commands. This is fine for
    * relatively short command lines, but chaining commands with ' && ' results
    * in quickly-growing complexity.

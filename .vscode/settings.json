@@ -131,7 +131,7 @@
       "italic": false
     },
     {
-      "tag": ["!", "# !"],
+      "tag": [ "!", "# !" ],
       "color": "#FF2D00",
       "strikethrough": false,
       "underline": false,
@@ -158,7 +158,7 @@
       "italic": false
     },
     {
-      "tag": ["todo", "to-do", "@todo", "TODO"],
+      "tag": [ "todo", "to-do", "@todo", "TODO" ],
       "color": "#FF8C00",
       "strikethrough": false,
       "underline": false,
@@ -213,5 +213,6 @@
     "**/.eslintrc.{js,cjs,mjs,yaml,yml,json}",
     "**/eslint.config.{js,cjs,mjs}"
   ],
-  "dotnet.defaultSolution": "dotnet/HCE.Shared.slnx"
+  "dotnet.defaultSolution": "dotnet/HCE.Shared.slnx",
+  "deno.enable": false
 }

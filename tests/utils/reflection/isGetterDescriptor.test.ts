@@ -1,5 +1,5 @@
 import { describe, it } from 'node:test';
-import { isGetterDescriptor, type GetterDescriptor } from '../../../src/utils/reflection.js';
+import { isGetterDescriptor, type GetterDescriptor } from '../../../src/utils/reflection.ts';
 import { ok, strictEqual } from 'node:assert';
 
 await describe('isGetterDescriptor', async () => {

@@ -1,7 +1,7 @@
 import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { CaseInsensitiveMap } from '../../src/CaseInsensitiveMap.js';
-import { NugetProjectProperties as NPP } from '../../src/dotnet/NugetProjectProperties.js';
+import { CaseInsensitiveMap } from '../../src/CaseInsensitiveMap.ts';
+import { NugetProjectProperties as NPP } from '../../src/dotnet/NugetProjectProperties.ts';
 
 await describe('NugetProjectProperties', async () => {
   await it('exists', () => {

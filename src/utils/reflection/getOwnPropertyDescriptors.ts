@@ -1,7 +1,7 @@
-import type { InstanceOrStatic } from '../miscTypes.js';
-import type { BaseClassProto, ClassLike, ConstructorConstraint, SuperClassLike, WithProto } from './inheritance.js';
-import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.js';
-import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.js';
+import type { InstanceOrStatic } from '../miscTypes.ts';
+import type { BaseClassProto, ClassLike, ConstructorConstraint, SuperClassLike, WithProto } from './inheritance.ts';
+import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
+import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
 
 /**
  * Get the property descriptors of the class or constructor similar to {@link Object.getOwnPropertyDescriptors}, but with more options--including recursion.

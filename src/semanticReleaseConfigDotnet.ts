@@ -18,14 +18,16 @@
 
 import { inspect } from 'node:util';
 import type { Options } from 'semantic-release';
+// @ts-types="./semantic-release__exec.d.ts"
 import type { Options as SRExecOptions } from '@semantic-release/exec';
-import debug from './debug.js';
-import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/helpers.js';
-import { getEnvVarValue } from './utils/env.js';
-import { baseConfig } from './semanticReleaseConfig.js';
-import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.js';
-import { MSBuildProject } from './dotnet/MSBuildProject.js';
-import { insertPlugin } from './insertPlugins.js';
+import * as console from 'node:console';
+import debug from './debug.ts';
+import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/helpers.ts';
+import { getEnvVarValue } from './utils/env.ts';
+import { baseConfig } from './semanticReleaseConfig.ts';
+import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.ts';
+import { MSBuildProject } from './dotnet/MSBuildProject.ts';
+import { insertPlugin } from './insertPlugins.ts';
 
 type UnArray<T> = T extends (infer U)[] ? U : T;
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
@@ -307,7 +309,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       p => new NugetRegistryInfo({ project: p }),
     );
     const nupkgPaths = await Promise.all(
-      regInfos.map(async nri =>
+      regInfos.map(nri =>
         nri.PackDummyPackage({}).then((nupkgs) => {
           // this is a full file path.
           const mainNupkg = nupkgs.find(nupkg =>

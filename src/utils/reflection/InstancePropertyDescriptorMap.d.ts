@@ -1,4 +1,4 @@
-import type { PropertyDescriptorMap } from './PropertyDescriptorMap.ts';
+import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
 import type {
   BaseClassProto,
   ConstructorConstraint,

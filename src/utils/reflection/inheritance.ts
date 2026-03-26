@@ -1,8 +1,8 @@
-import type { Increment } from '../GracefulRecursion.js';
-import type { Integer } from '../miscTypes.js';
-import type { FunctionLike } from './FunctionLike.js';
-import { getPrototypeOf } from './getPrototypeOf.js';
-import type { PropertyDescriptorMap } from './PropertyDescriptorMap.js';
+import type { Increment } from '../GracefulRecursion.d.ts';
+import type { Integer } from '../miscTypes.ts';
+import type { FunctionLike } from './FunctionLike.d.ts';
+import { getPrototypeOf } from './getPrototypeOf.ts';
+import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
 
 /**
  * The `[[Prototype]]` (i.e. `__proto__`) of any base class.

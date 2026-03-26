@@ -1,9 +1,10 @@
 import { type, type Type } from 'arktype';
-import path from 'node:path';
+// eslint-disable-next-line unicorn/import-style
+import * as path from 'node:path';
 import { cwd } from 'node:process';
-import { MSBuildProject } from './MSBuildProject.js';
-import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.js';
-import { NugetRegistryInfo } from './NugetRegistryInfo.js';
+import { MSBuildProject } from './MSBuildProject.ts';
+import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.ts';
+import { NugetRegistryInfo } from './NugetRegistryInfo.ts';
 import type { Default } from 'arktype/internal/attributes.ts';
 
 const ourDefaultPubDir = path.join('.', 'publish') as `.${'/' | '\\'}publish`;

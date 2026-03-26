@@ -1,6 +1,6 @@
 import type { BaseClassProto, ConstructorLike, InstanceTypeOrSelf, ProtoOrSuperClass, SuperClassLike, WithProto } from './inheritance.ts';
-import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.ts';
-import type { PropertyDescriptorMap } from './PropertyDescriptorMap.ts';
+import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
+import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
 
 /**
  * Variant of {@link InstancePropertyDescriptorMap} with a lesser constraint on {@link T}.

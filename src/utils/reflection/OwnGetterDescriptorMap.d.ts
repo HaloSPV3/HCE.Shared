@@ -1,5 +1,5 @@
-import type { GetterDescriptor } from './GetterDescriptor.ts';
-import type { OwnKeyOf } from './OwnKeyOf.js';
+import type { GetterDescriptor } from './GetterDescriptor.d.ts';
+import type { OwnKeyOf } from './OwnKeyOf.d.ts';
 
 /**
  * # !WARNING!

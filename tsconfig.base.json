@@ -25,13 +25,14 @@
   "compileOnSave": true,
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
+    "esModuleInterop": false,
     "forceConsistentCasingInFileNames": true,
     "isolatedDeclarations": true,
     "isolatedModules": true,
-    "module": "Node18",
     "noEmitOnError": true,
     "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": true,
@@ -42,7 +43,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
     "sourceMap": true,
     "verbatimModuleSyntax": true
   },

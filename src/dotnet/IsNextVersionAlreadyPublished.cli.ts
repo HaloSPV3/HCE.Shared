@@ -1,4 +1,5 @@
-import { NugetRegistryInfo, getGithubOutput } from './NugetRegistryInfo.js';
+import * as console from 'node:console';
+import { NugetRegistryInfo, getGithubOutput } from './NugetRegistryInfo.ts';
 import esMain from 'es-main';
 
 /**

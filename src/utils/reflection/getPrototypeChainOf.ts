@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/no-defaults */
-import type { TupleIndices } from '../miscTypes.js';
-import { getPrototypeOf } from './getPrototypeOf.js';
+import type { TupleIndices } from '../miscTypes.ts';
+import { getPrototypeOf } from './getPrototypeOf.ts';
 import {
   baseClassProto,
   type BaseClassProto,
@@ -10,8 +10,8 @@ import {
   type ProtoChainOfClassInstance,
   type SuperClassLike,
   type WithProto,
-} from './inheritance.js';
-import { isConstructor } from './isConstructor.js';
+} from './inheritance.ts';
+import { isConstructor } from './isConstructor.ts';
 
 type ProtoChain<
   Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,

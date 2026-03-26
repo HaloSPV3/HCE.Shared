@@ -1,11 +1,14 @@
+// @ts-types="../src/semantic-release__exec.d.ts"
 import type { Options as SRExecOptions } from '@semantic-release/exec';
+// @ts-types="../src/semantic-release__git.d.ts"
 import type { Options as GitOptions } from '@semantic-release/git';
+// @ts-types="../src/semantic-release__github.d.ts"
 import type { Options as GithubOptions } from '@semantic-release/github';
 import { deepStrictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import type { PluginSpec } from 'semantic-release';
-import { baseConfig, defaultPlugins } from '../src/semanticReleaseConfig.js';
-import { DefaultOptions } from '../src/setupGitPluginSpec.js';
+import { baseConfig, defaultPlugins } from '../src/semanticReleaseConfig.ts';
+import { DefaultOptions } from '../src/setupGitPluginSpec.ts';
 
 import '../src/semantic-release__exec.d.ts';
 import '../src/semantic-release__git.d.ts';

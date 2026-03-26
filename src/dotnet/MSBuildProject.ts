@@ -2,16 +2,17 @@ import { type, type Scope, type Type } from 'arktype';
 import { warn } from 'node:console';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
-import path from 'node:path';
+// eslint-disable-next-line unicorn/import-style
+import * as path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
-import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
-import { execAsync } from '../utils/execAsync.js';
-import { isError } from '../utils/isError.js';
-import { MSBuildProjectProperties } from './MSBuildProjectProperties.js';
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.ts';
+import { execAsync } from '../utils/execAsync.ts';
+import { isError } from '../utils/isError.ts';
+import { MSBuildProjectProperties } from './MSBuildProjectProperties.ts';
 import {
   NPPGetterNames,
   NugetProjectProperties,
-} from './NugetProjectProperties.js';
+} from './NugetProjectProperties.ts';
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).

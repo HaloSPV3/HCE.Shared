@@ -1,8 +1,9 @@
 import { strictEqual } from 'node:assert/strict';
 import { existsSync } from 'node:fs';
-import node_path from 'node:path';
-import { CaseInsensitiveMap } from '../CaseInsensitiveMap.js';
-import type { BaseClass, ClassLike } from '../utils/reflection.js';
+// eslint-disable-next-line unicorn/import-style
+import * as node_path from 'node:path';
+import { CaseInsensitiveMap } from '../CaseInsensitiveMap.ts';
+import type { BaseClass, ClassLike } from '../utils/reflection.ts';
 
 /**
  * Known properties. Additional properties may be added upon request.

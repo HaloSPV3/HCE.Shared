@@ -1,14 +1,14 @@
-import { getEnvVarValue } from '../utils/env.js';
-import { isError } from '../utils/isError.js';
+import { getEnvVarValue } from '../utils/env.ts';
+import { isError } from '../utils/isError.ts';
 import {
   NugetRegistryInfo,
   NRIOpts,
   NRIOptsBase,
-} from './NugetRegistryInfo.js';
+} from './NugetRegistryInfo.ts';
 import type { Out, Type } from 'arktype';
 import type { Default } from 'arktype/internal/attributes.ts';
-import type { MSBuildProject, MSBuildEvaluationOutput } from './MSBuildProject.js';
-import type { NugetProjectProperties } from './NugetProjectProperties.js';
+import type { MSBuildProject, MSBuildEvaluationOutput } from './MSBuildProject.ts';
+import type { NugetProjectProperties } from './NugetProjectProperties.ts';
 
 // https://docs.gitlab.com/ee/user/packages/nuget_repository/
 export class GitlabNugetRegistryInfo extends NugetRegistryInfo {

@@ -3,7 +3,7 @@ import { describe, it, todo } from 'node:test';
 import {
   configureDotnetNugetPush,
   configurePrepareCmd,
-} from '../../src/dotnet/helpers.js';
+} from '../../src/dotnet/helpers.ts';
 
 await describe('dotnetHelpers', async () => {
   await todo('configurePrepareCmd', () => {

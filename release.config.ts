@@ -1,7 +1,7 @@
 /**
  * # semantic-release
  *
- * After HCE.Shared's Shareable Configuration (see 'static/.releaserc.yml', https://semantic-release.gitbook.io/semantic-release/usage/configuration#extends)
+ * After HCE.Shared's Shareable Configuration (see './src/semanticReleaseConfig.ts', https://semantic-release.gitbook.io/semantic-release/usage/configuration#extends)
  * is loaded, the following semantic-release configuration is merged
  * into the configuration object, overriding existing values.
  * Later, when a release is triggered, semantic-release will
@@ -184,18 +184,42 @@ try {
     const npmIndex = config.plugins.findIndex(v =>
       v[0] === '@semantic-release/npm',
     );
-    if (npmIndex === -1)
-      config.plugins.push(tuple);
+    if (npmIndex === -1) {
+      let gh = -1;
+      let git = -1;
+      let gl = -1;
+      for (let i = 0; i < config.plugins.length; i++) {
+        switch (config.plugins[i]?.[0]) {
+          case '@semantic-release/github': {
+            gh = i;
+            break;
+          }
+          case '@semantic-release/git':{
+            git = i;
+            break;
+          }
+          case '@semantic-release/gitlab': {
+            gl = i;
+            break;
+          }
+          default: { break; }
+        }
+      }
+      // should run before github, gitlab, and git plugins so package.json is updated _before_ it's copied
+      if (gh == -1 && git == -1 && gl == -1)
+        config.plugins.push(tuple);
+      else {
+        const lesser = Math.min(...[gh, git, gl].filter(v => v != -1));
+        config.plugins.splice(lesser, 0, tuple);
+      }
+    }
     else config.plugins[npmIndex] = tuple;
   }
   replaceNpmWithMultipleNpm();
 
   // eslint-disable-next-line jsdoc/require-jsdoc
   function setupExec() {
-    const currentBranch = execSync('git branch', { encoding: 'utf8' })
-      .split('\n')
-      .find(line => line.startsWith('* '))
-      ?.slice(2);
+    const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' });
 
     if (!currentBranch)
       throw new Error('The current git branch could not be parsed.');

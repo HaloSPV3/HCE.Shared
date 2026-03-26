@@ -4,12 +4,12 @@ import { describe, it, skip } from 'node:test';
 import {
   MSBuildProjectProperties as MSBPP,
   type Class_MSBPP,
-} from '../../src/dotnet/MSBuildProjectProperties.js';
+} from '../../src/dotnet/MSBuildProjectProperties.ts';
 import {
   NugetProjectProperties,
   type Class_NPP,
-} from '../../src/dotnet/NugetProjectProperties.js';
-import type { BooleanString } from '../../src/utils/miscTypes.js';
+} from '../../src/dotnet/NugetProjectProperties.ts';
+import type { BooleanString } from '../../src/utils/miscTypes.ts';
 import {
   filterForGetters,
   getOwnPropertyDescriptors,
@@ -31,7 +31,7 @@ import {
   type RecursedPropertyDescriptorMap,
   type RecursedPropertyDescriptorMapArray,
   type WithProto,
-} from '../../src/utils/reflection.js';
+} from '../../src/utils/reflection.ts';
 import type { PickKeys } from 'ts-essentials';
 class TestClass0 {
   private static readonly _booleanDefault = true;
