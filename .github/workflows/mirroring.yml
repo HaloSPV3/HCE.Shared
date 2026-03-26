@@ -1,6 +1,11 @@
 name: Mirroring
 
-on: [push, delete]
+on:
+  push:
+    branches-ignore:
+      - dependabot/**/*
+      - renovate/**/*
+  delete: null
 
 jobs:
   to_gitlab:
