@@ -1,3 +1,12 @@
+## [3.4.7](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.6...v3.4.7) (2026-03-26)
+
+### Bug Fixes
+
+* **deps, deps-dev:** update commitlint deps to 20.5.0 ([a0e6ab3](https://github.com/HaloSPV3/HCE.Shared/commit/a0e6ab3066ae96c52124452a414224255a887696))
+* **deps, deps-dev:** update eslint deps ([24a382b](https://github.com/HaloSPV3/HCE.Shared/commit/24a382be93d4479ec2fb3b1d80b7f626da4264b6))
+* **deps:** update `sanitize-filename` to 1.6.4 ([9a97a04](https://github.com/HaloSPV3/HCE.Shared/commit/9a97a047acaea0ad575177419cb76d2d78c5c027))
+* **deps:** update dotenvx to 1.57.2 ([8185184](https://github.com/HaloSPV3/HCE.Shared/commit/8185184cc12112042c757e676e0015d8e48bc37f))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See
