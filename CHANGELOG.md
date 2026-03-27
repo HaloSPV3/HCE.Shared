@@ -1,3 +1,9 @@
+## [3.4.8-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.7...v3.4.8-develop.1) (2026-03-27)
+
+### Bug Fixes
+
+* export .d.ts files, again ([37b11cb](https://github.com/HaloSPV3/HCE.Shared/commit/37b11cb3cf25a50dc4aae487c9a2a9f2c8f22b78))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See
