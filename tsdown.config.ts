@@ -1,5 +1,5 @@
+import { readdirSync } from 'node:fs';
 import { defineConfig, type UserConfig } from 'tsdown';
-import * as process from 'node:process';
 
 const _config: UserConfig = defineConfig({
   dts: {
@@ -20,9 +20,29 @@ const _config: UserConfig = defineConfig({
   deps: { skipNodeModulesBundle: true },
   exports: {
     all: true,
-    devExports: process.env['CI']?.toLowerCase() != 'true',
+    // .d.ts files are not auto-exported. `ls src/**.d.ts` */
+    customExports(exports) {
+      const declarations = readdirSync(
+        './src/',
+        { encoding: 'utf8', recursive: true },
+      ).filter(v =>
+        v.endsWith('.d.ts'),
+      );
+
+      if (declarations.length === 0)
+        throw new Error('Where are my types???');
+
+      let namepath;
+      let filepath;
+      // 'utils/Exact.d.ts'
+      for (const d of declarations) {
+        namepath = `./${d.replace('.d.ts', '')}`;
+        filepath = `./src/${d}`;
+        exports[namepath] = filepath;
+      }
+      return exports;
+    },
   },
-  minify: true,
   outDir: './mjs',
   publint: true,
   tsconfig: './tsconfig.mjs.json',
