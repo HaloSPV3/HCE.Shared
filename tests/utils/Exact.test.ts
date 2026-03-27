@@ -1,4 +1,4 @@
-import type { Exact } from '@halospv3/hce.shared-config/utils/Exact';
+import type { Exact } from '../../src/utils/Exact.d.ts';
 import { describe } from 'node:test';
 
 // eslint-disable-next-line jsdoc/require-jsdoc, @typescript-eslint/no-unused-vars
