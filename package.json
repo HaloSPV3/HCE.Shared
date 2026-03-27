@@ -110,7 +110,7 @@
     "@bintoss/semantic-release-npm-multiple": "^3.17.1",
     "@commitlint/types": "^20.5.0",
     "@eslint/config-inspector": "^1.4.2",
-    "@eslint/markdown": "^7.5.1",
+    "@eslint/markdown": "^8.0.0",
     "@sebbo2002/semantic-release-jsr": "^3.2.0",
     "@semantic-release/gitlab": "^13.3.2",
     "@tsconfig/node24": "^24.0.3",
