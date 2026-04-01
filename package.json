@@ -119,7 +119,7 @@
     "conventional-changelog-preset-loader": "^5.0.0",
     "eslint": "^10.1.0",
     "eslint-plugin-jsdoc": "^62.8.1",
-    "eslint-plugin-unicorn": "^63.0.0",
+    "eslint-plugin-unicorn": "^64.0.0",
     "publint": "^0.3.18",
     "tmp": "^0.2.3",
     "tsdown": "^0.21.5",
