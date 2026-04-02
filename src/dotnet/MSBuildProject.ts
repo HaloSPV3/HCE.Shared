@@ -685,6 +685,7 @@ export function catchEBUSY(error: unknown): undefined {
       const isAVLN9999 = /AVLN9999:/gm.test(normalizedStderr)
         && hasErrMsgPattern;
       if (isCS2012 || isAVLN9999 || hasErrMsgPattern)
+        // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined; /* retry */
     }
     /**
@@ -728,6 +729,7 @@ export function catchCsc2012(error: unknown): undefined {
         error.stderr.normalize('NFKC'),
       )
     ) {
+      // eslint-disable-next-line unicorn/no-useless-undefined
       return undefined; /* retry */
     }
     /**
