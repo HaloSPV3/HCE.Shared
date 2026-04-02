@@ -1,9 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
     "outDir": "_tsout",
-    "target": "es2020",
     "erasableSyntaxOnly": true
   },
   "include": [
