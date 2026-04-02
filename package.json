@@ -47,7 +47,6 @@
     "lint:check": "eslint --cache .",
     "eslint-inspector": "eslint --inspect-config",
     "prepack": "npm run clean && npm run build",
-    "pack": "echo 'You should use `npm pack`' && exit 1",
     "postinstall": "patch-package && husky",
     "presemantic-release": "npm pack",
     "semantic-release": "semantic-release",
