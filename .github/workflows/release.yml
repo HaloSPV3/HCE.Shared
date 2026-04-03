@@ -9,7 +9,7 @@ jobs:
     uses: ./.github/workflows/npm-ci-and-pack.yml
     permissions:
       id-token: write # to enable use of OIDC for npm provenance; Upload coverage reports to Codecov
-      packages: write
+      packages: write # required for pushing dummy packages in test suite
       contents: read # access to check out code and install dependencies
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
