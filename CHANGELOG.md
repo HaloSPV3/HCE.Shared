@@ -1,3 +1,9 @@
+## [3.5.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.8...v3.5.0) (2026-04-03)
+
+### Features
+
+* add commit-analyzer types ([6728493](https://github.com/HaloSPV3/HCE.Shared/commit/6728493243c490285dfe33f5ae1fca6ae76847f1)), closes [#662](https://github.com/HaloSPV3/HCE.Shared/issues/662)
+
 ## [3.5.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.8...v3.5.0-develop.1) (2026-04-03)
 
 ### Features
