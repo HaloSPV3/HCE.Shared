@@ -36,6 +36,7 @@
     "type": "git",
     "url": "git+https://github.com/HaloSPV3/HCE.Shared.git"
   },
+  "script-shell": "sh",
   "scripts": {
     "build": "tsdown",
     "build:clean": "npm run clean-build",
@@ -47,7 +48,7 @@
     "lint:check": "eslint --cache .",
     "eslint-inspector": "eslint --inspect-config",
     "prepack": "npm run clean && npm run build",
-    "postinstall": "patch-package && husky",
+    "postinstall": "([ -e .git/ ] && patch-package && husky) || exit 0",
     "presemantic-release": "npm pack",
     "semantic-release": "semantic-release",
     "pretest": "npm run build && npm run test:cacheSampleProjects",
