@@ -1,3 +1,9 @@
+## [3.5.1-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.5.0...v3.5.1-develop.1) (2026-04-03)
+
+### Bug Fixes
+
+* run `postinstall` only when `./.git/` exists ([78d37f2](https://github.com/HaloSPV3/HCE.Shared/commit/78d37f283df94f1d391d98b60d34c8ad426931f5)), closes [#663](https://github.com/HaloSPV3/HCE.Shared/issues/663)
+
 ## [3.5.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.8...v3.5.0) (2026-04-03)
 
 ### Features

@@ -1,6 +1,6 @@
 {
   "name": "@halospv3/hce.shared-config",
-  "version": "3.5.0",
+  "version": "3.5.1-develop.1",
   "description": "Automate commit message quality, changelogs, and CI/CD releases. Its `main` entry point is a Semantic Release config. Functions and classes are exposed for customization. An ESLint config, a Commitlint config, and addl. resources for .NET projects are also provided.",
   "keywords": [
     "semantic-release",
@@ -36,6 +36,7 @@
     "type": "git",
     "url": "git+https://github.com/HaloSPV3/HCE.Shared.git"
   },
+  "script-shell": "sh",
   "scripts": {
     "build": "tsdown",
     "build:clean": "npm run clean-build",
@@ -47,7 +48,7 @@
     "lint:check": "eslint --cache .",
     "eslint-inspector": "eslint --inspect-config",
     "prepack": "npm run clean && npm run build",
-    "postinstall": "patch-package && husky",
+    "postinstall": "([ -e .git/ ] && patch-package && husky) || exit 0",
     "presemantic-release": "npm pack",
     "semantic-release": "semantic-release",
     "pretest": "npm run build && npm run test:cacheSampleProjects",
