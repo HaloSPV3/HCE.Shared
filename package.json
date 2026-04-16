@@ -110,7 +110,7 @@
     "@arethetypeswrong/core": "^0.18.2",
     "@bintoss/semantic-release-npm-multiple": "^3.17.1",
     "@commitlint/types": "^20.5.0",
-    "@eslint/config-inspector": "^1.4.2",
+    "@eslint/config-inspector": "^2.0.0",
     "@eslint/markdown": "^8.0.1",
     "@sebbo2002/semantic-release-jsr": "^3.2.0",
     "@semantic-release/gitlab": "^13.3.2",
