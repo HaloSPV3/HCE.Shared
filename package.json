@@ -64,7 +64,7 @@
   "dependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
-    "@dotenvx/dotenvx": "^1.61.0",
+    "@dotenvx/dotenvx": "^1.61.1",
     "@eslint/js": "^10.0.1",
     "@eslint/json": "^1.2.0",
     "@semantic-release/changelog": "^6.0.3",
@@ -117,7 +117,7 @@
     "@types/debug": "^4.1.13",
     "@types/tmp": "^0.2.6",
     "conventional-changelog-preset-loader": "^5.0.0",
-    "eslint": "^10.1.0",
+    "eslint": "^10.2.1",
     "eslint-plugin-jsdoc": "^62.9.0",
     "eslint-plugin-unicorn": "^64.0.0",
     "pinst": "^3.0.0",
