@@ -40,7 +40,7 @@
   "scripts": {
     "build": "tsdown",
     "build:clean": "npm run clean-build",
-    "check": "npm run type && npm run test && npm run lint",
+    "check": "npm run type && npm run lint:check && npm run test",
     "clean": "tsdown --clean",
     "clean-build": "npm run clean && npm run build",
     "coverage": "npm run test -- --experimental-test-coverage",
