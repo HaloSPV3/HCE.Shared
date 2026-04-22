@@ -46,7 +46,7 @@
   },
   "script-shell": "sh",
   "scripts": {
-    "build": "tsdown",
+    "build": "exit 1 && tsdown",
     "build:clean": "yarn clean-build",
     "check": "yarn type && yarn lint && yarn test",
     "clean": "tsdown --clean",
@@ -58,7 +58,7 @@
     "eslint-inspector": "eslint --inspect-config",
     "//prepack": "Include this if publishing to npmjs.com",
     "prepack": "pinst --disable && yarn clean && yarn build",
-    "postinstall": "husky",
+    "_postinstall": "husky",
     "postpack": "pinst --enable",
     "semantic-release": "yarn pack -o ./publish/ && semantic-release",
     "test:only": "tsx --test --experimental-test-coverage --enable-source-maps --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.txt --test-reporter=junit --test-reporter-destination=junit.xml",
