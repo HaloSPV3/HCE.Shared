@@ -2,8 +2,6 @@
 /* eslint @stylistic/quote-props: ["warn", "as-needed"] */
 /* eslint @stylistic/semi: ["warn", "always"] */
 import type {
-  RuleConfigCondition,
-  RuleConfigSeverity,
   UserConfig,
 } from '@commitlint/types';
 import 'tsx';
@@ -91,9 +89,9 @@ const config: UserConfig = {
   rules: {
     ...commitlintConfig.rules,
     'scope-enum': [
-      2 as RuleConfigSeverity.Error,
-      'always' as RuleConfigCondition,
-      Object.keys(scopes) satisfies string[] as (keyof typeof scopes)[],
+      2,
+      'always',
+      Object.keys(scopes),
     ],
   },
 };

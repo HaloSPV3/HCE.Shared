@@ -37,7 +37,7 @@ await describe('semanticReleaseConfig', async () => {
         ] satisfies PluginSpec<GitOptions>,
         [
           '@semantic-release/exec',
-          {} as SRExecOptions,
+          {},
         ] satisfies PluginSpec<SRExecOptions>,
         [
           '@semantic-release/github',
@@ -47,8 +47,8 @@ await describe('semanticReleaseConfig', async () => {
               './publish/*',
               '!./publish/.gitkeep',
             ],
-          } as GithubOptions,
-        ],
+          },
+        ] satisfies PluginSpec<GithubOptions>,
       ],
     } as const);
   });

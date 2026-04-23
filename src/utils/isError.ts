@@ -12,7 +12,7 @@ import { isNativeError } from 'node:util/types';
  */
 export function isError(error: unknown): error is Error {
   return 'isError' in Error && typeof Error.isError === 'function' && Error.isError.length > 0
-    ? (Error.isError as typeof isError)(error)
+    ? Error.isError(error)
     // eslint-disable-next-line @typescript-eslint/no-deprecated
     : isNativeError(error);
 }
