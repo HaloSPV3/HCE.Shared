@@ -70,9 +70,9 @@
     "watch": "tsdown --watch"
   },
   "dependencies": {
-    "@commitlint/cli": "^20.5.0",
+    "@commitlint/cli": "^20.5.2",
     "@commitlint/config-conventional": "^20.5.0",
-    "@dotenvx/dotenvx": "^1.61.1",
+    "@dotenvx/dotenvx": "^1.64.0",
     "@eslint/js": "^10.0.1",
     "@eslint/json": "^1.2.0",
     "@semantic-release/changelog": "^6.0.3",
@@ -83,7 +83,7 @@
     "@semantic-release/npm": "^13.1.5",
     "@semantic-release/release-notes-generator": "^14.1.0",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/node": "~24.12.2",
+    "@types/node": "~25.6.0",
     "arktype": "^2.2.0",
     "chardet": "^2.1.1",
     "conventional-changelog-conventionalcommits": "^9.3.1",
@@ -95,8 +95,8 @@
     "sanitize-filename": "^1.6.4",
     "semantic-release": "^25.0.3",
     "semantic-release-export-data": "^1.2.0",
-    "ts-essentials": "^10.1.1",
-    "typescript-eslint": "^8.59.0"
+    "ts-essentials": "^10.2.0",
+    "typescript-eslint": "^8.59.1"
   },
   "peerDependencies": {
     "@bintoss/semantic-release-npm-multiple": "^3.0.0 || >= 3.0.0",
@@ -116,7 +116,7 @@
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
     "@bintoss/semantic-release-npm-multiple": "^3.17.1",
-    "@commitlint/load": "^20.5.0",
+    "@commitlint/load": "^20.5.2",
     "@commitlint/types": "^20.5.0",
     "@eslint/config-inspector": "^2.0.0",
     "@eslint/markdown": "^8.0.1",
@@ -124,7 +124,7 @@
     "@semantic-release/gitlab": "^13.3.2",
     "@types/debug": "^4.1.13",
     "@types/tmp": "^0.2.6",
-    "@typescript-eslint/utils": "^8.59.0",
+    "@typescript-eslint/utils": "^8.59.1",
     "conventional-changelog-preset-loader": "^5.0.0",
     "eslint": "^10.2.1",
     "eslint-plugin-jsdoc": "^62.9.0",
@@ -133,7 +133,7 @@
     "pinst": "^3.0.0",
     "publint": "^0.3.18",
     "tmp": "^0.2.5",
-    "tsdown": "^0.21.9",
+    "tsdown": "^0.21.10",
     "tslib": "^2.8.1",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
