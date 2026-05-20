@@ -118,7 +118,7 @@
     "@types/tmp": "^0.2.6",
     "conventional-changelog-preset-loader": "^5.0.0",
     "eslint": "^10.2.1",
-    "eslint-plugin-jsdoc": "^62.9.0",
+    "eslint-plugin-jsdoc": "^63.0.0",
     "eslint-plugin-unicorn": "^64.0.0",
     "pinst": "^3.0.0",
     "publint": "^0.3.18",
