@@ -22,8 +22,8 @@ jobs:
     env:
       DOTNET_NOLOGO: true
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/cache/restore@v5
+      - uses: actions/checkout@v7
+      - uses: actions/cache/restore@v6
         with:
           path: /usr/share/dotnet
           key: usr-share-dotnet
@@ -32,7 +32,7 @@ jobs:
           global-json-file: ./global.json
           # required by Kuinox.NupkgDeterministicator
           dotnet-version: 6.0.x
-      - uses: actions/cache/save@v5
+      - uses: actions/cache/save@v6
         with:
           path: /usr/share/dotnet
           key: usr-share-dotnet
