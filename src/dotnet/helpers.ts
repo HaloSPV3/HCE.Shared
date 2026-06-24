@@ -7,7 +7,7 @@ import { MSBuildProjectProperties as MSBPP } from './MSBuildProjectProperties.ts
 import { NugetRegistryInfo } from './NugetRegistryInfo.ts';
 import type { Default } from 'arktype/internal/attributes.ts';
 
-const ourDefaultPubDir = path.join('.', 'publish') as `.${'/' | '\\'}publish`;
+const ourDefaultPubDirectory = path.join('.', 'publish') as `.${'/' | '\\'}publish`;
 
 /**
  * Build a prepareCmd string from .NET projects.\
@@ -26,20 +26,19 @@ const ourDefaultPubDir = path.join('.', 'publish') as `.${'/' | '\\'}publish`;
  * of the `--output` argument will be set to {@link ourDefaultPubDir} if `undefined`.
  * @returns A single string of CLI commands joined by ' && '
  */
+// eslint-disable-next-line unicorn/name-replacements
 export async function configurePrepareCmd(
   projectsToPublish: string[] | MSBuildProject[],
   projectsToPackAndPush?: string[] | NugetRegistryInfo[],
+  // eslint-disable-next-line unicorn/name-replacements
   dotnetNugetSignOpts?: typeof DotnetNugetSignOptions.inferIn,
 ): Promise<string> {
-  const evaluatedProjects: MSBuildProject[] = [];
+  const evaluatedProjects: MSBuildProject[] = projectsToPublish.filter(p => p instanceof MSBuildProject);
 
-  // append evaluated projects
-  for (const p of projectsToPublish.filter(p => p instanceof MSBuildProject)) {
-    evaluatedProjects.push(p);
-  }
   if (projectsToPackAndPush) {
-    for (const p of projectsToPackAndPush.filter(p => p instanceof NugetRegistryInfo)) {
-      evaluatedProjects.push(p.project);
+    for (const project of projectsToPackAndPush) {
+      if (project instanceof NugetRegistryInfo)
+        evaluatedProjects.push(project.project);
     }
   }
 
@@ -258,7 +257,7 @@ export async function configurePrepareCmd(
   ): Promise<string | undefined> {
     if (projectsToPackAndPush.length === 0)
       return undefined;
-    return await Promise.all(
+    const nriArray = await Promise.all(
       projectsToPackAndPush.map(async (proj) => {
         if (proj instanceof NugetRegistryInfo)
           return proj;
@@ -273,12 +272,12 @@ export async function configurePrepareCmd(
 
         return new NugetRegistryInfo({ project: msbp });
       }),
-    ).then((nriArray: NugetRegistryInfo[]): string => {
-      return nriArray
-        .map((nri: NugetRegistryInfo): string =>
-          nri.GetPackCommand(NugetRegistryInfo.PackPackagesOptionsType.from({})),
-        ).join(' && ');
-    });
+    );
+
+    return nriArray
+      .map((nri: NugetRegistryInfo): string =>
+        nri.GetPackCommand(NugetRegistryInfo.PackPackagesOptionsType.from({})),
+      ).join(' && ');
   }
 }
 
@@ -323,6 +322,7 @@ export function configureDotnetNugetPush(
  * @returns `dotnet nuget sign {...}`
  */
 function formatDotnetNugetSign(
+  // eslint-disable-next-line unicorn/name-replacements
   opts: typeof DotnetNugetSignOptions.inferIn | undefined,
 ): string | undefined {
   if (opts === undefined)
@@ -331,7 +331,7 @@ function formatDotnetNugetSign(
   const validOptions = DotnetNugetSignOptions.from(opts);
   const arguments_: ['--timestamper', typeof validOptions.timestamper, '-o', string, ...string[]] = [
     '--timestamper', validOptions.timestamper,
-    '-o', validOptions.output ?? ourDefaultPubDir,
+    '-o', validOptions.output ?? ourDefaultPubDirectory,
   ];
   if (validOptions.certificatePassword)
     arguments_.push('---certificate-password', validOptions.certificatePassword);

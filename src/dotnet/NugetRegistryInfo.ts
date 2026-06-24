@@ -466,7 +466,6 @@ but the environment variable is empty or undefined.`);
    * https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack, and
    * {@link PackPackagesOptionsType}.
    * {@link options['-GetItem']} will _always_ have '_OutputPackItems'.
-   * @param options
    * @param [shouldUsePerSourceSubfolder] If `true`, modify the output path to
    * include a subfolder bearing a path-safe encoding of the NuGet Source that
    * will receive the nupkg.

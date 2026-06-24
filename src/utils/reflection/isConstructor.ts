@@ -8,9 +8,8 @@
  * used with the `new` keyword.
  * #### NOTE: Only works when targeting ES6/ES2015 or later.
  * > If your project or a dependent project is compiled to < ES6, this function will always return `false`; classes and constructors were introduced in ES6/ES2015.
- * @param obj Anything.
- * @param object
- * @returns `true` if the obj is a constructor. Else, `false`.
+ * @param object Anything.
+ * @returns `true` if the {@link object} is a constructor. Else, `false`.
  * @since 3.0.0
  * @see https://stackoverflow.com/a/49510834
  */
