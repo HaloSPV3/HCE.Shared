@@ -1,3 +1,10 @@
+## [3.5.3-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.5.3-develop.1...v3.5.3-develop.2) (2026-06-24)
+
+### Bug Fixes
+
+* **deps:** update dependency @eslint/json to v2 ([6b6148a](https://github.com/HaloSPV3/HCE.Shared/commit/6b6148adf8163985a3244f4099feebc21e5418af))
+* **deps:** update node.js to v24.18.0 ([bd9ea1f](https://github.com/HaloSPV3/HCE.Shared/commit/bd9ea1fd08e991be4eb0ce7381def6ea20965ad5))
+
 ## [3.5.3-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.5.2...v3.5.3-develop.1) (2026-05-11)
 
 ### Bug Fixes
