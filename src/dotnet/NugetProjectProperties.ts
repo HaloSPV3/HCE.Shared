@@ -91,12 +91,6 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     // Pass the remainder to super
     super(msbuildProjectFullPath, properties);
 
-    /** convert values to strings */
-    for (const [value, key] of consumables.entries()) {
-      if (typeof value !== 'string')
-        consumables.set(key, String(value));
-    }
-
     const _getAndForget = (key: string) => NugetProjectProperties.getAndForget(consumables, key);
     let data;
     this._authors = _getAndForget('Authors');
