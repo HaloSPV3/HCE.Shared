@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/name-replacements */
 import type { Increment } from '../GracefulRecursion.d.ts';
 import type { Integer } from '../miscTypes.ts';
 import type { FunctionLike } from './FunctionLike.d.ts';
@@ -54,7 +55,7 @@ export type BaseClass<Class extends ConstructorConstraint<Class>>
  * @since 3.0.0
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Constructor_Unknown = abstract new (...args: any[]) => any;
+export type Constructor_Unknown = abstract new (...arguments_: any[]) => any;
 
 /**
  * The constraint for constructor types.
@@ -63,7 +64,7 @@ export type Constructor_Unknown = abstract new (...args: any[]) => any;
  * @template T Any newable constructor type
  * @since 3.0.0
  */
-export type ConstructorConstraint<T extends abstract new (...args: ConstructorParameters<T>) => InstanceType<T>> = abstract new (...arguments_: ConstructorParameters<T>) => InstanceType<T>;
+export type ConstructorConstraint<T extends abstract new (...arguments_: ConstructorParameters<T>) => InstanceType<T>> = abstract new (...arguments_: ConstructorParameters<T>) => InstanceType<T>;
 
 /**
  * {@link T} is a class constructor or unknown constructor. Else, `never`.
@@ -257,6 +258,6 @@ export type InstanceTypeOrSelf<T extends object | null> = T extends ConstructorL
  * @template __proto__ the type of the an object's `[[Prototype]]`.
  * @since 3.0.0
  */
-export interface WithProto<__proto__ extends ProtoOrSuperClass> {
-  ['__proto__']: __proto__;
+export interface WithProto<__prototype__ extends ProtoOrSuperClass> {
+  ['__proto__']: __prototype__;
 }

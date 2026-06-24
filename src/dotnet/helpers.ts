@@ -43,14 +43,14 @@ export async function configurePrepareCmd(
     }
   }
 
-  const dotnetPublishCmd: string = await formatDotnetPublish(projectsToPublish);
-  const dotnetPackCmd: string | undefined = await formatDotnetPack(projectsToPackAndPush ?? []);
-  const dotnetNugetSignCmd: string | undefined = formatDotnetNugetSign(dotnetNugetSignOpts);
+  const dotnetPublishCommand: string = await formatDotnetPublish(projectsToPublish);
+  const dotnetPackCommand: string | undefined = await formatDotnetPack(projectsToPackAndPush ?? []);
+  const dotnetNugetSignCommand: string | undefined = formatDotnetNugetSign(dotnetNugetSignOpts);
 
   return [
-    dotnetPublishCmd,
-    dotnetPackCmd,
-    dotnetNugetSignCmd,
+    dotnetPublishCommand,
+    dotnetPackCommand,
+    dotnetNugetSignCommand,
     // remove no-op commands
   ]
     .filter(v => v !== undefined)
@@ -162,7 +162,7 @@ export async function configurePrepareCmd(
      * // return array as success-chained CLI commands.
      * return publishCmdArray.join(' && ');
      */
-    function getPublishArgsPermutations(proj: MSBuildProject):
+    function getPublishArgumentsPermutations(proj: MSBuildProject):
       ([`"${typeof proj.Properties.MSBuildProjectFullPath}" -t:PublishAll -p:Configuration=Release`])
       | ([`"${typeof proj.Properties.MSBuildProjectFullPath}"`])
       | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`)[]
@@ -212,8 +212,8 @@ export async function configurePrepareCmd(
       }
 
       /** prepend each set of args with the project's path */
-      return tfmRidPermutations.map(permArgs =>
-        `"${proj.Properties.MSBuildProjectFullPath}" ${permArgs}`,
+      return tfmRidPermutations.map(permArguments =>
+        `"${proj.Properties.MSBuildProjectFullPath}" ${permArguments}`,
       ) as `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`[]
       | `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`[]
       | `"${typeof proj.Properties.MSBuildProjectFullPath}" --framework ${string}`[];
@@ -222,13 +222,13 @@ export async function configurePrepareCmd(
 
     const publishCmds: (`dotnet publish "${string}"` | `dotnet publish "${string}" ${string}` | `dotnet msbuild "${string}" -t:PublishAll -p:Configuration=Release`)[] = [];
     /** convert {@link evaluatedPublishProjects} to sets of space-separated CLI args. */
-    const argsSets = evaluatedPublishProjects.map(
-      proj => getPublishArgsPermutations(proj),
+    const argumentsSets = evaluatedPublishProjects.map(
+      proj => getPublishArgumentsPermutations(proj),
     );
-    for (const args of argsSets) {
-      if (typeof args === 'string')
+    for (const arguments_ of argumentsSets) {
+      if (typeof arguments_ === 'string')
         throw new Error(`\`args\` should not be a string!`);
-      for (const permutation of args) {
+      for (const permutation of arguments_) {
         if (typeof permutation === 'string' && permutation.length === 1)
           throw new Error('Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!');
         if (/".+" -t:PublishAll -p:Configuration=Release/.test(permutation))
@@ -263,11 +263,11 @@ export async function configurePrepareCmd(
         if (proj instanceof NugetRegistryInfo)
           return proj;
 
-        const msbpArr: MSBuildProject[] = await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects([proj]));
-        if (msbpArr.length === 0 || msbpArr[0] === undefined) {
+        const msbpArray: MSBuildProject[] = await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects([proj]));
+        if (msbpArray.length === 0 || msbpArray[0] === undefined) {
           throw new Error('This should be impossible!');
         }
-        const msbp: MSBuildProject = msbpArr[0];
+        const msbp: MSBuildProject = msbpArray[0];
 
         evaluatedProjects.push(msbp);
 
@@ -328,43 +328,43 @@ function formatDotnetNugetSign(
   if (opts === undefined)
     return undefined;
 
-  const validOpts = DotnetNugetSignOptions.from(opts);
-  const args: ['--timestamper', typeof validOpts.timestamper, '-o', string, ...string[]] = [
-    '--timestamper', validOpts.timestamper,
-    '-o', validOpts.output ?? ourDefaultPubDir,
+  const validOptions = DotnetNugetSignOptions.from(opts);
+  const arguments_: ['--timestamper', typeof validOptions.timestamper, '-o', string, ...string[]] = [
+    '--timestamper', validOptions.timestamper,
+    '-o', validOptions.output ?? ourDefaultPubDir,
   ];
-  if (validOpts.certificatePassword)
-    args.push('---certificate-password', validOpts.certificatePassword);
-  if (validOpts.hashAlgorithm)
-    args.push('--hash-algorithm', validOpts.hashAlgorithm);
-  if (validOpts.overwrite)
-    args.push('--overwrite');
-  if (validOpts.timestampHashAlgorithm)
-    args.push('--timestamp-hash-algorithm', validOpts.timestampHashAlgorithm);
-  if (validOpts.verbosity)
-    args.push('-v', validOpts.verbosity);
+  if (validOptions.certificatePassword)
+    arguments_.push('---certificate-password', validOptions.certificatePassword);
+  if (validOptions.hashAlgorithm)
+    arguments_.push('--hash-algorithm', validOptions.hashAlgorithm);
+  if (validOptions.overwrite)
+    arguments_.push('--overwrite');
+  if (validOptions.timestampHashAlgorithm)
+    arguments_.push('--timestamp-hash-algorithm', validOptions.timestampHashAlgorithm);
+  if (validOptions.verbosity)
+    arguments_.push('-v', validOptions.verbosity);
 
-  if ('certificatePath' in validOpts)
-    args.push('--certificate-path', validOpts.certificatePath);
-  else if ('certificateStoreName' in validOpts) {
+  if ('certificatePath' in validOptions)
+    arguments_.push('--certificate-path', validOptions.certificatePath);
+  else if ('certificateStoreName' in validOptions) {
     SetSubjectNameOrFingerprint();
-    args.push('--certificate-store-name', validOpts.certificateStoreName);
+    arguments_.push('--certificate-store-name', validOptions.certificateStoreName);
   }
-  else if ('certificateStoreLocation' in validOpts) {
+  else if ('certificateStoreLocation' in validOptions) {
     SetSubjectNameOrFingerprint();
-    args.push('--certificate-store-location', validOpts.certificateStoreLocation);
+    arguments_.push('--certificate-store-location', validOptions.certificateStoreLocation);
   }
   else throw new Error('No code signing certificate was specified!');
 
-  return `dotnet nuget sign ${args.join(' ')} `;
+  return `dotnet nuget sign ${arguments_.join(' ')} `;
 
   // eslint-disable-next-line jsdoc/require-jsdoc
   function SetSubjectNameOrFingerprint() {
-    if ('certificateSubjectName' in validOpts)
-      args.push('--certificate-subject-name', validOpts.certificateSubjectName);
+    if ('certificateSubjectName' in validOptions)
+      arguments_.push('--certificate-subject-name', validOptions.certificateSubjectName);
 
-    else if ('certificateFingerprint' in validOpts)
-      args.push('--certificate-fingerprint', validOpts.certificateFingerprint);
+    else if ('certificateFingerprint' in validOptions)
+      arguments_.push('--certificate-fingerprint', validOptions.certificateFingerprint);
     else throw new Error('If certificateStoreName or certificateStoreLocation is set, either certificateSubjectName or certificateFingerprint must also be set!');
   }
 }

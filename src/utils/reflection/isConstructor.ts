@@ -9,19 +9,20 @@
  * #### NOTE: Only works when targeting ES6/ES2015 or later.
  * > If your project or a dependent project is compiled to < ES6, this function will always return `false`; classes and constructors were introduced in ES6/ES2015.
  * @param obj Anything.
+ * @param object
  * @returns `true` if the obj is a constructor. Else, `false`.
  * @since 3.0.0
  * @see https://stackoverflow.com/a/49510834
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isConstructor(obj: unknown): obj is abstract new (...args: any[]) => any {
+export function isConstructor(object: unknown): object is abstract new (...arguments_: any[]) => any {
   // Method 0 - filter
-  if (typeof obj !== 'function')
+  if (typeof object !== 'function')
     return false;
 
   // Method 1
   // statically-defined class
-  if (/^class\s/.test(obj.toString()))
+  if (/^class\s/.test(object.toString()))
     return true;
 
   /* Method 2
@@ -38,7 +39,7 @@ export function isConstructor(obj: unknown): obj is abstract new (...args: any[]
    * typeof Function.prototype
    * > 'function'
    */
-  const prototype: unknown = obj.prototype;
+  const prototype: unknown = object.prototype;
   if ((typeof prototype === 'object' || typeof prototype === 'function')
     && prototype !== null
     && 'constructor' in prototype
@@ -50,7 +51,7 @@ export function isConstructor(obj: unknown): obj is abstract new (...args: any[]
     );
     // short-circuit if `obj.prototype.constructor` is a function, but not a constructor. Return false.
     return (
-      _ctor === obj
+      _ctor === object
       && _name?.writable === false
       && _name.enumerable === false
       && _name.configurable === true

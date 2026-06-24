@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/name-replacements */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * A generic alternative to the boxing {@link Function} type. Based on the

@@ -5,7 +5,7 @@ import { inspect } from 'node:util';
 import { GithubNugetRegistryInfo as GHNRI } from '../../src/dotnet/GithubNugetRegistryInfo.ts';
 import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.ts';
 import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.ts';
-import { getEnvVarValue } from '../../src/utils/env.ts';
+import { getEnvVarValue as getEnvironmentVariableValue } from '../../src/utils/env.ts';
 import { execAsync } from '../../src/utils/execAsync.ts';
 import { isError } from '../../src/utils/isError.ts';
 import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.ts';
@@ -15,16 +15,19 @@ import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.t
  * @returns the value of env.GITHUB_REPOSITORY_OWNER
  */
 function getGHRepoOwner(): string {
-  getEnvVarValue('GITHUB_REPOSITORY_OWNER');
+  getEnvironmentVariableValue('GITHUB_REPOSITORY_OWNER');
   return process.env['GITHUB_REPOSITORY_OWNER'] ??= 'HaloSPV3';
 }
 
 /** */
 async function trySetCI_PROJECT_ID(): Promise<void> {
-  const remoteIsUpstream = await execAsync('git remote get-url origin')
-    .then(({ stdout }) => stdout.toLowerCase().includes('halospv3/hce.shared'))
-    .catch(() => false);
-  if (remoteIsUpstream)
+  let isRemoteUpstream = false;
+  try {
+    const { stdout } = await execAsync('git remote get-url origin');
+    isRemoteUpstream = stdout.toLowerCase().includes('halospv3/hce.shared');
+  }
+  catch { /* empty */ }
+  if (isRemoteUpstream)
     process.env['CI_PROJECT_ID'] = '70884695';
 }
 
@@ -35,7 +38,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     async (t) => {
       if (process.env['GH_TOKEN'] === 'placeholder')
         delete process.env['GH_TOKEN'];
-      if (!getEnvVarValue('GH_TOKEN')) {
+      if (!getEnvironmentVariableValue('GH_TOKEN')) {
         t.skip('GITHUB_TOKEN and GH_TOKEN are unavailable for testing');
         return;
       }
@@ -54,9 +57,9 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
       await trySetCI_PROJECT_ID();
       if (process.env['CI_PROJECT_ID'] === 'placeholder')
         delete process.env['CI_PROJECT_ID'];
-      if (!getEnvVarValue('CI_PROJECT_ID', { overload: true }))
+      if (!getEnvironmentVariableValue('CI_PROJECT_ID', { overload: true }))
         t.skip('CI_PROJECT_ID is undefined');
-      if (!GLNRI.DefaultGitlabTokenEnvVars.some(key => getEnvVarValue(key) !== undefined)) {
+      if (GLNRI.DefaultGitlabTokenEnvVars.every(key => getEnvironmentVariableValue(key) === undefined)) {
         t.skip(GLNRI.DefaultGitlabTokenEnvVars.join(', ') + ' are all unavailable for testing.');
         return;
       }
@@ -72,7 +75,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     '...NUGET_TOKEN is defined, valid, and can push packages to source',
     { timeout: 60_000 },
     async (t) => {
-      if (!getEnvVarValue('NUGET_TOKEN')) {
+      if (!getEnvironmentVariableValue('NUGET_TOKEN')) {
         t.skip('NUGET_TOKEN environment variable undefined');
         return;
       }
@@ -86,41 +89,52 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
 });
 
 await describe('canPushPackagesToSource throws when...', { concurrency: false }, async () => {
-  const tokenEnvVars = ['INVALID_TOKEN'];
-  process.env['INVALID_TOKEN'] = tokenEnvVars[0];
+  const tokenEnvironmentVariables = ['INVALID_TOKEN'];
+  process.env['INVALID_TOKEN'] = tokenEnvironmentVariables[0];
 
   await it('GHNRI token is invalid', async () => {
     getGHRepoOwner();
-    const canPush = await new GHNRI({ project, tokenEnvVars })
+    let canPush: true | Error;
+    try {
+      canPush = await new GHNRI({ project, tokenEnvVars: tokenEnvironmentVariables })
       // eslint-disable-next-line @typescript-eslint/no-deprecated
-      .canPushPackagesToSource
-      .catch((error: unknown) =>
-        isError(error) ? error : new Error(JSON.stringify(error)),
-      );
-    ok(isError(canPush));
+        .canPushPackagesToSource;
+    }
+    catch (error: unknown) {
+      canPush = isError(error)
+        ? error
+        : new Error(JSON.stringify(error));
+    };
+    notStrictEqual(canPush, true);
   });
   await it('GLNRI token is invalid', async () => {
     await trySetCI_PROJECT_ID();
-    const canPush: true | Error = await new GLNRI({ project, tokenEnvVars })
+    let canPush: true | Error;
+    try {
+      canPush = await new GLNRI({ project, tokenEnvVars: tokenEnvironmentVariables })
       // eslint-disable-next-line @typescript-eslint/no-deprecated
-      .canPushPackagesToSource
-      .catch(
-        (error: unknown) =>
-          isError(error)
-            ? error
-            : new Error(JSON.stringify(error)),
-      );
+        .canPushPackagesToSource;
+    }
+    catch (error) {
+      canPush = isError(error)
+        ? error
+        : new Error(JSON.stringify(error));
+    }
+
     notStrictEqual(canPush, true);
   });
   await it('NRI token is invalid', async () => {
-    const canPush: true | Error = await new NRI({ project, tokenEnvVars })
+    let canPush: true | Error;
+    try {
+      canPush = await new NRI({ project, tokenEnvVars: tokenEnvironmentVariables })
       // eslint-disable-next-line @typescript-eslint/no-deprecated
-      .canPushPackagesToSource
-      .catch((error: unknown) =>
-        isError(error)
-          ? error
-          : new Error(inspect(error, { depth: 3 })),
-      );
+        .canPushPackagesToSource;
+    }
+    catch (error) {
+      canPush = isError(error)
+        ? error
+        : new Error(inspect(error, { depth: 3 }));
+    }
     ok(isError(canPush));
   });
 });

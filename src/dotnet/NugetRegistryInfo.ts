@@ -18,14 +18,14 @@ import { cwd, env } from 'node:process';
 import { setTimeout } from 'node:timers/promises';
 import { isError } from '../utils/isError.ts';
 import sanitizeFileName from 'sanitize-filename';
-import { getEnvVarValue } from '../utils/env.ts';
+import { getEnvVarValue as getEnvironmentVariableValue } from '../utils/env.ts';
 import { execAsync } from '../utils/execAsync.ts';
 import { catchEBUSY, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.ts';
 import type { Default } from 'arktype/internal/attributes.ts';
 
-type TmpDirNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
-type TmpDirNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
-const tmpDirNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies') as TmpDirNamespace_Unix | TmpDirNamespace_Win;
+type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
+type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
+const temporaryDirectoryNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
 const key_OutputPackItems = '_OutputPackItems';
 /**
@@ -42,16 +42,16 @@ export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>
   }
 
   const encoding = await detectFile(env['GITHUB_OUTPUT']);
-  const envOutput = configDotenv({
+  const environmentOutput = configDotenv({
     path: env['GITHUB_OUTPUT'],
     override: true,
     encoding: encoding ?? undefined,
     processEnv: {},
   });
 
-  if (isError(envOutput.error))
-    throw envOutput.error;
-  return envOutput.parsed;
+  if (isError(environmentOutput.error))
+    throw environmentOutput.error;
+  return environmentOutput.parsed;
 }
 
 /**
@@ -68,7 +68,7 @@ export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDoten
   }
 
   const encoding = detectFileSync(env['GITHUB_OUTPUT']);
-  const envOutput = configDotenv({
+  const environmentOutput = configDotenv({
     path: env['GITHUB_OUTPUT'],
     override: true,
     encoding: encoding ?? undefined,
@@ -76,19 +76,19 @@ export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDoten
   }) as { error: Error }
   | { parsed: NonNullable<ReturnType<typeof configDotenv>['parsed']> };
 
-  if ('error' in envOutput)
-    throw envOutput.error;
-  return envOutput.parsed;
+  if ('error' in environmentOutput)
+    throw environmentOutput.error;
+  return environmentOutput.parsed;
 }
 
-type DummiesDir<T> = T extends undefined
-  ? `${TmpDirNamespace_Unix}/` | `${TmpDirNamespace_Win}\\`
+type DummiesDirectory<T> = T extends undefined
+  ? `${TemporaryDirectoryNamespace_Unix}/` | `${TemporaryDirectoryNamespace_Win}\\`
   : T extends MSBuildProject
-    ? `${TmpDirNamespace_Unix}/${T['Properties']['PackageId']}/` | `${TmpDirNamespace_Win}\\${T['Properties']['PackageId']}\\`
+    ? `${TemporaryDirectoryNamespace_Unix}/${T['Properties']['PackageId']}/` | `${TemporaryDirectoryNamespace_Win}\\${T['Properties']['PackageId']}\\`
     : never;
 
-function getDummiesDir<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDir<T>;
-function getDummiesDir<T extends MSBuildProject>(project: T): DummiesDir<T>;
+function getDummiesDirectory<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDirectory<T>;
+function getDummiesDirectory<T extends MSBuildProject>(project: T): DummiesDirectory<T>;
 /**
  * Get HCE.Shared's temporary directory for .NET projects' dummy packages.
  * @param project The MSBuild project whose PackageId will be used to create a
@@ -97,17 +97,17 @@ function getDummiesDir<T extends MSBuildProject>(project: T): DummiesDir<T>;
  * `${tmpdir()}/HCE.Shared/.NET/Dummies/${project.Properties.PackageId}` if
  * {@link project} is defined. Else `${tmpdir()}/HCE.Shared/.NET/Dummies`
  */
-function getDummiesDir<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDir<typeof project> {
+function getDummiesDirectory<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDirectory<typeof project> {
   switch (true) {
     case project === undefined: {
-      return node_path.join(tmpDirNamespace, node_path.sep) as
-        DummiesDir<typeof project> satisfies
-        ReturnType<typeof getDummiesDir>;
+      return node_path.join(temporaryDirectoryNamespace, node_path.sep) as
+        DummiesDirectory<typeof project> satisfies
+        ReturnType<typeof getDummiesDirectory>;
     }
     case project instanceof MSBuildProject: {
-      return node_path.join(tmpDirNamespace, project.Properties.PackageId, node_path.sep) as
-        DummiesDir<typeof project> satisfies
-        ReturnType<typeof getDummiesDir<MSBuildProject>>;
+      return node_path.join(temporaryDirectoryNamespace, project.Properties.PackageId, node_path.sep) as
+        DummiesDirectory<typeof project> satisfies
+        ReturnType<typeof getDummiesDirectory<MSBuildProject>>;
     }
     default: {
       throw new Error('The type of argument `project` must be `undefined` or `MSBuildProject`.');
@@ -117,18 +117,18 @@ function getDummiesDir<T extends MSBuildProject | undefined = undefined>(project
 
 /**
  * Get the environment variables as key-value pairs.
- * @param tokenEnvVars The name of the environment variables whose values are
+ * @param tokenEnvironmentVariables The name of the environment variables whose values are
  * NuGet API keys.
  * @returns an array of key-value pairs of the given environment variables and
  * their values, filtered to only those whose values are not undefined.
  * @throws {Error} when none of the provided environment variables are defined.
  */
-function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): undefined | [readonly [string, string], ...readonly [string, string][]] {
+function _GetTokenEnvironmentVariables(tokenEnvironmentVariables: readonly string[]): undefined | [readonly [string, string], ...readonly [string, string][]] {
   const definedTokens = Object.freeze(
-    tokenEnvVars
-      .map((key: string) => [key, getEnvVarValue(key)] as const)
-      .filter((envVarTuple: readonly [string, string | undefined]): envVarTuple is [string, string] =>
-        envVarTuple[1] !== undefined,
+    tokenEnvironmentVariables
+      .map((key: string) => [key, getEnvironmentVariableValue(key)] as const)
+      .filter((environmentVariableTuple: readonly [string, string | undefined]): environmentVariableTuple is [string, string] =>
+        environmentVariableTuple[1] !== undefined,
       ),
   );
 
@@ -138,13 +138,29 @@ function _GetTokenEnvVariables(tokenEnvVars: readonly string[]): undefined | [re
 }
 
 export class NugetRegistryInfo {
-  private _canPushPackagesToSource: Promise<true> | undefined = undefined;
-  private readonly _project: MSBuildProject;
-  private readonly _resolvedEnvVariable: string | undefined;
-  private readonly _source: string;
-
   public static readonly DefaultTokenEnvVars: readonly ['NUGET_TOKEN']
     = Object.freeze(['NUGET_TOKEN'] as const);
+
+  /**
+   * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
+   * @param resolvedEnvironmentVariable The name of the environment variable(s) whose
+   * value is a NuGet API key. Typically, the value of
+   * {@link NugetRegistryInfo#resolvedEnvVariable}.
+   * @returns The value of the first defined environment variable.
+   * @throws {Error} when none of the provided environment variables are defined.
+   */
+  private static _GetTokenValue(resolvedEnvironmentVariable: string): string {
+    type.string.assert(resolvedEnvironmentVariable);
+
+    const tokenValue = getEnvironmentVariableValue(resolvedEnvironmentVariable);
+    if (tokenValue === undefined) {
+      throw new Error(`\
+The environment variable ${resolvedEnvironmentVariable} was specified \
+as the source of the token to push a NuGet package, \
+but the environment variable is empty or undefined.`);
+    }
+    return tokenValue;
+  }
 
   /**
    * Convert a URL string to a filesystem folder name.
@@ -167,6 +183,11 @@ export class NugetRegistryInfo {
     );
   }
 
+  private _canPushPackagesToSource: Promise<true> | undefined = undefined;
+  private readonly _project: MSBuildProject;
+  private readonly _resolvedEnvVariable: string | undefined;
+  private readonly _source: string;
+
   /**
    * Creates an instance of NugetRegistryInfo.\
    * This class enables the ability to push a given {@link project}'s
@@ -183,32 +204,32 @@ export class NugetRegistryInfo {
    *   Release's config object for later use by `@semantic-release/exec`.
    * - Other EcmaScript modules can access the environment variable(s) and steal
    *   your key. Be aware of malicious dependencies!
-   * @param opts The input type of {@link NRIOpts.from}
-   * @param opts.project The project whose package(s) will be
+   * @param options The input type of {@link NRIOpts.from}
+   * @param options.project The project whose package(s) will be
    * pushed.\
    * - Its {@link NugetProjectProperties#PackageId} will be read.\
    * - Its {@link NugetProjectProperties#PackageVersion} will be overridden via CLI args when creating a dummy package. The real package's
    * `PackageVersion` will *not* be overridden.
-   * @param [opts.tokenEnvVars] The environment variables
+   * @param [options.tokenEnvVars] The environment variables
    * whose values are tokens with permission to push a package to the NuGet
    * package registry. The array is iterated through until one token is found.
    * If none of the environment variables are defined, this constructor will
    * throw an {@link Error}.
-   * @param [opts.source] A NuGet package registry's API endpoint URL or name. Default: 'https://api.nuget.org/v3/index.json'
+   * @param [options.source] A NuGet package registry's API endpoint URL or name. Default: 'https://api.nuget.org/v3/index.json'
    */
-  constructor(opts: typeof NRIOpts['inferIn']) {
-    // note: you can reassign `opts` only when typeof `inferOut` is assignable
+  constructor(options: typeof NRIOpts['inferIn']) {
+    // note: you can reassign `options` only when typeof `inferOut` is assignable
     // to typeof `inferIn`.
-    const validOpts = NRIOpts.from(opts);
-    this._project = validOpts.project;
+    const validOptions = NRIOpts.from(options);
+    this._project = validOptions.project;
     /**
      * May throw! Assign key of the first key-value pair to
      * {@link resolvedEnvVariable}
      */
-    const tokenVars = _GetTokenEnvVariables(validOpts.tokenEnvVars);
-    if (tokenVars)
-      this._resolvedEnvVariable = tokenVars[0][0];
-    this._source = validOpts.source;
+    const tokenVariables = _GetTokenEnvironmentVariables(validOptions.tokenEnvVars);
+    if (tokenVariables)
+      this._resolvedEnvVariable = tokenVariables[0][0];
+    this._source = validOptions.source;
   }
 
   public get project(): MSBuildProject {
@@ -237,15 +258,17 @@ export class NugetRegistryInfo {
       tokenValue = NRI._GetTokenValue(this.resolvedEnvVariable);
 
     if (tokenValue?.startsWith('github_pat_')) {
-      const errMsg = `The value of the token in 'resolvedEnvVariable' ${String(this.resolvedEnvVariable)} begins with 'github_pat_', indicating it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`;
-      const err = new Error(errMsg);
-      return this._canPushPackagesToSource = Promise.reject(err);
+      const errorMessage = `The value of the token in 'resolvedEnvVariable' ${String(this.resolvedEnvVariable)} begins with 'github_pat_', indicating it's a Fine-Grained token. At the time of writing, GitHub Fine-Grained tokens cannot push packages. If you believe this is statement is outdated, report the issue at https://github.com/halospv3/hce.shared/issues/new. For more information, see https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry.`;
+      const error = new Error(errorMessage);
+      return this._canPushPackagesToSource = Promise.reject(error);
     }
 
     return this._canPushPackagesToSource = this.PackDummyPackage({})
+      // eslint-disable-next-line unicorn/prefer-await
       .then(async () => await this._PushDummyPackages({
         apiKey: tokenValue,
       }))
+      // eslint-disable-next-line unicorn/prefer-await
       .then<true>((execAsyncReturn) => {
         ok(execAsyncReturn);
         return true as const;
@@ -265,27 +288,6 @@ export class NugetRegistryInfo {
     return this._source;
   }
 
-  /**
-   * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
-   * @param resolvedEnvVariable The name of the environment variable(s) whose
-   * value is a NuGet API key. Typically, the value of
-   * {@link NugetRegistryInfo#resolvedEnvVariable}.
-   * @returns The value of the first defined environment variable.
-   * @throws {Error} when none of the provided environment variables are defined.
-   */
-  private static _GetTokenValue(resolvedEnvVariable: string): string {
-    type.string.assert(resolvedEnvVariable);
-
-    const tokenValue = getEnvVarValue(resolvedEnvVariable);
-    if (tokenValue === undefined) {
-      throw new Error(`\
-The environment variable ${resolvedEnvVariable} was specified \
-as the source of the token to push a NuGet package, \
-but the environment variable is empty or undefined.`);
-    }
-    return tokenValue;
-  }
-
   // #region Pack
 
   /**
@@ -294,6 +296,7 @@ but the environment variable is empty or undefined.`);
    * {@link NRI.PackPackagesOptionsType.t.propertyOverrides `propertyOverrides`}
    * is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
    */
+  // eslint-disable-next-line unicorn/consistent-class-member-order
   static readonly PackPackagesOptionsType: Type<{
     propertyOverrides?: Record<string, string> | undefined;
     artifactsPath?: string | undefined;
@@ -373,80 +376,80 @@ but the environment variable is empty or undefined.`);
    * When pushing the package(s), you only need to supply the main .nupkg's path
    * or its directory to the dotnet CLI—by default, it will also push the
    * symbols package, if present.
-   * @param opts Options passed to
+   * @param options Options passed to
    * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. The
    * {@link PackPackagesOptionsType.t.output} path is modified according to the
-   * {@link usePerSourceSubfolder} and {@link usePerPackageIdSubfolder}
+   * {@link shouldUsePerSourceSubfolder} and {@link shouldUsePerPackageIdSubfolder}
    * arguments.
-   * @param usePerSourceSubfolder If true, the path of the package output will
+   * @param shouldUsePerSourceSubfolder If true, the path of the package output will
    * include a subfolder named after the NuGet Source.
-   * @param usePerPackageIdSubfolder If true, the path of the package output
+   * @param shouldUsePerPackageIdSubfolder If true, the path of the package output
    * will include a subfolder named after the NuGet package's ID.
    * @returns `dotnet pack "${this.project.Properties.MSBuildProjectFullPath}"
    * -o "${outDir}"` where outDir may be `${cwd()}/publish/${NugetRegistryInfo.GetNameForURL(this.source)}/${this._project.Properties.PackageId}`
    */
   GetPackCommand(
-    opts: typeof NRI.PackPackagesOptionsType.inferIn,
-    usePerSourceSubfolder = false,
-    usePerPackageIdSubfolder = false,
+    options: typeof NRI.PackPackagesOptionsType.inferIn,
+    shouldUsePerSourceSubfolder = false,
+    shouldUsePerPackageIdSubfolder = false,
   ): string {
-    const validOpts = NRI.PackPackagesOptionsType.from(opts);
-    type.boolean.assert(usePerSourceSubfolder);
-    type.boolean.assert(usePerPackageIdSubfolder);
+    const validOptions = NRI.PackPackagesOptionsType.from(options);
+    type.boolean.assert(shouldUsePerSourceSubfolder);
+    type.boolean.assert(shouldUsePerPackageIdSubfolder);
 
-    validOpts.output ??= node_path.join(cwd(), 'publish');
-    if (usePerSourceSubfolder)
-      validOpts.output = node_path.join(validOpts.output, NugetRegistryInfo.GetDirNameForSource(this.source), node_path.sep);
-    if (usePerPackageIdSubfolder)
-      validOpts.output = node_path.join(validOpts.output, this._project.Properties.PackageId, node_path.sep);
+    validOptions.output ??= node_path.join(cwd(), 'publish');
+    if (shouldUsePerSourceSubfolder)
+      validOptions.output = node_path.join(validOptions.output, NugetRegistryInfo.GetDirNameForSource(this.source), node_path.sep);
+    if (shouldUsePerPackageIdSubfolder)
+      validOptions.output = node_path.join(validOptions.output, this._project.Properties.PackageId, node_path.sep);
 
-    const packCmdArr: string[] = [
+    const packCommandArray: string[] = [
       'dotnet',
       'pack',
       `"${this._project.Properties.MSBuildProjectFullPath}"`,
     ];
-    if (validOpts.artifactsPath !== undefined)
-      packCmdArr.push('--artifactsPath', `"${validOpts.artifactsPath}"`);
-    if (validOpts.configuration !== undefined)
-      packCmdArr.push('--configuration', validOpts.configuration);
-    if (validOpts.disableBuildServers === true)
-      packCmdArr.push('--disable-build-servers');
-    if (validOpts.force === true) packCmdArr.push('--force');
-    if (validOpts.includeSource === true) packCmdArr.push('--include-source');
-    if (validOpts.includeSymbols === true) packCmdArr.push('--include-symbols');
-    if (validOpts.interactive === true) packCmdArr.push('--interactive');
-    if (validOpts.noBuild === true) packCmdArr.push('--no-build');
-    if (validOpts.noLogo === true) packCmdArr.push('--nologo');
-    if (validOpts.noRestore === true) packCmdArr.push('--no-restore');
-    if (validOpts.runtime !== undefined)
-      packCmdArr.push('--runtime', validOpts.runtime);
-    if (validOpts.serviceable === true) packCmdArr.push('--serviceable');
-    if (validOpts.terminalLogger !== undefined)
-      packCmdArr.push('--tl', validOpts.terminalLogger);
-    if (validOpts.useCurrentRuntime === true)
-      packCmdArr.push('--use-current-runtime');
-    if (validOpts.verbosity !== undefined)
-      packCmdArr.push('--verbosity', validOpts.verbosity);
-    if (validOpts.versionSuffix !== undefined)
-      packCmdArr.push('--version-suffix', validOpts.versionSuffix);
+    if (validOptions.artifactsPath !== undefined)
+      packCommandArray.push('--artifactsPath', `"${validOptions.artifactsPath}"`);
+    if (validOptions.configuration !== undefined)
+      packCommandArray.push('--configuration', validOptions.configuration);
+    if (validOptions.disableBuildServers === true)
+      packCommandArray.push('--disable-build-servers');
+    if (validOptions.force === true) packCommandArray.push('--force');
+    if (validOptions.includeSource === true) packCommandArray.push('--include-source');
+    if (validOptions.includeSymbols === true) packCommandArray.push('--include-symbols');
+    if (validOptions.interactive === true) packCommandArray.push('--interactive');
+    if (validOptions.noBuild === true) packCommandArray.push('--no-build');
+    if (validOptions.noLogo === true) packCommandArray.push('--nologo');
+    if (validOptions.noRestore === true) packCommandArray.push('--no-restore');
+    if (validOptions.runtime !== undefined)
+      packCommandArray.push('--runtime', validOptions.runtime);
+    if (validOptions.serviceable === true) packCommandArray.push('--serviceable');
+    if (validOptions.terminalLogger !== undefined)
+      packCommandArray.push('--tl', validOptions.terminalLogger);
+    if (validOptions.useCurrentRuntime === true)
+      packCommandArray.push('--use-current-runtime');
+    if (validOptions.verbosity !== undefined)
+      packCommandArray.push('--verbosity', validOptions.verbosity);
+    if (validOptions.versionSuffix !== undefined)
+      packCommandArray.push('--version-suffix', validOptions.versionSuffix);
     /**
      * Haphazard. I need to override the Version and I'm not considering side
      * effects of arbitrary overrides.
      */
-    if (validOpts.propertyOverrides) {
+    if (validOptions.propertyOverrides) {
       /** convert propertyOverrides record to "-p:n0=v0;n1=v1;n2=v2" et cetera */
-      const assignments: string = '-p:' + Object.entries(validOpts.propertyOverrides)
+      const assignments: string = '-p:' + Object.entries(validOptions.propertyOverrides)
         .map(v => `${v[0]}=${v[1]}`).join(';');
-      packCmdArr.push(`"${assignments}"`);
+      packCommandArray.push(`"${assignments}"`);
     }
-    if (validOpts['-GetItem'] && validOpts['-GetItem'].length > 0) {
+    if (validOptions['-GetItem'] && validOptions['-GetItem'].length > 0) {
       // -GetItem:_OutputPackItems,MyCustomItem
-      packCmdArr.push(`-GetItem:${validOpts['-GetItem'].join(',')}`);
+      packCommandArray.push(`-GetItem:${validOptions['-GetItem'].join(',')}`);
     }
     // MSBuild parses everything after -o as the path.
-    packCmdArr.push('-o', `"${validOpts.output}"`);
+    packCommandArray.push('-o', `"${validOptions.output}"`);
 
-    return packCmdArr.join(' ');
+    return packCommandArray.join(' ');
   }
 
   /**
@@ -459,39 +462,43 @@ but the environment variable is empty or undefined.`);
    * NuGet packages should be created during the `prepare` step, but complex
    * configuration of `dotnet pack` via command lines intended to be invoked by
    * `@semantic-release/exec` is impractical.
-   * @param opts `dotnet pack` options. See `dotnet pack -h`,
+   * @param options `dotnet pack` options. See `dotnet pack -h`,
    * https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack, and
    * {@link PackPackagesOptionsType}.
-   * {@link opts['-GetItem']} will _always_ have '_OutputPackItems'.
-   * @param [usePerSourceSubfolder] If `true`, modify the output path to
+   * {@link options['-GetItem']} will _always_ have '_OutputPackItems'.
+   * @param options
+   * @param [shouldUsePerSourceSubfolder] If `true`, modify the output path to
    * include a subfolder bearing a path-safe encoding of the NuGet Source that
    * will receive the nupkg.
-   * @param [usePerPackageIdSubfolder] If `true`, modify the output path
+   * @param [shouldUsePerPackageIdSubfolder] If `true`, modify the output path
    * to include a subfolder named after the the PackageId.
    * @returns a string[] containing the full file paths of all new packages i.e.
    * .nupkg, .symbols.nupkg, .snupkg
    */
   // @ts-expect-error Todo: publicize to dismiss this "unused" error.
   private async _PackPackages(
-    opts: typeof NRI.PackPackagesOptionsType.inferIn,
-    usePerSourceSubfolder = false,
-    usePerPackageIdSubfolder = false,
+    options: typeof NRI.PackPackagesOptionsType.inferIn,
+    shouldUsePerSourceSubfolder = false,
+    shouldUsePerPackageIdSubfolder = false,
   ): Promise<string[]> {
-    opts['-GetItem'] = [...opts['-GetItem'] ?? [], key_OutputPackItems];
+    options['-GetItem'] = [...options['-GetItem'] ?? [], key_OutputPackItems];
 
-    const packCmd = this.GetPackCommand(
-      opts,
-      usePerSourceSubfolder,
-      usePerPackageIdSubfolder,
+    const packCommand = this.GetPackCommand(
+      options,
+      shouldUsePerSourceSubfolder,
+      shouldUsePerPackageIdSubfolder,
     );
-    let packOutput: undefined | { stdout: string; stderr: string } = undefined;
+    let packOutput: undefined | { stdout: string; stderr: string };
     while (packOutput === undefined) {
-      packOutput = await setTimeout(
-        1000,
-        execAsync(packCmd, true),
-      )
-        .then(async p => await p)
-        .catch<undefined>(catchEBUSY);
+      try {
+        packOutput = await setTimeout(
+          1000,
+          execAsync(packCommand, true),
+        );
+      }
+      catch (error: unknown) {
+        catchEBUSY(error);
+      }
     }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
@@ -505,7 +512,7 @@ but the environment variable is empty or undefined.`);
   /**
    * Create a dummy package for the current {@link project} by executing a
    * command line like \``dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this._project)}/${GetNameForURL(this.source)}`\`
-   * @param opts Options passed to
+   * @param options Options passed to
    * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument.
    * - The `output` field is ignored and overwritten. It is replaced with
    *   ${{@link getDummiesDir}({@link project})}/${{@link GetDirNameForSource}({@link source})}
@@ -517,26 +524,29 @@ but the environment variable is empty or undefined.`);
    * If mixed with other nupkgs, filter for the {@link NugetProjectProperties#PackageId}
    */
   public async PackDummyPackage(
-    opts: typeof NRI.PackDummyPackagesOptionsType.inferIn,
+    options: typeof NRI.PackDummyPackagesOptionsType.inferIn,
   ): Promise<string[]> {
-    const packCmd: string = this.GetPackCommand(
+    const packCommand: string = this.GetPackCommand(
       {
-        ...opts,
-        output: getDummiesDir(this._project),
-        propertyOverrides: { ...opts.propertyOverrides, Version: '0.0.1-DUMMY', UpdateVersionProperties: 'false' },
-        '-GetItem': [...opts['-GetItem'] ?? [], key_OutputPackItems],
+        ...options,
+        output: getDummiesDirectory(this._project),
+        propertyOverrides: { ...options.propertyOverrides, Version: '0.0.1-DUMMY', UpdateVersionProperties: 'false' },
+        '-GetItem': [...options['-GetItem'] ?? [], key_OutputPackItems],
       },
       true,
     );
 
-    let packOutput: undefined | { stdout: string; stderr: string } = undefined;
+    let packOutput: undefined | { stdout: string; stderr: string };
     while (packOutput === undefined) {
-      packOutput = await setTimeout(
-        1000,
-        execAsync(packCmd, true),
-      )
-        .then(async p => await p)
-        .catch<undefined>(catchEBUSY);
+      try {
+        packOutput = await setTimeout(
+          1000,
+          execAsync(packCommand, true),
+        );
+      }
+      catch (error: unknown) {
+        catchEBUSY(error);
+      }
     }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
@@ -633,11 +643,11 @@ but the environment variable is empty or undefined.`);
   /**
    * Create a `dotnet nuget push` command line from the given options and
    * optional boolean parameters.
-   * @param opts See {@link PushPackagesOptionsType}
-   * @param usePerSourceSubfolder If `true`, the NuGet Source name or URL is formatted
+   * @param options See {@link PushPackagesOptionsType}
+   * @param shouldUsePerSourceSubfolder If `true`, the NuGet Source name or URL is formatted
    * to a folder name and appended to the ROOT as a subfolder. Do not use
    * wildcards in ROOT with this set to `true`!
-   * @param usePerPackageIdSubfolder  If `true`, the
+   * @param shouldUsePerPackageIdSubfolder  If `true`, the
    * {@link project}'s {@link NugetProjectProperties#PackageId}
    * is appended to the ROOT as a subfolder. Do not use wildcards in
    * ROOT with this set to `true`!
@@ -645,96 +655,100 @@ but the environment variable is empty or undefined.`);
    * appropriate arguments.
    */
   GetPushCommand(
-    opts: typeof NRI.PushPackagesOptionsType.inferIn,
-    usePerSourceSubfolder = false,
-    usePerPackageIdSubfolder = false,
+    options: typeof NRI.PushPackagesOptionsType.inferIn,
+    shouldUsePerSourceSubfolder = false,
+    shouldUsePerPackageIdSubfolder = false,
   ): string {
-    const validOpts = NRI.PushPackagesOptionsType.from(opts);
-    type.boolean.assert(usePerSourceSubfolder);
-    type.boolean.assert(usePerPackageIdSubfolder);
+    const validOptions = NRI.PushPackagesOptionsType.from(options);
+    type.boolean.assert(shouldUsePerSourceSubfolder);
+    type.boolean.assert(shouldUsePerPackageIdSubfolder);
 
-    validOpts.root = validOpts.root === '' ? `${cwd()}/publish` : validOpts.root;
-    if (usePerSourceSubfolder)
-      validOpts.root = node_path.join(validOpts.root, NugetRegistryInfo.GetDirNameForSource(this.source), node_path.sep);
-    if (usePerPackageIdSubfolder)
-      validOpts.root = node_path.join(validOpts.root, this._project.Properties.PackageId, node_path.sep);
+    validOptions.root = validOptions.root === '' ? `${cwd()}/publish` : validOptions.root;
+    if (shouldUsePerSourceSubfolder)
+      validOptions.root = node_path.join(validOptions.root, NugetRegistryInfo.GetDirNameForSource(this.source), node_path.sep);
+    if (shouldUsePerPackageIdSubfolder)
+      validOptions.root = node_path.join(validOptions.root, this._project.Properties.PackageId, node_path.sep);
 
-    const packCmdArr: string[] = [
+    const packCommandArray: string[] = [
       'dotnet',
       'nuget',
       'push',
-      `"${node_path.join(validOpts.root, '*.nupkg')}"`,
+      `"${node_path.join(validOptions.root, '*.nupkg')}"`,
     ];
 
     if (this.resolvedEnvVariable)
-      validOpts.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable);
+      validOptions.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable);
     /**
      * If apiKey is an empty string, defer to the dotnet CLI's NuGet client
      * ability to lookup API keys saved via `dotnet nuget add source` or NuGet config
      * files.
      */
-    if (validOpts.apiKey && validOpts.apiKey !== '')
-      packCmdArr.push('--api-key', validOpts.apiKey);
-    if (validOpts.configFile)
-      packCmdArr.push('--configfile', validOpts.configFile);
-    if (validOpts.disableBuffering === true)
-      packCmdArr.push('--disable-buffering');
-    if (validOpts.forceEnglishOutput === true)
-      packCmdArr.push('--force-english-output');
-    if (validOpts.interactive === true)
-      packCmdArr.push('--interactive');
-    if (validOpts.noServiceEndpoint === true)
-      packCmdArr.push('--no-service-endpoint');
-    if (validOpts.noSymbols === true)
-      packCmdArr.push('--no-symbols');
-    if (validOpts.skipDuplicate === true)
-      packCmdArr.push('--skip-duplicate');
-    validOpts.source ??= this.source;
-    packCmdArr.push('--source', validOpts.source);
-    if (validOpts.symbolApiKey !== undefined)
-      packCmdArr.push('--symbol-api-key', validOpts.symbolApiKey);
-    if (validOpts.symbolSource !== undefined)
-      packCmdArr.push('--symbol-source', validOpts.symbolSource);
-    if (validOpts.timeout !== undefined)
-      packCmdArr.push('--timeout', validOpts.timeout.toString());
+    if (validOptions.apiKey && validOptions.apiKey !== '')
+      packCommandArray.push('--api-key', validOptions.apiKey);
+    if (validOptions.configFile)
+      packCommandArray.push('--configfile', validOptions.configFile);
+    if (validOptions.disableBuffering === true)
+      packCommandArray.push('--disable-buffering');
+    if (validOptions.forceEnglishOutput === true)
+      packCommandArray.push('--force-english-output');
+    if (validOptions.interactive === true)
+      packCommandArray.push('--interactive');
+    if (validOptions.noServiceEndpoint === true)
+      packCommandArray.push('--no-service-endpoint');
+    if (validOptions.noSymbols === true)
+      packCommandArray.push('--no-symbols');
+    if (validOptions.skipDuplicate === true)
+      packCommandArray.push('--skip-duplicate');
+    validOptions.source ??= this.source;
+    packCommandArray.push('--source', validOptions.source);
+    if (validOptions.symbolApiKey !== undefined)
+      packCommandArray.push('--symbol-api-key', validOptions.symbolApiKey);
+    if (validOptions.symbolSource !== undefined)
+      packCommandArray.push('--symbol-source', validOptions.symbolSource);
+    if (validOptions.timeout !== undefined)
+      packCommandArray.push('--timeout', validOptions.timeout.toString());
 
-    return packCmdArr.join(' ');
+    return packCommandArray.join(' ');
   }
 
   /**
    * Immediately push packages. The input path may be modified according to the
-   * {@link usePerSourceSubfolder} and {@link usePerPackageIdSubfolder}
+   * {@link shouldUsePerSourceSubfolder} and {@link shouldUsePerPackageIdSubfolder}
    * arguments.
-   * @param opts The `dotnet nuget push` command line options, including the
+   * @param options The `dotnet nuget push` command line options, including the
    * ROOT argument, the directory containing local nuget packages ready to be
    * pushed.
-   * @param usePerSourceSubfolder If `true`, the NuGet Source name or URL is formatted
+   * @param shouldUsePerSourceSubfolder If `true`, the NuGet Source name or URL is formatted
    * to a folder name and appended to the ROOT as a subfolder. Do not use
    * wildcards in ROOT with this set to `true`!
-   * @param usePerPackageIdSubfolder If `true`, the current {@link project}'s
+   * @param shouldUsePerPackageIdSubfolder If `true`, the current {@link project}'s
    * PackageId is appended to the ROOT as a subfolder. Do not use wildcards in
    * ROOT with this set to `true`!
    */
   // @ts-expect-error Todo: publicize to dismiss this "unused" error.
   private async _PushPackages(
-    opts: typeof NRI.PushPackagesOptionsType.inferIn,
-    usePerSourceSubfolder = false,
-    usePerPackageIdSubfolder = false,
+    options: typeof NRI.PushPackagesOptionsType.inferIn,
+    shouldUsePerSourceSubfolder = false,
+    shouldUsePerPackageIdSubfolder = false,
   ) {
-    // const pushOutput =
-    await execAsync(
-      this.GetPushCommand(
-        opts,
-        usePerSourceSubfolder,
-        usePerPackageIdSubfolder,
-      ),
-      true,
-    ).catch((error: unknown) => {
+    try {
+      await execAsync(
+        this.GetPushCommand(
+          options,
+          shouldUsePerSourceSubfolder,
+          shouldUsePerPackageIdSubfolder,
+        ),
+        true,
+      );
+    }
+    catch (error: unknown) {
       const _error: Error = isError(error) ? error : new Error(JSON.stringify(error));
-      throw opts.apiKey
-        ? _censorTokenInError(_error, opts.apiKey)
+      throw options.apiKey
+        ? _censorTokenInError(_error, options.apiKey)
         : _error;
-    });
+    };
+
+    // const pushOutput =.catch((error: unknown) => {
   }
 
   /**
@@ -756,7 +770,7 @@ but the environment variable is empty or undefined.`);
    *   nri.GetPushDummyPackageCommand(pushOpts, false, false),
    * ].join(' && ')
    * ```
-   * @param opts options for `dotnet nuget push`. The following
+   * @param options options for `dotnet nuget push`. The following
    * fields are overwritten:
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
@@ -764,12 +778,12 @@ but the environment variable is empty or undefined.`);
    * (created by executing {@link PackDummyPackage}) to {@link source}
    */
   GetPushDummyCommand(
-    opts: typeof NRI.PushDummyPackagesOptionsType.inferIn,
+    options: typeof NRI.PushDummyPackagesOptionsType.inferIn,
   ): string {
     return this.GetPushCommand(
       {
-        ...NRI.PushDummyPackagesOptionsType.from(opts),
-        root: getDummiesDir(this._project),
+        ...NRI.PushDummyPackagesOptionsType.from(options),
+        root: getDummiesDirectory(this._project),
       },
       true,
     );
@@ -780,23 +794,25 @@ but the environment variable is empty or undefined.`);
    * @throws {Error} when the process exits with an error code indicating
    * failure i.e. the command line is invalid, the process fails to start,
    * the push fails, et cetera.
-   * @param opts the ROOT arg and options for `dotnet nuget push`. The following
+   * @param options the ROOT arg and options for `dotnet nuget push`. The following
    * fields are overwritten:
    * - root: getDummiesDir(this.project)
    * - skipDuplicates: true
    * @returns The return type of {@link execAsync} i.e. a {@link Promise} resolving to `{ stdout: string; stderr: string }`.
    */
   private async _PushDummyPackages(
-    opts: typeof NRI.PushDummyPackagesOptionsType.inferIn,
+    options: typeof NRI.PushDummyPackagesOptionsType.inferIn,
   ): ReturnType<typeof execAsync> {
-    const pushCmd: string = this.GetPushDummyCommand(opts);
-    return await execAsync(pushCmd, true)
-      .catch((error: unknown) => {
-        const _error: Error = isError(error) ? error : new Error(String(error));
-        throw opts.apiKey
-          ? _censorTokenInError(_error, opts.apiKey)
-          : _error;
-      });
+    const pushCommand: string = this.GetPushDummyCommand(options);
+    try {
+      return await execAsync(pushCommand, true);
+    }
+    catch (error: unknown) {
+      const _error: Error = isError(error) ? error : new Error(String(error));
+      throw options.apiKey
+        ? _censorTokenInError(_error, options.apiKey)
+        : _error;
+    }
   }
 
   // #endregion Push
@@ -849,19 +865,17 @@ but the environment variable is empty or undefined.`);
   ): Promise<boolean> {
     if (nextVersion === '')
       throw new Error('The value of nextVersion is empty');
-    return await execAsync(
+    const stdPair = await execAsync(
       `dotnet package search --format JSON --exact-match --source ${source} --prerelease ${packageId}`,
       true,
-    )
-      .then(stdPair => stdPair.stdout)
-      .then(json => this._ParseNugetSearchReturn(json))
-      .then(errsOrObj => errsOrObj instanceof type.errors ? errsOrObj.throw() : errsOrObj)
-      .then(obj => obj.searchResult)
-      .then(results => results[0].packages)
-      .then(pkgs =>
-        pkgs.find(p => p.version === type('string.semver').from(nextVersion)),
-      )
-      .then(pkg => pkg !== undefined);
+    );
+    const json = stdPair.stdout;
+    const errsOrObject = this._ParseNugetSearchReturn(json);
+    const _object = errsOrObject instanceof type.errors ? errsOrObject.throw() : errsOrObject;
+    const results = _object.searchResult;
+    const packages = results[0].packages;
+    const package_ = packages.find(p => p.version === type('string.semver').from(nextVersion));
+    return package_ !== undefined;
   }
 
   /**
@@ -906,6 +920,7 @@ const NRI: typeof NugetRegistryInfo = NugetRegistryInfo;
  * The base type for {@link NRIOpts} and related types. Extend this type while
  * overriding member types via {@link NRIOptsBase.merge}
  */
+// eslint-disable-next-line unicorn/name-replacements
 export const NRIOptsBase: Type<{
   project: MSBuildProject | {
     readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
@@ -960,6 +975,7 @@ export const NRIOptsBase: Type<{
 /**
  * The type of the parameter for {@link NugetRegistryInfo}'s constructor.
  */
+// eslint-disable-next-line unicorn/name-replacements
 export const NRIOpts: Type<{
   project: MSBuildProject | {
     readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
@@ -1007,15 +1023,16 @@ function _censorToken(string: string, token: string): string {
  * NuGet API token.
  */
 function _censorTokenInError(error: ExecException, token: string): ExecException {
+  const text = JSON.stringify({
+    ...error,
+    message: error.message,
+    stack: error.stack,
+  });
   return Object.assign(
     error,
     JSON.parse(
       _censorToken(
-        JSON.stringify({
-          ...error,
-          message: error.message,
-          stack: error.stack,
-        }),
+        text,
         token,
       ),
     ) as ExecException,

@@ -1,9 +1,9 @@
-import { getEnvVarValue } from '../utils/env.ts';
+import { getEnvVarValue as getEnvironmentVariableValue } from '../utils/env.ts';
 import { isError } from '../utils/isError.ts';
 import {
   NugetRegistryInfo,
-  NRIOpts,
-  NRIOptsBase,
+  NRIOpts as NRIOptions,
+  NRIOptsBase as NRIOptionsBase,
 } from './NugetRegistryInfo.ts';
 import type { Out, Type } from 'arktype';
 import type { Default } from 'arktype/internal/attributes.ts';
@@ -12,13 +12,19 @@ import type { NugetProjectProperties } from './NugetProjectProperties.ts';
 
 // https://docs.gitlab.com/ee/user/packages/nuget_repository/
 export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
+  static readonly DefaultGitlabTokenEnvVars: readonly ['GL_TOKEN', 'GITLAB_TOKEN', 'CI_JOB_TOKEN'] = Object.freeze([
+    'GL_TOKEN',
+    'GITLAB_TOKEN',
+    'CI_JOB_TOKEN',
+  ] as const);
+
   /**
    * The GitLab API v4 root URL.
    * @returns The value of the environment variable `CI_API_V4_URL`.
    * If that's `undefined`, 'https://gitlab.com/api/v4' is returned, instead.
    */
   static get CI_API_V4_URL(): string {
-    return getEnvVarValue('CI_API_V4_URL') ?? 'https://gitlab.com/api/v4';
+    return getEnvironmentVariableValue('CI_API_V4_URL') ?? 'https://gitlab.com/api/v4';
   }
 
   /**
@@ -28,7 +34,7 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
    * @todo add URI encoded project pathname as alternative e.g. 'halospv3%2FHCE.Shared' in 'https://gitlab.com/api/v4/projects/halospv3%2FHCE.Shared'
    */
   static get projectId(): string | undefined {
-    return getEnvVarValue('CI_PROJECT_ID');
+    return getEnvironmentVariableValue('CI_PROJECT_ID');
   }
 
   /**
@@ -37,24 +43,7 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
    * @returns The value of the environment variable 'CI_PROJECT_NAMESPACE_ID' or `undefined`.
    */
   static get ownerId(): string | undefined {
-    return getEnvVarValue('CI_PROJECT_NAMESPACE_ID');
-  }
-
-  static readonly DefaultGitlabTokenEnvVars: readonly ['GL_TOKEN', 'GITLAB_TOKEN', 'CI_JOB_TOKEN'] = Object.freeze([
-    'GL_TOKEN',
-    'GITLAB_TOKEN',
-    'CI_JOB_TOKEN',
-  ] as const);
-
-  /**
-   * Creates an instance of GitlabNugetRegistryInfo.
-   * @param opts The input type of {@link GLNRIOpts.from}
-   */
-  constructor(opts: typeof GLNRIOpts.inferIn) {
-    const optsOut = GLNRIOpts.from(opts);
-    if (isError(optsOut.source))
-      throw optsOut.source;
-    super(optsOut as typeof optsOut & { source: string });
+    return getEnvironmentVariableValue('CI_PROJECT_NAMESPACE_ID');
   }
 
   /**
@@ -81,12 +70,25 @@ export class GitlabNugetRegistryInfo extends NugetRegistryInfo {
       ? `${this.CI_API_V4_URL}/groups/${this.ownerId}/-/packages/nuget/index.json`
       : new Error('env.CI_PROJECT_NAMESPACE_ID must be defined to use its GitLab API endpoint!');
   }
+
+  /**
+   * Creates an instance of GitlabNugetRegistryInfo.
+   * @param opts The input type of {@link GLNRIOpts.from}
+   */
+  // eslint-disable-next-line unicorn/name-replacements
+  constructor(opts: typeof GLNRIOpts.inferIn) {
+    const optionsOut = GLNRIOpts.from(opts);
+    if (isError(optionsOut.source))
+      throw optionsOut.source;
+    super(optionsOut as typeof optionsOut & { source: string });
+  }
 }
 const GLNRI = GitlabNugetRegistryInfo;
 
 /**
  * The Arktype definition for {@link GitlabNugetRegistryInfo}'s constructor parameter. Construct an object of this type by calling {@link GLNRIOpts.from}
  */
+// eslint-disable-next-line unicorn/name-replacements
 export const GLNRIOpts: Type<{
   project: MSBuildProject | {
     readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
@@ -96,8 +98,8 @@ export const GLNRIOpts: Type<{
   };
   tokenEnvVars: Default<readonly string[], readonly ['GL_TOKEN', 'GITLAB_TOKEN', 'CI_JOB_TOKEN']>;
   source: (In: Default<string | Error, string | Error>) => Out<string | Error>;
-}> = NRIOpts.merge({
-  tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(
+}> = NRIOptions.merge({
+  tokenEnvVars: NRIOptionsBase.get('tokenEnvVars').default(
     () => GLNRI.DefaultGitlabTokenEnvVars,
   ),
   /**
@@ -107,7 +109,7 @@ export const GLNRIOpts: Type<{
    * @see {@link GLNRI.projectUrl}, {@link GLNRI.groupUrl}
    */
   // todo: change '"group" | "project"' to '"GITLAB:PROJECT" | "GITLAB:GROUP"'
-  source: NRIOptsBase.get('source')
+  source: NRIOptionsBase.get('source')
     .or('"group" | "project" | Error')
     .pipe((source: string | Error): string | Error => {
       switch (source) {

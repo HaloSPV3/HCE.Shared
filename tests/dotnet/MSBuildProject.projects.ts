@@ -19,9 +19,9 @@ import * as console from 'node:console';
 import * as path from 'node:path';
 import { MSBuildProject as MSBP } from '../../src/dotnet/MSBuildProject.ts';
 
-const cacheDir = path.join(import.meta.dirname, '.projCache');
-if (!existsSync(cacheDir))
-  mkdirSync(cacheDir);
+const cacheDirectory = path.join(import.meta.dirname, '.projCache');
+if (!existsSync(cacheDirectory))
+  mkdirSync(cacheDirectory);
 
 const paths: Record<'DN' | 'SAP', { proj: string; json: string }> = {
   DN: {
@@ -29,14 +29,14 @@ const paths: Record<'DN' | 'SAP', { proj: string; json: string }> = {
       import.meta.dirname,
       '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
     ),
-    json: path.join(cacheDir, 'dn.json'),
+    json: path.join(cacheDirectory, 'dn.json'),
   },
   SAP: {
     proj: path.resolve(
       import.meta.dirname,
       '../../dotnet/samples/HCE.Shared.SignAfterPack/HCE.Shared.SignAfterPack.csproj',
     ),
-    json: path.join(cacheDir, 'sap.json'),
+    json: path.join(cacheDirectory, 'sap.json'),
   },
 };
 /**
@@ -49,10 +49,8 @@ async function writeCacheFile(keyofPaths: keyof typeof paths) {
 
   console.time(`Build Cache File "${path.basename(projPaths.json)}"`);
 
-  const jsonContentArray = await MSBP.PackableProjectsToMSBuildProjects([projPaths.proj])
-    .then(async promiseArray =>
-      await Promise.all(promiseArray.map(async proj => JSON.stringify(await proj))),
-    );
+  const projectsPromises = await MSBP.PackableProjectsToMSBuildProjects([projPaths.proj]);
+  const jsonContentArray = await Promise.all(projectsPromises.map(async proj => JSON.stringify(await proj)));
 
   const firstJson = jsonContentArray[0];
   if (firstJson === undefined)
@@ -69,6 +67,7 @@ async function writeCacheFile(keyofPaths: keyof typeof paths) {
 }
 
 /** for each project, rewrite its JSON-ified MSBuildProject if the JSON file does not exist. */
+// eslint-disable-next-line unicorn/no-top-level-side-effects
 await Promise.all(
   (Object.keys(paths) as (keyof typeof paths)[])
     .map(projName =>
@@ -78,32 +77,36 @@ await Promise.all(
     ),
 );
 
-const projects = {
-  DN: await readFile(paths.DN.json, 'utf8')
-    .then(contents => MSBP.fromJSON(contents))
-    .then(async (proj) => {
-      return await realpath(paths.DN.proj) === await realpath(proj.Properties.MSBuildProjectFullPath)
-        ? proj
-        : Promise.reject(new Error('Cache file points to non-existent project path.'));
-    }).catch(async () =>
-      await unlink(paths.DN.json)
-        .then(async () => await writeCacheFile('DN'))
-        .then(async () => await readFile(paths.DN.json, 'utf8'))
-        .then(contents => MSBP.fromJSON(contents)),
-    ),
-  SAP: await readFile(paths.SAP.json, 'utf8')
-    .then(contents => MSBP.fromJSON(contents))
-    .then(async (proj) => {
-      return await realpath(paths.SAP.proj) === await realpath(proj.Properties.MSBuildProjectFullPath)
-        ? proj
-        : Promise.reject(new Error('Cache file points to non-existent project path.'));
-    }).catch(async () =>
-      await unlink(paths.SAP.json)
-        .then(async () => await writeCacheFile('SAP'))
-        .then(async () => await readFile(paths.SAP.json, 'utf8'))
-        .then(contents => MSBP.fromJSON(contents)),
-    ),
-};
+/**
+ * @returns A promise of a dictionary of MSBP projects as dictated by {@link paths}
+ */
+async function getProjects() {
+  const projects: {
+    DN?: MSBP;
+    SAP?: MSBP;
+  } = { DN: undefined, SAP: undefined };
+
+  for (const key of ['DN', 'SAP'] as (keyof typeof paths)[]) {
+    try {
+      const contents = await readFile(paths[key].json, 'utf8');
+      const proj = MSBP.fromJSON(contents);
+      if (await realpath(paths[key].proj) === await realpath(proj.Properties.MSBuildProjectFullPath))
+        projects[key] = proj;
+      else throw new Error('Cache file points to non-existent project path.');
+    }
+    catch {
+      await unlink(paths[key].json);
+      if (!await writeCacheFile(key))
+        throw new Error('Failed to write cache file!');
+      const contents = await readFile(paths[key].json, 'utf8');
+      projects[key] = MSBP.fromJSON(contents);
+    }
+  }
+
+  return projects as Required<typeof projects>;
+}
+
+const projects = await getProjects();
 
 export const DeterministicNupkgCsproj: Readonly<MSBP> = Object.freeze(projects.DN);
 export const SignAfterPackCsproj: Readonly<MSBP> = Object.freeze(projects.SAP);

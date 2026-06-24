@@ -1,4 +1,4 @@
-import type { BaseClassProto, ConstructorLike, InstanceTypeOrSelf, ProtoOrSuperClass, SuperClassLike, WithProto } from './inheritance.ts';
+import type { BaseClassProto as BaseClassPrototype, ConstructorLike, InstanceTypeOrSelf, ProtoOrSuperClass as PrototypeOrSuperClass, SuperClassLike, WithProto as WithPrototype } from './inheritance.ts';
 import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
 import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
 
@@ -12,9 +12,9 @@ import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
  */
 export type InstanceTypeOrSelfPropertyDescriptorMap<
   T extends object | null,
-  __proto__ extends ProtoOrSuperClass,
+  __prototype__ extends PrototypeOrSuperClass,
 > = T extends ConstructorLike<T>
-  ? __proto__ extends SuperClassLike | BaseClassProto
-    ? InstancePropertyDescriptorMap<T & WithProto<__proto__>>
-    : PropertyDescriptorMap<InstanceType<T>, InstanceTypeOrSelf<__proto__>>
-  : PropertyDescriptorMap<InstanceTypeOrSelf<T>, InstanceTypeOrSelf<__proto__>>;
+  ? __prototype__ extends SuperClassLike | BaseClassPrototype
+    ? InstancePropertyDescriptorMap<T & WithPrototype<__prototype__>>
+    : PropertyDescriptorMap<InstanceType<T>, InstanceTypeOrSelf<__prototype__>>
+  : PropertyDescriptorMap<InstanceTypeOrSelf<T>, InstanceTypeOrSelf<__prototype__>>;

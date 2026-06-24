@@ -2,8 +2,8 @@ import type {
   BaseClass,
   ClassLike,
   ClassLike_Unknown,
-  ProtoOrSuperClass,
-  WithProto,
+  ProtoOrSuperClass as PrototypeOrSuperClass,
+  WithProto as WithPrototype,
 } from './inheritance.ts';
 
 // todo: Omit [P in keyof T] where T['__proto__'][P] === T[P].
@@ -15,7 +15,7 @@ import type {
  * @template T Any type with its `[[Prototype]]` attached via a type-only `__proto__` property. The type of `__proto__` must extends {@link ProtoOrSuperClass}.
  * @since 3.0.0
  */
-export type OwnPropertyDescriptorMap<T extends WithProto<ProtoOrSuperClass>>
+export type OwnPropertyDescriptorMap<T extends WithPrototype<PrototypeOrSuperClass>>
   = T['__proto__'] extends null
     ? { [P0 in keyof T]: TypedPropertyDescriptor<T[P0]>; }
     : Omit<

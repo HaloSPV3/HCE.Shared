@@ -1,10 +1,10 @@
 import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
 import type {
-  BaseClassProto,
+  BaseClassProto as BaseClassPrototype,
   ConstructorConstraint,
   InstanceTypeOrSelf,
   SuperClassLike,
-  WithProto,
+  WithProto as WithPrototype,
 } from './inheritance.ts';
 
 /**
@@ -26,7 +26,7 @@ import type {
  * @since 3.0.0
  */
 export type InstancePropertyDescriptorMap<
-  Class extends ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>,
-> = Class['__proto__'] extends BaseClassProto
+  Class extends ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>,
+> = Class['__proto__'] extends BaseClassPrototype
   ? PropertyDescriptorMap<InstanceType<Class>>
   : PropertyDescriptorMap<InstanceType<Class>, InstanceTypeOrSelf<Class['__proto__']>>;

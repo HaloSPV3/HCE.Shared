@@ -25,10 +25,16 @@ await describe('getConfig', async () => {
     process.env['GITHUB_REPOSITORY_OWNER'] = 'HaloSPV3';
     process.env['SKIP_TOKEN'] = 'true';
     // this test must pass two args here
-    const actual = await getConfig(
-      [DeterministicNupkgCsproj],
-      [new NugetRegistryInfo({ project: DeterministicNupkgCsproj })],
-    ).catch((error: unknown) => isError(error) ? error : new Error(String(error)));
+    let actual;
+    try {
+      actual = await getConfig(
+        [DeterministicNupkgCsproj],
+        [new NugetRegistryInfo({ project: DeterministicNupkgCsproj })],
+      );
+    }
+    catch (error: unknown) {
+      actual = isError(error) ? error : new Error(String(error));
+    }
 
     ok(
       !isError(actual),

@@ -2,11 +2,11 @@ import { deepStrictEqual, strictEqual } from 'node:assert/strict';
 import * as process from 'node:process';
 import { describe, it } from 'node:test';
 import {
-  DefaultGithubTokenEnvVars,
+  DefaultGithubTokenEnvVars as DefaultGithubTokenEnvironmentVariables,
   GithubNugetRegistryInfo as GHNRI,
-  GHNRIOpts,
+  GHNRIOpts as GHNRIOptions,
 } from '../../src/dotnet/GithubNugetRegistryInfo.ts';
-import { getEnvVarValue } from '../../src/utils/env.ts';
+import { getEnvVarValue as getEnvironmentVariableValue } from '../../src/utils/env.ts';
 
 /**
  * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
@@ -14,14 +14,14 @@ import { getEnvVarValue } from '../../src/utils/env.ts';
  */
 function getOwner(): string {
   const key = 'GITHUB_REPOSITORY_OWNER';
-  const owner = getEnvVarValue(key);
+  const owner = getEnvironmentVariableValue(key);
   return process.env[key] = owner ?? 'HaloSPV3';
 }
 
 await describe('DefaultGithubTokenEnvVars', async () => {
   await it('has expected value', () => {
     deepStrictEqual(
-      DefaultGithubTokenEnvVars,
+      DefaultGithubTokenEnvironmentVariables,
       Object.freeze(['GH_TOKEN', 'GITHUB_TOKEN'] as const),
     );
   });
@@ -52,11 +52,11 @@ await describe(
 
 await describe('GHNRIOpts', async () => {
   const owner = getOwner();
-  const opts = GHNRIOpts.omit('project').from({});
+  const options = GHNRIOptions.omit('project').from({});
   await it('defaults to expected source', () => {
-    strictEqual(opts.source, `https://nuget.pkg.github.com/${owner}/index.json`);
+    strictEqual(options.source, `https://nuget.pkg.github.com/${owner}/index.json`);
   });
   await it('defaults tokenEnvVars', () => {
-    deepStrictEqual(opts.tokenEnvVars, Object.freeze(['GH_TOKEN', 'GITHUB_TOKEN'] as const));
+    deepStrictEqual(options.tokenEnvVars, Object.freeze(['GH_TOKEN', 'GITHUB_TOKEN'] as const));
   });
 });

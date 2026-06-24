@@ -2,12 +2,12 @@ import type { InstanceOrStatic } from '../miscTypes.ts';
 import { filterForGetters } from './filterForGetters.ts';
 import { getOwnPropertyDescriptors } from './getOwnPropertyDescriptors.ts';
 import type {
-  BaseClassProto,
+  BaseClassProto as BaseClassPrototype,
   ClassLike,
   ConstructorConstraint,
   InstanceTypeOrSelf,
   SuperClassLike,
-  WithProto,
+  WithProto as WithPrototype,
 } from './inheritance.ts';
 import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
 import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
@@ -19,16 +19,16 @@ import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
  * @since 3.0.0
  */
 type OwnGetters<
-  Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
+  Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,
 >
   = [_InstanceOrStatic] extends ['Instance']
     ? Exclude<
-      (Class['__proto__'] extends BaseClassProto ? null : InstanceTypeOrSelf<Class['__proto__']>) extends null
+      (Class['__proto__'] extends BaseClassPrototype ? null : InstanceTypeOrSelf<Class['__proto__']>) extends null
         ? keyof InstanceType<Class>
         : Exclude<
           keyof InstanceType<Class>,
-          keyof (Class['__proto__'] extends BaseClassProto ? null : InstanceTypeOrSelf<Class['__proto__']>)
+          keyof (Class['__proto__'] extends BaseClassPrototype ? null : InstanceTypeOrSelf<Class['__proto__']>)
         >,
       '__proto__'
     >[]
@@ -54,7 +54,7 @@ type OwnGetters<
  * An array of names of getters that were not inherited from a parent class. If {@link classDefinition} is a class instance, the names of instanced getters are returned. Otherwise, the names of static getters are returned;
  */
 export function listOwnGetters<
-  Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
+  Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,
 >(
   classDefinition: Class,
@@ -66,7 +66,7 @@ export function listOwnGetters<
     const keyArray = Reflect.ownKeys(getterDescriptorMap) as (keyof typeof getterDescriptorMap)[];
     return keyArray as [typeof instanceOrStatic & 'Instance'] extends ['Instance'] ? typeof keyArray : never;
   }
-  else if (instanceOrStatic === 'Static') {
+  if (instanceOrStatic === 'Static') {
     const descriptorMap: OwnPropertyDescriptorMap<Class> = getOwnPropertyDescriptors(classDefinition, instanceOrStatic as 'Static');
     const getterDescriptorMap = filterForGetters(descriptorMap);
     const keyArray = Reflect.ownKeys(getterDescriptorMap) as (keyof typeof getterDescriptorMap)[];
@@ -76,5 +76,5 @@ export function listOwnGetters<
           ? typeof keyArray
           : never;
   }
-  else throw new TypeError('Argument `instanceOrStatic` must be "Instance" or "Static".');
+  throw new TypeError('Argument `instanceOrStatic` must be "Instance" or "Static".');
 }

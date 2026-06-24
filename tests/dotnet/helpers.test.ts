@@ -2,14 +2,14 @@ import { ok, strictEqual } from 'node:assert/strict';
 import { describe, it, todo } from 'node:test';
 import {
   configureDotnetNugetPush,
-  configurePrepareCmd,
+  configurePrepareCmd as configurePrepareCommand,
 } from '../../src/dotnet/helpers.ts';
 
 await describe('dotnetHelpers', async () => {
   await todo('configurePrepareCmd', () => {
     ok(typeof configureDotnetNugetPush === 'function');
     strictEqual(typeof configureDotnetNugetPush, 'function');
-    strictEqual(configurePrepareCmd.name, 'configurePrepareCmd');
+    strictEqual(configurePrepareCommand.name, 'configurePrepareCmd');
   });
 
   await it('configureDotnetNugetPush works', (t) => {

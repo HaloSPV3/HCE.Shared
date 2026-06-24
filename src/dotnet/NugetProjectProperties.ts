@@ -10,12 +10,12 @@ import {
   getPrototypesChainOf,
   listOwnGetters,
   type ClassLike,
-  type ProtoChainOfClass,
-  type WithProto,
+  type ProtoChainOfClass as PrototypeChainOfClass,
+  type WithProto as WithPrototype,
 } from '../utils/reflection.ts';
 import { MSBuildProjectProperties, type Class_MSBPP } from './MSBuildProjectProperties.ts';
 
-const Type_RepositoryType: type<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
+const Type_RepoType: type<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
 const Type_SymbolPackageFormat: type<'symbols.nupkg' | 'snupkg'> = type('"symbols.nupkg" | "snupkg"');
 
 /**
@@ -140,7 +140,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     this._packageVersion = _getAndForget('PackageVersion');
     this._product = _getAndForget('Product');
     this._repositoryCommit = _getAndForget('RepositoryCommit');
-    if (Type_RepositoryType.allows(data = _getAndForget('RepositoryType')))
+    if (Type_RepoType.allows(data = _getAndForget('RepositoryType')))
       this._repositoryType = data;
     this._repositoryUrl = _getAndForget('RepositoryUrl');
     if (tBooleanString.allows(data = _getAndForget('SuppressDependenciesWhenPacking')))
@@ -405,7 +405,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * Default: `''`
    * @example "git", "fts"
    */
-  get RepositoryType(): typeof Type_RepositoryType.inferOut {
+  get RepositoryType(): typeof Type_RepoType.inferOut {
     return this._repositoryType ??= '';
   }
 
@@ -569,20 +569,21 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
 export type Class_NPP = ClassLike<
   typeof NugetProjectProperties
-  & WithProto<Class_MSBPP>
+  & WithPrototype<Class_MSBPP>
 >;
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class NPPGetterNames {
-  private static _prototypeChain: ProtoChainOfClass<Class_NPP> | undefined;
-  private static get PrototypeChain(): [Class_NPP, Class_MSBPP] {
-    return this._prototypeChain ??= getPrototypesChainOf(NugetProjectProperties as Class_NPP, 'classes');
-  }
+  private static _prototypeChain: PrototypeChainOfClass<Class_NPP> | undefined;
 
   private static _instanceGetters: Exclude<keyof NugetProjectProperties, keyof MSBuildProjectProperties>[] | undefined;
   private static _instanceGettersRecursive: (keyof NugetProjectProperties)[] | undefined;
   private static _StaticGetters: never[] | undefined;
   private static _StaticGettersRecursive: (keyof typeof NugetProjectProperties)[] | undefined;
+
+  private static get PrototypeChain(): [Class_NPP, Class_MSBPP] {
+    return this._prototypeChain ??= getPrototypesChainOf(NugetProjectProperties as Class_NPP, 'classes');
+  }
 
   public static get InstanceGetters(): Exclude<keyof NugetProjectProperties, keyof MSBuildProjectProperties>[] {
     return this._instanceGetters ??= listOwnGetters(NugetProjectProperties as Class_NPP, 'Instance');
@@ -590,7 +591,7 @@ export class NPPGetterNames {
 
   public static get InstanceGettersRecursive(): (keyof NugetProjectProperties)[] {
     return this._instanceGettersRecursive ??= this.PrototypeChain.flatMap(
-      proto => listOwnGetters<typeof proto, 'Instance'>(proto, 'Instance'),
+      prototype => listOwnGetters<typeof prototype, 'Instance'>(prototype, 'Instance'),
     );
   }
 
@@ -600,7 +601,7 @@ export class NPPGetterNames {
 
   public static get StaticGettersRecursive(): ('prototype' | 'GetFullPath')[] {
     return this._StaticGettersRecursive ??= this.PrototypeChain.flatMap(
-      proto => listOwnGetters(proto, 'Static'),
+      prototype => listOwnGetters(prototype, 'Static'),
     );
   }
 }

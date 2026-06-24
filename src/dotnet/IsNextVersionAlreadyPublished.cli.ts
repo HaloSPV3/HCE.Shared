@@ -13,17 +13,17 @@ import esMain from 'es-main';
  *   - already exists at `source`
  */
 async function main(): Promise<0> {
-  const args = process.argv.slice(2);
+  const arguments_ = process.argv.slice(2);
   // Parse command-line arguments - https://stackoverflow.com/a/76298476/14894786
   const options: {
     packageId: string | undefined;
     source: string | undefined;
   } & Record<string, string | undefined> = { packageId: undefined, source: undefined };
-  for (let i = 0; i < args.length; i += 2) {
-    const argName = args[i];
-    const argValue = args[i + 1];
-    if (argValue !== undefined && argName?.startsWith('--') === true) {
-      options[argName.slice(2)] = argValue;
+  for (let index = 0; index < arguments_.length; index += 2) {
+    const argumentName = arguments_[index];
+    const argumentValue = arguments_[index + 1];
+    if (argumentValue !== undefined && argumentName?.startsWith('--') === true) {
+      options[argumentName.slice(2)] = argumentValue;
     }
   }
 

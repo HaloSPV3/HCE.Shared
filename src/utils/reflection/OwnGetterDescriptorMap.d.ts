@@ -13,5 +13,5 @@ import type { OwnKeyOf } from './OwnKeyOf.d.ts';
  */
 export type OwnGetterDescriptorMap<
   T,
-  __proto__ extends object | null,
-> = { [P in OwnKeyOf<T, __proto__>]: GetterDescriptor<T[P]> };
+  __prototype__ extends object | null,
+> = { [P in OwnKeyOf<T, __prototype__>]: GetterDescriptor<T[P]> };
