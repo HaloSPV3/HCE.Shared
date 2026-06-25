@@ -14,6 +14,7 @@
   "bugs": "https://github.com/halospv3/hce.shared/issues",
   "license": "MIT",
   "author": "Noah Sherwin",
+  "preferUnplugged": true,
   "files": [
     "!.github/",
     "!.husky/",
