@@ -398,11 +398,9 @@ export async function getConfig(
   }
 
   if (errors.length > 0) {
-    throw new Error(
-      [
-        'getConfig cannot continue. One or more errors occurred.',
-        ...errors.map(v => v.stack),
-      ].join('\n'),
+    throw new AggregateError(
+      errors,
+      'getConfig cannot continue. One or more errors occurred.',
     );
   }
 
