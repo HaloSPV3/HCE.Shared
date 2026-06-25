@@ -26,9 +26,11 @@
   "extends": "./tsconfig.node.json",
   "compilerOptions": {
     "allowImportingTsExtensions": true,
+    "allowJs": false,
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
+    "erasableSyntaxOnly": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedDeclarations": true,
     "isolatedModules": true,
