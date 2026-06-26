@@ -1,3 +1,19 @@
+## [3.6.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.5.2...v3.6.0) (2026-06-26)
+
+### Features
+
+* **dotnet.CWT:** add target `CleanupWpfTmp` by Brant Burnett ([75e6b5b](https://github.com/HaloSPV3/HCE.Shared/commit/75e6b5b09da20694248ce232396233edafe50f33))
+
+### Bug Fixes
+
+* **deps:** update commitlint monorepo to v21 ([a8739ee](https://github.com/HaloSPV3/HCE.Shared/commit/a8739ee6fda0d062550d6bd650decccc3a4dd755))
+* **deps:** update dependency @eslint/json to v2 ([6b6148a](https://github.com/HaloSPV3/HCE.Shared/commit/6b6148adf8163985a3244f4099feebc21e5418af))
+* **deps:** update node.js to v24.18.0 ([bd9ea1f](https://github.com/HaloSPV3/HCE.Shared/commit/bd9ea1fd08e991be4eb0ce7381def6ea20965ad5))
+* **dotnet.NRI:** add back-off and retry limit to `PackDummyPackage` ([b1eed50](https://github.com/HaloSPV3/HCE.Shared/commit/b1eed508f44d50d57dd3cae8052c66662f20e545))
+* **dotnet.SemanticRelease:** resolve `unicorn/prefer-aggregate-error` ([d5b0676](https://github.com/HaloSPV3/HCE.Shared/commit/d5b0676ab5c85692a4044437e30024c6c5e7238e))
+* ensure `ExecException`s have their `cmd` string ([c85ded5](https://github.com/HaloSPV3/HCE.Shared/commit/c85ded5356b54806e6a4e1a72ea6c14f8a6aa3f1))
+* prefer Yarn unplug this package for access to MSBuild props/targets files ([3191fb9](https://github.com/HaloSPV3/HCE.Shared/commit/3191fb9ead6ba5209dee145c4c576150aa2f8091))
+
 ## [3.6.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.5.3-develop.2...v3.6.0-develop.1) (2026-06-26)
 
 ### Features
