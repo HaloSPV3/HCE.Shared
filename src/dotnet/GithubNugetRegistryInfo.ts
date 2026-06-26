@@ -1,14 +1,15 @@
 import type { Type } from 'arktype';
-import { getEnvVarValue } from '../utils/env.ts';
+import { getEnvVarValue as getEnvironmentVariableValue } from '../utils/env.ts';
 import type { MSBuildProject, MSBuildEvaluationOutput } from './MSBuildProject.ts';
 import type { NugetProjectProperties } from './NugetProjectProperties.ts';
 import {
   NugetRegistryInfo,
-  NRIOptsBase,
+  NRIOptsBase as NRIOptionsBase,
 } from './NugetRegistryInfo.ts';
 import type { Default } from 'arktype/internal/attributes.ts';
 
 const NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
+// eslint-disable-next-line unicorn/name-replacements
 export const DefaultGithubTokenEnvVars: readonly ['GH_TOKEN', 'GITHUB_TOKEN'] = Object.freeze([
   'GH_TOKEN',
   'GITHUB_TOKEN',
@@ -16,15 +17,6 @@ export const DefaultGithubTokenEnvVars: readonly ['GH_TOKEN', 'GITHUB_TOKEN'] = 
 
 export class GithubNugetRegistryInfo extends NugetRegistryInfo {
   static readonly NUGET_PKG_GITHUB_COM = 'https://nuget.pkg.github.com';
-
-  // GithubNugetRegistryInfo.CtorArgs(...) behaves differently than NugetRegistryInfo.CtorArgs(...)
-  /**
-   * Creates an instance of GithubNugetRegistryInfo.
-   * @param opts The input type of {@link GHNRIOpts.from}
-   */
-  constructor(opts: typeof GHNRIOpts.inferIn) {
-    super(GHNRIOpts.from(opts));
-  }
 
   /**
    * Returns `https://nuget.pkg.github.com/${GITHUB_REPOSITORY_OWNER}/index.json`
@@ -34,10 +26,20 @@ export class GithubNugetRegistryInfo extends NugetRegistryInfo {
    * Otherwise, returns `undefined`
    */
   static getNugetGitHubUrl(): string | undefined {
-    const owner = getEnvVarValue('GITHUB_REPOSITORY_OWNER');
+    const owner = getEnvironmentVariableValue('GITHUB_REPOSITORY_OWNER');
     return owner === undefined
       ? undefined
       : `${NUGET_PKG_GITHUB_COM}/${owner}/index.json`;
+  }
+
+  // GithubNugetRegistryInfo.CtorArgs(...) behaves differently than NugetRegistryInfo.CtorArgs(...)
+  /**
+   * Creates an instance of GithubNugetRegistryInfo.
+   * @param opts The input type of {@link GHNRIOpts.from}
+   */
+  // eslint-disable-next-line unicorn/name-replacements
+  constructor(opts: typeof GHNRIOpts.inferIn) {
+    super(GHNRIOpts.from(opts));
   }
 }
 const GHNRI = GithubNugetRegistryInfo;
@@ -47,6 +49,7 @@ const GHNRI = GithubNugetRegistryInfo;
  * {@link GHNRI.getNugetGitHubUrl} and will default to an empty string if the
  * environment variable `GITHUB_REPOSITORY_OWNER` is undefined!
  */
+// eslint-disable-next-line unicorn/name-replacements
 export const GHNRIOpts: Type<{
   project: MSBuildProject | {
     readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
@@ -56,11 +59,11 @@ export const GHNRIOpts: Type<{
   };
   source: Default<string, string>;
   tokenEnvVars: Default<readonly string[], readonly ['GH_TOKEN', 'GITHUB_TOKEN']>;
-}> = NRIOptsBase.merge({
+}> = NRIOptionsBase.merge({
   /** @see {@link GHNRI.getNugetGitHubUrl } */
-  source: NRIOptsBase.get('source')
+  source: NRIOptionsBase.get('source')
     .default(() => GHNRI.getNugetGitHubUrl() ?? ''),
-  tokenEnvVars: NRIOptsBase.get('tokenEnvVars')
+  tokenEnvVars: NRIOptionsBase.get('tokenEnvVars')
     .default(
       /* must be a function. A fixed-length array is NOT a primitive type! */
       (): typeof DefaultGithubTokenEnvVars => DefaultGithubTokenEnvVars,

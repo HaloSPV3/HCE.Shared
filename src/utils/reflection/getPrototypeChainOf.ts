@@ -2,22 +2,22 @@
 import type { TupleIndices } from '../miscTypes.ts';
 import { getPrototypeOf } from './getPrototypeOf.ts';
 import {
-  baseClassProto,
-  type BaseClassProto,
+  baseClassProto as baseClassPrototype,
+  type BaseClassProto as BaseClassPrototype,
   type ClassLike,
   type ConstructorConstraint,
-  type ProtoChainOfClass,
-  type ProtoChainOfClassInstance,
+  type ProtoChainOfClass as PrototypeChainOfClass,
+  type ProtoChainOfClassInstance as PrototypeChainOfClassInstance,
   type SuperClassLike,
-  type WithProto,
+  type WithProto as WithPrototype,
 } from './inheritance.ts';
 import { isConstructor } from './isConstructor.ts';
 
-type ProtoChain<
-  Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
+type PrototypeChain<
+  Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   ClassesOrInstances extends 'classes' | 'classInstances',
-> = [ClassesOrInstances] extends ['classInstances'] ? ProtoChainOfClassInstance<Class>
-  : [ClassesOrInstances] extends ['classes'] ? ProtoChainOfClass<Class>
+> = [ClassesOrInstances] extends ['classInstances'] ? PrototypeChainOfClassInstance<Class>
+  : [ClassesOrInstances] extends ['classes'] ? PrototypeChainOfClass<Class>
       : never;
 
 /**
@@ -32,21 +32,21 @@ type ProtoChain<
  * Excludes default superclasses e.g. anonymous functions, native code.
  */
 export function getPrototypesChainOf<
-  Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
+  Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   ClassesOrInstances extends 'classes' | 'classInstances',
 >(
   classDefinition: Class,
   returnType: ClassesOrInstances,
-): ProtoChain<Class, ClassesOrInstances> {
+): PrototypeChain<Class, ClassesOrInstances> {
   // class definitions or their respective .prototype; exclude default superclasses.
-  let current: ProtoChainOfClass<Class>[TupleIndices<ProtoChainOfClass<Class>>] = classDefinition as ProtoChainOfClass<Class>[0 extends TupleIndices<ProtoChainOfClass<Class>> ? 0 : never];
-  let parent: typeof current & WithProto<SuperClassLike | BaseClassProto> | object;
+  let current: PrototypeChainOfClass<Class>[TupleIndices<PrototypeChainOfClass<Class>>] = classDefinition as PrototypeChainOfClass<Class>[0 extends TupleIndices<PrototypeChainOfClass<Class>> ? 0 : never];
   const returnValue = [] as unknown as
-  ProtoChain<Class, ClassesOrInstances>;
+  PrototypeChain<Class, ClassesOrInstances>;
   let index: TupleIndices<typeof returnValue> = 0 as TupleIndices<typeof returnValue>;
 
-  while (baseClassProto !== current) {
-    parent = getPrototypeOf(current);
+  while (baseClassPrototype !== current) {
+    const parent: typeof current & WithPrototype<SuperClassLike | BaseClassPrototype> | object
+      = getPrototypeOf(current);
     // current is a Class symbol/constructor. Object.getOwnPropertyDescriptors on current will include static properties.
     if (!isConstructor(current))
       break;
@@ -70,7 +70,7 @@ export function getPrototypesChainOf<
       && typeof parent.name === 'string'
       && '' !== parent.name // it's possible for a Function/Constructor to be anonymous...
     ) {
-      current = parent as ProtoChainOfClass<Class>[TupleIndices<ProtoChainOfClass<Class>>];
+      current = parent as PrototypeChainOfClass<Class>[TupleIndices<PrototypeChainOfClass<Class>>];
     }
     else {
       break;

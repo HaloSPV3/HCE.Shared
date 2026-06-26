@@ -3,9 +3,17 @@ import jsdoc from 'eslint-plugin-jsdoc';
 import unicorn from 'eslint-plugin-unicorn';
 import { defineConfig, type Config } from 'eslint/config';
 import hceSharedConfig from './src/eslintConfig.ts';
+import path from 'node:path';
 
 const config: Config[] = defineConfig(
   ...hceSharedConfig,
+  {
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: path.resolve('.'),
+      },
+    },
+  },
   ...jsdoc.configs['flat/recommended-mixed'],
   {
     ...markdown.configs.recommended[0],

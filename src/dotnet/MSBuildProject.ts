@@ -139,19 +139,6 @@ const msbuildEvaluationOutput: Type<{
 
 export class MSBuildEvaluationOutput {
   /**
-   * @param rawMSBuildEvaluation The output of a CLI MSBuild project evaluation.
-   * May be the UTF-8 string-encoded JSON or the object decoded from that JSON.
-   */
-  constructor(rawMSBuildEvaluation: Parameters<typeof JSON.parse>[0] | Parameters<typeof msbuildEvaluationOutput.from>[0]) {
-    /** `.assert` instead of `.from` to allow `unknown` JSON.parse return type */
-    const knownObject = msbuildEvaluationOutput.assert(typeof rawMSBuildEvaluation === 'string' ? JSON.parse(rawMSBuildEvaluation) : rawMSBuildEvaluation);
-
-    this.Properties = knownObject.Properties;
-    this.Items = knownObject.Items;
-    this.TargetResults = knownObject.TargetResults;
-  }
-
-  /**
    * The specified properties and their values as evaluated by MSBuild Core.
    * `-getProperty:{propertyName,...}`
    */
@@ -168,6 +155,19 @@ export class MSBuildEvaluationOutput {
    * `-getTargetResult:{targetName,...}`
    */
   TargetResults?: typeof msbuildEvaluationOutput.infer.TargetResults;
+
+  /**
+   * @param rawMSBuildEvaluation The output of a CLI MSBuild project evaluation.
+   * May be the UTF-8 string-encoded JSON or the object decoded from that JSON.
+   */
+  constructor(rawMSBuildEvaluation: Parameters<typeof JSON.parse>[0] | Parameters<typeof msbuildEvaluationOutput.from>[0]) {
+    /** `.assert` instead of `.from` to allow `unknown` JSON.parse return type */
+    const knownObject = msbuildEvaluationOutput.assert(typeof rawMSBuildEvaluation === 'string' ? JSON.parse(rawMSBuildEvaluation) : rawMSBuildEvaluation);
+
+    this.Properties = knownObject.Properties;
+    this.Items = knownObject.Items;
+    this.TargetResults = knownObject.TargetResults;
+  }
 }
 
 export const EvaluationOptions: Type<{
@@ -254,44 +254,6 @@ export class MSBuildProject {
   ]);
 
   /**
-   * Creates an instance of MSBuildProject.
-   * @param opts The order-independent arguments for this constructor.
-   * Properties may be added or moved around in this definition without
-   * breaking compatibility.
-   * @param opts.fullPath The full path of the MSBuild project's file. This
-   * should have a '.csproj', '.fsproj', or '.vbproj' file extension.
-   * @param opts.projTargets A list of MSBuild Targets supported by the project.
-   * @param opts.evaluation The output of an MSBuild project evaluation. This
-   * comprises MSBuild Properties, Items, and Target results.
-   */
-  public constructor(opts: {
-    fullPath: string;
-    projTargets: string[];
-    evaluation: MSBuildEvaluationOutput;
-  }) {
-    this.Items = opts.evaluation.Items ?? {};
-    this.Properties = new NugetProjectProperties(
-      opts.fullPath,
-      new CaseInsensitiveMap<string, string>(
-        Object.entries(opts.evaluation.Properties ?? {}),
-      ),
-    );
-    this.Targets = opts.projTargets;
-    this.TargetResults
-      = opts.evaluation.TargetResults === undefined
-        ? []
-        : [opts.evaluation.TargetResults];
-  }
-
-  readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
-  readonly Properties: Readonly<NugetProjectProperties>;
-  readonly Targets: readonly string[];
-  /**
-   * Allows appending subsequent target results.
-   */
-  readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][];
-
-  /**
    * @param projectPath The full path of the project file or its directory. A
    * relative path may be passed, but will resolve relative to the current
    * working directory.
@@ -309,19 +271,19 @@ export class MSBuildProject {
    */
   static async GetTargets(
     projectPath: string,
+    // eslint-disable-next-line unicorn/consistent-boolean-name
     includeNonPublic = false,
   ): Promise<string[]> {
-    return execAsync(`dotnet msbuild ${projectPath} -targets`, true)
-      .then((v) => {
-        const targets = v.stdout
-          .split('\n')
-          .filter((v, index) => v !== '' && index !== 0)
-          .map(v => v.replaceAll('\r', ''))
-          .sort((a, b) => a.localeCompare(b));
-        return includeNonPublic
-          ? targets
-          : targets.filter(v => !v.startsWith('_'));
-      });
+    const stdPair = await execAsync(`dotnet msbuild ${projectPath} -targets`, true);
+
+    const targets = stdPair.stdout
+      .split('\n')
+      .filter((v, index) => v !== '' && index !== 0)
+      .map(v => v.replaceAll('\r', ''))
+      .sort((a, b) => a.localeCompare(b));
+    return includeNonPublic
+      ? targets
+      : targets.filter(v => !v.startsWith('_'));
   }
 
   /**
@@ -350,48 +312,51 @@ export class MSBuildProject {
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
     const _pairs = Object.entries(options.Property).filter(p => typeof p[1] === 'string');
-    const property
+    const string_property
       = _pairs.length === 0
         ? ''
         : `-p:"${_pairs.map(pair => pair[0] + '=' + pair[1]).join(';')}"`;
-    const target
+    const string_target
       = options.Targets.length === 0
         ? ''
         : `"-t:${options.Targets.join(';')}"`;
-    const getItem
+    const string_getItem
       = options.GetItem.length === 0
         ? ''
         : `-getItem:"${options.GetItem.join(',')}"`;
-    const getProperty
+    const string_getProperty
       = options.GetProperty.length === 0
         ? ''
         : `-getProperty:"${options.GetProperty.join(',')}"`;
-    const getTargetResult
+    const string_getTargetResult
       = options.GetTargetResult.length === 0
         ? ''
         : `-getTargetResult:"${options.GetTargetResult.join(',')}"`;
-    const cmdLine = [
+    const commandLine = [
       'dotnet',
       'msbuild',
       `"${options.FullName}"`,
       '-restore',
-      property,
-      target,
-      getItem,
-      getProperty,
-      getTargetResult,
+      string_property,
+      string_target,
+      string_getItem,
+      string_getProperty,
+      string_getTargetResult,
     ]
       .filter(v => v !== '')
       .join(' ');
-    let stdio: Awaited<ReturnType<typeof execAsync>> | undefined = undefined;
+    let stdio: Awaited<ReturnType<typeof execAsync>> | undefined;
     // may throw
     while (stdio === undefined) {
-      stdio = await setTimeout(
-        1000,
-        execAsync(cmdLine, true),
-      )
-        .then(async p => await p)
-        .catch<undefined>(catchEBUSY);
+      try {
+        stdio = await setTimeout(
+          1000,
+          execAsync(commandLine, true),
+        );
+      }
+      catch (error: unknown) {
+        catchEBUSY(error);
+      }
     }
 
     // todo: consider -getResultOutputFile:file
@@ -434,7 +399,7 @@ export class MSBuildProject {
 
     return new MSBuildProject({
       fullPath: options.FullName,
-      projTargets: await MSBuildProject.GetTargets(options.FullName),
+      projTargets: await this.GetTargets(options.FullName),
       evaluation,
     });
   }
@@ -453,12 +418,8 @@ export class MSBuildProject {
   public static async PackableProjectsToMSBuildProjects(
     projectsToPackAndPush: string[],
   ): Promise<Promise<MSBuildProject>[]> {
-    const dirEntriesPromise = toDirEntries(typeof projectsToPackAndPush === 'string' ? [projectsToPackAndPush] : projectsToPackAndPush);
-    const projectPromises: Promise<MSBuildProject>[] = await dirEntriesPromise
-      .then(
-        (direntArray: Dirent[]) =>
-          direntArray.map(element => convertDirentToMSBuildProject(element)),
-      );
+    const directoryEntriesPromise = await toDirectoryEntries(typeof projectsToPackAndPush === 'string' ? [projectsToPackAndPush] : projectsToPackAndPush);
+    const projectPromises: Promise<MSBuildProject>[] = directoryEntriesPromise.map(element => convertDirentToMSBuildProject(element));
     return projectPromises;
 
     /**
@@ -469,10 +430,10 @@ export class MSBuildProject {
      * https://github.com/dotnet/sdk/blob/497f334b2862bdf98b30c00ede2fd259ea5f624d/src/Cli/dotnet/Commands/New/MSBuildEvaluation/MSBuildEvaluationResult.cs#L19-L32.\
      * @returns An promised array of Dirent instances for discovered project files.
      */
-    async function toDirEntries(
+    async function toDirectoryEntries(
       projectsToPackAndPush: string[],
     ): Promise<Dirent[]> {
-      const dirEntries: (Dirent | Dirent[])[] = await Promise.all(
+      const directoryEntries: (Dirent | Dirent[])[] = await Promise.all(
         projectsToPackAndPush.map(async (proj) => {
           proj = await realpath(makeAbsolute(proj));
           const stats = await stat(proj);
@@ -489,10 +450,9 @@ export class MSBuildProject {
             );
             if (dirent)
               return dirent;
-            else
-              throw new Error(
-                `file "${proj}" not found. It may have been moved or deleted.`,
-              );
+            throw new Error(
+              `file "${proj}" not found. It may have been moved or deleted.`,
+            );
           }
           if (!stats.isDirectory())
             throw new Error(`"${proj}" is not a file or directory`);
@@ -505,7 +465,7 @@ export class MSBuildProject {
         }),
       );
 
-      return dirEntries.flat();
+      return directoryEntries.flat();
     }
 
     /**
@@ -519,19 +479,17 @@ export class MSBuildProject {
         ('path' in dirent ? dirent.path as string | undefined : undefined) ?? (dirent as unknown as Omit<typeof dirent, 'path'> & { parentPath: string }).parentPath,
         dirent.name,
       );
-      const projTargets: Promise<string[]> = MSBuildProject.GetTargets(fullPath);
-      const evalTargets = await projTargets.then(v =>
-        v.includes('Pack') ? ['Pack'] : [],
-      );
+      const projTargets: string[] = await MSBuildProject.GetTargets(fullPath);
+      const evalTargets: string[] = projTargets.includes('Pack') ? ['Pack'] : [];
       // this might be too long for a command line. What was it on Windows?
       // 2^15 (32,768) character limit for command lines?
-      const getProperties = NPPGetterNames.InstanceGettersRecursive;
+      const propertiesToEvaluate = NPPGetterNames.InstanceGettersRecursive;
 
       return await MSBuildProject.Evaluate(
         EvaluationOptions.from({
           FullName: fullPath,
           GetItem: [],
-          GetProperty: getProperties,
+          GetProperty: propertiesToEvaluate,
           GetTargetResult: [],
           Property: {},
           Targets: evalTargets,
@@ -544,13 +502,52 @@ export class MSBuildProject {
     const parsed = T_PseudoMSBPInstance.assert(JSON.parse(json));
 
     type.true.assert(
-      Reflect.setPrototypeOf(parsed, MSBuildProject.prototype),
+      Reflect.setPrototypeOf(parsed, this.prototype),
     );
     type.true.assert(
       Reflect.setPrototypeOf(parsed.Properties, NugetProjectProperties.prototype),
     );
     parsed.Properties = T_NPP.assert(parsed.Properties);
     return T_MSBuildProject.assert(parsed);
+  }
+
+  readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
+  readonly Properties: Readonly<NugetProjectProperties>;
+  readonly Targets: readonly string[];
+  /**
+   * Allows appending subsequent target results.
+   */
+  readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][];
+
+  /**
+   * Creates an instance of MSBuildProject.
+   * @param opts The order-independent arguments for this constructor.
+   * Properties may be added or moved around in this definition without
+   * breaking compatibility.
+   * @param opts.fullPath The full path of the MSBuild project's file. This
+   * should have a '.csproj', '.fsproj', or '.vbproj' file extension.
+   * @param opts.projTargets A list of MSBuild Targets supported by the project.
+   * @param opts.evaluation The output of an MSBuild project evaluation. This
+   * comprises MSBuild Properties, Items, and Target results.
+   */
+  // eslint-disable-next-line unicorn/name-replacements
+  public constructor(opts: {
+    fullPath: string;
+    projTargets: string[];
+    evaluation: MSBuildEvaluationOutput;
+  }) {
+    this.Items = opts.evaluation.Items ?? {};
+    this.Properties = new NugetProjectProperties(
+      opts.fullPath,
+      new CaseInsensitiveMap<string, string>(
+        Object.entries(opts.evaluation.Properties ?? {}),
+      ),
+    );
+    this.Targets = opts.projTargets;
+    this.TargetResults
+      = opts.evaluation.TargetResults === undefined
+        ? []
+        : [opts.evaluation.TargetResults];
   }
 }
 
@@ -679,12 +676,12 @@ export function catchEBUSY(error: unknown): undefined {
       // Normalize colon-like chars: '\uFF1A'.normalize('NFKC') === ':' === true;
       const normalizedStderr = error.stderr.normalize('NFKC');
       const patternEN = /The process cannot access the file '[^']+' because it is being used by another process\./gm;
-      const hasErrMsgPattern = patternEN.test(normalizedStderr);
+      const hasErrorMessagePattern = patternEN.test(normalizedStderr);
       const isCS2012 = /^CSC ?:.+CS2012:/gm.test(normalizedStderr);
       // generic error code; error message must be checked.
       const isAVLN9999 = /AVLN9999:/gm.test(normalizedStderr)
-        && hasErrMsgPattern;
-      if (isCS2012 || isAVLN9999 || hasErrMsgPattern)
+        && hasErrorMessagePattern;
+      if (isCS2012 || isAVLN9999 || hasErrorMessagePattern)
         // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined; /* retry */
     }
@@ -750,7 +747,7 @@ export function catchCsc2012(error: unknown): undefined {
      *    > Learn about SDK resolution:
      *    > https://aka.ms/dotnet/sdk-not-found
      */
-    else throw error;
+    throw error;
   }
-  else throw new Error('unknown error', { cause: error });
+  throw new Error('unknown error', { cause: error });
 }

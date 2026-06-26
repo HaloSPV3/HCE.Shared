@@ -42,12 +42,12 @@ await describe('tEmptyOrBooleanString', async () => {
 
 await describe('TupleIndices', async () => {
   await it('validates indices of tuple(2)', () => {
-    const arr = [1, 2] as const;
-    type ArrIndices = TupleIndices<typeof arr>;
+    const array = [1, 2] as const;
+    type ArrayIndices = TupleIndices<typeof array>;
     // type ArrIndices = 0 | 1
-    const _0: ArrIndices = 0;
-    const _1: ArrIndices = 1;
-    const indices = [...arr.keys()];
+    const _0: ArrayIndices = 0;
+    const _1: ArrayIndices = 1;
+    const indices = array.keys().toArray();
 
     deepStrictEqual(indices, [_0, _1]);
     deepStrictEqual(indices.map(v => isValidIndexOf(v, indices)), [true, true]);
@@ -57,7 +57,7 @@ await describe('TupleIndices', async () => {
     const tenNines = [9, 9, 9, 9, 9, 9, 9, 9, 9, 9] as const;
     type IndicesOfTenNines = TupleIndices<typeof tenNines>;
     // type IndicesOfNineNines = 0 | 1 | 2 | 9 | 3 | 4 | 5 | 6 | 7 | 8
-    const actual = [...tenNines.keys()] as TupleIndices<typeof tenNines>[];
+    const actual = tenNines.keys().toArray() as TupleIndices<typeof tenNines>[];
     const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as const satisfies IndicesOfTenNines[];
     deepStrictEqual(actual, expected);
   });

@@ -9,8 +9,8 @@ import * as path from 'node:path';
 import { after, before, describe, it } from 'node:test';
 import {
   NugetRegistryInfo as NRI,
-  NRIOpts,
-  NRIOptsBase,
+  NRIOpts as NRIOptions,
+  NRIOptsBase as NRIOptionsBase,
   getGithubOutput,
   getGithubOutputSync,
 } from '../../src/dotnet/NugetRegistryInfo.ts';
@@ -41,7 +41,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
         'ANOTHER_UNDEFINED_TOKEN',
       ],
     });
-    // eslint-disable-next-line unicorn/no-useless-undefined
+
     deepStrictEqual(nri.resolvedEnvVariable, undefined);
   });
 });
@@ -49,7 +49,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
 await describe('NRIOptsBase', { concurrency: true }, async () => {
   await it('has expected props', () => {
     strictEqual(
-      JSON.stringify(NRIOptsBase.props, undefined, 2),
+      JSON.stringify(NRIOptionsBase.props, undefined, 2),
       `\
 [
   {
@@ -72,7 +72,7 @@ await describe('NRIOptsBase', { concurrency: true }, async () => {
   });
   await it('has expected props (In)', () => {
     strictEqual(
-      JSON.stringify(NRIOptsBase.in.props, undefined, 2),
+      JSON.stringify(NRIOptionsBase.in.props, undefined, 2),
       `\
 [
   {
@@ -95,7 +95,7 @@ await describe('NRIOptsBase', { concurrency: true }, async () => {
   });
   await it('has expected props (Out)', () => {
     strictEqual(
-      JSON.stringify(NRIOptsBase.out.props, undefined, 2),
+      JSON.stringify(NRIOptionsBase.out.props, undefined, 2),
       `\
 [
   {
@@ -119,31 +119,31 @@ await describe('NRIOptsBase', { concurrency: true }, async () => {
 });
 
 await describe('NRIOpts', { concurrency: true }, async () => {
-  const NRIOptsOwn = NRIOpts.omit('project');
+  const NRIOptionsOwn = NRIOptions.omit('project');
 
   await it('defaults token variables', () => {
-    const opts = NRIOptsOwn.from({});
-    deepStrictEqual(opts.tokenEnvVars,
+    const options = NRIOptionsOwn.from({});
+    deepStrictEqual(options.tokenEnvVars,
       Object.freeze(['NUGET_TOKEN'] as const),
     );
   });
 
   await it('defaults NuGet source', () => {
-    const opts = NRIOptsOwn.from({});
+    const options = NRIOptionsOwn.from({});
     strictEqual(
-      opts.source,
+      options.source,
       'https://api.nuget.org/v3/index.json',
     );
   });
 });
 
 await describe('when GITHUB_OUT is defined', { concurrency: true }, async () => {
-  let tmp_GITHUB_OUTPUT_FileName: string;
+  let temporary_GITHUB_OUTPUT_FileName: string;
   before(() => {
-    tmp_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
-    if (!existsSync(tmp_GITHUB_OUTPUT_FileName))
-      writeFileSync(tmp_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
-    process.env['GITHUB_OUTPUT'] = tmp_GITHUB_OUTPUT_FileName;
+    temporary_GITHUB_OUTPUT_FileName = path.join(tmpdir(), 'HCE.Shared', 'GITHUB_OUTPUT');
+    if (!existsSync(temporary_GITHUB_OUTPUT_FileName))
+      writeFileSync(temporary_GITHUB_OUTPUT_FileName, 'dotnet.NRI=true');
+    process.env['GITHUB_OUTPUT'] = temporary_GITHUB_OUTPUT_FileName;
   });
 
   await it('getGithubOutput returns non-empty object when GITHUB_OUTPUT defined and file exists', async () => {

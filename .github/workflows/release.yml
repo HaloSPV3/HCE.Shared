@@ -26,14 +26,14 @@ jobs:
       pull-requests: write # to be able to comment on released pull requests
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
           fetch-depth: 0
       - uses: actions/setup-node@v6
         with:
           cache: npm
-          node-version: '>=24.0.0'
+          node-version: lts/*
           # see https://github.com/actions/setup-node/blob/53b8394/src/main.ts#L103
           node-version-file: package.json
           check-latest: true

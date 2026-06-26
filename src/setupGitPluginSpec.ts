@@ -40,36 +40,35 @@ function gitAssetsToStringArray(
     return [assets] as string[];
   if (typeof assets.path === 'string')
     return [assets.path];
-  else
-    throw new TypeError('assets is not typeof GitOptions[\'assets\'!');
+  throw new TypeError('assets is not typeof GitOptions[\'assets\'!');
 }
 
 /**
  * Sanitize a {@link GitOptions} object so its {@link GitOptions#assets} property is either `false` or a `string[]`.
- * @param opts A {@link GitOptions} object.
+ * @param options A {@link GitOptions} object.
  * @returns A {@link GitOptions} object whose {@link GitOptions#assets} is `string[] | false`.
  */
-function sanitizeGitOptions(opts: GitOptions): Omit<GitOptions, 'assets'> & { assets: string[] | false } {
-  return { ...opts, assets: opts.assets === false ? opts.assets : gitAssetsToStringArray(opts.assets) };
+function sanitizeGitOptions(options: GitOptions): Omit<GitOptions, 'assets'> & { assets: string[] | false } {
+  return { ...options, assets: options.assets === false ? options.assets : gitAssetsToStringArray(options.assets) };
 }
 
 /**
- *Determine if {@link opts} is a {@link GitOptions} object.
- * @param opts Anything.
- * @returns `true` if {@link opts} is a {@link GitOptions} object. Else, `false`.
+ *Determine if {@link options} is a {@link GitOptions} object.
+ * @param options Anything.
+ * @returns `true` if {@link options} is a {@link GitOptions} object. Else, `false`.
  */
-function isGitOptions(opts: unknown): opts is GitOptions {
+function isGitOptions(options: unknown): options is GitOptions {
   let isOptions = false;
 
-  if (typeof opts !== 'object' || opts == undefined)
+  if (typeof options !== 'object' || options == undefined)
     return isOptions;
-  if ('assets' in opts) {
-    isOptions = Array.isArray(opts.assets)
-      ? opts.assets.every(unk => isGitAsset(unk))
-      : isGitAsset(opts.assets);
+  if ('assets' in options) {
+    isOptions = Array.isArray(options.assets)
+      ? options.assets.every(unk => isGitAsset(unk))
+      : isGitAsset(options.assets);
   }
-  if ('message' in opts)
-    isOptions = typeof opts.message === 'string';
+  if ('message' in options)
+    isOptions = typeof options.message === 'string';
   return isOptions;
 }
 
@@ -112,7 +111,7 @@ export function setupGitPluginSpec(plugins: PluginSpecTuple[]): PluginSpecTuple[
    */
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const firstGitPlugin = plugins[firstGitPluginIndex]!;
-  const firstGitOpts: ReturnType<typeof sanitizeGitOptions> = isGitOptions(firstGitPlugin[1])
+  const firstGitOptions: ReturnType<typeof sanitizeGitOptions> = isGitOptions(firstGitPlugin[1])
     ? sanitizeGitOptions(firstGitPlugin[1])
     : DefaultOptions;
 
@@ -130,23 +129,23 @@ export function setupGitPluginSpec(plugins: PluginSpecTuple[]): PluginSpecTuple[
 
     /** if another Git PluginSpec is discovered, copy its options to the first Git PluginSpec and return undefined. */
     if (hasGitOptions(current)) {
-      const currentGitOpts = sanitizeGitOptions(current[1]);
+      const currentGitOptions = sanitizeGitOptions(current[1]);
 
-      if (currentGitOpts.assets === false) {
-        firstGitOpts.assets = false;
+      if (currentGitOptions.assets === false) {
+        firstGitOptions.assets = false;
       }
       else {
-        const assets: string[] = gitAssetsToStringArray(currentGitOpts.assets);
-        if (Array.isArray(firstGitOpts.assets)) {
-          firstGitOpts.assets.push(...assets);
+        const assets: string[] = gitAssetsToStringArray(currentGitOptions.assets);
+        if (Array.isArray(firstGitOptions.assets)) {
+          firstGitOptions.assets.push(...assets);
         }
         else {
-          firstGitOpts.assets = assets;
+          firstGitOptions.assets = assets;
         }
       }
 
-      if (typeof currentGitOpts.message === 'string')
-        firstGitOpts.message = currentGitOpts.message;
+      if (typeof currentGitOptions.message === 'string')
+        firstGitOptions.message = currentGitOptions.message;
     }
     return undefined;
   }).filter(pluginSpec => pluginSpec !== undefined);

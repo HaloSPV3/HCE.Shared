@@ -1,0 +1,15 @@
+<Project>
+  <!-- Created by Brant Burnett - https://github.com/dotnet/wpf/issues/2930#issuecomment-2562793707
+    WPF projects tend to leave dangling "_wpftmp" directories in the "artifacts/bin" directory, clean these up after build -->
+  <Target Name="CleanupWpfTmp"
+          AfterTargets="Build"
+          Condition=" '$(UseWPF)' == 'true' ">
+    <ItemGroup>
+      <_ArtifactsBinDirectories Include="$([System.IO.Directory]::GetDirectories(&quot;$(ArtifactsPath)\bin&quot;))" />
+      <_WpfTmpDirectories Include="@(_ArtifactsBinDirectories)"
+                          Condition="$([System.IO.Path]::GetFilename([System.String]::Copy('%(Identity)')).StartsWith('$(ArtifactsProjectName)_')) And $([System.String]::Copy('%(Identity)').EndsWith('_wpftmp'))" />
+    </ItemGroup>
+
+    <RemoveDir Directories="@(_WpfTmpDirectories)" />
+  </Target>
+</Project>

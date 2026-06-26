@@ -9,20 +9,20 @@ await describe('MSBuildProjectProperties', async () => {
   const emptySample = new MPP('', emptyMap);
   await it('throws if path does not exist', () => {
     // does not create file
-    const tmpName = tmpNameSync();
-    let ctorHadThrown: boolean;
+    const temporaryName = tmpNameSync();
+    let hasCtorThrown: boolean;
     try {
-      new MPP(tmpName, emptyMap);
-      ctorHadThrown = false;
+      new MPP(temporaryName, emptyMap);
+      hasCtorThrown = false;
     }
     catch {
-      ctorHadThrown = true;
+      hasCtorThrown = true;
       // good!
     }
 
-    if (!ctorHadThrown)
+    if (!hasCtorThrown)
       throw new Error(
-        `MSBuildProjectProperties saw ${tmpName} and thought it existed when it shouldn't!`,
+        `MSBuildProjectProperties saw ${temporaryName} and thought it existed when it shouldn't!`,
       );
   });
   await it('does not throw if given path is empty string (defaults to CWD)', () => {

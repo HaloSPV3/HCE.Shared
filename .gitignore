@@ -778,3 +778,4 @@ tarballs/
 # Mac bundle stuff
 *.dmg
 *.app
+.dotnet

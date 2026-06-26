@@ -209,12 +209,38 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 
 ```xml
 <Project>
+  <!-- Import all targets; See HCE.Shared.targets for their descriptions -->
   <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.targets"/>
+  <!-- Or, alternatively, selectively import the .target files e.g.
+  <Import Project="$(HCESharedDir)/dotnet/ExecNupkgDeterministicator.targets" />
+  <Import Project="$(HCESharedDir)/dotnet/HCE.Shared.CI.props" />
+  <Import Project="$(HCESharedDir)/dotnet/ZipPublishDir.targets" />
+  <Import Project="$(HCESharedDir)/dotnet/PublishAll.targets" />
+  <Import Project="$(HCESharedDir)/dotnet/BuildEachRID.targets" />
+  <Import Project="$(HCESharedDir)/dotnet/CleanupWpfTmp.targets" />
+  They are independent of each other; You can import some or even just one.
+   -->
 
   <PropertyGroup>
-    <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
-    <HCESharedDir Condition="'$(HCESharedDir)' == ''">$(RepoRoot)node_modules/@halospv3/hce.shared-config/</HCESharedDir>
-    <!--<GitVersion_Path Condition="'$(GitVersion_Path)' == ''">Path/To/Your/GitVersion.yml</GitVersion_Path>-->
+    <RepoRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git/index'))</RepoRoot>
+    <_HCESharedDirSuffix>node_modules/@halospv3/hce.shared-config/</_HCESharedDirSuffix>
+    <HCESharedDir>$(RepoRoot)$(_HCESharedDirSuffix)</HCESharedDir>
+    <!-- (OPTIONAL) -->
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+  </PropertyGroup>
+
+  <!-- This property group allows for finding HCESharedDir if it's an unplugged (un-virtualized) Yarn Berry/PnP module-->
+  <PropertyGroup Label="Yarn-unplugged HCE.Shared" Condition="!Exists($(HCESharedDir))">
+    <_yarnUnplugged>$(RepoRoot).yarn/unplugged/</_yarnUnplugged>
+    <_yarnUnpluggedChildren>$([System.IO.Directory]::GetDirectories($(RepoRoot).yarn/unplugged/))</_yarnUnpluggedChildren>
+    <_yarnUnpluggedHceSharedMatches>$([System.Text.RegularExpressions.Regex]::Matches(
+        $(_yarnUnpluggedChildren),'@halospv3-hce.shared-config-[^;]+')
+      )</_yarnUnpluggedHceSharedMatches>
+      <_yarnUnplugged_lastMatch>$([MSBuild]::Subtract(
+          $(_yarnUnpluggedHceSharedMatches.Split(';').Length),
+          1
+      ))</_yarnUnplugged_lastMatch>
+    <HCESharedDir>$(_yarnUnplugged)$(_yarnUnpluggedHceSharedMatches.Split(';')[$(_yarnUnplugged_lastMatch)])/$(_HCESharedDirSuffix)</HCESharedDir>
   </PropertyGroup>
 </Project>
 ```
@@ -228,18 +254,13 @@ These may evaluate to the following:
 
 #### CI/CD-Only Properties
 
-> Note: Already included when importing HCE.Shared.targets
-> If you don't import HCE.Shared.targets, you may import HCE.Shared.CI.props or define your own conditional property group.
+**SKIP IF YOU IMPORT `HCE.Shared.props`, `HCE.Shared.targets`, OR `HCE.Shared.CI.props`**
 
 If you want properties set only in a CI/CD environment (e.g. a GitHub workflow), add the following
 conditional property group to the props file:
 
-```xml, diff
+```xml
 <Project>
-  <PropertyGroup>
-    ...
-  </PropertyGroup>
-
   <PropertyGroup Condition=" '$(CI)' == 'true' ">
     <Configuration>Release</Configuration>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
@@ -247,6 +268,8 @@ conditional property group to the props file:
   </PropertyGroup>
 </Project>
 ```
+
+Consider adding `https://www.nuget.org/packages/DotNet.ReproducibleBuilds/`
 
 > Any properties added to this conditional property group will only be evaluated when `$(CI)` is
 > defined either as a property or as an environment variable. This is most useful for properties

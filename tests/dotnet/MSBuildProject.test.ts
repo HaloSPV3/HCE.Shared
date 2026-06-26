@@ -24,7 +24,7 @@ await describe('MSBuildProject', { concurrency: true }, async () => {
         import.meta.dirname,
         '../../dotnet/samples/HCE.Shared.DeterministicNupkg/HCE.Shared.DeterministicNupkg.csproj',
       );
-      const evalOpts: typeof EvaluationOptions.inferOut = EvaluationOptions.from({
+      const evalOptions: typeof EvaluationOptions.inferOut = EvaluationOptions.from({
         FullName: deterministicNupkgProj,
         GetItem: [],
         GetProperty: MSBP.MatrixProperties,
@@ -32,9 +32,9 @@ await describe('MSBuildProject', { concurrency: true }, async () => {
         Property: { BaseIntermediateOutputPath: `obj/test_Evaluate/` },
         Targets: [],
       });
-      const actual: MSBP = await MSBP.Evaluate(evalOpts);
+      const actual: MSBP = await MSBP.Evaluate(evalOptions);
       // lets not bother testing targets for now. It depends on both the project and the SDK.
-      const actual_targets = await MSBP.GetTargets(evalOpts.FullName);
+      const actual_targets = await MSBP.GetTargets(evalOptions.FullName);
       const expected = new MSBP({
         fullPath: deterministicNupkgProj,
         projTargets: actual_targets,

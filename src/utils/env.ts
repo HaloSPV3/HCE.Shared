@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/name-replacements */
 import dotenvx, {
   type DotenvConfigOptions,
   type GetOptions,

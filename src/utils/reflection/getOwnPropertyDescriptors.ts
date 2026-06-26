@@ -1,5 +1,5 @@
 import type { InstanceOrStatic } from '../miscTypes.ts';
-import type { BaseClassProto, ClassLike, ConstructorConstraint, SuperClassLike, WithProto } from './inheritance.ts';
+import type { BaseClassProto as BaseClassPrototype, ClassLike, ConstructorConstraint, SuperClassLike, WithProto as WithPrototype } from './inheritance.ts';
 import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
 import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
 
@@ -20,7 +20,7 @@ import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
  * @since 3.0.0
  */
 export function getOwnPropertyDescriptors<
-  Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
+  Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,
 >(
   classDefinition: Class,

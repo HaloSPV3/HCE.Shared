@@ -25,10 +25,16 @@ await describe('getConfig', async () => {
     process.env['GITHUB_REPOSITORY_OWNER'] = 'HaloSPV3';
     process.env['SKIP_TOKEN'] = 'true';
     // this test must pass two args here
-    const actual = await getConfig(
-      [DeterministicNupkgCsproj],
-      [new NugetRegistryInfo({ project: DeterministicNupkgCsproj })],
-    ).catch((error: unknown) => isError(error) ? error : new Error(String(error)));
+    let actual;
+    try {
+      actual = await getConfig(
+        [DeterministicNupkgCsproj],
+        [new NugetRegistryInfo({ project: DeterministicNupkgCsproj })],
+      );
+    }
+    catch (error: unknown) {
+      actual = isError(error) ? error : new Error(String(error));
+    }
 
     ok(
       !isError(actual),
@@ -46,10 +52,16 @@ await describe('getConfig', async () => {
     }
 
     ok(isError(actual));
-    ok(
-      actual.message.includes(
-        'projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path.',
-      ),
-    );
+
+    const searchString = 'projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path.';
+
+    if ('errors' in actual && Array.isArray(actual.errors)) {
+      ok(actual.errors.some(error =>
+        Error.isError(error) && error.message.includes(searchString),
+      ));
+    }
+    else {
+      ok(actual.message.includes(searchString));
+    }
   });
 });
