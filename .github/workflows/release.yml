@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           cache: npm
-          node-version: '>=24.0.0'
+          node-version: lts/*
           # see https://github.com/actions/setup-node/blob/53b8394/src/main.ts#L103
           node-version-file: package.json
           check-latest: true
