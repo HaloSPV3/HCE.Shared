@@ -743,9 +743,10 @@ but the environment variable is empty or undefined.`);
     shouldUsePerSourceSubfolder = false,
     shouldUsePerPackageIdSubfolder = false,
   ) {
+    let command = '';
     try {
       await execAsync(
-        this.GetPushCommand(
+        command = this.GetPushCommand(
           options,
           shouldUsePerSourceSubfolder,
           shouldUsePerPackageIdSubfolder,
@@ -754,7 +755,14 @@ but the environment variable is empty or undefined.`);
       );
     }
     catch (error: unknown) {
-      const _error: Error = isError(error) ? error : new Error(JSON.stringify(error));
+      const _error: ExecException = Object.assign(
+        isError(error)
+          ? error
+          : new Error(JSON.stringify(error)),
+        { cmd: command },
+      );
+
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw options.apiKey
         ? _censorTokenInError(_error, options.apiKey)
         : _error;
@@ -820,7 +828,14 @@ but the environment variable is empty or undefined.`);
       return await execAsync(pushCommand, true);
     }
     catch (error: unknown) {
-      const _error: Error = isError(error) ? error : new Error(String(error));
+      const _error: ExecException = Object.assign(
+        isError(error)
+          ? error
+          : new Error(JSON.stringify(error)),
+        { cmd: pushCommand },
+      );
+
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw options.apiKey
         ? _censorTokenInError(_error, options.apiKey)
         : _error;
