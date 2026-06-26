@@ -117,7 +117,7 @@
     "@semantic-release/gitlab": "^13.3.2",
     "@types/debug": "^4.1.13",
     "@types/tmp": "^0.2.6",
-    "conventional-changelog-preset-loader": "^5.0.0",
+    "conventional-changelog-preset-loader": "^6.0.0",
     "eslint": "^10.2.1",
     "eslint-plugin-jsdoc": "^63.0.8",
     "eslint-plugin-unicorn": "^69.0.0",
