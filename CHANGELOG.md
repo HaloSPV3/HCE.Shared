@@ -1,3 +1,16 @@
+## [3.6.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.5.3-develop.2...v3.6.0-develop.1) (2026-06-26)
+
+### Features
+
+* **dotnet.CWT:** add target `CleanupWpfTmp` by Brant Burnett ([75e6b5b](https://github.com/HaloSPV3/HCE.Shared/commit/75e6b5b09da20694248ce232396233edafe50f33))
+
+### Bug Fixes
+
+* **dotnet.NRI:** add back-off and retry limit to `PackDummyPackage` ([b1eed50](https://github.com/HaloSPV3/HCE.Shared/commit/b1eed508f44d50d57dd3cae8052c66662f20e545))
+* **dotnet.SemanticRelease:** resolve `unicorn/prefer-aggregate-error` ([d5b0676](https://github.com/HaloSPV3/HCE.Shared/commit/d5b0676ab5c85692a4044437e30024c6c5e7238e))
+* ensure `ExecException`s have their `cmd` string ([c85ded5](https://github.com/HaloSPV3/HCE.Shared/commit/c85ded5356b54806e6a4e1a72ea6c14f8a6aa3f1))
+* prefer Yarn unplug this package for access to MSBuild props/targets files ([3191fb9](https://github.com/HaloSPV3/HCE.Shared/commit/3191fb9ead6ba5209dee145c4c576150aa2f8091))
+
 ## [3.5.3-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.5.3-develop.1...v3.5.3-develop.2) (2026-06-24)
 
 ### Bug Fixes
