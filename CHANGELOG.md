@@ -1,3 +1,9 @@
+## [3.6.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.0...v3.6.1) (2026-06-26)
+
+### Bug Fixes
+
+* **dotnet.CWT:** fix MSB3024: remove/replace "--" in comment ([e7ba305](https://github.com/HaloSPV3/HCE.Shared/commit/e7ba3054b605f77518262401c663339336f88a62))
+
 ## [3.6.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.5.2...v3.6.0) (2026-06-26)
 
 ### Features
