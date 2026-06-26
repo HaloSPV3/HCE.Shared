@@ -132,7 +132,7 @@
   },
   "//engines.node": "See file://./.nvmrc, https://github.com/nvm-sh/nvm#nvmrc. Supporting the lowest version possible is a PITA. Just support LTS. ",
   "engines": {
-    "node": ">=24.10.0",
+    "node": ">=24.10.0 || <26.0.0",
     "npm": ">=11.7.0"
   },
   "engineStrict": true,
