@@ -536,16 +536,29 @@ but the environment variable is empty or undefined.`);
     );
 
     let packOutput: undefined | { stdout: string; stderr: string };
+    let delay = 0;
     while (packOutput === undefined) {
       try {
         packOutput = await setTimeout(
-          1000,
+          delay,
           execAsync(packCommand, true),
         );
       }
       catch (error: unknown) {
-        catchEBUSY(error);
+        if (delay <= 10_000 /* milliseconds */) {
+          catchEBUSY(error);
+        }
+        else {
+          throw new Error(
+            'Unable to pack dummy package; (10/10) Maximum retries reached.',
+            { cause: error });
+        }
+        // If the delay is pushed back to 10 seconds, then...
+        // A) A project's intermediate output (`obj/**`) is in use by a build system or language server
+        // B) something horrible has happened
       }
+      // back-off
+      delay += 1000;
     }
     // may include .snupkg
     const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
