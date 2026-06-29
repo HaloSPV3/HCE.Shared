@@ -376,6 +376,7 @@ export async function getConfig(
   const errors: Error[] = [];
 
   if (projectsToPublish.length === 0) {
+    debug('projectsToPublish is empty. Checking PROJECTS_TO_PUBLISH...');
     const _ = getEnvironmentVariableValue('PROJECTS_TO_PUBLISH');
     if (_ === undefined)
       errors.push(
@@ -385,8 +386,10 @@ export async function getConfig(
       );
     else projectsToPublish = _.split(';');
   }
+  debug(`${projectsToPublish.length.toString()} projects found to dotnet-publish.`);
 
   if (!projectsToPackAndPush) {
+    debug('projectsToPackAndPush is empty. Checking PROJECTS_TO_PACK_AND_PUSH...');
     const _ = getEnvironmentVariableValue('PROJECTS_TO_PACK_AND_PUSH');
     if (_ === undefined)
       errors.push(
@@ -396,6 +399,7 @@ export async function getConfig(
       );
     else projectsToPackAndPush = _.split(';');
   }
+  debug(`${(projectsToPackAndPush?.length ?? 0).toString()} projects found to dotnet-pack and dotnet-nuget-push.`);
 
   if (errors.length > 0) {
     throw new AggregateError(
@@ -404,10 +408,12 @@ export async function getConfig(
     );
   }
 
+  debug(`Instantiating ${SemanticReleaseConfigDotnet.name}...`);
   const config = new SemanticReleaseConfigDotnet(
     projectsToPublish,
     projectsToPackAndPush ?? [],
   );
+  debug('Setting up Dotnet commands...');
   await config.setupDotnetCommands();
 
   const options: Options = config.toOptions();
