@@ -213,10 +213,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
     debug('[exec:verifyConditionsCmd] Done');
 
     const verifyReleaseCommandAppendix
-      = this.ProjectsToPackAndPush
-        .filter(project =>
-          typeof project !== 'string',
-        ).map(project =>
+      = (this._projectsToPackAndPush satisfies NugetRegistryInfo[])
+        .map(project =>
           project.GetIsNextVersionAlreadyPublishedCommand(),
         ).join(' && ');
     execOptions.verifyReleaseCmd
@@ -316,11 +314,13 @@ Appending it to the end of the array...This may cause an unexpected order of ope
   protected async getTokenTestingCommands(): Promise<string> {
     let projects;
 
+    if (this._projectsToPackAndPush.every(nri => nri instanceof NugetRegistryInfo)) {
       debug('[SemanticReleaseConfigDotnet#getTokenTestingCommands] All projects already evaluated.');
+      projects = this._projectsToPackAndPush.map(nri => nri.project);
     }
     else {
-      debug(`[SemanticReleaseConfigDotnet#getTokenTestingCommands] Evaluating up to ${this.ProjectsToPackAndPush.length.toString()} projects...`);
-      projects = await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush));
+      debug(`[SemanticReleaseConfigDotnet#getTokenTestingCommands] Evaluating up to ${this._projectsToPackAndPush.length.toString()} projects...`);
+      projects = await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects(this._projectsToPackAndPush));
     }
 
     /** if a project is not in {@link EvaluatedProjects}, add it */
