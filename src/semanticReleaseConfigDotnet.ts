@@ -28,6 +28,7 @@ import { baseConfig } from './semanticReleaseConfig.ts';
 import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.ts';
 import { MSBuildProject } from './dotnet/MSBuildProject.ts';
 import { insertPlugin } from './insertPlugins.ts';
+import { CaseInsensitiveMap } from './CaseInsensitiveMap.ts';
 
 type UnArray<T> = T extends (infer U)[] ? U : T;
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
@@ -156,10 +157,13 @@ Appending it to the end of the array...This may cause an unexpected order of ope
     const plugin = this.options.plugins[srExecIndex] as ['@semantic-release/exec', SRExecOptions];
     const execOptions: SRExecOptions = plugin[1];
 
-    // ensure all packable projects are evaluated
+    debug('Evaluating all projects with dotnet CLI...This may take a while.');
+
+    const referenceCounter = new CaseInsensitiveMap<string, number>();
     const projectPromiseArrayArray = await Promise.all(
       this._projectsToPackAndPush.map(async (project) => {
         if (typeof project === 'string') {
+          debug(`Evaluating path "${project}" with "PackableProjectsToMSBuildProjects"...`);
           const packableProjects = await Promise.all(
             await MSBuildProject.PackableProjectsToMSBuildProjects(
               [project],
@@ -168,19 +172,35 @@ Appending it to the end of the array...This may cause an unexpected order of ope
           if (packableProjects.length === 0)
             throw new Error('No MSBuildProject instances were returned!');
           this._evaluatedProjects.push(...packableProjects);
+          const variant = (referenceCounter.get(project) ?? 0) + packableProjects.length;
+          referenceCounter.set(
+            project,
+            variant,
+          );
+
+          debug(`Done. Path "${project}" evaluated for ${packableProjects.length.toString()} MSBuildProject instances for a total of ${variant.toString()} variants of the given path.`);
 
           // if the user doesn't want a defaulted NRI, they should pass their own NRI (or derived) instance.
           return packableProjects.map(project => new NugetRegistryInfo({ project }));
         }
+
+        const path = project.project.Properties.MSBuildProjectFullPath;
+        const variant = (referenceCounter.get(path) ?? 0) + 1;
+        referenceCounter.set(path, variant);
+        debug(`Done. Path "${path}" (variant ${variant.toString()}) is pre-evaluated. Skipping re-evaluation.`);
         return [project];
       }),
     );
     this._projectsToPackAndPush = projectPromiseArrayArray.flat();
 
+    debug('[exec:verifyConditionsCmd] Packing "Dummy" packages and generating "Push Dummy Package" commands for API token tests...');
     const _pushDummyCommands = await Promise.all(
       this._projectsToPackAndPush
         .map(async (project) => {
+          const path = project.project.Properties.MSBuildProjectFullPath;
+          debug(`[exec:verifyConditionsCmd] Packing dummy package for "${path}"...`);
           await project.PackDummyPackage({});
+          debug(`[exec:verifyConditionsCmd] Generating "Push Dummy Package" command for "${path}"...`);
           return project.GetPushDummyCommand({});
         }),
     );
@@ -190,6 +210,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       = execOptions.verifyConditionsCmd && execOptions.verifyConditionsCmd.trim().length > 0
         ? `${execOptions.verifyConditionsCmd} && ${verifyConditionsCommandAppendix}`
         : verifyConditionsCommandAppendix;
+    debug('[exec:verifyConditionsCmd] Done');
 
     const verifyReleaseCommandAppendix
       = this.ProjectsToPackAndPush
@@ -202,6 +223,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       = execOptions.verifyReleaseCmd && execOptions.verifyReleaseCmd.trim().length > 0
         ? `${execOptions.verifyReleaseCmd} && ${verifyReleaseCommandAppendix}`
         : verifyConditionsCommandAppendix;
+    debug('[exec:verifyReleaseCmd] Done');
 
     const prepareCommandAppendix = await configurePrepareCommand(
       this._projectsToPublish,
@@ -213,9 +235,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       = execOptions.prepareCmd && execOptions.prepareCmd.trim().length > 0
         ? `${execOptions.prepareCmd} && ${prepareCommandAppendix}`
         : prepareCommandAppendix;
+    debug('[exec:prepareCmd] Done');
 
-    // FINISHED execOptions.prepareCmd
-    // STARTING execOptions.publishCmd
     if (this._projectsToPackAndPush.length > 0) {
       const publishCommandAppendix: string = configureDotnetNugetPush(
         this._projectsToPackAndPush,
@@ -225,8 +246,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
           ? `${execOptions.publishCmd} && ${publishCommandAppendix}`
           : publishCommandAppendix;
     }
-
-    // FINISHED execOptions.publishCmd
+    debug('[exec:publishCmd] Done');
   }
 
   /**
@@ -294,18 +314,23 @@ Appending it to the end of the array...This may cause an unexpected order of ope
 
   // todo: join result with dummy pack commands
   protected async getTokenTestingCommands(): Promise<string> {
-    const promiseProjects = this.ProjectsToPackAndPush.every(nri => nri instanceof NugetRegistryInfo)
-      ? this.ProjectsToPackAndPush.map(nri => nri.project)
-      : await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush));
+    let projects;
+
+      debug('[SemanticReleaseConfigDotnet#getTokenTestingCommands] All projects already evaluated.');
+    }
+    else {
+      debug(`[SemanticReleaseConfigDotnet#getTokenTestingCommands] Evaluating up to ${this.ProjectsToPackAndPush.length.toString()} projects...`);
+      projects = await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush));
+    }
 
     /** if a project is not in {@link EvaluatedProjects}, add it */
-    for (const project of promiseProjects) {
+    for (const project of projects) {
       if (!this.EvaluatedProjects.includes(project))
         this.EvaluatedProjects.push(project);
     }
 
-    const regInfos = promiseProjects.map(
-      p => new NugetRegistryInfo({ project: p }),
+    const regInfos = projects.map(
+      project => new NugetRegistryInfo({ project }),
     );
     const nupkgPaths = await Promise.all(
       regInfos.map(nri =>
