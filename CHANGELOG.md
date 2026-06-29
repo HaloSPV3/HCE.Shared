@@ -1,3 +1,9 @@
+## [3.6.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.2...v3.6.3) (2026-06-29)
+
+### Bug Fixes
+
+* **dotnet.SemanticRelease:** add debug statements ([1d905e2](https://github.com/HaloSPV3/HCE.Shared/commit/1d905e20d5ed36674a1865bfacbafd7e8f3f1f9c))
+
 ## [3.6.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.1...v3.6.2) (2026-06-29)
 
 ### Bug Fixes
