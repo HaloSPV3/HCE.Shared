@@ -79,7 +79,7 @@
     "@types/node": "~26.0.1",
     "arktype": "^2.2.1",
     "chardet": "^2.2.0",
-    "conventional-changelog-conventionalcommits": "^9.3.1",
+    "conventional-changelog-conventionalcommits": "^10.2.0",
     "debug": "^4.4.1",
     "error.iserror": "^1.0.2",
     "es-main": "^1.3.0",
@@ -90,7 +90,7 @@
     "semantic-release": "^25.0.5",
     "semantic-release-export-data": "^1.1.0",
     "ts-essentials": "^10.2.1",
-    "typescript-eslint": "^8.62.0"
+    "typescript-eslint": "^8.62.1"
   },
   "peerDependencies": {
     "@bintoss/semantic-release-npm-multiple": "^3.0.0 || >= 3.0.0",
@@ -118,8 +118,8 @@
     "@types/debug": "^4.1.13",
     "@types/tmp": "^0.2.6",
     "conventional-changelog-preset-loader": "^6.0.0",
-    "eslint": "^10.2.1",
-    "eslint-plugin-jsdoc": "^63.0.8",
+    "eslint": "^10.6.0",
+    "eslint-plugin-jsdoc": "^63.0.10",
     "eslint-plugin-unicorn": "^69.0.0",
     "pinst": "^3.0.0",
     "publint": "^0.3.21",
