@@ -58,7 +58,7 @@
     "eslint-inspector": "eslint --inspect-config",
     "//prepack": "Include this if publishing to npmjs.com",
     "prepack": "pinst --disable && yarn clean && yarn build",
-    "_postinstall": "husky",
+    "postinstall": "husky",
     "postpack": "attw --profile 'esm-only' -P ./publish/*.tgz && pinst --enable",
     "semantic-release": "yarn pack -o ./publish/ && semantic-release",
     "test:only": "node --trace-deprecation --trace-warnings --test --experimental-test-coverage --enable-source-maps --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.txt --test-reporter=junit --test-reporter-destination=junit.xml",
