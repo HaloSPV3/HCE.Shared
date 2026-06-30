@@ -1,3 +1,5 @@
+## [3.6.4](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.3...v3.6.4) (2026-06-30)
+
 ## [3.6.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.2...v3.6.3) (2026-06-29)
 
 ### Bug Fixes
