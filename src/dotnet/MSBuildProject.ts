@@ -393,7 +393,7 @@ export class MSBuildProject {
         }
         else {
           throw new Error(
-            `Unable to pack dummy package: Maximum retries reached. Approximately ${(totalMilliseconds / 1000).toString()} seconds spent retrying.`,
+            `Unable to evaluate project: Maximum retries reached. Approximately ${(totalMilliseconds / 1000).toString()} seconds spent retrying.`,
             { cause: error });
         }
         // If the delay is pushed back to 10 seconds, then...
