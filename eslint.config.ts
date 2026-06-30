@@ -1,5 +1,9 @@
 import markdown from '@eslint/markdown';
 import jsdoc from 'eslint-plugin-jsdoc';
+// @ts-expect-error no types available; spray and pray
+import * as publint from "eslint-plugin-publint";
+// @ts-expect-error no types available; spray and pray
+import * as parser from "eslint-plugin-publint/jsonc-eslint-parser";
 import unicorn from 'eslint-plugin-unicorn';
 import { defineConfig, type Config } from 'eslint/config';
 import hceSharedConfig from './src/eslintConfig.ts';
@@ -54,7 +58,27 @@ const config: Config[] = defineConfig(
     },
   },
   { ignores: ['.yarn/sdks/**', '.pnp.cjs', '.pnp.loader.mjs'] },
-
+  {
+    files: ['**/package.json'],
+    languageOptions: {
+      parser,
+    },
+    plugins: { publint },
+    rules: {
+      /**
+       * The 'suggestion' type messages created by publint will cause eslint warns
+       */
+      'publint/suggestion': 'warn',
+      /**
+       * The 'warning' type messages created by publint will cause eslint warns
+       */
+      'publint/warning': 'warn',
+      /**
+       * The 'error' type messages created by publint will cause eslint errors
+       */
+      'publint/error': 'error',
+    },
+  },
 );
 
 export default config;
