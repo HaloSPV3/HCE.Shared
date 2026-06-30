@@ -118,7 +118,7 @@
     "@arethetypeswrong/core": "^0.18.4",
     "@bintoss/semantic-release-npm-multiple": "^3.17.1",
     "@commitlint/load": "^21.1.0",
-    "@commitlint/types": "^21.0.0",
+    "@commitlint/types": "^21.1.0",
     "@eslint/config-inspector": "^3.0.4",
     "@eslint/markdown": "^8.0.2",
     "@sebbo2002/semantic-release-jsr": "^4.0.1",
