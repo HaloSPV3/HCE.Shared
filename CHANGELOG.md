@@ -1,3 +1,9 @@
+## [3.7.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.7.0...v3.7.1) (2026-06-30)
+
+### Bug Fixes
+
+* **dotnet.MSBP:** disable GeneratePackageOnBuild; fix "error NU5026: The file '...' to be packed was not found on disk." ([555b6d0](https://github.com/HaloSPV3/HCE.Shared/commit/555b6d030a67f4e43c4b84de6ffd40117556e8eb))
+
 ## [3.7.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.7...v3.7.0) (2026-06-30)
 
 ### Features
