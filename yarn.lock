@@ -872,7 +872,7 @@ __metadata:
     "@semantic-release/release-notes-generator": "npm:^14.1.1"
     "@stylistic/eslint-plugin": "npm:^5.10.0"
     "@types/debug": "npm:^4.1.13"
-    "@types/node": "npm:^24.12.2"
+    "@types/node": "npm:^24.13.2"
     "@types/tmp": "npm:^0.2.6"
     "@typescript-eslint/utils": "npm:^8.59.0"
     arktype: "npm:^2.2.1"
@@ -2283,7 +2283,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.12.2":
+"@types/node@npm:^24.13.2":
   version: 24.13.2
   resolution: "@types/node@npm:24.13.2"
   dependencies:

@@ -83,7 +83,7 @@
     "@semantic-release/npm": "^13.1.5",
     "@semantic-release/release-notes-generator": "^14.1.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/node": "^24.12.2",
+    "@types/node": "^24.13.2",
     "arktype": "^2.2.1",
     "chardet": "^2.2.0",
     "conventional-changelog-conventionalcommits": "^9.3.1",
