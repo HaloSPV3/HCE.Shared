@@ -3,6 +3,7 @@ import { warn } from 'node:console';
 import { hash } from 'node:crypto';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.ts';
@@ -21,6 +22,10 @@ const debug_MSBP_PPTMSBP = debug_MSBP.extend('PackableProjectsToMSBuildProjects'
 debug_MSBP_PPTMSBP.enabled = debug.enabled;
 const debug_MSBP_Evaluate = debug_MSBP.extend('Evaluate');
 debug_MSBP_Evaluate.enabled = debug.enabled;
+
+export type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/`;
+export type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
+const temporaryDirectoryNamespace = path.join(tmpdir(), 'HCE.Shared', '.NET') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
@@ -403,9 +408,17 @@ export class MSBuildProject {
     }`;
     const debug_MSBP_Evaluate_hashed = debug_MSBP_Evaluate.extend(shortHashName);
     options.Property.BaseIntermediateOutputPath = path.join(
-      options.Property.BaseIntermediateOutputPath ?? 'obj',
+      temporaryDirectoryNamespace,
+      path.basename(options.FullName, path.extname(options.FullName)),
       shortHashName,
-    ) + '/';
+      'obj',
+    ) + path.sep;
+    options.Property.BaseOutputPath = path.join(
+      temporaryDirectoryNamespace,
+      path.basename(options.FullName, path.extname(options.FullName)),
+      shortHashName,
+      'bin',
+    ) + path.sep;
 
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
