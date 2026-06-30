@@ -48,7 +48,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@arethetypeswrong/core@npm:^0.18.4":
+"@arethetypeswrong/cli@npm:^0.18.4":
+  version: 0.18.4
+  resolution: "@arethetypeswrong/cli@npm:0.18.4"
+  dependencies:
+    "@arethetypeswrong/core": "npm:0.18.4"
+    chalk: "npm:^4.1.2"
+    cli-table3: "npm:^0.6.3"
+    commander: "npm:^10.0.1"
+    marked: "npm:^9.1.2"
+    marked-terminal: "npm:^7.1.0"
+    semver: "npm:^7.5.4"
+  bin:
+    attw: ./dist/index.js
+  checksum: 10c0/33fda6943521762f873fc3c508ac5544e4578de018abaed195b30d5db54b7e43a88e7725d70196da6cb67522a19cc1e636189784af53041dad8f68ee34476033
+  languageName: node
+  linkType: hard
+
+"@arethetypeswrong/core@npm:0.18.4, @arethetypeswrong/core@npm:^0.18.4":
   version: 0.18.4
   resolution: "@arethetypeswrong/core@npm:0.18.4"
   dependencies:
@@ -832,6 +849,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@halospv3/hce.shared-config@workspace:."
   dependencies:
+    "@arethetypeswrong/cli": "npm:^0.18.4"
     "@arethetypeswrong/core": "npm:^0.18.4"
     "@bintoss/semantic-release-npm-multiple": "npm:^3.17.1"
     "@commitlint/cli": "npm:^21.1.0"
@@ -3084,7 +3102,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0":
+"chalk@npm:^4.0.0, chalk@npm:^4.1.2":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
   dependencies:
@@ -3205,7 +3223,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cli-table3@npm:^0.6.5":
+"cli-table3@npm:^0.6.3, cli-table3@npm:^0.6.5":
   version: 0.6.5
   resolution: "cli-table3@npm:0.6.5"
   dependencies:
@@ -3276,6 +3294,13 @@ __metadata:
   version: 1.1.4
   resolution: "color-name@npm:1.1.4"
   checksum: 10c0/a1a3f914156960902f46f7f56bc62effc6c94e84b2cae157a526b1c1f74b677a47ec602bf68a61abfa2b42d15b7c5651c6dbe72a43af720bc588dff885b10f95
+  languageName: node
+  linkType: hard
+
+"commander@npm:^10.0.1":
+  version: 10.0.1
+  resolution: "commander@npm:10.0.1"
+  checksum: 10c0/53f33d8927758a911094adadda4b2cbac111a5b377d8706700587650fd8f45b0bbe336de4b5c3fe47fd61f420a3d9bd452b6e0e6e5600a7e74d7bf0174f6efe3
   languageName: node
   linkType: hard
 
@@ -5884,7 +5909,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked-terminal@npm:^7.3.0":
+"marked-terminal@npm:^7.1.0, marked-terminal@npm:^7.3.0":
   version: 7.3.0
   resolution: "marked-terminal@npm:7.3.0"
   dependencies:
@@ -5907,6 +5932,15 @@ __metadata:
   bin:
     marked: bin/marked.js
   checksum: 10c0/e09da211544b787ecfb25fed07af206060bf7cd6d9de6cb123f15c496a57f83b7aabea93340aaa94dae9c94e097ae129377cad6310abc16009590972e85f4212
+  languageName: node
+  linkType: hard
+
+"marked@npm:^9.1.2":
+  version: 9.1.6
+  resolution: "marked@npm:9.1.6"
+  bin:
+    marked: bin/marked.js
+  checksum: 10c0/010bbd33c0f38300259c5d3bf0063deb36bab098d37ac0a3be5a35a65674a4c693427fc6704f486a89f638e9b36c36b8e220a93d47163f4e70e45a1fa8ca7b60
   languageName: node
   linkType: hard
 

@@ -114,6 +114,7 @@
     }
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.4",
     "@arethetypeswrong/core": "^0.18.4",
     "@bintoss/semantic-release-npm-multiple": "^3.17.1",
     "@commitlint/load": "^21.1.0",
