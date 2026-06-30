@@ -886,7 +886,7 @@ __metadata:
     eslint-plugin-jsdoc: "npm:^63.0.10"
     eslint-plugin-publint: "npm:^0.5.2"
     eslint-plugin-unicorn: "npm:^69.0.0"
-    globals: "npm:^17.5.0"
+    globals: "npm:^17.7.0"
     husky: "npm:^9.1.7"
     jiti: "npm:^2.6.1"
     pinst: "npm:^3.0.0"
@@ -4793,14 +4793,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^17.5.0":
-  version: 17.5.0
-  resolution: "globals@npm:17.5.0"
-  checksum: 10c0/92828102ed2f5637907725f0478038bed02fc83e9fc89300bb753639ba7c022b6c02576fc772117302b431b204591db1f2fa909d26f3f0a9852cc856a941df3f
-  languageName: node
-  linkType: hard
-
-"globals@npm:^17.6.0":
+"globals@npm:^17.6.0, globals@npm:^17.7.0":
   version: 17.7.0
   resolution: "globals@npm:17.7.0"
   checksum: 10c0/e83f791acf537b85fa1632ac48a45432a1999a61acd9f955b5c2145f66d6b5000a7945029874b6184fa2dfac8d33af03885a5a7ffa457866f1bcf0b40d0c1291
