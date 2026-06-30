@@ -1,3 +1,17 @@
+## [3.6.7](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.6...v3.6.7) (2026-06-30)
+
+### Bug Fixes
+
+* **deps:** downgrade conventional-changelog-conventionalcommits to compatible ^9 ([4e51c1d](https://github.com/HaloSPV3/HCE.Shared/commit/4e51c1defefcc2e9259c4a641d6ef7e87ba20eca))
+
+## [3.6.7-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.6...v3.6.7-develop.1) (2026-06-30)
+
+### Bug Fixes
+
+* **deps:** downgrade conventional-changelog-conventionalcommits to compatible ^9 ([4e51c1d](https://github.com/HaloSPV3/HCE.Shared/commit/4e51c1defefcc2e9259c4a641d6ef7e87ba20eca))
+
+## [3.6.6](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.5...v3.6.6) (2026-06-30)
+
 ## [3.6.5](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.4...v3.6.5) (2026-06-30)
 
 ## [3.6.5-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.5-develop.1...v3.6.5-develop.2) (2026-06-30)
