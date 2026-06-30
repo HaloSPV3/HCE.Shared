@@ -15,7 +15,8 @@ const _config: UserConfig = defineConfig({
     semanticReleaseConfigDotnet: './src/semanticReleaseConfigDotnet.ts',
     '*': './src/**/*.ts',
   },
-  attw: { profile: 'esm-only' },
+  // Leaks memory in Yarn Berry/PnP!
+  // attw: { profile: 'esm-only' },
   checks: { circularDependency: true },
   deps: { skipNodeModulesBundle: true },
   exports: {
