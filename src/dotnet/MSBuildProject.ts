@@ -6,6 +6,7 @@ import { readdir, realpath, stat } from 'node:fs/promises';
 import * as path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.ts';
+import debug from '../debug.ts';
 import { execAsync } from '../utils/execAsync.ts';
 import { isError } from '../utils/isError.ts';
 import { MSBuildProjectProperties } from './MSBuildProjectProperties.ts';
@@ -13,6 +14,10 @@ import {
   NPPGetterNames,
   NugetProjectProperties,
 } from './NugetProjectProperties.ts';
+
+const debug_MSBP = debug.extend('MSBuildProject');
+const debug_MSBP_PPTMSBP = debug_MSBP.extend('PackableProjectsToMSBuildProjects');
+const debug_MSBP_Evaluate = debug_MSBP.extend('Evaluate');
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
@@ -346,6 +351,8 @@ export class MSBuildProject {
       .filter(v => v !== '')
       .join(' ');
     let stdio: Awaited<ReturnType<typeof execAsync>> | undefined;
+    debug_MSBP_Evaluate(`Beginning try/retry loop to evaluate "${options.FullName}"...`);
+
     // may throw
     while (stdio === undefined) {
       try {
@@ -356,6 +363,7 @@ export class MSBuildProject {
       }
       catch (error: unknown) {
         catchEBUSY(error);
+        debug_MSBP_Evaluate(`A file needed by "${options.FullName}" is locked by another process. Retrying after ${(1000).toString()} seconds...`);
       }
     }
 
@@ -397,9 +405,13 @@ export class MSBuildProject {
 
     const evaluation = new MSBuildEvaluationOutput(rawOutput);
 
+    debug_MSBP_Evaluate(`Getting MSBuild Targets of "${options.FullName}"...`);
+    const projTargets = await this.GetTargets(options.FullName);
+
+    debug_MSBP_Evaluate(`Returning new MSBuildProject instance for "${options.FullName}"...`);
     return new MSBuildProject({
       fullPath: options.FullName,
-      projTargets: await this.GetTargets(options.FullName),
+      projTargets,
       evaluation,
     });
   }
@@ -418,7 +430,9 @@ export class MSBuildProject {
   public static async PackableProjectsToMSBuildProjects(
     projectsToPackAndPush: string[],
   ): Promise<Promise<MSBuildProject>[]> {
+    debug_MSBP_PPTMSBP('Mapping projects to Dirent instances...');
     const directoryEntriesPromise = await toDirectoryEntries(typeof projectsToPackAndPush === 'string' ? [projectsToPackAndPush] : projectsToPackAndPush);
+    debug_MSBP_PPTMSBP('Converting Dirent instances to MSBuildProject instances...');
     const projectPromises: Promise<MSBuildProject>[] = directoryEntriesPromise.map(element => convertDirentToMSBuildProject(element));
     return projectPromises;
 
@@ -435,11 +449,15 @@ export class MSBuildProject {
     ): Promise<Dirent[]> {
       const directoryEntries: (Dirent | Dirent[])[] = await Promise.all(
         projectsToPackAndPush.map(async (proj) => {
+          debug_MSBP_PPTMSBP(`Getting absolute path of "${proj}"...`);
           proj = await realpath(makeAbsolute(proj));
+
+          debug_MSBP_PPTMSBP(`Getting filesystem stats of "${proj}"...`);
           const stats = await stat(proj);
           let entries: Dirent[];
 
           if (stats.isFile()) {
+            debug_MSBP_PPTMSBP(`"${proj}" is a file. Returning Dirent instance...`);
             entries = await readdir(path.dirname(proj), { withFileTypes: true });
             const dirent: Dirent | undefined = entries.find(v =>
               path.join(
@@ -457,6 +475,7 @@ export class MSBuildProject {
           if (!stats.isDirectory())
             throw new Error(`"${proj}" is not a file or directory`);
 
+          debug_MSBP_PPTMSBP(`"${proj}" is a directory. Searching for files ending with ".csproj", ".fsproj", or ".vbproj"...`);
           entries = await readdir(proj, { withFileTypes: true });
           return entries.filter(v =>
             v.isFile()
@@ -479,12 +498,18 @@ export class MSBuildProject {
         ('path' in dirent ? dirent.path as string | undefined : undefined) ?? (dirent as unknown as Omit<typeof dirent, 'path'> & { parentPath: string }).parentPath,
         dirent.name,
       );
+
+      debug_MSBP_PPTMSBP(`Getting MSBuild targets of "${fullPath}"...`);
       const projTargets: string[] = await MSBuildProject.GetTargets(fullPath);
       const evalTargets: string[] = projTargets.includes('Pack') ? ['Pack'] : [];
       // this might be too long for a command line. What was it on Windows?
       // 2^15 (32,768) character limit for command lines?
       const propertiesToEvaluate = NPPGetterNames.InstanceGettersRecursive;
+      const withTargets: string = evalTargets.length === 0
+        ? ''
+        : ` with target(s) ${evalTargets.join(', ').replace(/, ([^,]+)$/, ', and ${0}')}`;
 
+      debug_MSBP_PPTMSBP(`Evaluating "${fullPath}" for properties${withTargets}...`);
       return await MSBuildProject.Evaluate(
         EvaluationOptions.from({
           FullName: fullPath,
