@@ -3,8 +3,7 @@ import { warn } from 'node:console';
 import { hash } from 'node:crypto';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
-// eslint-disable-next-line unicorn/import-style
-import * as path from 'node:path';
+import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.ts';
 import debug from '../debug.ts';
