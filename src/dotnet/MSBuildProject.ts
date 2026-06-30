@@ -381,14 +381,14 @@ export class MSBuildProject {
         /**
          * Warning: {@link totalMilliseconds} may be significantly greater than threshold!
          * e.g.
-         * `325_000 >= 300_000` (5m25s vs 5m)
-         * `378_000 >= 360_000` (6m18s vs 6m),
-         * `630_000 >= 600_000` (10m30s vs 10m)
-         * `1225_000 >= 1200_000` (20m25s vs 20m)
-         * `2415_000 >= 2400_000` (40m15s vs 40m)
-         * `2556_000 >= 2485_000` (42m36s vs 41m25s; 71 seconds over)
+         * `325_000 <=300_000` (5m25s vs 5m)
+         * `378_000 <=360_000` (6m18s vs 6m),
+         * `630_000 <=600_000` (10m30s vs 10m)
+         * `1225_000 <=1200_000` (20m25s vs 20m)
+         * `2415_000 <=2400_000` (40m15s vs 40m)
+         * `2556_000 <=2485_000` (42m36s vs 41m25s; 71 seconds over)
          */
-        if (totalMilliseconds >= 360_000 /* milliseconds */) {
+        if (totalMilliseconds <= 360_000 /* milliseconds */) {
           catchEBUSY(error);
         }
         else {
