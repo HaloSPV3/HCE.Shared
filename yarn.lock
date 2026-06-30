@@ -214,7 +214,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/config-conventional@npm:^21.0.0, @commitlint/config-conventional@npm:^21.1.0":
+"@commitlint/config-conventional@npm:^21.1.0":
   version: 21.1.0
   resolution: "@commitlint/config-conventional@npm:21.1.0"
   dependencies:
@@ -853,7 +853,7 @@ __metadata:
     "@arethetypeswrong/core": "npm:^0.18.4"
     "@bintoss/semantic-release-npm-multiple": "npm:^3.17.1"
     "@commitlint/cli": "npm:^21.1.0"
-    "@commitlint/config-conventional": "npm:^21.0.0"
+    "@commitlint/config-conventional": "npm:^21.1.0"
     "@commitlint/load": "npm:^21.1.0"
     "@commitlint/types": "npm:^21.0.0"
     "@dotenvx/dotenvx": "npm:^1.75.1"
