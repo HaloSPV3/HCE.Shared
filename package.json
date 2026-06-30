@@ -125,7 +125,7 @@
     "@semantic-release/gitlab": "^13.3.2",
     "@types/debug": "^4.1.13",
     "@types/tmp": "^0.2.6",
-    "@typescript-eslint/utils": "^8.59.0",
+    "@typescript-eslint/utils": "^8.62.1",
     "conventional-changelog-preset-loader": "^6.0.0",
     "eslint": "^10.6.0",
     "eslint-plugin-jsdoc": "^63.0.10",
