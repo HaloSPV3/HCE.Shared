@@ -186,7 +186,9 @@ export const EvaluationOptions: Type<{
     BaseIntermediateOutputPath?: string | undefined;
     BaseOutputPath?: string | undefined;
     Description?: string | undefined;
+    /** @deprecated use '{@link EvaluationOptions.infer.Property.IntermediateOutputPath}' */
     IntermediateOutput?: string | undefined;
+    IntermediateOutputPath?: string | undefined;
     OutDir?: string | undefined;
     OutputPath?: string | undefined;
     Version?: string | undefined;
