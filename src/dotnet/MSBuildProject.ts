@@ -17,8 +17,11 @@ import {
 } from './NugetProjectProperties.ts';
 
 const debug_MSBP = debug.extend('MSBuildProject');
+debug_MSBP.enabled = debug.enabled;
 const debug_MSBP_PPTMSBP = debug_MSBP.extend('PackableProjectsToMSBuildProjects');
+debug_MSBP_PPTMSBP.enabled = debug.enabled;
 const debug_MSBP_Evaluate = debug_MSBP.extend('Evaluate');
+debug_MSBP_Evaluate.enabled = debug.enabled;
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
