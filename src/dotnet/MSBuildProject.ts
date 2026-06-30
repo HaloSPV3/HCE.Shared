@@ -180,16 +180,91 @@ export class MSBuildEvaluationOutput {
 
 export const EvaluationOptions: Type<{
   FullName: string;
+  /**
+   * @see {@link NugetProjectProperties}
+   * @description
+   * User-defined Properties and their values.
+   * `{ Configuration: "Release" }` will cause the MSBuild to first set the
+   * Configuration property  to Release before evaluating the project
+   * or the project's Target(s).
+   * ```txt
+   *   -property:<n>=<v>  Set or override these project-level properties. <n> is
+   *                      the property name, and <v> is the property value. Use a
+   *                      semicolon or a comma to separate multiple properties, or
+   *                      specify each property separately. (Short form: -p)
+   *                      Example:
+   *                        -property:WarningLevel=2;OutDir=bin\Debug\
+   * ```
+   */
   Property: {
+    IsPackable?: 'false' | 'true' | undefined;
+    SuppressDependenciesWhenPacking?: 'false' | 'true' | undefined;
+    PackageVersion?: string | undefined;
+    PackageId?: string | undefined;
+    PackageDescription?: string | undefined;
+    Authors?: string | undefined;
+    Copyright?: string | undefined;
+    PackageRequireLicenseAcceptance?: 'false' | 'true' | undefined;
+    DevelopmentDependency?: '' | 'false' | 'true' | undefined;
+    PackageLicenseExpression?: string | undefined;
+    PackageLicenseFile?: string | undefined;
+    PackageProjectUrl?: string | undefined;
+    PackageIcon?: string | undefined;
+    PackageReleaseNotes?: string | undefined;
+    PackageReadmeFile?: string | undefined;
+    PackageTags?: string | undefined;
+    /**
+     * A relative or absolute path determining the where the packed package will
+     * be dropped.
+     *
+     * Default: {@link EvaluationOptions.infer.Property.OutputPath}
+     */
+    PackageOutputPath?: string | undefined;
+    IncludeSymbols?: '' | 'false' | 'true' | undefined;
+    IncludeSource?: '' | 'false' | 'true' | undefined;
+    PackageType?: string | undefined;
+    IsTool?: '' | 'false' | 'true' | undefined;
+    RepositoryUrl?: string | undefined;
+    RepositoryType?: '' | 'git' | 'tfs' | undefined;
+    RepositoryCommit?: string | undefined;
+    SymbolPackageFormat?: 'symbols.nupkg' | 'snupkg' | undefined;
+    NoPackageAnalysis?: '' | 'false' | 'true' | undefined;
+    MinClientVersion?: string | undefined;
+    IncludeBuildOutput?: 'false' | 'true' | undefined;
+    IncludeContentInPack?: 'false' | 'true' | undefined;
+    BuildOutputTargetFolder?: string | undefined;
+    ContentTargetFolders?: string | undefined;
+    NuspecFile?: string | undefined;
+    NuspecBasePath?: string | undefined;
+    NuspecProperties?: string | undefined;
+    Title?: string | undefined;
+    Company?: string | undefined;
+    Product?: string | undefined;
     MSBuildProjectFullPath?: string | undefined;
     AssemblyName?: string | undefined;
     BaseIntermediateOutputPath?: string | undefined;
     BaseOutputPath?: string | undefined;
     Description?: string | undefined;
-    /** @deprecated use '{@link EvaluationOptions.infer.Property.IntermediateOutputPath}' */
+    /** @deprecated Typo. Use {@link EvaluationOptions.infer.Property.IntermediateOutputPath}} */
     IntermediateOutput?: string | undefined;
+    /** @see {@link NugetProjectProperties.IntermediateOutputPath } */
     IntermediateOutputPath?: string | undefined;
+    /**
+     * The final output location for the project or solution.
+     * When you build a solution, OutDir can be used to gather multiple project outputs in one location.
+     * In addition, OutDir is included in AssemblySearchPaths used for resolving references.
+     * @example
+     * `bin/Debug`
+     * @see {@link NugetProjectProperties.OutDir}
+     */
     OutDir?: string | undefined;
+    /**
+     * The path to the output directory, relative to the project directory.
+     * @example
+     * `bin/Debug`
+     * /// non-AnyCPU builds
+     * `bin/Debug/${Platform}`
+     */
     OutputPath?: string | undefined;
     Version?: string | undefined;
     VersionPrefix?: string | undefined;
@@ -224,7 +299,7 @@ export const EvaluationOptions: Type<{
      * ```
      */
     Property: type({ '[string]': 'string' })
-      .as<{ -readonly [P in keyof MSBuildProjectProperties]: MSBuildProjectProperties[P] }>()
+      .as<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }>()
       .partial(),
     /**
      * The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
