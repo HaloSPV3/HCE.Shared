@@ -352,10 +352,10 @@ export class MSBuildProject {
         ? ''
         : `-getTargetResult:"${options.GetTargetResult.join(',')}"`;
 
-    const isTargetPack = string_target.toLocaleLowerCase() == 'pack';
+    const isTargetPack = string_target.toLocaleLowerCase() == `-t:pack`;
     const commandLine = [
       'dotnet',
-      isTargetPack ? string_target : 'msbuild',
+      isTargetPack ? 'pack' : 'msbuild',
       `"${options.FullName}"`,
       isTargetPack ? '' : '-restore',
       string_property,
