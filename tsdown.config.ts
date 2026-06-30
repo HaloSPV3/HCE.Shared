@@ -43,7 +43,8 @@ const _config: UserConfig = defineConfig({
     },
   },
   outDir: './mjs',
-  publint: true,
+  // leaks memory in Yarn Berry/PnP!
+  // publint: true,
   tsconfig: './tsconfig.mjs.json',
   unbundle: true,
   unused: true,
