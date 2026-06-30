@@ -3,8 +3,8 @@ import { warn } from 'node:console';
 import { hash } from 'node:crypto';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
-// eslint-disable-next-line unicorn/import-style
-import * as path from 'node:path';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { CaseInsensitiveMap } from '../CaseInsensitiveMap.ts';
 import debug from '../debug.ts';
@@ -17,8 +17,15 @@ import {
 } from './NugetProjectProperties.ts';
 
 const debug_MSBP = debug.extend('MSBuildProject');
+debug_MSBP.enabled = debug.enabled;
 const debug_MSBP_PPTMSBP = debug_MSBP.extend('PackableProjectsToMSBuildProjects');
+debug_MSBP_PPTMSBP.enabled = debug.enabled;
 const debug_MSBP_Evaluate = debug_MSBP.extend('Evaluate');
+debug_MSBP_Evaluate.enabled = debug.enabled;
+
+export type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/`;
+export type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
+const temporaryDirectoryNamespace = path.join(tmpdir(), 'HCE.Shared', '.NET') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
@@ -178,14 +185,91 @@ export class MSBuildEvaluationOutput {
 
 export const EvaluationOptions: Type<{
   FullName: string;
+  /**
+   * @see {@link NugetProjectProperties}
+   * @description
+   * User-defined Properties and their values.
+   * `{ Configuration: "Release" }` will cause the MSBuild to first set the
+   * Configuration property  to Release before evaluating the project
+   * or the project's Target(s).
+   * ```txt
+   *   -property:<n>=<v>  Set or override these project-level properties. <n> is
+   *                      the property name, and <v> is the property value. Use a
+   *                      semicolon or a comma to separate multiple properties, or
+   *                      specify each property separately. (Short form: -p)
+   *                      Example:
+   *                        -property:WarningLevel=2;OutDir=bin\Debug\
+   * ```
+   */
   Property: {
+    IsPackable?: 'false' | 'true' | undefined;
+    SuppressDependenciesWhenPacking?: 'false' | 'true' | undefined;
+    PackageVersion?: string | undefined;
+    PackageId?: string | undefined;
+    PackageDescription?: string | undefined;
+    Authors?: string | undefined;
+    Copyright?: string | undefined;
+    PackageRequireLicenseAcceptance?: 'false' | 'true' | undefined;
+    DevelopmentDependency?: '' | 'false' | 'true' | undefined;
+    PackageLicenseExpression?: string | undefined;
+    PackageLicenseFile?: string | undefined;
+    PackageProjectUrl?: string | undefined;
+    PackageIcon?: string | undefined;
+    PackageReleaseNotes?: string | undefined;
+    PackageReadmeFile?: string | undefined;
+    PackageTags?: string | undefined;
+    /**
+     * A relative or absolute path determining the where the packed package will
+     * be dropped.
+     *
+     * Default: {@link EvaluationOptions.infer.Property.OutputPath}
+     */
+    PackageOutputPath?: string | undefined;
+    IncludeSymbols?: '' | 'false' | 'true' | undefined;
+    IncludeSource?: '' | 'false' | 'true' | undefined;
+    PackageType?: string | undefined;
+    IsTool?: '' | 'false' | 'true' | undefined;
+    RepositoryUrl?: string | undefined;
+    RepositoryType?: '' | 'git' | 'tfs' | undefined;
+    RepositoryCommit?: string | undefined;
+    SymbolPackageFormat?: 'symbols.nupkg' | 'snupkg' | undefined;
+    NoPackageAnalysis?: '' | 'false' | 'true' | undefined;
+    MinClientVersion?: string | undefined;
+    IncludeBuildOutput?: 'false' | 'true' | undefined;
+    IncludeContentInPack?: 'false' | 'true' | undefined;
+    BuildOutputTargetFolder?: string | undefined;
+    ContentTargetFolders?: string | undefined;
+    NuspecFile?: string | undefined;
+    NuspecBasePath?: string | undefined;
+    NuspecProperties?: string | undefined;
+    Title?: string | undefined;
+    Company?: string | undefined;
+    Product?: string | undefined;
     MSBuildProjectFullPath?: string | undefined;
     AssemblyName?: string | undefined;
     BaseIntermediateOutputPath?: string | undefined;
     BaseOutputPath?: string | undefined;
     Description?: string | undefined;
+    /** @deprecated Typo. Use {@link EvaluationOptions.infer.Property.IntermediateOutputPath}} */
     IntermediateOutput?: string | undefined;
+    /** @see {@link NugetProjectProperties.IntermediateOutputPath } */
+    IntermediateOutputPath?: string | undefined;
+    /**
+     * The final output location for the project or solution.
+     * When you build a solution, OutDir can be used to gather multiple project outputs in one location.
+     * In addition, OutDir is included in AssemblySearchPaths used for resolving references.
+     * @example
+     * `bin/Debug`
+     * @see {@link NugetProjectProperties.OutDir}
+     */
     OutDir?: string | undefined;
+    /**
+     * The path to the output directory, relative to the project directory.
+     * @example
+     * `bin/Debug`
+     * /// non-AnyCPU builds
+     * `bin/Debug/${Platform}`
+     */
     OutputPath?: string | undefined;
     Version?: string | undefined;
     VersionPrefix?: string | undefined;
@@ -220,7 +304,7 @@ export const EvaluationOptions: Type<{
      * ```
      */
     Property: type({ '[string]': 'string' })
-      .as<{ -readonly [P in keyof MSBuildProjectProperties]: MSBuildProjectProperties[P] }>()
+      .as<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }>()
       .partial(),
     /**
      * The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
@@ -324,9 +408,17 @@ export class MSBuildProject {
     }`;
     const debug_MSBP_Evaluate_hashed = debug_MSBP_Evaluate.extend(shortHashName);
     options.Property.BaseIntermediateOutputPath = path.join(
-      options.Property.BaseIntermediateOutputPath ?? 'obj',
+      temporaryDirectoryNamespace,
+      path.basename(options.FullName, path.extname(options.FullName)),
       shortHashName,
-    ) + '/';
+      'obj',
+    ) + path.sep;
+    options.Property.BaseOutputPath = path.join(
+      temporaryDirectoryNamespace,
+      path.basename(options.FullName, path.extname(options.FullName)),
+      shortHashName,
+      'bin',
+    ) + path.sep;
 
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
@@ -352,10 +444,10 @@ export class MSBuildProject {
         ? ''
         : `-getTargetResult:"${options.GetTargetResult.join(',')}"`;
 
-    const isTargetPack = string_target.toLocaleLowerCase() == 'pack';
+    const isTargetPack = string_target.toLocaleLowerCase() == `-t:pack`;
     const commandLine = [
       'dotnet',
-      isTargetPack ? string_target : 'msbuild',
+      isTargetPack ? 'pack' : 'msbuild',
       `"${options.FullName}"`,
       isTargetPack ? '' : '-restore',
       string_property,

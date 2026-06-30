@@ -1,3 +1,29 @@
+## [3.7.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.7...v3.7.0) (2026-06-30)
+
+### Features
+
+* **dotnet.MSBP, dotnet.MSBPP:** add `IntermediateOutputPath`; deprecate `IntermediateOutput` ([a0e4ce6](https://github.com/HaloSPV3/HCE.Shared/commit/a0e4ce6a873f3d0f3d755751c0e578537f2bfa49))
+* **dotnet.MSBP:** rebase `EvaluationOptions.Property` on `NugetProjectProperties`; add docs ([ddb13e7](https://github.com/HaloSPV3/HCE.Shared/commit/ddb13e7eb54aeb66f74e2e3fb6666a5f2fe6c64b))
+
+### Bug Fixes
+
+* **dotnet.MSBP:** enable sub-debuggers when root debugger is enabled ([d9aed6b](https://github.com/HaloSPV3/HCE.Shared/commit/d9aed6b56c8de59f82f2158eda92150ccf315f7e))
+* **dotnet.MSBP:** simplify Evaluate command line when Target is 'pack' ([8898dee](https://github.com/HaloSPV3/HCE.Shared/commit/8898deeb066202e4d11519e54b4b0013496108c1))
+* **dotnet.MSBP:** use temporary, namespaced bin/obj output paths in `Evaluate` ([e321e55](https://github.com/HaloSPV3/HCE.Shared/commit/e321e551aa5adfebf466c00a64446bf7b0ae50a3))
+
+## [3.7.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.7...v3.7.0-develop.1) (2026-06-30)
+
+### Features
+
+* **dotnet.MSBP, dotnet.MSBPP:** add `IntermediateOutputPath`; deprecate `IntermediateOutput` ([a0e4ce6](https://github.com/HaloSPV3/HCE.Shared/commit/a0e4ce6a873f3d0f3d755751c0e578537f2bfa49))
+* **dotnet.MSBP:** rebase `EvaluationOptions.Property` on `NugetProjectProperties`; add docs ([ddb13e7](https://github.com/HaloSPV3/HCE.Shared/commit/ddb13e7eb54aeb66f74e2e3fb6666a5f2fe6c64b))
+
+### Bug Fixes
+
+* **dotnet.MSBP:** enable sub-debuggers when root debugger is enabled ([d9aed6b](https://github.com/HaloSPV3/HCE.Shared/commit/d9aed6b56c8de59f82f2158eda92150ccf315f7e))
+* **dotnet.MSBP:** simplify Evaluate command line when Target is 'pack' ([8898dee](https://github.com/HaloSPV3/HCE.Shared/commit/8898deeb066202e4d11519e54b4b0013496108c1))
+* **dotnet.MSBP:** use temporary, namespaced bin/obj output paths in `Evaluate` ([e321e55](https://github.com/HaloSPV3/HCE.Shared/commit/e321e551aa5adfebf466c00a64446bf7b0ae50a3))
+
 ## [3.6.7](https://github.com/HaloSPV3/HCE.Shared/compare/v3.6.6...v3.6.7) (2026-06-30)
 
 ### Bug Fixes
