@@ -174,8 +174,18 @@ export class MSBuildProjectProperties {
    * @returns The full intermediate output path as derived from
    * {@link BaseIntermediateOutputPath}, if no path is specified.
    * @example "obj\\debug\\"
+   * @deprecated Typo; Use {@link IntermediateOutputPath}
    */
   get IntermediateOutput(): string {
+    return this._intermediateOutputPath ??= '';
+  }
+
+  /**
+   * @returns The full intermediate output path as derived from
+   * {@link BaseIntermediateOutputPath}, if no path is specified.
+   * @example "obj\\debug\\"
+   */
+  get IntermediateOutputPath(): string {
     return this._intermediateOutputPath ??= '';
   }
 
