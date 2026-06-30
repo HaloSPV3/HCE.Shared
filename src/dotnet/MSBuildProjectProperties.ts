@@ -92,7 +92,7 @@ export class MSBuildProjectProperties {
       `arg 'properties' should be instanceof ${CaseInsensitiveMap.name}`,
     );
     strictEqual(
-      [...properties.keys()].every((v): v is string => typeof v === 'string'),
+      properties.keys().every((v): v is string => typeof v === 'string'),
       true,
       'all keys in arg \'properties\' should be strings',
     );

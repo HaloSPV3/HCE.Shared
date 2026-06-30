@@ -32,12 +32,10 @@ const _config: UserConfig = defineConfig({
       if (declarations.length === 0)
         throw new Error('Where are my types???');
 
-      let namepath;
-      let filepath;
       // 'utils/Exact.d.ts'
       for (const d of declarations) {
-        namepath = `./${d.replace('.d.ts', '')}`;
-        filepath = `./src/${d}`;
+        const namepath = `./${d.replace('.d.ts', '')}`;
+        const filepath = `./src/${d}`;
         exports[namepath] = filepath;
       }
       return exports;

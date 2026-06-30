@@ -26,11 +26,11 @@ import {
   type OwnKeyOf,
   type OwnPropertyDescriptorMap,
   type PropertyDescriptorMap,
-  type ProtoChainOfClass,
-  type ProtoOrSuperClass,
+  type ProtoChainOfClass as PrototypeChainOfClass,
+  type ProtoOrSuperClass as PrototypeOrSuperClass,
   type RecursedPropertyDescriptorMap,
   type RecursedPropertyDescriptorMapArray,
-  type WithProto,
+  type WithProto as WithPrototype,
 } from '../../src/utils/reflection.ts';
 import type { PickKeys } from 'ts-essentials';
 class TestClass0 {
@@ -49,10 +49,10 @@ class TestClass1 extends TestClass0 {
   private _boolean: boolean | undefined;
   private _string: string | undefined;
 
-  constructor(boolean?: boolean, string?: string) {
+  constructor(isTrue?: boolean, string?: string) {
     super();
-    if (boolean)
-      this._boolean = boolean;
+    if (isTrue)
+      this._boolean = isTrue;
     if (string)
       this._string = string;
   }
@@ -63,7 +63,7 @@ class TestClass1 extends TestClass0 {
   public IsStringDefault(): boolean { return this.String === ''; }
 }
 
-type Class_TestClass1 = ClassLike<typeof TestClass1 & WithProto<Class_TestClass0>>;
+type Class_TestClass1 = ClassLike<typeof TestClass1 & WithPrototype<Class_TestClass0>>;
 
 await describe('filterForGetters', async () => {
   await it('can filter a class instance\'s OwnPropertyDescriptorMap to an array of getters\' property descriptors', () => {
@@ -257,7 +257,7 @@ await describe('getOwnPropertyDescriptorsRecursively', async () => {
         const keys: NoRepetition<'Boolean' | 'String'> = Reflect.ownKeys(getterMaps[0]) as NoRepetition<Exclude<keyof typeof getterMaps[0], typeof TestClass1['IsStringDefault']['name'] & 'IsStringDefault'>>;
         return keys;
       }
-      else if (map === getterMaps[1]) {
+      if (map === getterMaps[1]) {
         /**
          * TypeScript does not differentiate getters and readonly fields.
          *
@@ -266,10 +266,10 @@ await describe('getOwnPropertyDescriptorsRecursively', async () => {
         const keys: [] = Reflect.ownKeys(getterMaps[1]) as NoRepetition<Exclude<keyof typeof getterMaps[1], 'InheritedProperty'>>;
         return keys;
       }
-      else throw new RangeError('Current getterMap is unexpected');
+      throw new RangeError('Current getterMap is unexpected');
     }) satisfies ('Boolean' | 'String')[] as NoRepetition<'Boolean' | 'String'>;
 
-    deepStrictEqual(keys.sort(), ['Boolean', 'String']);
+    deepStrictEqual(keys.sort((a, b) => a.localeCompare(b)), ['Boolean', 'String']);
   });
 });
 
@@ -380,7 +380,7 @@ const __PropertyDescriptorMap_NPP_Instance_Own: _PropertyDescriptorMap_NPP_Insta
     = true;
 ok(__PropertyDescriptorMap_NPP_Instance_Own);
 
-type _PickOwnGetters<T extends object, S extends ProtoOrSuperClass> = Pick<PropertyDescriptorMap<T, S>, keyof OwnGetterDescriptorMap<T, S>>;
+type _PickOwnGetters<T extends object, S extends PrototypeOrSuperClass> = Pick<PropertyDescriptorMap<T, S>, keyof OwnGetterDescriptorMap<T, S>>;
 const __PickOwnGetters_NPP_Instance: _PickOwnGetters<NugetProjectProperties, MSBPP> extends {
   readonly IsPackable: TypedPropertyDescriptor<BooleanString>;
 } ? true
@@ -438,20 +438,20 @@ const _instanceMembers = getOwnPropertyDescriptors(NugetProjectProperties as Cla
 ok(_instanceMembers);
 
 /** @satisfies {[Class_NPP, Class_MSBPP]} */
-const _ProtoChainOfNPP: [Class_NPP, Class_MSBPP] = [] as unknown as ProtoChainOfClass<Class_NPP>;
-ok(_ProtoChainOfNPP);
+const _PrototypeChainOfNP: [Class_NPP, Class_MSBPP] = [] as unknown as PrototypeChainOfClass<Class_NPP>;
+ok(_PrototypeChainOfNP);
 
-type _NPP_WithProto = Class_NPP;
-type _NPP_WithProto_InstanceType = InstanceType<_NPP_WithProto>;
-type _NPP_Proto_InstanceTypeOrSelf = InstanceTypeOrSelf<_NPP_WithProto['__proto__']>;
+type _NP_WithPrototype = Class_NPP;
+type _NP_WithPrototype_InstanceType = InstanceType<_NP_WithPrototype>;
+type _NP_Prototype_InstanceTypeOrSelf = InstanceTypeOrSelf<_NP_WithPrototype['__proto__']>;
 
 type _MSBPP_InstanceTypeOrSelf = InstanceTypeOrSelf<typeof MSBPP>;
 // @ts-expect-error unused variable
 const __MSBPP_InstanceTypeOrSelf: _MSBPP_InstanceTypeOrSelf = 0 as unknown as _MSBPP_InstanceTypeOrSelf;
 
 type _OwnKeysOf_NPP_Instance = OwnKeyOf<
-  _NPP_WithProto_InstanceType,
-  _NPP_Proto_InstanceTypeOrSelf
+  _NP_WithPrototype_InstanceType,
+  _NP_Prototype_InstanceTypeOrSelf
 >[];
 // @ts-expect-error unused variable
 const __OwnKeysOf_NPP_Instance: _OwnKeysOf_NPP_Instance = 0 as unknown as _OwnKeysOf_NPP_Instance;

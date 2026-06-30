@@ -12,6 +12,7 @@ await describe('isGetterDescriptor', async () => {
       : (() => { throw new Error('never'); })();
     ok(gpd);
     type _ = typeof gpd extends GetterDescriptor<boolean> ? true : false;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     strictEqual(true as _, true);
   });
   await it('returns false when `.get` is not a function', () => {
@@ -23,6 +24,7 @@ await describe('isGetterDescriptor', async () => {
       : new Error('never');
     ok(gpd);
     type _ = typeof gpd extends GetterDescriptor<boolean> ? true : false;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     strictEqual(false as _, false);
   });
 });

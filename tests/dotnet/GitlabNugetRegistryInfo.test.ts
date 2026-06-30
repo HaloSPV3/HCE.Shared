@@ -1,8 +1,8 @@
 import { deepStrictEqual, strictEqual } from 'node:assert/strict';
 import * as process from 'node:process';
 import { describe, it, test } from 'node:test';
-import { GitlabNugetRegistryInfo as GLNRI, GLNRIOpts } from '../../src/dotnet/GitlabNugetRegistryInfo.ts';
-import { getEnvVarValue } from '../../src/utils/env.ts';
+import { GitlabNugetRegistryInfo as GLNRI, GLNRIOpts as GLNRIOptions } from '../../src/dotnet/GitlabNugetRegistryInfo.ts';
+import { getEnvVarValue as getEnvironmentVariableValue } from '../../src/utils/env.ts';
 
 await describe('GLNRI:undefinedEnv)', { concurrency: true }, async () => {
   await test('CI_API_V4_URL has the correct default value if the environment variable is undefined', () => {
@@ -31,7 +31,7 @@ await describe('GLNRI', { concurrency: true }, async () => {
   });
 
   await test('projectUrl returns the expected url when CI_PROJECT_ID is defined', () => {
-    if (!getEnvVarValue('CI_PROJECT_ID'))
+    if (!getEnvironmentVariableValue('CI_PROJECT_ID'))
       process.env['CI_PROJECT_ID'] = 'placeholder';
     strictEqual(
       GLNRI.projectUrl,
@@ -40,15 +40,15 @@ await describe('GLNRI', { concurrency: true }, async () => {
   });
 
   await test('ownerId returns string if CI_PROJECT_NAMESPACE_ID is defined', () => {
-    if (!getEnvVarValue('CI_PROJECT_NAMESPACE_ID'))
+    if (!getEnvironmentVariableValue('CI_PROJECT_NAMESPACE_ID'))
       process.env['CI_PROJECT_NAMESPACE_ID'] = 'placeholder';
-    strictEqual(GLNRI.ownerId, getEnvVarValue('CI_PROJECT_NAMESPACE_ID'));
+    strictEqual(GLNRI.ownerId, getEnvironmentVariableValue('CI_PROJECT_NAMESPACE_ID'));
   });
 
   await test('projectId returns string if CI_PROJECT_ID is defined', () => {
-    if (!getEnvVarValue('CI_PROJECT_ID'))
+    if (!getEnvironmentVariableValue('CI_PROJECT_ID'))
       process.env['CI_PROJECT_ID'] = 'placeholder';
-    strictEqual(GLNRI.projectId, getEnvVarValue('CI_PROJECT_ID'));
+    strictEqual(GLNRI.projectId, getEnvironmentVariableValue('CI_PROJECT_ID'));
   });
 });
 
@@ -59,14 +59,14 @@ await describe('InstanceOf GitlabNugetRegistryInfo', async () => {
 await describe('GLNRIOpts', { concurrency: true }, async () => {
   await it('defaults to project-level endpoint', () => {
     strictEqual(
-      GLNRIOpts.pick('source').from({}).source,
+      GLNRIOptions.pick('source').from({}).source,
       `${GLNRI.CI_API_V4_URL}/projects/${GLNRI.projectId ?? 'placeholder'}/packages/nuget/index.json`,
     );
   });
 
   await it('defaults to GitLab token variables', () => {
     deepStrictEqual(
-      GLNRIOpts.pick('tokenEnvVars').from({}).tokenEnvVars,
+      GLNRIOptions.pick('tokenEnvVars').from({}).tokenEnvVars,
       Object.freeze([
         'GL_TOKEN',
         'GITLAB_TOKEN',

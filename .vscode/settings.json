@@ -115,8 +115,15 @@
     "editor.formatOnType": false
   },
   "files.associations": {
-    "*.ts": "typescriptreact",
-    "*.mts": "typescriptreact"
+    "release.config.ts": "typescriptreact",
+    "**/src/dotnet/helpers.ts": "typescriptreact",
+    "**/src/dotnet/MSBuildProject.ts": "typescriptreact",
+    "**/src/dotnet/NugetProjectProperties.ts": "typescriptreact",
+    "**/src/dotnet/NugetRegistryInfo.ts": "typescriptreact",
+    "**/src/utils/execAsync.ts": "typescriptreact",
+    "**/src/utils/miscTypes.ts": "typescriptreact",
+    "*.ts": "typescript",
+    "*.mts": "typescript"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",

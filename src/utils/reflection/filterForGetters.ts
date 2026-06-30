@@ -1,11 +1,11 @@
 import type {
-  BaseClassProto,
-  baseClassProto,
+  BaseClassProto as BaseClassPrototype,
+  baseClassProto as baseClassPrototype,
   ClassLike,
   ConstructorConstraint,
   InstanceTypeOrSelf,
   SuperClassLike,
-  WithProto,
+  WithProto as WithPrototype,
 } from './inheritance.ts';
 import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptorMap.d.ts';
 import type { OwnGetterDescriptorMap } from './OwnGetterDescriptorMap.d.ts';
@@ -13,15 +13,15 @@ import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
 import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
 
 export function filterForGetters<
-  Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | typeof baseClassProto>>,
+  Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | typeof baseClassPrototype>>,
 >(
   descriptorMap: InstancePropertyDescriptorMap<Class>,
 ): Partial<OwnGetterDescriptorMap<
   InstanceType<Class>,
-  Class['__proto__'] extends BaseClassProto ? null : InstanceTypeOrSelf<Class['__proto__']>
+  Class['__proto__'] extends BaseClassPrototype ? null : InstanceTypeOrSelf<Class['__proto__']>
 >>;
 export function filterForGetters<
-  Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
+  Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
 >(
   descriptorMap: OwnPropertyDescriptorMap<Class>,
 ): Partial<OwnGetterDescriptorMap<Class, Class['__proto__']>>;
@@ -40,11 +40,11 @@ export function filterForGetters<
  */
 export function filterForGetters<
   T extends object,
-  __proto__ extends object | null = null,
+  __prototype__ extends object | null = null,
 >(
-  descriptorMap: PropertyDescriptorMap<T, __proto__> | PropertyDescriptorMap<T>,
-): Partial<OwnGetterDescriptorMap<T, __proto__>> {
-  let getterDescriptorMap: Partial<OwnGetterDescriptorMap<T, __proto__>> = {};
+  descriptorMap: PropertyDescriptorMap<T, __prototype__> | PropertyDescriptorMap<T>,
+): Partial<OwnGetterDescriptorMap<T, __prototype__>> {
+  let getterDescriptorMap: Partial<OwnGetterDescriptorMap<T, __prototype__>> = {};
   for (const key in descriptorMap) {
     const element = descriptorMap[key as keyof typeof descriptorMap];
     if (typeof element.get === 'function') {

@@ -17,7 +17,9 @@
   (and symbols package, if applicable) deterministic.
   See the targets file for its usage -->
   <Import Project="../../ExecNupkgDeterministicator.targets" />
+ 
   <Import Project="../../BuildEachRID.targets" />
+  <Import Project="../../CleanupWpfTmp.targets" />
   <Import Project="../../PublishAll.targets" />
   <Import Project="../../ZipPublishDir.targets" />
 

@@ -4,13 +4,13 @@ import { getOwnPropertyDescriptors } from './getOwnPropertyDescriptors.ts';
 import { getPrototypesChainOf } from './getPrototypeChainOf.ts';
 import type {
   BaseClass,
-  BaseClassProto,
+  BaseClassProto as BaseClassPrototype,
   ClassLike,
   ConstructorConstraint,
   ConstructorLike,
-  ProtoChainOfClass,
+  ProtoChainOfClass as PrototypeChainOfClass,
   SuperClassLike,
-  WithProto,
+  WithProto as WithPrototype,
 } from './inheritance.ts';
 import type { InstanceTypeOrSelfPropertyDescriptorMap } from './InstanceTypeOrSelfPropertyDescriptorMap.d.ts';
 import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
@@ -38,7 +38,7 @@ import type { InstancePropertyDescriptorMap as _InstancePropertyDescriptorMap } 
  * @since 3.0.0
  */
 export type RecursedPropertyDescriptorMap<
-  Class extends ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>,
+  Class extends ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>,
   _InstanceOrStatic extends InstanceOrStatic,
 > = [_InstanceOrStatic] extends ['Instance'] ? InstanceTypeOrSelfPropertyDescriptorMap<Class, Class['__proto__']>
   : [_InstanceOrStatic] extends ['Static'] ? OwnPropertyDescriptorMap<Class>
@@ -55,17 +55,17 @@ export type RecursedPropertyDescriptorMap<
  * @template {Integer<number>} [CurrentLevel=0]
  */
 export type RecursedPropertyDescriptorMapArray<
-  Class extends ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>,
+  Class extends ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>,
   InstanceOrStatic extends 'Instance' | 'Static',
   Limit extends Integer<number> = 16,
   CurrentLevel extends Integer<number> = 0,
-> = Class['__proto__'] extends BaseClassProto['__proto__'] | BaseClassProto['__proto__']['__proto__'] ? never
-  : Class['__proto__'] extends BaseClassProto ? [RecursedPropertyDescriptorMap<BaseClass<Class>, InstanceOrStatic>]
+> = Class['__proto__'] extends BaseClassPrototype['__proto__'] | BaseClassPrototype['__proto__']['__proto__'] ? never
+  : Class['__proto__'] extends BaseClassPrototype ? [RecursedPropertyDescriptorMap<BaseClass<Class>, InstanceOrStatic>]
     : Class['__proto__'] extends ConstructorLike<Class['__proto__']>
       ? [
           RecursedPropertyDescriptorMap<Class, InstanceOrStatic>,
           ...RecursedPropertyDescriptorMapArray<
-            ClassLike<Exclude<Class['__proto__'], BaseClassProto> & WithProto<SuperClassLike | BaseClassProto>>,
+            ClassLike<Exclude<Class['__proto__'], BaseClassPrototype> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
             InstanceOrStatic,
             Limit,
             Increment<CurrentLevel>
@@ -88,7 +88,7 @@ export type RecursedPropertyDescriptorMapArray<
  */
 export function getOwnPropertyDescriptorsRecursively<
   // Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
-  Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
+  Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   Limit extends Integer<number> = 16,
@@ -96,17 +96,17 @@ export function getOwnPropertyDescriptorsRecursively<
   classDefinition: Class,
   instanceOrStatic: _InstanceOrStatic,
 ): RecursedPropertyDescriptorMapArray<Class, _InstanceOrStatic> {
-  const staticProtoChain: ProtoChainOfClass<Class> = getPrototypesChainOf(classDefinition, 'classes');
-  if (isSingleTuple(staticProtoChain)) {
+  const staticPrototypeChain: PrototypeChainOfClass<Class> = getPrototypesChainOf(classDefinition, 'classes');
+  if (isSingleTuple(staticPrototypeChain)) {
     return [
       getOwnPropertyDescriptors(
-        staticProtoChain[0],
+        staticPrototypeChain[0],
         instanceOrStatic,
       ) as RecursedPropertyDescriptorMap<Class, _InstanceOrStatic>,
     ] as unknown as RecursedPropertyDescriptorMapArray<Class, _InstanceOrStatic, Limit>;
   }
 
-  const recursedPropertyDescriptorMapArray = staticProtoChain.map(classDefinition =>
+  const recursedPropertyDescriptorMapArray = staticPrototypeChain.map(classDefinition =>
     getOwnPropertyDescriptors(
       classDefinition,
       instanceOrStatic,

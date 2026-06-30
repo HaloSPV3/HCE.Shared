@@ -25,6 +25,29 @@
       "semanticCommitType": "build",
       "semanticCommitScope": "deps-dev",
       "automerge": true
+    },
+    {
+      "matchBaseBranches": [ "yarn-migration" ],
+      "matchDepTypes": [
+        "dependencies"
+      ],
+      "matchCategories": [
+        "js"
+      ],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "matchBaseBranches": [ "yarn-migration" ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchCategories": [
+        "js"
+      ],
+      "semanticCommitType": "build",
+      "semanticCommitScope": "deps-dev",
+      "automerge": true
     }
   ]
 }

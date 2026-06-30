@@ -22,12 +22,13 @@ import type { Options } from 'semantic-release';
 import type { Options as SRExecOptions } from '@semantic-release/exec';
 import * as console from 'node:console';
 import debug from './debug.ts';
-import { configureDotnetNugetPush, configurePrepareCmd } from './dotnet/helpers.ts';
-import { getEnvVarValue } from './utils/env.ts';
+import { configureDotnetNugetPush, configurePrepareCmd as configurePrepareCommand } from './dotnet/helpers.ts';
+import { getEnvVarValue as getEnvironmentVariableValue } from './utils/env.ts';
 import { baseConfig } from './semanticReleaseConfig.ts';
 import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.ts';
 import { MSBuildProject } from './dotnet/MSBuildProject.ts';
 import { insertPlugin } from './insertPlugins.ts';
+import { CaseInsensitiveMap } from './CaseInsensitiveMap.ts';
 
 type UnArray<T> = T extends (infer U)[] ? U : T;
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
@@ -80,7 +81,7 @@ export class SemanticReleaseConfigDotnet {
 
     this._projectsToPublish = projectsToPublish;
     if (this._projectsToPublish.length === 0) {
-      const p = getEnvVarValue('PROJECTS_TO_PUBLISH')?.split(';');
+      const p = getEnvironmentVariableValue('PROJECTS_TO_PUBLISH')?.split(';');
       if (p && p.length > 0) {
         this._projectsToPublish = p;
       }
@@ -91,7 +92,7 @@ export class SemanticReleaseConfigDotnet {
 
     this._projectsToPackAndPush = projectsToPackAndPush;
     if (this._projectsToPackAndPush.length === 0) {
-      const p = getEnvVarValue('PROJECTS_TO_PACK_AND_PUSH')?.split(';');
+      const p = getEnvironmentVariableValue('PROJECTS_TO_PACK_AND_PUSH')?.split(';');
       if (p && p.length > 0) {
         this._projectsToPackAndPush = p;
       }
@@ -149,17 +150,20 @@ export class SemanticReleaseConfigDotnet {
 Unable to find\`['@semantic-release/exec', unknown]\` in plugins array!
 Appending it to the end of the array...This may cause an unexpected order of operations!`;
       console.warn(message);
-      srExecIndex = this.options.plugins.push(['@semantic-release/exec', {}]) - 1;
+      this.options.plugins.push(['@semantic-release/exec', {}]);
+      srExecIndex = this.options.plugins.length - 1;
     }
 
     const plugin = this.options.plugins[srExecIndex] as ['@semantic-release/exec', SRExecOptions];
     const execOptions: SRExecOptions = plugin[1];
 
-    // ensure all packable projects are evaluated
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    this._projectsToPackAndPush = await Promise.all(
+    debug('Evaluating all projects with dotnet CLI...This may take a while.');
+
+    const referenceCounter = new CaseInsensitiveMap<string, number>();
+    const projectPromiseArrayArray = await Promise.all(
       this._projectsToPackAndPush.map(async (project) => {
         if (typeof project === 'string') {
+          debug(`Evaluating path "${project}" with "PackableProjectsToMSBuildProjects"...`);
           const packableProjects = await Promise.all(
             await MSBuildProject.PackableProjectsToMSBuildProjects(
               [project],
@@ -168,44 +172,58 @@ Appending it to the end of the array...This may cause an unexpected order of ope
           if (packableProjects.length === 0)
             throw new Error('No MSBuildProject instances were returned!');
           this._evaluatedProjects.push(...packableProjects);
+          const variant = (referenceCounter.get(project) ?? 0) + packableProjects.length;
+          referenceCounter.set(
+            project,
+            variant,
+          );
+
+          debug(`Done. Path "${project}" evaluated for ${packableProjects.length.toString()} MSBuildProject instances for a total of ${variant.toString()} variants of the given path.`);
 
           // if the user doesn't want a defaulted NRI, they should pass their own NRI (or derived) instance.
           return packableProjects.map(project => new NugetRegistryInfo({ project }));
         }
-        else return [project];
-      }),
-    ).then(p => p.flat()) as NugetRegistryInfo[];
 
-    // todo: double-check token-testing commands. Are they formatted prepended correctly?
-    const verifyConditionsCmdAppendix = await Promise.all(
-      this._projectsToPackAndPush
-        .map(async project =>
-          await project.PackDummyPackage({})
-            .then(() =>
-              project.GetPushDummyCommand({}),
-            ),
-        ),
-    ).then(cmds =>
-      cmds.join(' && '),
+        const path = project.project.Properties.MSBuildProjectFullPath;
+        const variant = (referenceCounter.get(path) ?? 0) + 1;
+        referenceCounter.set(path, variant);
+        debug(`Done. Path "${path}" (variant ${variant.toString()}) is pre-evaluated. Skipping re-evaluation.`);
+        return [project];
+      }),
     );
+    this._projectsToPackAndPush = projectPromiseArrayArray.flat();
+
+    debug('[exec:verifyConditionsCmd] Packing "Dummy" packages and generating "Push Dummy Package" commands for API token tests...');
+    const _pushDummyCommands = await Promise.all(
+      this._projectsToPackAndPush
+        .map(async (project) => {
+          const path = project.project.Properties.MSBuildProjectFullPath;
+          debug(`[exec:verifyConditionsCmd] Packing dummy package for "${path}"...`);
+          await project.PackDummyPackage({});
+          debug(`[exec:verifyConditionsCmd] Generating "Push Dummy Package" command for "${path}"...`);
+          return project.GetPushDummyCommand({});
+        }),
+    );
+    const verifyConditionsCommandAppendix = _pushDummyCommands.join(' && ');
+
     execOptions.verifyConditionsCmd
       = execOptions.verifyConditionsCmd && execOptions.verifyConditionsCmd.trim().length > 0
-        ? `${execOptions.verifyConditionsCmd} && ${verifyConditionsCmdAppendix}`
-        : verifyConditionsCmdAppendix;
+        ? `${execOptions.verifyConditionsCmd} && ${verifyConditionsCommandAppendix}`
+        : verifyConditionsCommandAppendix;
+    debug('[exec:verifyConditionsCmd] Done');
 
-    const verifyReleaseCmdAppendix
-      = this.ProjectsToPackAndPush
-        .filter(project =>
-          typeof project !== 'string',
-        ).map(project =>
+    const verifyReleaseCommandAppendix
+      = (this._projectsToPackAndPush satisfies NugetRegistryInfo[])
+        .map(project =>
           project.GetIsNextVersionAlreadyPublishedCommand(),
         ).join(' && ');
     execOptions.verifyReleaseCmd
       = execOptions.verifyReleaseCmd && execOptions.verifyReleaseCmd.trim().length > 0
-        ? `${execOptions.verifyReleaseCmd} && ${verifyReleaseCmdAppendix}`
-        : verifyConditionsCmdAppendix;
+        ? `${execOptions.verifyReleaseCmd} && ${verifyReleaseCommandAppendix}`
+        : verifyConditionsCommandAppendix;
+    debug('[exec:verifyReleaseCmd] Done');
 
-    const prepareCmdAppendix = await configurePrepareCmd(
+    const prepareCommandAppendix = await configurePrepareCommand(
       this._projectsToPublish,
       this._projectsToPackAndPush,
     );
@@ -213,22 +231,20 @@ Appending it to the end of the array...This may cause an unexpected order of ope
     // 'ZipPublishDir' zips each publish folder to ./publish/*.zip
     execOptions.prepareCmd
       = execOptions.prepareCmd && execOptions.prepareCmd.trim().length > 0
-        ? `${execOptions.prepareCmd} && ${prepareCmdAppendix}`
-        : prepareCmdAppendix;
+        ? `${execOptions.prepareCmd} && ${prepareCommandAppendix}`
+        : prepareCommandAppendix;
+    debug('[exec:prepareCmd] Done');
 
-    // FINISHED execOptions.prepareCmd
-    // STARTING execOptions.publishCmd
     if (this._projectsToPackAndPush.length > 0) {
-      const publishCmdAppendix: string = configureDotnetNugetPush(
+      const publishCommandAppendix: string = configureDotnetNugetPush(
         this._projectsToPackAndPush,
       );
       execOptions.publishCmd
         = execOptions.publishCmd && execOptions.publishCmd.trim().length > 0
-          ? `${execOptions.publishCmd} && ${publishCmdAppendix}`
-          : publishCmdAppendix;
+          ? `${execOptions.publishCmd} && ${publishCommandAppendix}`
+          : publishCommandAppendix;
     }
-
-    // FINISHED execOptions.publishCmd
+    debug('[exec:publishCmd] Done');
   }
 
   /**
@@ -254,8 +270,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
     const indexOfLastPreceding: number | undefined = insertAfterPluginIDs
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
-      .sort()
-      .find((_v, i, obj) => i === obj.length - 1);
+      .sort((a, b) => a - b)
+      .find((_v, index, object) => index === object.length - 1);
     if (!indexOfLastPreceding)
       throw new ReferenceError(
         'An attempt to get the last element of indexOfLastAfter returned undefined.',
@@ -264,23 +280,24 @@ Appending it to the end of the array...This may cause an unexpected order of ope
     const indicesOfBefore: number[] = insertBeforePluginsIDs
       .filter(v => pluginIDs.includes(v))
       .map(v => pluginIDs.indexOf(v))
-      .sort();
+      .sort((a, b) => a - b);
 
     for (const index of indicesOfBefore) {
-      if (index <= indexOfLastPreceding) {
-        const formattedInsertIds: string
-          = '[' + insertPluginIDs.map(v => `"${v}"`).join(', ') + ']';
-        const formattedAfterIds: string
-          = '[' + insertAfterPluginIDs.map(v => `"${v}"`).join(', ') + ']';
-        const formattedBeforeIds: string
-          = '[' + insertBeforePluginsIDs.map(v => `"${v}"`).join(', ') + ']';
-        errors.push(
-          new Error(
-            `insertPlugin was instructed to insert ${formattedInsertIds} after ${formattedAfterIds} and before ${formattedBeforeIds}, `
-            + `but ${JSON.stringify(pluginIDs[indexOfLastPreceding])} is ordered after ${JSON.stringify(pluginIDs[index])}!`,
-          ),
-        );
-      }
+      if (index > indexOfLastPreceding)
+        continue;
+
+      const formattedInsertIds: string
+        = '[' + insertPluginIDs.map(v => `"${v}"`).join(', ') + ']';
+      const formattedAfterIds: string
+        = '[' + insertAfterPluginIDs.map(v => `"${v}"`).join(', ') + ']';
+      const formattedBeforeIds: string
+        = '[' + insertBeforePluginsIDs.map(v => `"${v}"`).join(', ') + ']';
+      errors.push(
+        new Error(
+          `insertPlugin was instructed to insert ${formattedInsertIds} after ${formattedAfterIds} and before ${formattedBeforeIds}, `
+          + `but ${JSON.stringify(pluginIDs[indexOfLastPreceding])} is ordered after ${JSON.stringify(pluginIDs[index])}!`,
+        ),
+      );
     }
 
     if (errors.length > 0)
@@ -295,21 +312,29 @@ Appending it to the end of the array...This may cause an unexpected order of ope
 
   // todo: join result with dummy pack commands
   protected async getTokenTestingCommands(): Promise<string> {
-    const promiseProjects = this.ProjectsToPackAndPush.every(nri => nri instanceof NugetRegistryInfo)
-      ? this.ProjectsToPackAndPush.map(nri => nri.project)
-      : await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects(this.ProjectsToPackAndPush));
+    let projects;
+
+    if (this._projectsToPackAndPush.every(nri => nri instanceof NugetRegistryInfo)) {
+      debug('[SemanticReleaseConfigDotnet#getTokenTestingCommands] All projects already evaluated.');
+      projects = this._projectsToPackAndPush.map(nri => nri.project);
+    }
+    else {
+      debug(`[SemanticReleaseConfigDotnet#getTokenTestingCommands] Evaluating up to ${this._projectsToPackAndPush.length.toString()} projects...`);
+      projects = await Promise.all(await MSBuildProject.PackableProjectsToMSBuildProjects(this._projectsToPackAndPush));
+    }
 
     /** if a project is not in {@link EvaluatedProjects}, add it */
-    for (const project of promiseProjects) {
+    for (const project of projects) {
       if (!this.EvaluatedProjects.includes(project))
         this.EvaluatedProjects.push(project);
     }
 
-    const regInfos = promiseProjects.map(
-      p => new NugetRegistryInfo({ project: p }),
+    const regInfos = projects.map(
+      project => new NugetRegistryInfo({ project }),
     );
     const nupkgPaths = await Promise.all(
       regInfos.map(nri =>
+        // eslint-disable-next-line unicorn/prefer-await
         nri.PackDummyPackage({}).then((nupkgs) => {
           // this is a full file path.
           const mainNupkg = nupkgs.find(nupkg =>
@@ -376,7 +401,8 @@ export async function getConfig(
   const errors: Error[] = [];
 
   if (projectsToPublish.length === 0) {
-    const _ = getEnvVarValue('PROJECTS_TO_PUBLISH');
+    debug('projectsToPublish is empty. Checking PROJECTS_TO_PUBLISH...');
+    const _ = getEnvironmentVariableValue('PROJECTS_TO_PUBLISH');
     if (_ === undefined)
       errors.push(
         new Error(
@@ -385,9 +411,11 @@ export async function getConfig(
       );
     else projectsToPublish = _.split(';');
   }
+  debug(`${projectsToPublish.length.toString()} projects found to dotnet-publish.`);
 
   if (!projectsToPackAndPush) {
-    const _ = getEnvVarValue('PROJECTS_TO_PACK_AND_PUSH');
+    debug('projectsToPackAndPush is empty. Checking PROJECTS_TO_PACK_AND_PUSH...');
+    const _ = getEnvironmentVariableValue('PROJECTS_TO_PACK_AND_PUSH');
     if (_ === undefined)
       errors.push(
         new Error(
@@ -396,20 +424,21 @@ export async function getConfig(
       );
     else projectsToPackAndPush = _.split(';');
   }
+  debug(`${(projectsToPackAndPush?.length ?? 0).toString()} projects found to dotnet-pack and dotnet-nuget-push.`);
 
   if (errors.length > 0) {
-    throw new Error(
-      [
-        'getConfig cannot continue. One or more errors occurred.',
-        ...errors.map(v => v.stack),
-      ].join('\n'),
+    throw new AggregateError(
+      errors,
+      'getConfig cannot continue. One or more errors occurred.',
     );
   }
 
+  debug(`Instantiating ${SemanticReleaseConfigDotnet.name}...`);
   const config = new SemanticReleaseConfigDotnet(
     projectsToPublish,
     projectsToPackAndPush ?? [],
   );
+  debug('Setting up Dotnet commands...');
   await config.setupDotnetCommands();
 
   const options: Options = config.toOptions();

@@ -73,8 +73,8 @@ export function insertPlugin(
   const indexOfLastAfter = afterPluginsIDs
     .filter(v => pluginIDs.includes(v))
     .map(v => pluginIDs.indexOf(v))
-    .sort()
-    .find((_v, i, obj) => i === obj.length - 1);
+    .sort((a, b) => a - b)
+    .find((_v, index, object) => index === object.length - 1);
   if (undefined === indexOfLastAfter)
     throw new ReferenceError(
       'An attempt to get the last element of an array returned undefined.',
@@ -83,7 +83,7 @@ export function insertPlugin(
   const indicesOfBefore = beforePluginsIDs
     .filter(v => pluginIDs.includes(v))
     .map(v => pluginIDs.indexOf(v))
-    .sort();
+    .sort((a, b) => a - b);
 
   // This for-of collects *all* sorting errors. The resulting AggregateError
   // notifies the API user of *all* errors in the order rather than just the

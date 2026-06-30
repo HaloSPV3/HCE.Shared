@@ -36,6 +36,16 @@ updates:
         patterns:
           - '*'
 
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    target-branch: 'yarn-migration'
+    groups:
+      'Yarn Dependencies':
+        patterns:
+          - '*'
+
   - package-ecosystem: 'nuget'
     directory: '/'
     schedule:

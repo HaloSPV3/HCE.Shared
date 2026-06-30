@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-top-level-side-effects */
 /**
  * # semantic-release
  *
@@ -71,6 +72,7 @@ try {
   function setupCommitAnalyzer() {
     const COMMIT_ANALYZER_ID = '@semantic-release/commit-analyzer';
     const commitAnalyzerIndex = config.plugins.findIndex(pluginSpec =>
+      // eslint-disable-next-line unicorn/prefer-minimal-ternary
       typeof pluginSpec === 'string'
         ? pluginSpec === COMMIT_ANALYZER_ID
         : pluginSpec[0] === COMMIT_ANALYZER_ID,
@@ -81,7 +83,7 @@ try {
       scope: type.string.optional(),
       release: type.string,
     });
-    const T_CommitAnalyzerOpts = type({
+    const T_CommitAnalyzerOptions = type({
       preset: type.string.optional(),
       config: type.string.optional(),
       parserOpts: T_AnyRecord.optional(),
@@ -90,28 +92,28 @@ try {
     });
 
     // eslint-disable-next-line jsdoc/require-jsdoc
-    function extractCommitAnalyzerOpts(plugins: (string | [string, Record<keyof object, unknown>])[]): typeof T_CommitAnalyzerOpts['inferOut'] {
+    function extractCommitAnalyzerOptions(plugins: (string | [string, Record<keyof object, unknown>])[]): typeof T_CommitAnalyzerOptions['inferOut'] {
       const entry = plugins.find(v => v === COMMIT_ANALYZER_ID || v[0] === COMMIT_ANALYZER_ID);
       if (entry == undefined || typeof entry === 'string')
         return {};
-      return T_CommitAnalyzerOpts.allows(entry[1]) ? T_CommitAnalyzerOpts.from(entry[1]) : {};
+      return T_CommitAnalyzerOptions.allows(entry[1]) ? T_CommitAnalyzerOptions.from(entry[1]) : {};
     }
 
     /** https://github.com/semantic-release/commit-analyzer#options */
-    const commitAnalyzerOpts = extractCommitAnalyzerOpts(config.plugins);
+    const commitAnalyzerOptions = extractCommitAnalyzerOptions(config.plugins);
 
     // Set Release Rules
 
-    commitAnalyzerOpts.releaseRules ??= [];
-    if (typeof commitAnalyzerOpts.releaseRules === 'string') {
-      const importedConfig = type.unknown.from(createRequire(import.meta.url)(commitAnalyzerOpts.releaseRules));
+    commitAnalyzerOptions.releaseRules ??= [];
+    if (typeof commitAnalyzerOptions.releaseRules === 'string') {
+      const importedConfig = type.unknown.from(createRequire(import.meta.url)(commitAnalyzerOptions.releaseRules));
       if (T_RuleObject.array().allows(type.object.allows(importedConfig) && 'default' in importedConfig && Array.isArray(importedConfig.default) ? importedConfig.default : importedConfig)) {
-        commitAnalyzerOpts.releaseRules = T_RuleObject.array().assert(importedConfig);
+        commitAnalyzerOptions.releaseRules = T_RuleObject.array().assert(importedConfig);
       }
     }
 
     // assign modified tuple to commit analyzer
-    config.plugins[commitAnalyzerIndex] = [COMMIT_ANALYZER_ID, commitAnalyzerOpts];
+    config.plugins[commitAnalyzerIndex] = [COMMIT_ANALYZER_ID, commitAnalyzerOptions];
   }
   setupCommitAnalyzer();
 
@@ -189,22 +191,30 @@ try {
       let gh = -1;
       let git = -1;
       let gl = -1;
-      for (let i = 0; i < config.plugins.length; i++) {
-        switch (config.plugins[i]?.[0]) {
+
+      /**
+       * @param index indexer of {@link config.plugins}
+       */
+      function findIDs(index: number) {
+        switch (config.plugins[index]?.[0]) {
           case '@semantic-release/github': {
-            gh = i;
+            gh = index;
             break;
           }
           case '@semantic-release/git':{
-            git = i;
+            git = index;
             break;
           }
           case '@semantic-release/gitlab': {
-            gl = i;
+            gl = index;
             break;
           }
           default: { break; }
         }
+      }
+
+      for (let index = 0; index < config.plugins.length; index++) {
+        findIDs(index);
       }
       // should run before github, gitlab, and git plugins so package.json is updated _before_ it's copied
       if (gh == -1 && git == -1 && gl == -1)

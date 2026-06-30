@@ -2,8 +2,6 @@
 /* eslint @stylistic/quote-props: ["warn", "as-needed"] */
 /* eslint @stylistic/semi: ["warn", "always"] */
 import type {
-  RuleConfigCondition,
-  RuleConfigSeverity,
   UserConfig,
 } from '@commitlint/types';
 import 'tsx';
@@ -20,7 +18,8 @@ const scopes = {
     'Affects dependencies required in the dev environment or during build time.',
   dotnet:
     'Affects "src/dotnet.ts", files in "dotnet/" or "src/dotnet/" not included in other scopes, and/or our reusable GitHub workflows provided for assisting dotnet CI.',
-  'dotnet.BuildEachRID': 'Affects "dotnet/BuildEachRID.targets',
+  'dotnet.BuildEachRID': 'Affects "dotnet/BuildEachRID.targets"',
+  'dotnet.CWT': 'Affects "dotnet/CleanupWpfTmp.targets"',
   'dotnet.END': 'Affects "dotnet/ExecNupkgDeterministicator.targets".',
   'dotnet.GHNRI':
     'Affects "src/dotnet/GithubNugetRegistryInfo.ts" or its tests.',
@@ -91,9 +90,9 @@ const config: UserConfig = {
   rules: {
     ...commitlintConfig.rules,
     'scope-enum': [
-      2 as RuleConfigSeverity.Error,
-      'always' as RuleConfigCondition,
-      Object.keys(scopes) satisfies string[] as (keyof typeof scopes)[],
+      2,
+      'always',
+      Object.keys(scopes),
     ],
   },
 };
