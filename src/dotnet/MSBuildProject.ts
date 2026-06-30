@@ -1,5 +1,6 @@
 import { type, type Scope, type Type } from 'arktype';
 import { warn } from 'node:console';
+import { hash } from 'node:crypto';
 import { type Dirent } from 'node:fs';
 import { readdir, realpath, stat } from 'node:fs/promises';
 // eslint-disable-next-line unicorn/import-style
@@ -314,6 +315,19 @@ export class MSBuildProject {
         'No MSBuild Property, Item, or TargetResult queries were provided.',
       );
     }
+    // We append this to IntermediateOutputPath for parallel evaluations
+    const shortHashName = `options_SHA3-256_${
+      hash(
+        'SHA3-256',
+        JSON.stringify(options),
+      ).slice(0, 7)
+    }`;
+    const debug_MSBP_Evaluate_hashed = debug_MSBP_Evaluate.extend(shortHashName);
+    options.Property.BaseIntermediateOutputPath = path.join(
+      options.Property.BaseIntermediateOutputPath ?? 'obj',
+      shortHashName,
+    ) + '/';
+
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
     const _pairs = Object.entries(options.Property).filter(p => typeof p[1] === 'string');
@@ -351,7 +365,7 @@ export class MSBuildProject {
       .filter(v => v !== '')
       .join(' ');
     let stdio: Awaited<ReturnType<typeof execAsync>> | undefined;
-    debug_MSBP_Evaluate(`Beginning try/retry loop to evaluate "${options.FullName}"...`);
+    debug_MSBP_Evaluate_hashed(`Beginning try/retry loop to evaluate "${options.FullName}"...`);
 
     // may throw
     while (stdio === undefined) {
@@ -363,7 +377,7 @@ export class MSBuildProject {
       }
       catch (error: unknown) {
         catchEBUSY(error);
-        debug_MSBP_Evaluate(`A file needed by "${options.FullName}" is locked by another process. Retrying after ${(1000).toString()} seconds...`);
+        debug_MSBP_Evaluate_hashed(`A file needed by "${options.FullName}" is locked by another process. Retrying after ${(1000).toString()} seconds...`);
       }
     }
 
@@ -405,10 +419,10 @@ export class MSBuildProject {
 
     const evaluation = new MSBuildEvaluationOutput(rawOutput);
 
-    debug_MSBP_Evaluate(`Getting MSBuild Targets of "${options.FullName}"...`);
+    debug_MSBP_Evaluate_hashed(`Getting MSBuild Targets of "${options.FullName}"...`);
     const projTargets = await this.GetTargets(options.FullName);
 
-    debug_MSBP_Evaluate(`Returning new MSBuildProject instance for "${options.FullName}"...`);
+    debug_MSBP_Evaluate_hashed(`Returning new MSBuildProject instance for "${options.FullName}"...`);
     return new MSBuildProject({
       fullPath: options.FullName,
       projTargets,
