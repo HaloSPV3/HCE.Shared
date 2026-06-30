@@ -365,19 +365,44 @@ export class MSBuildProject {
       .filter(v => v !== '')
       .join(' ');
     let stdio: Awaited<ReturnType<typeof execAsync>> | undefined;
+    let totalMilliseconds = 0;
+    let delay = 0;
     debug_MSBP_Evaluate_hashed(`Beginning try/retry loop to evaluate "${options.FullName}"...`);
 
     // may throw
     while (stdio === undefined) {
       try {
         stdio = await setTimeout(
-          1000,
+          delay,
           execAsync(commandLine, true),
         );
       }
       catch (error: unknown) {
+        /**
+         * Warning: {@link totalMilliseconds} may be significantly greater than threshold!
+         * e.g.
+         * `325_000 >= 300_000` (5m25s vs 5m)
+         * `378_000 >= 360_000` (6m18s vs 6m),
+         * `630_000 >= 600_000` (10m30s vs 10m)
+         * `1225_000 >= 1200_000` (20m25s vs 20m)
+         * `2415_000 >= 2400_000` (40m15s vs 40m)
+         * `2556_000 >= 2485_000` (42m36s vs 41m25s; 71 seconds over)
+         */
+        if (totalMilliseconds >= 360_000 /* milliseconds */) {
+          catchEBUSY(error);
+        }
+        else {
+          throw new Error(
+            `Unable to pack dummy package: Maximum retries reached. Approximately ${(totalMilliseconds / 1000).toString()} seconds spent retrying.`,
+            { cause: error });
+        }
+        // If the delay is pushed back to 10 seconds, then...
+        // A) A project's intermediate output (`obj/**`) is in use by a build system or language server
+        // B) something horrible has happened
         catchEBUSY(error);
-        debug_MSBP_Evaluate_hashed(`A file needed by "${options.FullName}" is locked by another process. Retrying after ${(1000).toString()} seconds...`);
+        // incremental back-off; add new delay to total
+        totalMilliseconds += delay += 1000;
+        debug_MSBP_Evaluate_hashed(`A file needed by "${options.FullName}" is locked by another process. Retrying after ${(delay / 1000).toString()} seconds...`);
       }
     }
 
