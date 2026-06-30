@@ -400,6 +400,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@conventional-changelog/template@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@conventional-changelog/template@npm:1.2.0"
+  checksum: 10c0/c0e8a5fb4fc04770a9ba259cad782f96e512da4f9ff6bc9a634272700494b397759fde67a757684ef216056749ca42bcade00f149a8958039854d40806390e97
+  languageName: node
+  linkType: hard
+
 "@dotenvx/dotenvx@npm:^1.75.1":
   version: 1.75.1
   resolution: "@dotenvx/dotenvx@npm:1.75.1"
@@ -872,12 +879,12 @@ __metadata:
     "@semantic-release/release-notes-generator": "npm:^14.1.1"
     "@stylistic/eslint-plugin": "npm:^5.10.0"
     "@types/debug": "npm:^4.1.13"
-    "@types/node": "npm:^24.13.2"
+    "@types/node": "npm:^26.0.1"
     "@types/tmp": "npm:^0.2.6"
     "@typescript-eslint/utils": "npm:^8.62.1"
     arktype: "npm:^2.2.1"
     chardet: "npm:^2.2.0"
-    conventional-changelog-conventionalcommits: "npm:^9.3.1"
+    conventional-changelog-conventionalcommits: "npm:^10.2.0"
     conventional-changelog-preset-loader: "npm:^6.0.0"
     debug: "npm:^4.4.3"
     error.iserror: "npm:^1.0.2"
@@ -2283,12 +2290,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^24.13.2":
-  version: 24.13.2
-  resolution: "@types/node@npm:24.13.2"
+"@types/node@npm:^26.0.1":
+  version: 26.0.1
+  resolution: "@types/node@npm:26.0.1"
   dependencies:
-    undici-types: "npm:~7.18.0"
-  checksum: 10c0/d7d48a88a4feb0a6aac3cbfaf9ef3b12752b4b09447f88dd0b4c77c03b281e3d4330fe6982a99aedcd63fc16c7540a0c248b91eb2abb0b3edd884d7fe684e9ea
+    undici-types: "npm:~8.3.0"
+  checksum: 10c0/31d204333c70124da6bcac7d1f27d8980149fe3f95a8419bfcd19c3e5823705c0e370d71ac34399352e1263b2d5fc41c87af964ec81e5a05a32224d65d8d224e
   languageName: node
   linkType: hard
 
@@ -3322,7 +3329,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-conventionalcommits@npm:^9.2.0, conventional-changelog-conventionalcommits@npm:^9.3.1":
+"conventional-changelog-conventionalcommits@npm:^10.2.0":
+  version: 10.2.0
+  resolution: "conventional-changelog-conventionalcommits@npm:10.2.0"
+  dependencies:
+    "@conventional-changelog/template": "npm:^1.2.0"
+  checksum: 10c0/8a1bf93c8336846c934b16e601c07d7a7321772c81fefb877e70c9e8ba2400f0f8029f28417b708f2608faad2abf513027353db3234428abf540a0f5b8a7db5d
+  languageName: node
+  linkType: hard
+
+"conventional-changelog-conventionalcommits@npm:^9.2.0":
   version: 9.3.1
   resolution: "conventional-changelog-conventionalcommits@npm:9.3.1"
   dependencies:
@@ -9021,10 +9037,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~7.18.0":
-  version: 7.18.2
-  resolution: "undici-types@npm:7.18.2"
-  checksum: 10c0/85a79189113a238959d7a647368e4f7c5559c3a404ebdb8fc4488145ce9426fcd82252a844a302798dfc0e37e6fb178ff481ed03bc4caf634c5757d9ef43521d
+"undici-types@npm:~8.3.0":
+  version: 8.3.0
+  resolution: "undici-types@npm:8.3.0"
+  checksum: 10c0/c8aa7e2fbebfce519654dafadc0ece59be888d2ccaf180fb4495da875e7b536d2456345c384069c7e6f3e9c9ab7435f074957da306f142343eee86ff8048855a
   languageName: node
   linkType: hard
 
