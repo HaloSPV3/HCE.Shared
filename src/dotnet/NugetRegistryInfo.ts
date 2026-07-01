@@ -6,6 +6,7 @@ import type { NugetProjectProperties } from './NugetProjectProperties.ts';
 
 import { config as configDotenv } from '@dotenvx/dotenvx';
 import { type, type Type } from 'arktype';
+import type { Default } from 'arktype/internal/attributes.ts';
 import { detectFile, detectFileSync } from 'chardet';
 import { ok } from 'node:assert/strict';
 import type { ExecException } from 'node:child_process';
@@ -13,21 +14,30 @@ import { existsSync, writeFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 // eslint-disable-next-line unicorn/import-style
-import * as node_path from 'node:path';
+import path, * as node_path from 'node:path';
 import { cwd, env } from 'node:process';
-import { setTimeout } from 'node:timers/promises';
-import { isError } from '../utils/isError.ts';
 import sanitizeFileName from 'sanitize-filename';
+import debug from '../debug.ts';
 import { getEnvVarValue as getEnvironmentVariableValue } from '../utils/env.ts';
 import { execAsync } from '../utils/execAsync.ts';
-import { catchEBUSY, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.ts';
-import type { Default } from 'arktype/internal/attributes.ts';
+import { isError } from '../utils/isError.ts';
+import { loopTryDotnetCommand, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.ts';
 
 type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
 type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
 const temporaryDirectoryNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
 const key_OutputPackItems = '_OutputPackItems';
+
+const debug_NRI = debug.extend('NugetRegistryInfo');
+debug_NRI.enabled = debug.enabled;
+
+const debug_NRI_PackPackages = debug_NRI.extend('_PackPackages');
+debug_NRI_PackPackages.enabled = debug.enabled;
+
+const debug_NRI_PackDummyPackage = debug_NRI.extend('PackDummyPackage');
+debug_NRI_PackDummyPackage.enabled = debug.enabled;
+
 /**
  * Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
  * If the file doesn't exist, it is created.
@@ -482,25 +492,25 @@ but the environment variable is empty or undefined.`);
   ): Promise<string[]> {
     options['-GetItem'] = [...options['-GetItem'] ?? [], key_OutputPackItems];
 
-    const packCommand = this.GetPackCommand(
+    const commandLine = this.GetPackCommand(
       options,
       shouldUsePerSourceSubfolder,
       shouldUsePerPackageIdSubfolder,
     );
-    let packOutput: undefined | { stdout: string; stderr: string };
-    while (packOutput === undefined) {
-      try {
-        packOutput = await setTimeout(
-          1000,
-          execAsync(packCommand, true),
-        );
-      }
-      catch (error: unknown) {
-        catchEBUSY(error);
-      }
-    }
+
+    const output = await loopTryDotnetCommand({
+      commandLine,
+      customDebugger: debug_NRI_PackPackages,
+      projectName: path.basename(
+        this._project.Properties.MSBuildProjectFullPath,
+        path.extname(this._project.Properties.MSBuildProjectFullPath),
+      ),
+      taskVerb: 'pack',
+      timeoutMilliseconds: 360_000,
+    });
+
     // may include .snupkg
-    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
+    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(output.stdout)
       .Items
       ?.[key_OutputPackItems]
       ?.filter(item => item.Extension !== '.nuspec')
@@ -525,7 +535,7 @@ but the environment variable is empty or undefined.`);
   public async PackDummyPackage(
     options: typeof NRI.PackDummyPackagesOptionsType.inferIn,
   ): Promise<string[]> {
-    const packCommand: string = this.GetPackCommand(
+    const commandLine: string = this.GetPackCommand(
       {
         ...options,
         output: getDummiesDirectory(this._project),
@@ -535,33 +545,19 @@ but the environment variable is empty or undefined.`);
       true,
     );
 
-    let packOutput: undefined | { stdout: string; stderr: string };
-    let delay = 0;
-    while (packOutput === undefined) {
-      try {
-        packOutput = await setTimeout(
-          delay,
-          execAsync(packCommand, true),
-        );
-      }
-      catch (error: unknown) {
-        if (delay <= 10_000 /* milliseconds */) {
-          catchEBUSY(error);
-        }
-        else {
-          throw new Error(
-            'Unable to pack dummy package; (10/10) Maximum retries reached.',
-            { cause: error });
-        }
-        // If the delay is pushed back to 10 seconds, then...
-        // A) A project's intermediate output (`obj/**`) is in use by a build system or language server
-        // B) something horrible has happened
-      }
-      // back-off
-      delay += 1000;
-    }
+    const output = await loopTryDotnetCommand({
+      commandLine,
+      customDebugger: debug_NRI_PackDummyPackage,
+      projectName: path.basename(
+        this._project.Properties.MSBuildProjectFullPath,
+        path.extname(this._project.Properties.MSBuildProjectFullPath),
+      ),
+      taskVerb: 'pack',
+      timeoutMilliseconds: 360_000,
+    });
+
     // may include .snupkg
-    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
+    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(output.stdout)
       .Items
       ?.[key_OutputPackItems]
       ?.filter(item => item.Extension !== '.nuspec')
