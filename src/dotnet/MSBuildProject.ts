@@ -429,7 +429,7 @@ export class MSBuildProject {
     const string_property
       = _pairs.length === 0
         ? ''
-        : `-p:"${_pairs.map(pair => pair[0] + '=' + pair[1]).join(';')}"`;
+        : `"-p:${_pairs.map(pair => pair[0] + '=' + pair[1]).join(';')}"`;
     const string_target
       = options.Targets.length === 0
         ? ''
@@ -437,15 +437,15 @@ export class MSBuildProject {
     const string_getItem
       = options.GetItem.length === 0
         ? ''
-        : `-getItem:"${options.GetItem.join(',')}"`;
+        : `"-getItem:${options.GetItem.join(',')}"`;
     const string_getProperty
       = options.GetProperty.length === 0
         ? ''
-        : `-getProperty:"${options.GetProperty.join(',')}"`;
+        : `"-getProperty:${options.GetProperty.join(',')}"`;
     const string_getTargetResult
       = options.GetTargetResult.length === 0
         ? ''
-        : `-getTargetResult:"${options.GetTargetResult.join(',')}"`;
+        : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
 
     const isTargetPack = string_target.toLocaleLowerCase() == `-t:pack`;
     const commandLine = [
