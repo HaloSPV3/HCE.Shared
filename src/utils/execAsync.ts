@@ -50,7 +50,8 @@ const T_ErrnoException: Type<NodeJS.ErrnoException> = type('Error').and({
 });
 
 const T_ExecException: Type<
-  Omit<ExecException, 'cmd'>
+  Omit<ExecException, 'cmd' | 'signal'>
+  & { signal?: ExecException['signal'] | null }
   & Partial<Pick<ExecException, 'cmd'>>
 > = T_ErrnoException.omit('code').and({
   'cmd?': 'string',
@@ -59,7 +60,8 @@ const T_ExecException: Type<
   'signal?': type((Object.keys(constants.signals) as NodeJS.Signals[])
     .map(v => type(`'${v}'`))
     // eslint-disable-next-line unicorn/no-array-reduce
-    .reduce((previous, current) => previous.or(current))),
+    .reduce((previous, current) => previous.or(current)))
+    .or('null'),
   'stdout?': 'string',
   'stderr?': 'string',
 });
