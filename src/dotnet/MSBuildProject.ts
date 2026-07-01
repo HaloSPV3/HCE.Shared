@@ -407,6 +407,7 @@ export class MSBuildProject {
       ).slice(0, 7)
     }`;
     const debug_MSBP_Evaluate_hashed = debug_MSBP_Evaluate.extend(shortHashName);
+    debug_MSBP_Evaluate_hashed.enabled = debug.enabled;
     options.Property.BaseIntermediateOutputPath = path.join(
       temporaryDirectoryNamespace,
       path.basename(options.FullName, path.extname(options.FullName)),
