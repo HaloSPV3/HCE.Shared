@@ -24,7 +24,7 @@ const debug_MSBP_Evaluate = debug_MSBP.extend('Evaluate');
 debug_MSBP_Evaluate.enabled = debug.enabled;
 
 export type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/`;
-export type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
+export type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\`;
 const temporaryDirectoryNamespace = path.join(tmpdir(), 'HCE.Shared', '.NET') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
 
 /**
