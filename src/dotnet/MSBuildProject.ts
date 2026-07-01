@@ -426,10 +426,6 @@ export class MSBuildProject {
     // disable GeneratePackageOnBuild so Pack can succeed when Build hasn't been run
     Object.assign(options.Property, { GeneratePackageOnBuild: false });
     const _pairs = Object.entries(options.Property).filter(p => typeof p[1] === 'string');
-    const string_property
-      = _pairs.length === 0
-        ? ''
-        : `"-p:${_pairs.map(pair => pair[0] + '=' + pair[1]).join(';')}"`;
     const string_target
       = options.Targets.length === 0
         ? ''
@@ -446,6 +442,10 @@ export class MSBuildProject {
       = options.GetTargetResult.length === 0
         ? ''
         : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
+    const string_property
+      = _pairs.length === 0
+        ? ''
+        : `"-p:${_pairs.map(([key, value]) => key + '=' + value).join(';')}"`;
 
     const isTargetPack = string_target.toLocaleLowerCase().replaceAll('"', '') == `-t:pack`;
     const commandLine = [
@@ -453,11 +453,11 @@ export class MSBuildProject {
       isTargetPack ? 'pack' : 'msbuild',
       `"${options.FullName}"`,
       isTargetPack ? '' : '-restore',
-      string_property,
       isTargetPack ? '' : string_target,
       string_getItem,
       string_getProperty,
       string_getTargetResult,
+      string_property,
     ]
       .filter(v => v !== '')
       .join(' ');
