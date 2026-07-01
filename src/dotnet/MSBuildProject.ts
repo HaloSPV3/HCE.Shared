@@ -447,7 +447,7 @@ export class MSBuildProject {
         ? ''
         : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
 
-    const isTargetPack = string_target.toLocaleLowerCase() == `-t:pack`;
+    const isTargetPack = string_target.toLocaleLowerCase().replaceAll('"', '') == `-t:pack`;
     const commandLine = [
       'dotnet',
       isTargetPack ? 'pack' : 'msbuild',
