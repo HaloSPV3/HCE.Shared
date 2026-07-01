@@ -461,20 +461,18 @@ export class MSBuildProject {
     ]
       .filter(v => v !== '')
       .join(' ');
-    let stdio: Awaited<ReturnType<typeof execAsync>> | undefined;
+    let output: Awaited<ReturnType<typeof execAsync>> | undefined | Error;
     let totalMilliseconds = 0;
     let delay = 0;
     debug_MSBP_Evaluate_hashed(`Beginning try/retry loop to evaluate "${options.FullName}"...`);
 
     // may throw
-    while (stdio === undefined) {
-      try {
-        stdio = await setTimeout(
-          delay,
-          execAsync(commandLine, true),
-        );
-      }
-      catch (error: unknown) {
+    while (output === undefined) {
+      output = await setTimeout(
+        delay,
+        execAsync(commandLine, true),
+        // eslint-disable-next-line unicorn/prefer-await
+      ).catch((error: unknown) => {
         /**
          * Warning: {@link totalMilliseconds} may be significantly greater than threshold!
          * e.g.
@@ -487,21 +485,17 @@ export class MSBuildProject {
          */
         if (totalMilliseconds <= 360_000 /* milliseconds */) {
           catchEBUSY(error);
+          // incremental back-off; add new delay to total
+          totalMilliseconds += delay += 1000;
+          debug_MSBP_Evaluate_hashed(`A file needed by "${options.FullName}" is locked by another process. Retrying after ${(delay / 1000).toString()} seconds...`);
+          return;
         }
-        else {
-          throw new Error(
-            `Unable to evaluate project: Maximum retries reached. Approximately ${(totalMilliseconds / 1000).toString()} seconds spent retrying.`,
-            { cause: error });
-        }
-        // If the delay is pushed back to 10 seconds, then...
-        // A) A project's intermediate output (`obj/**`) is in use by a build system or language server
-        // B) something horrible has happened
-        catchEBUSY(error);
-        // incremental back-off; add new delay to total
-        totalMilliseconds += delay += 1000;
-        debug_MSBP_Evaluate_hashed(`A file needed by "${options.FullName}" is locked by another process. Retrying after ${(delay / 1000).toString()} seconds...`);
-      }
+        return new Error(
+          `Unable to evaluate project: Maximum retries reached. Approximately ${(totalMilliseconds / 1000).toString()} seconds spent retrying.`,
+          { cause: error });
+      });
     }
+    if (Error.isError(output)) throw output;
 
     // todo: consider -getResultOutputFile:file
     //  Redirect output from get* into a file.
@@ -516,22 +510,22 @@ export class MSBuildProject {
      *   platforms. Even Windows. Otherwise, MSBuild/dotnet will error-exit with
      *   "The BaseIntermediateOutputPath must end with a trailing slash".
      */
-    if (stdio.stdout.startsWith('MSBuild version')) {
-      warn(stdio.stdout);
+    if (output.stdout.startsWith('MSBuild version')) {
+      warn(output.stdout);
       throw new Error(
         'dotnet msbuild was expected to output JSON, but output its version header instead.',
       );
     }
 
     let rawOutput: ConstructorParameters<typeof MSBuildEvaluationOutput>[0];
-    if (stdio.stdout.startsWith('{')) {
+    if (output.stdout.startsWith('{')) {
       /** stdout is JSON string */
-      rawOutput = stdio.stdout;
+      rawOutput = output.stdout;
     }
     else if (options.GetProperty.length > 0 && options.GetProperty[0] !== undefined) {
       rawOutput = {
         Properties: {
-          [options.GetProperty[0]]: String(JSON.parse(stdio.stdout)),
+          [options.GetProperty[0]]: String(JSON.parse(output.stdout)),
         },
       };
     }
