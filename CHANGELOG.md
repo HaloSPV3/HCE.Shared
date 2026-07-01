@@ -1,3 +1,9 @@
+## [3.8.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.8.0...v3.8.1) (2026-07-01)
+
+### Bug Fixes
+
+* **utils.execAsync:** allow null `ExecException.signal` ([5fd6de5](https://github.com/HaloSPV3/HCE.Shared/commit/5fd6de5f06d629e9775418bf871a9a2a9d819a62))
+
 ## [3.8.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.7.1...v3.8.0) (2026-07-01)
 
 ### Features
