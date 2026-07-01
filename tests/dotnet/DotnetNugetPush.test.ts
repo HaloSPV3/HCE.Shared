@@ -34,7 +34,7 @@ async function trySetCI_PROJECT_ID(): Promise<void> {
 await describe('canPushPackagesToSource resolves when...', { concurrency: false }, async () => {
   await it(
     '...GITHUB_REPOSITORY_OWNER and GH_TOKEN are defined, valid, and can push packages to source ',
-    { timeout: 60_000 },
+    { timeout: 30_000 },
     async (t) => {
       if (process.env['GH_TOKEN'] === 'placeholder')
         delete process.env['GH_TOKEN'];
@@ -52,7 +52,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     });
   await it(
     '...CI_PROJECT_ID is defined and CI_JOB_TOKEN, GITLAB_TOKEN, or GL_TOKEN is defined, valid, and can push packages to source',
-    { timeout: 60_000 },
+    { timeout: 30_000 },
     async (t) => {
       await trySetCI_PROJECT_ID();
       if (process.env['CI_PROJECT_ID'] === 'placeholder')
@@ -73,7 +73,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     });
   await it(
     '...NUGET_TOKEN is defined, valid, and can push packages to source',
-    { timeout: 60_000 },
+    { timeout: 30_000 },
     async (t) => {
       if (!getEnvironmentVariableValue('NUGET_TOKEN')) {
         t.skip('NUGET_TOKEN environment variable undefined');
