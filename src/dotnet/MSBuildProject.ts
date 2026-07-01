@@ -442,10 +442,10 @@ export class MSBuildProject {
       = options.GetTargetResult.length === 0
         ? ''
         : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
-    const string_property
+    const string_property_array: string[]
       = _pairs.length === 0
-        ? ''
-        : `"-p:${_pairs.map(([key, value]) => key + '=' + value).join(';')}"`;
+        ? []
+        : _pairs.map(([key, value]) => '"-p:' + key + '=' + value + '"');
 
     const isTargetPack = string_target.toLocaleLowerCase().replaceAll('"', '') == `-t:pack`;
     const commandLine = [
@@ -457,7 +457,7 @@ export class MSBuildProject {
       string_getItem,
       string_getProperty,
       string_getTargetResult,
-      string_property,
+      ...string_property_array,
     ]
       .filter(v => v !== '')
       .join(' ');
