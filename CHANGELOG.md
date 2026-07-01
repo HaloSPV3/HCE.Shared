@@ -1,3 +1,9 @@
+## [3.8.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.7.1...v3.8.0) (2026-07-01)
+
+### Features
+
+* **utils.execAsync:** correct types of `ChildProcessSpawnException` properties; add missing, optional properties ([37ef04f](https://github.com/HaloSPV3/HCE.Shared/commit/37ef04f81bb3f73ccebe215d21c0f32e9fdcbf32))
+
 ## [3.7.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.7.0...v3.7.1) (2026-06-30)
 
 ### Bug Fixes

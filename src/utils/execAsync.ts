@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/no-defaults */
 import { type, type Type } from 'arktype';
-import { exec } from 'node:child_process';
+import { exec, type ExecException } from 'node:child_process';
 import { constants } from 'node:os';
 import { promisify } from 'node:util';
 import { isError } from './isError.ts';
@@ -42,22 +42,21 @@ export async function execAsync(command: string, shouldSetStderrAsCause = false)
   }
 }
 
-const T_ExecException: Type<{
-  name: string;
-  message: string;
-  stack?: string | undefined;
-  cause?: unknown;
-  cmd?: string | null | undefined;
-  killed?: boolean | null | undefined;
-  code?: number | null | undefined;
-  signal?: 'SIGABRT' | 'SIGALRM' | 'SIGBUS' | 'SIGCHLD' | 'SIGCONT' | 'SIGFPE' | 'SIGHUP' | 'SIGILL' | 'SIGINT' | 'SIGIO' | 'SIGIOT' | 'SIGKILL' | 'SIGPIPE' | 'SIGPOLL' | 'SIGPROF' | 'SIGPWR' | 'SIGQUIT' | 'SIGSEGV' | 'SIGSTKFLT' | 'SIGSTOP' | 'SIGSYS' | 'SIGTERM' | 'SIGTRAP' | 'SIGTSTP' | 'SIGTTIN' | 'SIGTTOU' | 'SIGUNUSED' | 'SIGURG' | 'SIGUSR1' | 'SIGUSR2' | 'SIGVTALRM' | 'SIGWINCH' | 'SIGXCPU' | 'SIGXFSZ' | 'SIGBREAK' | 'SIGLOST' | 'SIGINFO' | null | undefined;
-  stdout?: string | undefined;
-  stderr?: string | undefined;
-}> = type('Error').and({
-  'cmd?': 'string | null',
-  'killed?': 'boolean | null',
-  'code?': 'number | null',
-  'signal?': type.null.or((Object.keys(constants.signals) as NodeJS.Signals[])
+const T_ErrnoException: Type<NodeJS.ErrnoException> = type('Error').and({
+  'errno?': 'number',
+  'code?': 'string',
+  'path?': 'string',
+  'syscall?': 'string',
+});
+
+const T_ExecException: Type<
+  Omit<ExecException, 'cmd'>
+  & Partial<Pick<ExecException, 'cmd'>>
+> = T_ErrnoException.omit('code').and({
+  'cmd?': 'string',
+  'code?': 'number | string',
+  'killed?': 'boolean',
+  'signal?': type((Object.keys(constants.signals) as NodeJS.Signals[])
     .map(v => type(`'${v}'`))
     // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((previous, current) => previous.or(current))),
@@ -65,15 +64,19 @@ const T_ExecException: Type<{
   'stderr?': 'string',
 });
 
+// A class can only implement an identifier/qualified-name with optional type arguments. ts(2500)
 type _ExecException = typeof T_ExecException.inferOut;
 
 export class ChildProcessSpawnException extends Error implements _ExecException {
   cmd: typeof T_ExecException.inferOut.cmd;
   code: typeof T_ExecException.inferOut.code;
+  errno?: typeof T_ExecException.inferOut.errno;
   killed: typeof T_ExecException.inferOut.killed;
+  path?: typeof T_ExecException.inferOut.path;
   signal: typeof T_ExecException.inferOut.signal;
   stderr: typeof T_ExecException.inferOut.stderr;
   stdout: typeof T_ExecException.inferOut.stdout;
+  syscall?: typeof T_ExecException.inferOut.syscall;
 
   constructor(
     message: Parameters<typeof Error>[0],
@@ -83,9 +86,12 @@ export class ChildProcessSpawnException extends Error implements _ExecException 
     super(message, options);
     this.cmd = options.cmd;
     this.code = options.code;
+    this.errno = options.errno;
     this.killed = options.killed;
+    this.path = options.path;
     this.signal = options.signal;
     this.stderr = options.stderr;
     this.stdout = options.stdout;
+    this.syscall = options.syscall;
   }
 }
