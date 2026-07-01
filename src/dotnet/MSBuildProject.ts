@@ -452,7 +452,7 @@ export class MSBuildProject {
       'dotnet',
       isTargetPack ? 'pack' : 'msbuild',
       `"${options.FullName}"`,
-      isTargetPack ? '' : '-restore',
+      '-restore',
       isTargetPack ? '' : string_target,
       string_getItem,
       string_getProperty,
