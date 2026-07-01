@@ -424,7 +424,7 @@ export class MSBuildProject {
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
     // disable GeneratePackageOnBuild so Pack can succeed when Build hasn't been run
-    Object.assign(options.Property, { GeneratePackageOnBuild: false });
+    Object.assign(options.Property, { GeneratePackageOnBuild: 'false' });
     const _pairs = Object.entries(options.Property).filter(p => typeof p[1] === 'string');
     const string_target
       = options.Targets.length === 0
