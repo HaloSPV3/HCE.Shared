@@ -811,6 +811,7 @@ export function catchEBUSY(error: unknown): undefined {
       if (isCS2012 || isAVLN9999 || hasErrorMessagePattern)
         // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined; /* retry */
+      throw error;
     }
     /**
      * some known warnings/errors:
@@ -830,9 +831,9 @@ export function catchEBUSY(error: unknown): undefined {
      *    > Learn about SDK resolution:
      *    > https://aka.ms/dotnet/sdk-not-found
      */
-    else throw error;
+    throw error;
   }
-  else throw new Error('unknown error', { cause: error });
+  throw new Error('unknown error', { cause: error });
 }
 
 /**
