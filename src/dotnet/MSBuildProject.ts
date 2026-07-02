@@ -336,13 +336,13 @@ export class MSBuildProject {
       path.basename(options.FullName, path.extname(options.FullName)),
       shortHashName,
       'obj',
-    ) + path.sep;
+    ) + '/';
     options.Property.BaseOutputPath = path.join(
       temporaryDirectoryNamespace,
       path.basename(options.FullName, path.extname(options.FullName)),
       shortHashName,
       'bin',
-    ) + path.sep;
+    ) + '/';
 
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
