@@ -15,9 +15,6 @@ import {
 } from '../utils/reflection.ts';
 import { MSBuildProjectProperties, type Class_MSBPP } from './MSBuildProjectProperties.ts';
 
-const Type_RepoType: type<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
-const Type_SymbolPackageFormat: type<'symbols.nupkg' | 'snupkg'> = type('"symbols.nupkg" | "snupkg"');
-
 /**
  * A readonly record of a .csproj or .fsproj with NuGet configuration properties in
  * addition to those specified by {@link MSBuildProjectProperties}. This record
@@ -574,11 +571,6 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   }
 }
 
-export type Class_NPP = ClassLike<
-  typeof NugetProjectProperties
-  & WithPrototype<Class_MSBPP>
->;
-
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class NPPGetterNames {
   private static _prototypeChain: PrototypeChainOfClass<Class_NPP> | undefined;
@@ -612,5 +604,12 @@ export class NPPGetterNames {
     );
   }
 }
+
+export type Class_NPP = ClassLike<
+  typeof NugetProjectProperties
+  & WithPrototype<Class_MSBPP>
+>;
+const Type_RepoType: type<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
+const Type_SymbolPackageFormat: type<'symbols.nupkg' | 'snupkg'> = type('"symbols.nupkg" | "snupkg"');
 
 /** @module NugetProjectProperties */
