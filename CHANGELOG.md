@@ -1,3 +1,11 @@
+## [3.9.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.2...v3.9.3) (2026-07-02)
+
+### Bug Fixes
+
+* **deps:** bump `@eslint/json` to 2.0.1 ([0ca0fe5](https://github.com/HaloSPV3/HCE.Shared/commit/0ca0fe55ffa4c5180a2d790f1b8497e4b66a98f0))
+* **deps:** bump `@semantic-release/github` to 12.0.9 to fix publishing error ([5df2862](https://github.com/HaloSPV3/HCE.Shared/commit/5df2862c641659d262660702b4aaeb2c39de6955))
+* **deps:** bump arktype to 2.2.2 ([20ad5c8](https://github.com/HaloSPV3/HCE.Shared/commit/20ad5c87030273f7f95c02efd906faf4dc6f7648))
+
 ## [3.9.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.1...v3.9.2) (2026-07-02)
 
 ### Bug Fixes
