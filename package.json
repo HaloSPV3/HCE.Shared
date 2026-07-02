@@ -1,6 +1,6 @@
 {
   "name": "@halospv3/hce.shared-config",
-  "version": "3.8.1",
+  "version": "3.9.0",
   "description": "Automate commit message quality, changelogs, and CI/CD releases. Its `main` entry point is a Semantic Release config. Functions and classes are exposed for customization. An ESLint config, a Commitlint config, and addl. resources for .NET projects are also provided.",
   "keywords": [
     "semantic-release",
@@ -49,7 +49,7 @@
     "build": "tsdown",
     "build:clean": "yarn clean-build",
     "check": "yarn type && yarn lint && yarn test",
-    "clean": "tsdown --clean",
+    "clean": "dotnet clean dotnet; tsdown --clean",
     "clean-build": "yarn clean && yarn build",
     "commitlint": "commitlint",
     "coverage": "yarn test -- --experimental-test-coverage",

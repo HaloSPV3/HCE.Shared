@@ -1,3 +1,27 @@
+## [3.9.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.8.1...v3.9.0) (2026-07-02)
+
+### Features
+
+* **dotnet.MSBP, dotnet.NPP:** add `BooleanString` `GeneratePackageOnBuild` (default: "false"); disable it in all Pack operations ([6044469](https://github.com/HaloSPV3/HCE.Shared/commit/6044469ca8e482a91b75a345c003b782cf706984))
+* **dotnet.MSBP:** refactor `execAsync` retry loops to `loopTryDotnetCommand` ([4d86185](https://github.com/HaloSPV3/HCE.Shared/commit/4d86185b0b4bb47164af490ce8e55a289539a0a7))
+
+### Bug Fixes
+
+* **dotnet.MSBP:** enable "hashed" sub-debugger when root debugger is enabled ([c260a58](https://github.com/HaloSPV3/HCE.Shared/commit/c260a5830a4c0b531e206a3f890e5f2cf28ec7b3))
+* **dotnet.MSBP:** infer `EvaluationOptions`'s `Property` from NugetProjectProperties ([54baca8](https://github.com/HaloSPV3/HCE.Shared/commit/54baca852db10210e6da02d935cd7557fc477bb5))
+* **dotnet.MSBP:** move "useless" delay increment and debug statement into `if` statement so they execute; convert try-catch to Promise.catch chain ([38c431e](https://github.com/HaloSPV3/HCE.Shared/commit/38c431ea025eef269f8343469b23ee2cfa54acb8))
+* **dotnet.MSBP:** move `-p:` to end of arguments to mitigate MSB3021 'Unable to copy file "...".The filename, directory name, or volume label syntax is incorrect.' ([9e6956a](https://github.com/HaloSPV3/HCE.Shared/commit/9e6956ad1470ff4f223030b1414a3038b1c9bfe1))
+* **dotnet.MSBP:** move double-quotes in `Evaluate` command line ([a97d0c1](https://github.com/HaloSPV3/HCE.Shared/commit/a97d0c1113dab476bcecaa3065a0cbb28a0decca))
+* **dotnet.MSBP:** remove "Dummies" from type `TemporaryDirectoryNamespace_Win` ([bf0ba07](https://github.com/HaloSPV3/HCE.Shared/commit/bf0ba071c58c1392cd18cd42a2cc5970345bf295))
+* **dotnet.MSBP:** split Evaluation property assignments to separate arguments ([8aece83](https://github.com/HaloSPV3/HCE.Shared/commit/8aece83b9304d52a4e6d098a5724afb0ec6c2e25))
+* **dotnet.MSBP:** stringify `GeneratePackageOnBuild`'s `false` value so it isn't filtered out ([d91ecfc](https://github.com/HaloSPV3/HCE.Shared/commit/d91ecfc948f742d50f31cef6442cfda6b357de88))
+* **dotnet.MSBP:** strip double-quotes when comparing to "-p:pack" for `isTargetPack` ([4b27b1b](https://github.com/HaloSPV3/HCE.Shared/commit/4b27b1b0a1fbfa8d2c30867dc91124e4b0815939))
+* **dotnet.MSBP:** throw error if it is not one expected by `catchEBUSY`; remove redundant `else`s ([a508f69](https://github.com/HaloSPV3/HCE.Shared/commit/a508f69d4d17a9bef641432c04669ca78067cf5b))
+* **dotnet.MSBP:** unconditionally add `-restore` to `Evaluation` command ([6fa668b](https://github.com/HaloSPV3/HCE.Shared/commit/6fa668bcf96bb4306b58db9c820a8192406515d1))
+* **dotnet.NRI:** infer `PackDummyPackagesOptionsType`'s `propertyOverrides` `NugetProjectProperties` ([4654463](https://github.com/HaloSPV3/HCE.Shared/commit/4654463465af4a17074a52fe7dfc390f59874020))
+* **dotnet.NRI:** infer type of `PackDummyPackagesOptionsType` from `PackPackagesOptionsType` ([93cd295](https://github.com/HaloSPV3/HCE.Shared/commit/93cd295c68406b0e9571422699d7f2f15ad0cef9))
+* **dotnet.NRI:** split property override arguments in Pack command ([a552a59](https://github.com/HaloSPV3/HCE.Shared/commit/a552a59857293ee25fdb90d14445cb6bc26997d4))
+
 ## [3.8.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.8.0...v3.8.1) (2026-07-01)
 
 ### Bug Fixes

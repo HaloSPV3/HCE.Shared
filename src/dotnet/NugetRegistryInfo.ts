@@ -6,6 +6,7 @@ import type { NugetProjectProperties } from './NugetProjectProperties.ts';
 
 import { config as configDotenv } from '@dotenvx/dotenvx';
 import { type, type Type } from 'arktype';
+import type { Default } from 'arktype/internal/attributes.ts';
 import { detectFile, detectFileSync } from 'chardet';
 import { ok } from 'node:assert/strict';
 import type { ExecException } from 'node:child_process';
@@ -13,21 +14,30 @@ import { existsSync, writeFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 // eslint-disable-next-line unicorn/import-style
-import * as node_path from 'node:path';
+import path, * as node_path from 'node:path';
 import { cwd, env } from 'node:process';
-import { setTimeout } from 'node:timers/promises';
-import { isError } from '../utils/isError.ts';
 import sanitizeFileName from 'sanitize-filename';
+import debug from '../debug.ts';
 import { getEnvVarValue as getEnvironmentVariableValue } from '../utils/env.ts';
 import { execAsync } from '../utils/execAsync.ts';
-import { catchEBUSY, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.ts';
-import type { Default } from 'arktype/internal/attributes.ts';
+import { isError } from '../utils/isError.ts';
+import { loopTryDotnetCommand, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.ts';
 
 type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/Dummies`;
 type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
 const temporaryDirectoryNamespace = node_path.join(tmpdir(), 'HCE.Shared', '.NET', 'Dummies') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
 const defaultNugetSource = 'https://api.nuget.org/v3/index.json';
 const key_OutputPackItems = '_OutputPackItems';
+
+const debug_NRI = debug.extend('NugetRegistryInfo');
+debug_NRI.enabled = debug.enabled;
+
+const debug_NRI_PackPackages = debug_NRI.extend('_PackPackages');
+debug_NRI_PackPackages.enabled = debug.enabled;
+
+const debug_NRI_PackDummyPackage = debug_NRI.extend('PackDummyPackage');
+debug_NRI_PackDummyPackage.enabled = debug.enabled;
+
 /**
  * Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
  * If the file doesn't exist, it is created.
@@ -298,7 +308,7 @@ but the environment variable is empty or undefined.`);
    */
   // eslint-disable-next-line unicorn/consistent-class-member-order
   static readonly PackPackagesOptionsType: Type<{
-    propertyOverrides?: Record<string, string> | undefined;
+    propertyOverrides?: Record<string, string> & Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }> | undefined;
     artifactsPath?: string | undefined;
     configuration?: 'Release' | 'Debug' | undefined;
     disableBuildServers?: boolean | undefined;
@@ -319,10 +329,11 @@ but the environment variable is empty or undefined.`);
     '-GetItem'?: readonly string[] | string[] | undefined;
   }> = Object.freeze(
     type({
-      /**
-       * a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties.
-       */
-      'propertyOverrides?': type('Record<string,string>'),
+    /**
+     * a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties.
+     */
+      'propertyOverrides?': type.Record('string', 'string')
+        .as<Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }>>(),
       'artifactsPath?': 'string',
       'configuration?': '"Release" | "Debug"',
       'disableBuildServers?': 'boolean',
@@ -348,27 +359,12 @@ but the environment variable is empty or undefined.`);
     }),
   );
 
-  public static readonly PackDummyPackagesOptionsType: Type<{
-    propertyOverrides?: Record<string, string> | undefined;
-    artifactsPath?: string | undefined;
-    configuration?: 'Release' | 'Debug' | undefined;
-    disableBuildServers?: boolean | undefined;
-    force?: boolean | undefined;
-    includeSource?: boolean | undefined;
-    includeSymbols?: boolean | undefined;
-    interactive?: boolean | undefined;
-    noBuild?: boolean | undefined;
-    noLogo?: boolean | undefined;
-    noRestore?: boolean | undefined;
-    runtime?: string | undefined;
-    serviceable?: boolean | undefined;
-    terminalLogger?: 'auto' | 'on' | 'off' | undefined;
-    useCurrentRuntime?: boolean | undefined;
-    verbosity?: 'quiet' | 'minimal' | 'normal' | 'detailed' | 'diagnostic' | undefined;
-    versionSuffix?: string | undefined;
-    '-GetItem'?: readonly string[] | string[] | undefined;
-  }>
-    = this.PackPackagesOptionsType.omit('output');
+  public static readonly PackDummyPackagesOptionsType: Type<
+    Omit<
+      typeof NugetRegistryInfo.PackPackagesOptionsType.infer,
+      'output'
+    >
+  > = this.PackPackagesOptionsType.omit('output');
 
   /**
    * Get a `dotnet pack` command line string, outputting the package(s) to a
@@ -432,16 +428,14 @@ but the environment variable is empty or undefined.`);
       packCommandArray.push('--verbosity', validOptions.verbosity);
     if (validOptions.versionSuffix !== undefined)
       packCommandArray.push('--version-suffix', validOptions.versionSuffix);
-    /**
-     * Haphazard. I need to override the Version and I'm not considering side
-     * effects of arbitrary overrides.
-     */
-    if (validOptions.propertyOverrides) {
-      /** convert propertyOverrides record to "-p:n0=v0;n1=v1;n2=v2" et cetera */
-      const assignments: string = '-p:' + Object.entries(validOptions.propertyOverrides)
-        .map(v => `${v[0]}=${v[1]}`).join(';');
-      packCommandArray.push(`"${assignments}"`);
-    }
+
+    validOptions.propertyOverrides ??= {};
+    validOptions.propertyOverrides.GeneratePackageOnBuild = 'false';
+    /** convert propertyOverrides record to "-p:k0=v0", "-p:k1=v1", "-p:k2=v2", et cetera */
+    const assignments: string[] = Object.entries(validOptions.propertyOverrides)
+      .map(([key, value]) => `"-p:${key}=${value}"`);
+    packCommandArray.push(...assignments);
+
     if (validOptions['-GetItem'] && validOptions['-GetItem'].length > 0) {
       // -GetItem:_OutputPackItems,MyCustomItem
       packCommandArray.push(`-GetItem:${validOptions['-GetItem'].join(',')}`);
@@ -482,25 +476,25 @@ but the environment variable is empty or undefined.`);
   ): Promise<string[]> {
     options['-GetItem'] = [...options['-GetItem'] ?? [], key_OutputPackItems];
 
-    const packCommand = this.GetPackCommand(
+    const commandLine = this.GetPackCommand(
       options,
       shouldUsePerSourceSubfolder,
       shouldUsePerPackageIdSubfolder,
     );
-    let packOutput: undefined | { stdout: string; stderr: string };
-    while (packOutput === undefined) {
-      try {
-        packOutput = await setTimeout(
-          1000,
-          execAsync(packCommand, true),
-        );
-      }
-      catch (error: unknown) {
-        catchEBUSY(error);
-      }
-    }
+
+    const output = await loopTryDotnetCommand({
+      commandLine,
+      customDebugger: debug_NRI_PackPackages,
+      projectName: path.basename(
+        this._project.Properties.MSBuildProjectFullPath,
+        path.extname(this._project.Properties.MSBuildProjectFullPath),
+      ),
+      taskVerb: 'pack',
+      timeoutMilliseconds: 360_000,
+    });
+
     // may include .snupkg
-    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
+    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(output.stdout)
       .Items
       ?.[key_OutputPackItems]
       ?.filter(item => item.Extension !== '.nuspec')
@@ -525,43 +519,34 @@ but the environment variable is empty or undefined.`);
   public async PackDummyPackage(
     options: typeof NRI.PackDummyPackagesOptionsType.inferIn,
   ): Promise<string[]> {
-    const packCommand: string = this.GetPackCommand(
-      {
-        ...options,
-        output: getDummiesDirectory(this._project),
-        propertyOverrides: { ...options.propertyOverrides, Version: '0.0.1-DUMMY', UpdateVersionProperties: 'false' },
-        '-GetItem': [...options['-GetItem'] ?? [], key_OutputPackItems],
-      },
+    options = Object.assign(options, { output: getDummiesDirectory(this._project) });
+
+    options['-GetItem'] = [...options['-GetItem'] ??= [], key_OutputPackItems];
+
+    options.propertyOverrides ??= {};
+    options.propertyOverrides.Version = '0.0.1-DUMMY';
+    options.propertyOverrides.GeneratePackageOnBuild = 'false';
+    /** GitVersion */
+    options.propertyOverrides['UpdateVersionProperties'] = 'false';
+
+    const commandLine: string = this.GetPackCommand(
+      options,
       true,
     );
 
-    let packOutput: undefined | { stdout: string; stderr: string };
-    let delay = 0;
-    while (packOutput === undefined) {
-      try {
-        packOutput = await setTimeout(
-          delay,
-          execAsync(packCommand, true),
-        );
-      }
-      catch (error: unknown) {
-        if (delay <= 10_000 /* milliseconds */) {
-          catchEBUSY(error);
-        }
-        else {
-          throw new Error(
-            'Unable to pack dummy package; (10/10) Maximum retries reached.',
-            { cause: error });
-        }
-        // If the delay is pushed back to 10 seconds, then...
-        // A) A project's intermediate output (`obj/**`) is in use by a build system or language server
-        // B) something horrible has happened
-      }
-      // back-off
-      delay += 1000;
-    }
+    const output = await loopTryDotnetCommand({
+      commandLine,
+      customDebugger: debug_NRI_PackDummyPackage,
+      projectName: path.basename(
+        this._project.Properties.MSBuildProjectFullPath,
+        path.extname(this._project.Properties.MSBuildProjectFullPath),
+      ),
+      taskVerb: 'pack',
+      timeoutMilliseconds: 360_000,
+    });
+
     // may include .snupkg
-    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(packOutput.stdout)
+    const nupkgFullPaths: string[] | undefined = new MSBuildEvaluationOutput(output.stdout)
       .Items
       ?.[key_OutputPackItems]
       ?.filter(item => item.Extension !== '.nuspec')

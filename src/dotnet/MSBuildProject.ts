@@ -201,84 +201,7 @@ export const EvaluationOptions: Type<{
    *                        -property:WarningLevel=2;OutDir=bin\Debug\
    * ```
    */
-  Property: {
-    IsPackable?: 'false' | 'true' | undefined;
-    SuppressDependenciesWhenPacking?: 'false' | 'true' | undefined;
-    PackageVersion?: string | undefined;
-    PackageId?: string | undefined;
-    PackageDescription?: string | undefined;
-    Authors?: string | undefined;
-    Copyright?: string | undefined;
-    PackageRequireLicenseAcceptance?: 'false' | 'true' | undefined;
-    DevelopmentDependency?: '' | 'false' | 'true' | undefined;
-    PackageLicenseExpression?: string | undefined;
-    PackageLicenseFile?: string | undefined;
-    PackageProjectUrl?: string | undefined;
-    PackageIcon?: string | undefined;
-    PackageReleaseNotes?: string | undefined;
-    PackageReadmeFile?: string | undefined;
-    PackageTags?: string | undefined;
-    /**
-     * A relative or absolute path determining the where the packed package will
-     * be dropped.
-     *
-     * Default: {@link EvaluationOptions.infer.Property.OutputPath}
-     */
-    PackageOutputPath?: string | undefined;
-    IncludeSymbols?: '' | 'false' | 'true' | undefined;
-    IncludeSource?: '' | 'false' | 'true' | undefined;
-    PackageType?: string | undefined;
-    IsTool?: '' | 'false' | 'true' | undefined;
-    RepositoryUrl?: string | undefined;
-    RepositoryType?: '' | 'git' | 'tfs' | undefined;
-    RepositoryCommit?: string | undefined;
-    SymbolPackageFormat?: 'symbols.nupkg' | 'snupkg' | undefined;
-    NoPackageAnalysis?: '' | 'false' | 'true' | undefined;
-    MinClientVersion?: string | undefined;
-    IncludeBuildOutput?: 'false' | 'true' | undefined;
-    IncludeContentInPack?: 'false' | 'true' | undefined;
-    BuildOutputTargetFolder?: string | undefined;
-    ContentTargetFolders?: string | undefined;
-    NuspecFile?: string | undefined;
-    NuspecBasePath?: string | undefined;
-    NuspecProperties?: string | undefined;
-    Title?: string | undefined;
-    Company?: string | undefined;
-    Product?: string | undefined;
-    MSBuildProjectFullPath?: string | undefined;
-    AssemblyName?: string | undefined;
-    BaseIntermediateOutputPath?: string | undefined;
-    BaseOutputPath?: string | undefined;
-    Description?: string | undefined;
-    /** @deprecated Typo. Use {@link EvaluationOptions.infer.Property.IntermediateOutputPath}} */
-    IntermediateOutput?: string | undefined;
-    /** @see {@link NugetProjectProperties.IntermediateOutputPath } */
-    IntermediateOutputPath?: string | undefined;
-    /**
-     * The final output location for the project or solution.
-     * When you build a solution, OutDir can be used to gather multiple project outputs in one location.
-     * In addition, OutDir is included in AssemblySearchPaths used for resolving references.
-     * @example
-     * `bin/Debug`
-     * @see {@link NugetProjectProperties.OutDir}
-     */
-    OutDir?: string | undefined;
-    /**
-     * The path to the output directory, relative to the project directory.
-     * @example
-     * `bin/Debug`
-     * /// non-AnyCPU builds
-     * `bin/Debug/${Platform}`
-     */
-    OutputPath?: string | undefined;
-    Version?: string | undefined;
-    VersionPrefix?: string | undefined;
-    VersionSuffix?: string | undefined;
-    TargetFramework?: string | undefined;
-    TargetFrameworks?: string | undefined;
-    RuntimeIdentifier?: string | undefined;
-    RuntimeIdentifiers?: string | undefined;
-  };
+  Property: Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }>;
   Targets: readonly string[] | string[];
   GetItem: readonly string[] | string[];
   GetProperty: readonly string[] | string[];
@@ -424,8 +347,8 @@ export class MSBuildProject {
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
     // disable GeneratePackageOnBuild so Pack can succeed when Build hasn't been run
-    Object.assign(options.Property, { GeneratePackageOnBuild: false });
-    const _pairs = Object.entries(options.Property).filter(p => typeof p[1] === 'string');
+    options.Property.GeneratePackageOnBuild = 'false';
+    const _pairs = Object.entries<string>(options.Property).filter(p => typeof p[1] === 'string') as [['GeneratePackageOnBuild', 'false'], ...[string, string][]];
     const string_target
       = options.Targets.length === 0
         ? ''
@@ -443,9 +366,7 @@ export class MSBuildProject {
         ? ''
         : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
     const string_property_array: string[]
-      = _pairs.length === 0
-        ? []
-        : _pairs.map(([key, value]) => '"-p:' + key + '=' + value + '"');
+      = _pairs.map(([key, value]) => `"-p:${key}=${value}"`);
 
     const isTargetPack = string_target.toLocaleLowerCase().replaceAll('"', '') == `-t:pack`;
     const commandLine = [
@@ -461,47 +382,13 @@ export class MSBuildProject {
     ]
       .filter(v => v !== '')
       .join(' ');
-    let stdio: Awaited<ReturnType<typeof execAsync>> | undefined;
-    let totalMilliseconds = 0;
-    let delay = 0;
-    debug_MSBP_Evaluate_hashed(`Beginning try/retry loop to evaluate "${options.FullName}"...`);
-
-    // may throw
-    while (stdio === undefined) {
-      try {
-        stdio = await setTimeout(
-          delay,
-          execAsync(commandLine, true),
-        );
-      }
-      catch (error: unknown) {
-        /**
-         * Warning: {@link totalMilliseconds} may be significantly greater than threshold!
-         * e.g.
-         * `325_000 <=300_000` (5m25s vs 5m)
-         * `378_000 <=360_000` (6m18s vs 6m),
-         * `630_000 <=600_000` (10m30s vs 10m)
-         * `1225_000 <=1200_000` (20m25s vs 20m)
-         * `2415_000 <=2400_000` (40m15s vs 40m)
-         * `2556_000 <=2485_000` (42m36s vs 41m25s; 71 seconds over)
-         */
-        if (totalMilliseconds <= 360_000 /* milliseconds */) {
-          catchEBUSY(error);
-        }
-        else {
-          throw new Error(
-            `Unable to evaluate project: Maximum retries reached. Approximately ${(totalMilliseconds / 1000).toString()} seconds spent retrying.`,
-            { cause: error });
-        }
-        // If the delay is pushed back to 10 seconds, then...
-        // A) A project's intermediate output (`obj/**`) is in use by a build system or language server
-        // B) something horrible has happened
-        catchEBUSY(error);
-        // incremental back-off; add new delay to total
-        totalMilliseconds += delay += 1000;
-        debug_MSBP_Evaluate_hashed(`A file needed by "${options.FullName}" is locked by another process. Retrying after ${(delay / 1000).toString()} seconds...`);
-      }
-    }
+    const output = await loopTryDotnetCommand({
+      commandLine,
+      customDebugger: debug_MSBP_Evaluate_hashed,
+      projectName: path.basename(options.FullName, path.extname(options.FullName)),
+      taskVerb: 'evaluate',
+      timeoutMilliseconds: 360_000,
+    });
 
     // todo: consider -getResultOutputFile:file
     //  Redirect output from get* into a file.
@@ -516,22 +403,22 @@ export class MSBuildProject {
      *   platforms. Even Windows. Otherwise, MSBuild/dotnet will error-exit with
      *   "The BaseIntermediateOutputPath must end with a trailing slash".
      */
-    if (stdio.stdout.startsWith('MSBuild version')) {
-      warn(stdio.stdout);
+    if (output.stdout.startsWith('MSBuild version')) {
+      warn(output.stdout);
       throw new Error(
         'dotnet msbuild was expected to output JSON, but output its version header instead.',
       );
     }
 
     let rawOutput: ConstructorParameters<typeof MSBuildEvaluationOutput>[0];
-    if (stdio.stdout.startsWith('{')) {
+    if (output.stdout.startsWith('{')) {
       /** stdout is JSON string */
-      rawOutput = stdio.stdout;
+      rawOutput = output.stdout;
     }
     else if (options.GetProperty.length > 0 && options.GetProperty[0] !== undefined) {
       rawOutput = {
         Properties: {
-          [options.GetProperty[0]]: String(JSON.parse(stdio.stdout)),
+          [options.GetProperty[0]]: String(JSON.parse(output.stdout)),
         },
       };
     }
@@ -831,6 +718,7 @@ function makeAbsolute(_path: string) {
  * @param error Probably an Error object
  * @returns `undefined` if file in use by another process
  */
+// TODO: BREAKING CHANGE: change return type to `true` to lint implicit `undefined`/`void` returns.
 export function catchEBUSY(error: unknown): undefined {
   if (isError(error)) {
     if ('stderr' in error && typeof error.stderr === 'string') {
@@ -845,6 +733,7 @@ export function catchEBUSY(error: unknown): undefined {
       if (isCS2012 || isAVLN9999 || hasErrorMessagePattern)
         // eslint-disable-next-line unicorn/no-useless-undefined
         return undefined; /* retry */
+      throw error;
     }
     /**
      * some known warnings/errors:
@@ -864,9 +753,9 @@ export function catchEBUSY(error: unknown): undefined {
      *    > Learn about SDK resolution:
      *    > https://aka.ms/dotnet/sdk-not-found
      */
-    else throw error;
+    throw error;
   }
-  else throw new Error('unknown error', { cause: error });
+  throw new Error('unknown error', { cause: error });
 }
 
 /**
@@ -911,4 +800,63 @@ export function catchCsc2012(error: unknown): undefined {
     throw error;
   }
   throw new Error('unknown error', { cause: error });
+}
+
+/**
+ *
+ * @returns A Promise of execAsync's output object.
+ * @param root0 structured parameters object
+ * @param root0.commandLine The command line to try and retry
+ * @param root0.taskVerb Used in debug messages e.g. ```
+ * const debug_MSBP = debug.extend('MSBuildProject');
+ * debug_MSBP.enabled = debug.enabled;
+ * const output = await loopTryDotnetCommand({ customDebugger: debug_MSBP, ... });
+ * ```
+ * @param root0.customDebugger e.g. `debug.extend('Evaluate)`
+ * @param root0.projectName The filename (sans extension) or AssemblyName of the project e.g. `path.basename(fullPath, path.extname(fullPath))`
+ * @param root0.timeoutMilliseconds The maximum time spent (re)trying the command.
+ * Warning! {@link totalMilliseconds} may be significantly greater than {@link timeoutMilliseconds}!
+ * e.g.
+ * `325_000 <=300_000` (5m25s vs 5m)
+ * `378_000 <=360_000` (6m18s vs 6m),
+ * `630_000 <=600_000` (10m30s vs 10m)
+ * `1225_000 <=1200_000` (20m25s vs 20m)
+ * `2415_000 <=2400_000` (40m15s vs 40m)
+ * `2556_000 <=2485_000` (42m36s vs 41m25s; 71 seconds over)
+ * @throws {Error} when retry limit is reached or an unhandled exception occurs.
+ * File-in-use errors are _supposed_ to be ignored and retried.
+ */
+export async function loopTryDotnetCommand({ commandLine, customDebugger, projectName, taskVerb, timeoutMilliseconds: maximumTime }: {
+  commandLine: string;
+  customDebugger: typeof debug;
+  projectName: string;
+  taskVerb?: string | undefined;
+  timeoutMilliseconds: number;
+}): Promise<Awaited<ReturnType<typeof execAsync>>> {
+  let output: Awaited<ReturnType<typeof execAsync>> | undefined;
+  let totalMilliseconds = 0;
+  let delay = 0;
+
+  taskVerb ??= '<undefined>';
+  customDebugger(`Beginning try/retry loop to ${taskVerb} "${projectName}"...`);
+
+  while (output === undefined) {
+    try {
+      await setTimeout(delay, undefined);
+      output = await execAsync(commandLine, true);
+    }
+    catch (error: unknown) {
+      if (totalMilliseconds > maximumTime /* milliseconds */) {
+        throw new Error(
+          `Unable to ${taskVerb} "${projectName}": Retry limit hit. ~${(totalMilliseconds / 1000).toString()} seconds spent retrying.`,
+          { cause: error },
+        );
+      };
+      catchEBUSY(error);
+      // incremental back-off; add new delay to total
+      totalMilliseconds += delay += 1000;
+      customDebugger(`A file needed by "${projectName}" is locked by another process. Retrying after ${(delay / 1000).toString()} seconds...`);
+    }
+  };
+  return output;
 }
