@@ -204,6 +204,7 @@ export const EvaluationOptions: Type<{
   Property: {
     IsPackable?: 'false' | 'true' | undefined;
     SuppressDependenciesWhenPacking?: 'false' | 'true' | undefined;
+    GeneratePackageOnBuild?: 'false' | 'true' | undefined;
     PackageVersion?: string | undefined;
     PackageId?: string | undefined;
     PackageDescription?: string | undefined;
@@ -424,8 +425,8 @@ export class MSBuildProject {
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
     // disable GeneratePackageOnBuild so Pack can succeed when Build hasn't been run
-    Object.assign(options.Property, { GeneratePackageOnBuild: 'false' });
-    const _pairs = Object.entries(options.Property).filter(p => typeof p[1] === 'string');
+    options.Property.GeneratePackageOnBuild = 'false';
+    const _pairs = Object.entries<string>(options.Property).filter(p => typeof p[1] === 'string') as [['GeneratePackageOnBuild', 'false'], ...[string, string][]];
     const string_target
       = options.Targets.length === 0
         ? ''
@@ -443,9 +444,7 @@ export class MSBuildProject {
         ? ''
         : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
     const string_property_array: string[]
-      = _pairs.length === 0
-        ? []
-        : _pairs.map(([key, value]) => '"-p:' + key + '=' + value + '"');
+      = _pairs.map(([key, value]) => `"-p:${key}=${value}"`);
 
     const isTargetPack = string_target.toLocaleLowerCase().replaceAll('"', '') == `-t:pack`;
     const commandLine = [

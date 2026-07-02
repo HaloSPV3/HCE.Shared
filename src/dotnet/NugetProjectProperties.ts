@@ -28,6 +28,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   // #region private
   private _isPackable: BooleanString | undefined;
   private _suppressDependenciesWhenPacking: BooleanString | undefined;
+  private _generatePackageOnBuild: BooleanString | undefined;
   private _packageVersion: string | undefined;
   private _packageId: string | undefined;
   private _packageDescription: string | undefined;
@@ -162,6 +163,18 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    */
   get SuppressDependenciesWhenPacking(): BooleanString {
     return this._suppressDependenciesWhenPacking ??= 'false';
+  }
+
+  /**
+   * @returns "true" or "false". If "true", Pack will run after every Build. To
+   * prevent recursion, Build will no longer auto-run before Pack.
+   *
+   * WARNING: Pack may fail if there are no Build artifacts!
+   *
+   * Default: "false"
+   */
+  get GeneratePackageOnBuild(): BooleanString {
+    return this._generatePackageOnBuild ??= 'false';
   }
 
   /**

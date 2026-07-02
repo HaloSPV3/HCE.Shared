@@ -442,16 +442,14 @@ but the environment variable is empty or undefined.`);
       packCommandArray.push('--verbosity', validOptions.verbosity);
     if (validOptions.versionSuffix !== undefined)
       packCommandArray.push('--version-suffix', validOptions.versionSuffix);
-    /**
-     * Haphazard. I need to override the Version and I'm not considering side
-     * effects of arbitrary overrides.
-     */
-    if (validOptions.propertyOverrides) {
-      /** convert propertyOverrides record to "-p:n0=v0;n1=v1;n2=v2" et cetera */
-      const assignments: string = '-p:' + Object.entries(validOptions.propertyOverrides)
-        .map(v => `${v[0]}=${v[1]}`).join(';');
-      packCommandArray.push(`"${assignments}"`);
-    }
+
+    validOptions.propertyOverrides ??= {};
+    validOptions.propertyOverrides['GeneratePackageOnBuild'] = 'false';
+    /** convert propertyOverrides record to "-p:n0=v0;n1=v1;n2=v2" et cetera */
+    const assignments: string = '-p:' + Object.entries(validOptions.propertyOverrides)
+      .map(v => `${v[0]}=${v[1]}`).join(';');
+    packCommandArray.push(`"${assignments}"`);
+
     if (validOptions['-GetItem'] && validOptions['-GetItem'].length > 0) {
       // -GetItem:_OutputPackItems,MyCustomItem
       packCommandArray.push(`-GetItem:${validOptions['-GetItem'].join(',')}`);
@@ -539,7 +537,7 @@ but the environment variable is empty or undefined.`);
       {
         ...options,
         output: getDummiesDirectory(this._project),
-        propertyOverrides: { ...options.propertyOverrides, Version: '0.0.1-DUMMY', UpdateVersionProperties: 'false' },
+        propertyOverrides: { ...options.propertyOverrides, Version: '0.0.1-DUMMY', UpdateVersionProperties: 'false', GeneratePackageOnBuild: 'false' },
         '-GetItem': [...options['-GetItem'] ?? [], key_OutputPackItems],
       },
       true,
