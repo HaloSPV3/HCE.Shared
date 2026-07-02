@@ -348,7 +348,7 @@ export class MSBuildProject {
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
     // disable GeneratePackageOnBuild so Pack can succeed when Build hasn't been run
     options.Property.GeneratePackageOnBuild = 'false';
-    const _pairs = Object.entries<string>(options.Property).filter(p => typeof p[1] === 'string') as [['GeneratePackageOnBuild', 'false'], ...[string, string][]];
+    const _pairs = Object.entries<string>(options.Property).filter(p => typeof p[1] === 'string') as [['BaseIntermediatePath', '0'], ['BaseOutputPath', '1'], ['GeneratePackageOnBuild', 'false'], ...[string, string][]];
     const string_target
       = options.Targets.length === 0
         ? ''
