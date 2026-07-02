@@ -1,3 +1,9 @@
+## [3.9.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.0...v3.9.1) (2026-07-02)
+
+### Bug Fixes
+
+* **dotnet.MSBP:** end `BaseIntermediateOutputPath`, `BaseOutputPath` with Unix path separators ([f1cf10f](https://github.com/HaloSPV3/HCE.Shared/commit/f1cf10f13997851777bd67004c702ade4496f862))
+
 ## [3.9.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.8.1...v3.9.0) (2026-07-02)
 
 ### Features
