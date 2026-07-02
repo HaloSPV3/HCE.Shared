@@ -445,10 +445,10 @@ but the environment variable is empty or undefined.`);
 
     validOptions.propertyOverrides ??= {};
     validOptions.propertyOverrides['GeneratePackageOnBuild'] = 'false';
-    /** convert propertyOverrides record to "-p:n0=v0;n1=v1;n2=v2" et cetera */
-    const assignments: string = '-p:' + Object.entries(validOptions.propertyOverrides)
-      .map(v => `${v[0]}=${v[1]}`).join(';');
-    packCommandArray.push(`"${assignments}"`);
+    /** convert propertyOverrides record to "-p:k0=v0", "-p:k1=v1", "-p:k2=v2", et cetera */
+    const assignments: string[] = Object.entries(validOptions.propertyOverrides)
+      .map(([key, value]) => `"-p:${key}=${value}"`);
+    packCommandArray.push(...assignments);
 
     if (validOptions['-GetItem'] && validOptions['-GetItem'].length > 0) {
       // -GetItem:_OutputPackItems,MyCustomItem
