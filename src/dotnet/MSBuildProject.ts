@@ -718,6 +718,7 @@ function makeAbsolute(_path: string) {
  * @param error Probably an Error object
  * @returns `undefined` if file in use by another process
  */
+// TODO: BREAKING CHANGE: change return type to `true` to lint implicit `undefined`/`void` returns.
 export function catchEBUSY(error: unknown): undefined {
   if (isError(error)) {
     if ('stderr' in error && typeof error.stderr === 'string') {
