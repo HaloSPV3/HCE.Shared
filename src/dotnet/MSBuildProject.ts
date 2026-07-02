@@ -24,7 +24,7 @@ const debug_MSBP_Evaluate = debug_MSBP.extend('Evaluate');
 debug_MSBP_Evaluate.enabled = debug.enabled;
 
 export type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/`;
-export type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\Dummies`;
+export type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\`;
 const temporaryDirectoryNamespace = path.join(tmpdir(), 'HCE.Shared', '.NET') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
 
 /**
@@ -407,6 +407,7 @@ export class MSBuildProject {
       ).slice(0, 7)
     }`;
     const debug_MSBP_Evaluate_hashed = debug_MSBP_Evaluate.extend(shortHashName);
+    debug_MSBP_Evaluate_hashed.enabled = debug.enabled;
     options.Property.BaseIntermediateOutputPath = path.join(
       temporaryDirectoryNamespace,
       path.basename(options.FullName, path.extname(options.FullName)),
@@ -425,10 +426,6 @@ export class MSBuildProject {
     // disable GeneratePackageOnBuild so Pack can succeed when Build hasn't been run
     Object.assign(options.Property, { GeneratePackageOnBuild: false });
     const _pairs = Object.entries(options.Property).filter(p => typeof p[1] === 'string');
-    const string_property
-      = _pairs.length === 0
-        ? ''
-        : `-p:"${_pairs.map(pair => pair[0] + '=' + pair[1]).join(';')}"`;
     const string_target
       = options.Targets.length === 0
         ? ''
@@ -436,27 +433,31 @@ export class MSBuildProject {
     const string_getItem
       = options.GetItem.length === 0
         ? ''
-        : `-getItem:"${options.GetItem.join(',')}"`;
+        : `"-getItem:${options.GetItem.join(',')}"`;
     const string_getProperty
       = options.GetProperty.length === 0
         ? ''
-        : `-getProperty:"${options.GetProperty.join(',')}"`;
+        : `"-getProperty:${options.GetProperty.join(',')}"`;
     const string_getTargetResult
       = options.GetTargetResult.length === 0
         ? ''
-        : `-getTargetResult:"${options.GetTargetResult.join(',')}"`;
+        : `"-getTargetResult:${options.GetTargetResult.join(',')}"`;
+    const string_property_array: string[]
+      = _pairs.length === 0
+        ? []
+        : _pairs.map(([key, value]) => '"-p:' + key + '=' + value + '"');
 
-    const isTargetPack = string_target.toLocaleLowerCase() == `-t:pack`;
+    const isTargetPack = string_target.toLocaleLowerCase().replaceAll('"', '') == `-t:pack`;
     const commandLine = [
       'dotnet',
       isTargetPack ? 'pack' : 'msbuild',
       `"${options.FullName}"`,
-      isTargetPack ? '' : '-restore',
-      string_property,
+      '-restore',
       isTargetPack ? '' : string_target,
       string_getItem,
       string_getProperty,
       string_getTargetResult,
+      ...string_property_array,
     ]
       .filter(v => v !== '')
       .join(' ');

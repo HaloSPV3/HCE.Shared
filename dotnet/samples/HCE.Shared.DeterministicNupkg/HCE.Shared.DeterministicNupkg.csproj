@@ -10,6 +10,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.0.1-DUMMY</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <!--
@@ -17,7 +18,7 @@
   (and symbols package, if applicable) deterministic.
   See the targets file for its usage -->
   <Import Project="../../ExecNupkgDeterministicator.targets" />
- 
+
   <Import Project="../../BuildEachRID.targets" />
   <Import Project="../../CleanupWpfTmp.targets" />
   <Import Project="../../PublishAll.targets" />
