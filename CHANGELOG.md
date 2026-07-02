@@ -1,3 +1,15 @@
+## [3.9.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.1...v3.9.2) (2026-07-02)
+
+### Bug Fixes
+
+* **dotnet.CWT:** do not run CleamupWpfTmp if `$(ArtifactsPath)/bin` ([de4cec7](https://github.com/HaloSPV3/HCE.Shared/commit/de4cec770c1120ec21c95ac5eaaa609e39c593d9))
+
+## [3.9.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.0...v3.9.1) (2026-07-02)
+
+### Bug Fixes
+
+* **dotnet.MSBP:** end `BaseIntermediateOutputPath`, `BaseOutputPath` with Unix path separators ([f1cf10f](https://github.com/HaloSPV3/HCE.Shared/commit/f1cf10f13997851777bd67004c702ade4496f862))
+
 ## [3.9.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.8.1...v3.9.0) (2026-07-02)
 
 ### Features

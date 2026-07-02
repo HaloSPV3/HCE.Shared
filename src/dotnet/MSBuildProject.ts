@@ -336,19 +336,19 @@ export class MSBuildProject {
       path.basename(options.FullName, path.extname(options.FullName)),
       shortHashName,
       'obj',
-    ) + path.sep;
+    ) + '/';
     options.Property.BaseOutputPath = path.join(
       temporaryDirectoryNamespace,
       path.basename(options.FullName, path.extname(options.FullName)),
       shortHashName,
       'bin',
-    ) + path.sep;
+    ) + '/';
 
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
     // disable GeneratePackageOnBuild so Pack can succeed when Build hasn't been run
     options.Property.GeneratePackageOnBuild = 'false';
-    const _pairs = Object.entries<string>(options.Property).filter(p => typeof p[1] === 'string') as [['GeneratePackageOnBuild', 'false'], ...[string, string][]];
+    const _pairs = Object.entries<string>(options.Property).filter(p => typeof p[1] === 'string') as [['BaseIntermediatePath', '0'], ['BaseOutputPath', '1'], ['GeneratePackageOnBuild', 'false'], ...[string, string][]];
     const string_target
       = options.Targets.length === 0
         ? ''
