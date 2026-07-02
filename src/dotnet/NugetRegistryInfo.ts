@@ -308,7 +308,7 @@ but the environment variable is empty or undefined.`);
    */
   // eslint-disable-next-line unicorn/consistent-class-member-order
   static readonly PackPackagesOptionsType: Type<{
-    propertyOverrides?: Record<string, string> | undefined;
+    propertyOverrides?: Record<string, string> & Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }> | undefined;
     artifactsPath?: string | undefined;
     configuration?: 'Release' | 'Debug' | undefined;
     disableBuildServers?: boolean | undefined;
@@ -329,10 +329,11 @@ but the environment variable is empty or undefined.`);
     '-GetItem'?: readonly string[] | string[] | undefined;
   }> = Object.freeze(
     type({
-      /**
-       * a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties.
-       */
-      'propertyOverrides?': type('Record<string,string>'),
+    /**
+     * a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties.
+     */
+      'propertyOverrides?': type.Record('string', 'string')
+        .as<Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }>>(),
       'artifactsPath?': 'string',
       'configuration?': '"Release" | "Debug"',
       'disableBuildServers?': 'boolean',
@@ -429,7 +430,7 @@ but the environment variable is empty or undefined.`);
       packCommandArray.push('--version-suffix', validOptions.versionSuffix);
 
     validOptions.propertyOverrides ??= {};
-    validOptions.propertyOverrides['GeneratePackageOnBuild'] = 'false';
+    validOptions.propertyOverrides.GeneratePackageOnBuild = 'false';
     /** convert propertyOverrides record to "-p:k0=v0", "-p:k1=v1", "-p:k2=v2", et cetera */
     const assignments: string[] = Object.entries(validOptions.propertyOverrides)
       .map(([key, value]) => `"-p:${key}=${value}"`);
@@ -518,13 +519,18 @@ but the environment variable is empty or undefined.`);
   public async PackDummyPackage(
     options: typeof NRI.PackDummyPackagesOptionsType.inferIn,
   ): Promise<string[]> {
+    options = Object.assign(options, { output: getDummiesDirectory(this._project) });
+
+    options['-GetItem'] = [...options['-GetItem'] ??= [], key_OutputPackItems];
+
+    options.propertyOverrides ??= {};
+    options.propertyOverrides.Version = '0.0.1-DUMMY';
+    options.propertyOverrides.GeneratePackageOnBuild = 'false';
+    /** GitVersion */
+    options.propertyOverrides['UpdateVersionProperties'] = 'false';
+
     const commandLine: string = this.GetPackCommand(
-      {
-        ...options,
-        output: getDummiesDirectory(this._project),
-        propertyOverrides: { ...options.propertyOverrides, Version: '0.0.1-DUMMY', UpdateVersionProperties: 'false', GeneratePackageOnBuild: 'false' },
-        '-GetItem': [...options['-GetItem'] ?? [], key_OutputPackItems],
-      },
+      options,
       true,
     );
 
