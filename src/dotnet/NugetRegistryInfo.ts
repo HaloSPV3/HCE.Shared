@@ -358,27 +358,12 @@ but the environment variable is empty or undefined.`);
     }),
   );
 
-  public static readonly PackDummyPackagesOptionsType: Type<{
-    propertyOverrides?: Record<string, string> | undefined;
-    artifactsPath?: string | undefined;
-    configuration?: 'Release' | 'Debug' | undefined;
-    disableBuildServers?: boolean | undefined;
-    force?: boolean | undefined;
-    includeSource?: boolean | undefined;
-    includeSymbols?: boolean | undefined;
-    interactive?: boolean | undefined;
-    noBuild?: boolean | undefined;
-    noLogo?: boolean | undefined;
-    noRestore?: boolean | undefined;
-    runtime?: string | undefined;
-    serviceable?: boolean | undefined;
-    terminalLogger?: 'auto' | 'on' | 'off' | undefined;
-    useCurrentRuntime?: boolean | undefined;
-    verbosity?: 'quiet' | 'minimal' | 'normal' | 'detailed' | 'diagnostic' | undefined;
-    versionSuffix?: string | undefined;
-    '-GetItem'?: readonly string[] | string[] | undefined;
-  }>
-    = this.PackPackagesOptionsType.omit('output');
+  public static readonly PackDummyPackagesOptionsType: Type<
+    Omit<
+      typeof NugetRegistryInfo.PackPackagesOptionsType.infer,
+      'output'
+    >
+  > = this.PackPackagesOptionsType.omit('output');
 
   /**
    * Get a `dotnet pack` command line string, outputting the package(s) to a
