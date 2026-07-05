@@ -42,20 +42,13 @@ export async function execAsync(command: string, shouldSetStderrAsCause = false)
   }
 }
 
-const T_ErrnoException: Type<NodeJS.ErrnoException> = type('Error').and({
-  'errno?': 'number',
-  'code?': 'string',
-  'path?': 'string',
-  'syscall?': 'string',
-});
-
 const T_ExecException: Type<
   Omit<ExecException, 'cmd' | 'signal'>
   & { signal?: ExecException['signal'] | null }
   & Partial<Pick<ExecException, 'cmd'>>
-> = T_ErrnoException.omit('code').and({
+> = type.instanceOf(Error).and({
   'cmd?': 'string',
-  'code?': 'number | string',
+  'code?': 'number',
   'killed?': 'boolean',
   'signal?': type((Object.keys(constants.signals) as NodeJS.Signals[])
     .map(v => type(`'${v}'`))
@@ -72,13 +65,10 @@ type _ExecException = typeof T_ExecException.inferOut;
 export class ChildProcessSpawnException extends Error implements _ExecException {
   cmd: typeof T_ExecException.inferOut.cmd;
   code: typeof T_ExecException.inferOut.code;
-  errno?: typeof T_ExecException.inferOut.errno;
   killed: typeof T_ExecException.inferOut.killed;
-  path?: typeof T_ExecException.inferOut.path;
   signal: typeof T_ExecException.inferOut.signal;
   stderr: typeof T_ExecException.inferOut.stderr;
   stdout: typeof T_ExecException.inferOut.stdout;
-  syscall?: typeof T_ExecException.inferOut.syscall;
 
   constructor(
     message: Parameters<typeof Error>[0],
@@ -88,12 +78,9 @@ export class ChildProcessSpawnException extends Error implements _ExecException 
     super(message, options);
     this.cmd = options.cmd;
     this.code = options.code;
-    this.errno = options.errno;
     this.killed = options.killed;
-    this.path = options.path;
     this.signal = options.signal;
     this.stderr = options.stderr;
     this.stdout = options.stdout;
-    this.syscall = options.syscall;
   }
 }
