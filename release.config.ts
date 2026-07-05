@@ -308,7 +308,7 @@ try {
       GHTuple.get('0').allows(p[0]),
     );
     const github = GHTuple.assert(config.plugins[githubIndex]);
-    github[1].assets = 'publish/*.tgz';
+    github[1].assets = 'package.tgz';
     config.plugins[githubIndex] = github;
   }
   setupGithub();
@@ -595,7 +595,7 @@ try {
         '@semantic-release/gitlab',
         {
           assets: [
-            'publish/*.tgz',
+            'package.tgz',
           // DON'T DO THIS! It causes Semantic Release to use an ESM-to-CJS
           // ESBuild transformer (WHY???) which obviously doesn't work because
           // we use top-level awaits!
