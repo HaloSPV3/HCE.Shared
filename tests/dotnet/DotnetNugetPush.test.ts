@@ -94,6 +94,7 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
 
   await it('GHNRI token is invalid', { timeout: 10_000 }, async () => {
     getGHRepoOwner();
+    // eslint-disable-next-line unicorn/consistent-boolean-name
     let canPush: true | Error;
     try {
       canPush = await new GHNRI({ project, tokenEnvVars: tokenEnvironmentVariables })
@@ -109,6 +110,7 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
   });
   await it('GLNRI token is invalid', { timeout: 10_000 }, async () => {
     await trySetCI_PROJECT_ID();
+    // eslint-disable-next-line unicorn/consistent-boolean-name
     let canPush: true | Error;
     try {
       canPush = await new GLNRI({ project, tokenEnvVars: tokenEnvironmentVariables })
@@ -124,6 +126,7 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
     notStrictEqual(canPush, true);
   });
   await it('NRI token is invalid', { timeout: 10_000 }, async () => {
+    // eslint-disable-next-line unicorn/consistent-boolean-name
     let canPush: true | Error;
     try {
       canPush = await new NRI({ project, tokenEnvVars: tokenEnvironmentVariables })
