@@ -535,6 +535,7 @@ const _ownPropertyDescriptorsRecursive_NPP_Instance = getOwnPropertyDescriptorsR
 const _ownPropertyDescriptorsRecursive_NPP_Instance_0 = _ownPropertyDescriptorsRecursive_NPP_Instance[0];
 const _ownPropertyDescriptorsRecursive_NPP = getOwnPropertyDescriptorsRecursively(NugetProjectProperties as Class_NPP, 'Static');
 ok(_ownPropertyDescriptorsRecursive_NPP);
+// eslint-disable-next-line unicorn/consistent-boolean-name
 const _isPackableDescriptor: TypedPropertyDescriptor<'false' | 'true'> = _ownPropertyDescriptorsRecursive_NPP_Instance_0.IsPackable;
 ok(_isPackableDescriptor);
 
