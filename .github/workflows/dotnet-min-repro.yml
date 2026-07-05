@@ -41,4 +41,4 @@ jobs:
       - run: dotnet --list-sdks
       - run: dotnet tool list
       - run: dotnet clean ./dotnet/HCE.Shared.slnx
-      - run: dotnet pack ./dotnet/samples/HCE.Shared.DeterministicNupkg --verbosity diag
+      - run: dotnet pack ./dotnet/samples/HCE.Shared.DeterministicNupkg -p:GeneratePackageOnBuild=false --verbosity diag
