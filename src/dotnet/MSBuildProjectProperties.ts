@@ -282,6 +282,19 @@ export class MSBuildProjectProperties {
   }
 
   /**
+   * @returns When `"true"`; obj, bin, publish, and package output paths are
+   * nested under a single directory.
+   *
+   * You can use {@link ArtifactsPath} to set the artifacts path and implicitly
+   * enable this property.
+   *
+   * Default: "$(MSBuildThisFileDirectory)artifacts"
+   */
+  get UseArtifactsOutput(): string {
+    return this._useArtifactsOutput ??= '';
+  }
+
+  /**
    * @returns
    * > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier `Runtime Identifier`} property lets you specify a single runtime
    * > identifier (RID) for the project. The RID enables publishing a
