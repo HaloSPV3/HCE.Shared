@@ -10,6 +10,8 @@ on:
 jobs:
   to_gitlab:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps: # <-- must use actions/checkout before mirroring!
       - uses: actions/checkout@v7
         with:
