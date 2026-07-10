@@ -1,3 +1,23 @@
+## [3.10.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.3...v3.10.0) (2026-07-10)
+
+### Features
+
+* **dotnet.MSBPP:** add properties `ArtifactsPath`, `UseArtifactsOutput` ([aa822e0](https://github.com/HaloSPV3/HCE.Shared/commit/aa822e081681d5f628b1ffb703f0470dad645b0d))
+
+### Bug Fixes
+
+* **dotnet.MSBP:** override `ArtifactsPath` instead of `IntermediateOutputPath` and `OutputPath` to resolve NETSDK1047, MC3074 ([3015bca](https://github.com/HaloSPV3/HCE.Shared/commit/3015bcaeb26f96e35a753937838c595bae945d29)), closes [#815](https://github.com/HaloSPV3/HCE.Shared/issues/815)
+
+## [3.10.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.3...v3.10.0-develop.1) (2026-07-10)
+
+### Features
+
+* **dotnet.MSBPP:** add properties `ArtifactsPath`, `UseArtifactsOutput` ([aa822e0](https://github.com/HaloSPV3/HCE.Shared/commit/aa822e081681d5f628b1ffb703f0470dad645b0d))
+
+### Bug Fixes
+
+* **dotnet.MSBP:** override `ArtifactsPath` instead of `IntermediateOutputPath` and `OutputPath` to resolve NETSDK1047, MC3074 ([3015bca](https://github.com/HaloSPV3/HCE.Shared/commit/3015bcaeb26f96e35a753937838c595bae945d29)), closes [#815](https://github.com/HaloSPV3/HCE.Shared/issues/815)
+
 ## [3.9.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.2...v3.9.3) (2026-07-02)
 
 ### Bug Fixes

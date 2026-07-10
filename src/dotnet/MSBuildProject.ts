@@ -26,6 +26,9 @@ debug_MSBP_Evaluate.enabled = debug.enabled;
 export type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/`;
 export type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\`;
 const temporaryDirectoryNamespace = path.join(tmpdir(), 'HCE.Shared', '.NET') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
+type typeof_ArtifactsPath
+  = | (`${TemporaryDirectoryNamespace_Unix}${string}/${string}/`)
+    | (`${TemporaryDirectoryNamespace_Win}${string}\\${string}/`);
 
 /**
  * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
@@ -322,7 +325,7 @@ export class MSBuildProject {
         'No MSBuild Property, Item, or TargetResult queries were provided.',
       );
     }
-    // We append this to IntermediateOutputPath for parallel evaluations
+    // We append this to ArtifactsPath for parallel evaluations
     const shortHashName = `options_SHA3-256_${
       hash(
         'SHA3-256',
@@ -331,24 +334,23 @@ export class MSBuildProject {
     }`;
     const debug_MSBP_Evaluate_hashed = debug_MSBP_Evaluate.extend(shortHashName);
     debug_MSBP_Evaluate_hashed.enabled = debug.enabled;
-    options.Property.BaseIntermediateOutputPath = path.join(
+    // override `ArtifactsPath` instead of `IntermediateOutputPath` and `OutputPath` to resolve NETSDK1047, MC3074
+    /** Update {@link typeof_ArtifactsPath} if this changes */
+    options.Property.ArtifactsPath = path.join(
       temporaryDirectoryNamespace,
       path.basename(options.FullName, path.extname(options.FullName)),
       shortHashName,
-      'obj',
-    ) + '/';
-    options.Property.BaseOutputPath = path.join(
-      temporaryDirectoryNamespace,
-      path.basename(options.FullName, path.extname(options.FullName)),
-      shortHashName,
-      'bin',
     ) + '/';
 
     // reminder: args containing spaces and semi-colons MUST be quote-enclosed!
     options.FullName = MSBuildProjectProperties.GetFullPath(options.FullName);
     // disable GeneratePackageOnBuild so Pack can succeed when Build hasn't been run
     options.Property.GeneratePackageOnBuild = 'false';
-    const _pairs = Object.entries<string>(options.Property).filter(p => typeof p[1] === 'string') as [['BaseIntermediatePath', '0'], ['BaseOutputPath', '1'], ['GeneratePackageOnBuild', 'false'], ...[string, string][]];
+    const _pairs = Object.entries<string>(options.Property).filter(p => typeof p[1] === 'string') as [
+      ['ArtifactsPath', typeof_ArtifactsPath],
+      ['GeneratePackageOnBuild', 'false'],
+      ...[string, string][],
+    ];
     const string_target
       = options.Targets.length === 0
         ? ''
