@@ -5,7 +5,7 @@ on:
   pull_request:
     types: [opened, reopened, ready_for_review]
   schedule:
-  - cron: '0 0 * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   analyze:
@@ -49,14 +49,10 @@ jobs:
     - run: yarn install --immutable # ${{ steps.isDepUpBranch.outputs.IMMUTABLE_CACHE}}
 
     - uses: actions/setup-dotnet@v5
+      
+    - uses: fast-actions/setup-dotnet@v1
       with:
-        cache: true
-        cache-dependency-path: |
-          src/packages.lock.json
-          src/packages-debug.lock.json
-
-    - name: Setup DotNet
-      uses: actions/setup-dotnet@v5
+        runtime-version: '6.0.x'
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
