@@ -58,6 +58,7 @@ export class MSBuildProjectProperties {
 
   // #region private
   private _msbuildProjectFullPath: string | undefined;
+  private _artifactsPath: string | undefined;
   private _assemblyName: string | undefined;
   private _baseIntermediateOutputPath: string | undefined;
   private _baseOutputPath: string | undefined;
@@ -69,6 +70,7 @@ export class MSBuildProjectProperties {
   private _runtimeIdentifiers: string | undefined;
   private _targetFramework: string | undefined;
   private _targetFrameworks: string | undefined;
+  private _useArtifactsOutput: string | undefined;
   private _version: string | undefined;
   private _versionPrefix: string | undefined;
   private _versionSuffix: string | undefined;
@@ -99,6 +101,7 @@ export class MSBuildProjectProperties {
 
     this._msbuildProjectFullPath = MPP.GetFullPath(msbuildProjectFullPath);
     this._assemblyName = MPP.getAndForget(properties, 'AssemblyName');
+    this._artifactsPath = MPP.getAndForget(properties, 'ArtifactsPath');
     this._description = MPP.getAndForget(properties, 'Description');
     this._outputPath = MPP.getAndForget(properties, 'OutputPath');
     this._runtimeIdentifier = MPP.getAndForget(properties, 'RuntimeIdentifier');
@@ -108,6 +111,7 @@ export class MSBuildProjectProperties {
     );
     this._targetFramework = MPP.getAndForget(properties, 'TargetFramework');
     this._targetFrameworks = MPP.getAndForget(properties, 'TargetFrameworks');
+    this._useArtifactsOutput = MPP.getAndForget(properties, 'UseArtifactsOutput');
     this._version = MPP.getAndForget(properties, 'Version');
     this._versionPrefix = MPP.getAndForget(properties, 'VersionPrefix');
     this._versionSuffix = MPP.getAndForget(properties, 'VersionSuffix');
@@ -127,6 +131,14 @@ export class MSBuildProjectProperties {
 
   get MSBuildProjectFullPath(): string {
     return this._msbuildProjectFullPath ??= '';
+  }
+
+  /**
+   * @returns If set, enables {@link UseArtifactsOutput} and overrides the
+   * default artifacts output path.
+   */
+  get ArtifactsPath(): string {
+    return this._artifactsPath ??= '';
   }
 
   /**
