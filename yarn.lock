@@ -140,7 +140,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/cli@npm:^21.1.0":
+"@commitlint/cli@npm:~21.2.1":
   version: 21.2.1
   resolution: "@commitlint/cli@npm:21.2.1"
   dependencies:
@@ -158,13 +158,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/config-conventional@npm:^21.1.0, @commitlint/config-conventional@npm:^21.2.0":
+"@commitlint/config-conventional@npm:^21.2.0":
   version: 21.2.0
   resolution: "@commitlint/config-conventional@npm:21.2.0"
   dependencies:
     "@commitlint/types": "npm:^21.2.0"
     conventional-changelog-conventionalcommits: "npm:^10.0.0"
   checksum: 10c0/4d091563201c6f5f1033bb9ed8a7c22ac3453ae585cc2f3331e85ffc71ac485392a1e230322365697e5ebf0047153b8826cb732aec5eda167ede15f32c3a0260
+  languageName: node
+  linkType: hard
+
+"@commitlint/config-conventional@npm:~21.1.0":
+  version: 21.1.0
+  resolution: "@commitlint/config-conventional@npm:21.1.0"
+  dependencies:
+    "@commitlint/types": "npm:^21.1.0"
+    conventional-changelog-conventionalcommits: "npm:^9.2.0"
+  checksum: 10c0/15cdf9c611976a29bef58fa1629d04979bde26ac09a65766c9e8350c48792fdc696970a6275e7c11658fa4cd4394e3d5012c78f0c5215b2fe91f9b678c8020d0
   languageName: node
   linkType: hard
 
@@ -782,8 +792,8 @@ __metadata:
     "@arethetypeswrong/cli": "npm:^0.18.4"
     "@arethetypeswrong/core": "npm:^0.18.4"
     "@bintoss/semantic-release-npm-multiple": "npm:^3.17.1"
-    "@commitlint/cli": "npm:^21.1.0"
-    "@commitlint/config-conventional": "npm:^21.1.0"
+    "@commitlint/cli": "npm:~21.2.1"
+    "@commitlint/config-conventional": "npm:~21.1.0"
     "@commitlint/load": "npm:^21.1.0"
     "@commitlint/types": "npm:^21.1.0"
     "@dotenvx/dotenvx": "npm:^1.75.1"
@@ -3152,7 +3162,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-conventionalcommits@npm:^9.3.1":
+"conventional-changelog-conventionalcommits@npm:^9.2.0, conventional-changelog-conventionalcommits@npm:^9.3.1":
   version: 9.3.1
   resolution: "conventional-changelog-conventionalcommits@npm:9.3.1"
   dependencies:
