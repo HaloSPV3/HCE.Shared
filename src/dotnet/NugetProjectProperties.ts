@@ -341,10 +341,11 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
    * property.
    *
    * Default: `''` (false-y)
-   * @description When using `MSBuild -t:pack -p:IncludeSymbols=true`, the
-   * corresponding .pdb files are copied along with other output files (.dll,
-   * .exe, .winmd, .xml, .json, .pri). Note that setting `IncludeSymbols=true`
-   * creates a regular package and a symbols package.
+   * @description When using `dotnet msbuild my.csproj -restore -t:pack
+   * -p:IncludeSymbols=true`, the corresponding .pdb files are copied along with
+   * other output files (.dll, .exe, .winmd, .xml, .json, .pri). Note that
+   * setting `IncludeSymbols=true` creates a regular package and a symbols
+   * package.
    * @see
    * {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesymbols IncludeSymbols}
    */
