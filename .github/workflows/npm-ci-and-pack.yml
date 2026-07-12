@@ -54,6 +54,7 @@ jobs:
       - run: npm i -g npm@latest
       - run: npm ci
       - run: npm audit signatures
+      - run: npx commitlint -l
       - run: npm pack
       - run: npm run type
       - run: npm run lint:check
