@@ -1,3 +1,10 @@
+## [3.10.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.10.0...v3.10.1) (2026-07-12)
+
+### Bug Fixes
+
+* **dotnet.helpers:** add nuget-restore when invoking target PublishAll ([f5cc5f0](https://github.com/HaloSPV3/HCE.Shared/commit/f5cc5f0327e88e9ad44494989ded61016cf56634))
+* **dotnet.SemanticRelease:** undefine Exec commands if they're empty strings ([aa7e6da](https://github.com/HaloSPV3/HCE.Shared/commit/aa7e6da8cee2e89a44b2ee0bc71dc9aa30e7f798))
+
 ## [3.10.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.3...v3.10.0) (2026-07-10)
 
 ### Features
