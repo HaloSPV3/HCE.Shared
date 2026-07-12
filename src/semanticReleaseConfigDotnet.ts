@@ -210,6 +210,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       = execOptions.verifyConditionsCmd && execOptions.verifyConditionsCmd.trim().length > 0
         ? `${execOptions.verifyConditionsCmd} && ${verifyConditionsCommandAppendix}`
         : verifyConditionsCommandAppendix;
+    if (execOptions.verifyConditionsCmd.length === 0)
+      execOptions.verifyConditionsCmd = undefined;
     debug('[exec:verifyConditionsCmd] Done');
 
     const verifyReleaseCommandAppendix
@@ -221,6 +223,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       = execOptions.verifyReleaseCmd && execOptions.verifyReleaseCmd.trim().length > 0
         ? `${execOptions.verifyReleaseCmd} && ${verifyReleaseCommandAppendix}`
         : verifyConditionsCommandAppendix;
+    if (execOptions.verifyReleaseCmd.length === 0)
+      execOptions.verifyReleaseCmd = undefined;
     debug('[exec:verifyReleaseCmd] Done');
 
     const prepareCommandAppendix = await configurePrepareCommand(
@@ -233,6 +237,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       = execOptions.prepareCmd && execOptions.prepareCmd.trim().length > 0
         ? `${execOptions.prepareCmd} && ${prepareCommandAppendix}`
         : prepareCommandAppendix;
+    if (execOptions.prepareCmd.length === 0)
+      execOptions.prepareCmd = undefined;
     debug('[exec:prepareCmd] Done');
 
     if (this._projectsToPackAndPush.length > 0) {
@@ -243,6 +249,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
         = execOptions.publishCmd && execOptions.publishCmd.trim().length > 0
           ? `${execOptions.publishCmd} && ${publishCommandAppendix}`
           : publishCommandAppendix;
+      if (execOptions.publishCmd.length === 0)
+        execOptions.publishCmd = undefined;
     }
     debug('[exec:publishCmd] Done');
   }
