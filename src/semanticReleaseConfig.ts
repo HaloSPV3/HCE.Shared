@@ -16,7 +16,8 @@ export interface SRReleaseNotesGeneratorOptions {
    */
   preset?: 'angular' | 'atom' | 'codemirror' | 'ember' | 'eslint' | 'express' | 'jquery' | 'jscs' | 'jshint' | 'conventionalcommits' | (string & Record<never, never>) | undefined;
   /**
-   * Requireable npm package with a custom conventional-changelog preset.
+   * Require-able npm package with a custom conventional-changelog preset.'
+   * If {@link preset} is specified, then this is ignored.
    */
   config?: string | undefined;
   /**
