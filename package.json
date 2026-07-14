@@ -76,7 +76,7 @@
     "@semantic-release/npm": "^13.1.5",
     "@semantic-release/release-notes-generator": "^14.1.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/node": "~26.0.1",
+    "@types/node": "^24.0.0",
     "arktype": "^2.2.2",
     "chardet": "^2.2.0",
     "conventional-changelog-conventionalcommits": "^9.3.1",
