@@ -31,7 +31,7 @@ async function trySetCI_PROJECT_ID(): Promise<void> {
     process.env['CI_PROJECT_ID'] = '70884695';
 }
 
-await describe('canPushPackagesToSource resolves when...', { concurrency: false }, async () => {
+await describe('canPushPackagesToSource resolves when...', { concurrency: true }, async () => {
   await it(
     '...GITHUB_REPOSITORY_OWNER and GH_TOKEN are defined, valid, and can push packages to source ',
     { timeout: 10_000 },
@@ -88,7 +88,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     });
 });
 
-await describe('canPushPackagesToSource throws when...', { concurrency: false }, async () => {
+await describe('canPushPackagesToSource throws when...', { concurrency: true }, async () => {
   const tokenEnvironmentVariables = ['INVALID_TOKEN'];
   process.env['INVALID_TOKEN'] = tokenEnvironmentVariables[0];
 
