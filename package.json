@@ -120,7 +120,7 @@
     "conventional-changelog-preset-loader": "^6.0.0",
     "eslint": "^10.6.0",
     "eslint-plugin-jsdoc": "^63.0.10",
-    "eslint-plugin-unicorn": "^71.0.0",
+    "eslint-plugin-unicorn": "^72.0.0",
     "jiti": "^2.7.0",
     "pinst": "^3.0.0",
     "publint": "^0.3.21",
