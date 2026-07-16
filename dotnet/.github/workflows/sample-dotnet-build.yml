@@ -13,7 +13,7 @@ jobs:
         with:
           submodules: 'recursive'
           fetch-depth: 0
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@v6.0.0
 
       - run:
           dotnet build src/SPV3.csproj -c Release
