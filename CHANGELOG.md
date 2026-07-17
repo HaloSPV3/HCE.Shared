@@ -1,3 +1,9 @@
+## [3.11.1-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.0...v3.11.1-develop.1) (2026-07-17)
+
+### Bug Fixes
+
+* **deps, deps-dev:** bump all NPM dependencies ([ae97554](https://github.com/HaloSPV3/HCE.Shared/commit/ae9755435273563a18160d564965e9b4588c5f53))
+
 ## [3.11.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.10.1...v3.11.0) (2026-07-16)
 
 ### Features
