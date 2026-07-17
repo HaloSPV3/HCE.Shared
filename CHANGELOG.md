@@ -1,3 +1,22 @@
+## [3.11.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.10.1...v3.11.0) (2026-07-16)
+
+### Features
+
+* **semanticRelease:** add missing types and members to `SRReleaseNotesGeneratorOptions` ([5ac0bd4](https://github.com/HaloSPV3/HCE.Shared/commit/5ac0bd4e5a12664dd7b0a52d2cd8a9072b9c4a07))
+
+### Bug Fixes
+
+* add missing `null` to `@semantic-release/commit-analyzer`'s `RuleObject.release` type ([a3d1610](https://github.com/HaloSPV3/HCE.Shared/commit/a3d16109af1dcae4c2e95cfb1a49ff76dcfad60f))
+* **deps:** downgrade `@types/node` to back to v24, AGAIN ([f549996](https://github.com/HaloSPV3/HCE.Shared/commit/f54999629a2c4d1ed9b2feeb42f666e6e5038a86))
+* **utils.execAsync:** override types for incorrect `ExecException` in `@types/node` < v26 ([3250ce1](https://github.com/HaloSPV3/HCE.Shared/commit/3250ce195d5c049bd27d10b071242b74c31ebda6))
+
+## [3.10.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.10.0...v3.10.1) (2026-07-12)
+
+### Bug Fixes
+
+* **dotnet.helpers:** add nuget-restore when invoking target PublishAll ([f5cc5f0](https://github.com/HaloSPV3/HCE.Shared/commit/f5cc5f0327e88e9ad44494989ded61016cf56634))
+* **dotnet.SemanticRelease:** undefine Exec commands if they're empty strings ([aa7e6da](https://github.com/HaloSPV3/HCE.Shared/commit/aa7e6da8cee2e89a44b2ee0bc71dc9aa30e7f798))
+
 ## [3.10.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.9.3...v3.10.0) (2026-07-10)
 
 ### Features

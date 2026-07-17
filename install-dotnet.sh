@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 set -e
+dir=$(greadlink -f ${BASH_SOURCE[0]} || readlink -f ${BASH_SOURCE[0]})
 
 # -------- Configuration --------
+VERSION=$(
+	[ -f "$dir/global.json" ] &&
+		cat -- "$dir/global.json" |
+		grep -P '"version":' |
+			grep -Po '(?<=\s")[\d.]+(?=")'
+)
 CHANNEL="11.0"
 QUALITY="GA"
 # Uncomment the workloads your project needs:
@@ -46,7 +53,12 @@ echo "Installing .NET $CHANNEL ($QUALITY) SDK to $INSTALL_DIR ..."
 
 curl -sSL https://dot.net/v1/dotnet-install.sh -o "$SCRIPT_DIR/dotnet-install.sh"
 chmod +x "$SCRIPT_DIR/dotnet-install.sh"
-"$SCRIPT_DIR/dotnet-install.sh" --channel "$CHANNEL" --quality "$QUALITY" --install-dir "$INSTALL_DIR"
+
+if [ "$VERSION" != '' ]; then
+  "$SCRIPT_DIR/dotnet-install.sh" --version "$VERSION" --install-dir "$INSTALL_DIR"
+else
+  "$SCRIPT_DIR/dotnet-install.sh" --channel "$CHANNEL" --quality "$QUALITY" --install-dir "$INSTALL_DIR"
+fi
 rm -f "$SCRIPT_DIR/dotnet-install.sh"
 
 # Auto-detect the installed SDK version

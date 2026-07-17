@@ -42,20 +42,22 @@ jobs:
 
       - run: corepack enable # enable corepack before setup-node
       - name: Use Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: yarn
           node-version-file: package.json
           check-latest: true
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@v6.0.0
         with:
           # required by Kuinox.NupkgDeterministicator
           dotnet-version: 6.x
           global-json-file: ./global.json
 
       - run: yarn
+      - run: yarn dlx commitlint -l
       # Waiting for https://github.com/yarnpkg/berry/issues/6487
       # - run: yarn npm audit signatures
+      - run: yarn dlx commitlint -l
       - run: yarn pack
       - run: yarn type
       - run: yarn lint

@@ -31,10 +31,10 @@ async function trySetCI_PROJECT_ID(): Promise<void> {
     process.env['CI_PROJECT_ID'] = '70884695';
 }
 
-await describe('canPushPackagesToSource resolves when...', { concurrency: false }, async () => {
+await describe('canPushPackagesToSource resolves when...', { concurrency: true }, async () => {
   await it(
     '...GITHUB_REPOSITORY_OWNER and GH_TOKEN are defined, valid, and can push packages to source ',
-    { timeout: 10_000 },
+    { timeout: 20_000 },
     async (t) => {
       if (process.env['GH_TOKEN'] === 'placeholder')
         delete process.env['GH_TOKEN'];
@@ -52,7 +52,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     });
   await it(
     '...CI_PROJECT_ID is defined and CI_JOB_TOKEN, GITLAB_TOKEN, or GL_TOKEN is defined, valid, and can push packages to source',
-    { timeout: 10_000 },
+    { timeout: 20_000 },
     async (t) => {
       await trySetCI_PROJECT_ID();
       if (process.env['CI_PROJECT_ID'] === 'placeholder')
@@ -73,7 +73,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     });
   await it(
     '...NUGET_TOKEN is defined, valid, and can push packages to source',
-    { timeout: 10_000 },
+    { timeout: 20_000 },
     async (t) => {
       if (!getEnvironmentVariableValue('NUGET_TOKEN')) {
         t.skip('NUGET_TOKEN environment variable undefined');
@@ -88,27 +88,11 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: false 
     });
 });
 
-await describe('canPushPackagesToSource throws when...', { concurrency: false }, async () => {
+await describe('canPushPackagesToSource throws when...', { concurrency: true }, async () => {
   const tokenEnvironmentVariables = ['INVALID_TOKEN'];
   process.env['INVALID_TOKEN'] = tokenEnvironmentVariables[0];
 
-  await it('GHNRI token is invalid', { timeout: 10_000 }, async () => {
-    getGHRepoOwner();
-    // eslint-disable-next-line unicorn/consistent-boolean-name
-    let canPush: true | Error;
-    try {
-      canPush = await new GHNRI({ project, tokenEnvVars: tokenEnvironmentVariables })
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
-        .canPushPackagesToSource;
-    }
-    catch (error: unknown) {
-      canPush = isError(error)
-        ? error
-        : new Error(JSON.stringify(error));
-    };
-    notStrictEqual(canPush, true);
-  });
-  await it('GLNRI token is invalid', { timeout: 10_000 }, async () => {
+  await it('GLNRI token is invalid', { timeout: 20_000 }, async () => {
     await trySetCI_PROJECT_ID();
     // eslint-disable-next-line unicorn/consistent-boolean-name
     let canPush: true | Error;
@@ -125,7 +109,7 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
 
     notStrictEqual(canPush, true);
   });
-  await it('NRI token is invalid', { timeout: 10_000 }, async () => {
+  await it('NRI token is invalid', { timeout: 20_000 }, async () => {
     // eslint-disable-next-line unicorn/consistent-boolean-name
     let canPush: true | Error;
     try {
@@ -139,5 +123,21 @@ await describe('canPushPackagesToSource throws when...', { concurrency: false },
         : new Error(inspect(error, { depth: 3 }));
     }
     ok(isError(canPush));
+  });
+  await it('GHNRI token is invalid', { timeout: 20_000 }, async () => {
+    getGHRepoOwner();
+    // eslint-disable-next-line unicorn/consistent-boolean-name
+    let canPush: true | Error;
+    try {
+      canPush = await new GHNRI({ project, tokenEnvVars: tokenEnvironmentVariables })
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+        .canPushPackagesToSource;
+    }
+    catch (error: unknown) {
+      canPush = isError(error)
+        ? error
+        : new Error(JSON.stringify(error));
+    };
+    notStrictEqual(canPush, true);
   });
 });

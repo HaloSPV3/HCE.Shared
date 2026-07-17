@@ -43,9 +43,13 @@ export async function execAsync(command: string, shouldSetStderrAsCause = false)
 }
 
 const T_ExecException: Type<
-  Omit<ExecException, 'cmd' | 'signal'>
-  & { signal?: ExecException['signal'] | null }
-  & Partial<Pick<ExecException, 'cmd'>>
+  Omit<NodeJS.ErrnoException, 'code'>
+  & Omit<ExecException, 'cmd' | 'code' | 'signal'>
+  & {
+    cmd?: ExecException['cmd'];
+    code?: number | string | undefined;
+    signal?: ExecException['signal'] | null;
+  }
 > = type.instanceOf(Error).and({
   'cmd?': 'string',
   'code?': 'number',

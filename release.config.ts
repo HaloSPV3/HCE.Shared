@@ -49,7 +49,7 @@ const config: Omit<Omit<typeof baseConfig, 'branches'>, 'plugins'> & {
   ];
   plugins: [
     ...typeof baseConfig.plugins,
-    ...[string, Record<keyof object, unknown>][],
+    ...[string, Record<PropertyKey, unknown>][],
   ];
 } = {
   ...baseConfig,
@@ -92,11 +92,14 @@ try {
     });
 
     // eslint-disable-next-line jsdoc/require-jsdoc
-    function extractCommitAnalyzerOptions(plugins: (string | [string, Record<keyof object, unknown>])[]): typeof T_CommitAnalyzerOptions['inferOut'] {
-      const entry = plugins.find(v => v === COMMIT_ANALYZER_ID || v[0] === COMMIT_ANALYZER_ID);
-      if (entry == undefined || typeof entry === 'string')
-        return {};
-      return T_CommitAnalyzerOptions.allows(entry[1]) ? T_CommitAnalyzerOptions.from(entry[1]) : {};
+    function extractCommitAnalyzerOptions(plugins: typeof config.plugins): typeof T_CommitAnalyzerOptions['inferOut'] {
+      const options = plugins.find(
+        (v): v is [typeof COMMIT_ANALYZER_ID, unknown] =>
+          Array.isArray(v) && v[0] === COMMIT_ANALYZER_ID,
+      )?.[1] as unknown;
+      return T_CommitAnalyzerOptions.allows(options)
+        ? T_CommitAnalyzerOptions.from(options)
+        : {};
     }
 
     /** https://github.com/semantic-release/commit-analyzer#options */

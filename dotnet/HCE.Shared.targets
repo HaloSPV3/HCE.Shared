@@ -5,7 +5,7 @@
   <Import Project="$(MSBuildThisFileDirectory)ExecNupkgDeterministicator.targets" />
   <Import Project="$(MSBuildThisFileDirectory)HCE.Shared.CI.props" />
   <Import Project="$(MSBuildThisFileDirectory)ZipPublishDir.targets" />
-  <!-- Must be explicitly targeted via 'dotnet msbuild project.csproj -t:PublishAll'. May lead to incompatibility errors -->
+  <!-- Must be explicitly targeted via 'dotnet msbuild project.csproj -restore -t:PublishAll'. May lead to incompatibility errors -->
   <Import Project="$(MSBuildThisFileDirectory)PublishAll.targets" />
   <!-- Auto-runs after 'dotnet build' if (TargetFramework != '') AND (RuntimeIdentifier == '') AND (RuntimeIdentifiers != '');
     The SDK iterates through TargetFrameworks for each TFM. We iterate each TFM's RIDs.

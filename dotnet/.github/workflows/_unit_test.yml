@@ -18,14 +18,14 @@ jobs:
         with:
           fetch-depth: 0
       - run: corepack enable # enable corepack before setup-node
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           cache: 'yarn'
           check-latest: true
           node-version-file: package.json
       - run: yarn
 
-      - uses: actions/setup-dotnet@v5.4.0
+      - uses: actions/setup-dotnet@v6.0.0
         with:
           dotnet-version: '8.x'
 

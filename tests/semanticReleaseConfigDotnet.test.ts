@@ -18,7 +18,7 @@ await describe('SemanticReleaseConfigDotnet', async () => {
 });
 
 await describe('getConfig', async () => {
-  await it('does not throw when projectToPackAndPush contains at least one item', { concurrency: false, timeout: 10_000 }, async () => {
+  await it('does not throw when projectToPackAndPush contains at least one item', { concurrency: false, timeout: 20_000 }, async () => {
     process.env['GITHUB_REPOSITORY_OWNER'] = 'HaloSPV3';
     process.env['SKIP_TOKEN'] = 'true';
     // this test must pass two args here

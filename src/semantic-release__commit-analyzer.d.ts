@@ -6,8 +6,11 @@ declare module '@semantic-release/commit-analyzer' {
     /** @default true if {@link release} is 'major' */
       breaking?: boolean;
       revert?: boolean;
-      /** @default 'patch' if {@link revert} is `true` */
-      release: 'major' | 'premajor' | 'minor' | 'preminor' | 'patch' | 'prepatch' | 'prerelease' | false;
+      /**
+       * @default 'patch' if {@link revert} is `true`
+       * @see {@link https://github.com/semantic-release/commit-analyzer/blob/master/lib/load-release-rules.js load-release-rules.js}, {@link https://github.com/semantic-release/commit-analyzer/blob/a3c26636fb78dc2e441606c1e746bc07751a2c87/lib/default-release-types.js#L4 }
+       */
+      release: 'major' | 'premajor' | 'minor' | 'preminor' | 'patch' | 'prepatch' | 'prerelease' | false | null;
     }
 
     /**

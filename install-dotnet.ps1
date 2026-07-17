@@ -2,6 +2,12 @@
 $ErrorActionPreference = 'Stop'
 
 # -------- Configuration --------
+$Version = if (Get-ChildItem -File $PSScriptRoot/global.json) {
+  Get-Content -Raw $PSScriptRoot/global.json |
+  ConvertFrom-Json |
+  Select-Object -ExpandProperty sdk |
+  Select-Object -ExpandProperty version
+}
 $Channel = '11.0'
 $Quality = 'GA'
 # Uncomment the workloads your project needs:
@@ -29,7 +35,12 @@ Write-Host "Installing .NET $Channel ($Quality) SDK to $installDir ..."
 
 $installerPath = Join-Path $scriptDir 'dotnet-install.ps1'
 Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile $installerPath
-& $installerPath -Channel $Channel -Quality $Quality -InstallDir $installDir
+if ($Version -ne ''){
+  & $installerPath -Version $Version -InstallDir $installDir
+}
+else {
+  & $installerPath -Channel $Channel -Quality $Quality -InstallDir $installDir
+}
 Remove-Item $installerPath -ErrorAction SilentlyContinue
 
 # Auto-detect the installed SDK version

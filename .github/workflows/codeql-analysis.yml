@@ -39,7 +39,7 @@ jobs:
 
       - run: corepack enable
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
 
@@ -47,7 +47,7 @@ jobs:
 
       - run: yarn install --immutable ${{ steps.isDepUpBranch.outputs }}
 
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@v6.0.0
 
       - uses: fast-actions/setup-dotnet@v1
         with:

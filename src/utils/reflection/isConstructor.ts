@@ -39,8 +39,8 @@ export function isConstructor(object: unknown): object is abstract new (...argum
    * > 'function'
    */
   const prototype: unknown = object.prototype;
-  if ((typeof prototype === 'object' || typeof prototype === 'function')
-    && prototype !== null
+  if (prototype != undefined
+    && (typeof prototype === 'function' || typeof prototype === 'object')
     && 'constructor' in prototype
     && typeof prototype.constructor === 'function') {
     const _ctor = prototype.constructor as (new (...arguments_: unknown[]) => unknown);
