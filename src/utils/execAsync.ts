@@ -43,7 +43,7 @@ export async function execAsync(command: string, shouldSetStderrAsCause = false)
 }
 
 const T_ExecException: Type<
-  Omit<NodeJS.ErrnoException, 'code'>
+  Error
   & Omit<ExecException, 'cmd' | 'code' | 'signal'>
   & {
     cmd?: ExecException['cmd'];

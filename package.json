@@ -1,6 +1,6 @@
 {
   "name": "@halospv3/hce.shared-config",
-  "version": "3.11.1-develop.1",
+  "version": "3.11.1",
   "description": "Automate commit message quality, changelogs, and CI/CD releases. Its `main` entry point is a Semantic Release config. Functions and classes are exposed for customization. An ESLint config, a Commitlint config, and addl. resources for .NET projects are also provided.",
   "keywords": [
     "semantic-release",
@@ -56,7 +56,6 @@
     "lint": "eslint --cache --fix .",
     "lint:check": "eslint --cache .",
     "eslint-inspector": "eslint --inspect-config",
-    "//prepack": "Include this if publishing to npmjs.com",
     "prepack": "pinst --disable && yarn clean && yarn build",
     "postinstall": "husky",
     "postpack": "attw --profile 'esm-only' -P ./package.tgz && pinst --enable",

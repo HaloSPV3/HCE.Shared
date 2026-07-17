@@ -1,3 +1,16 @@
+## [3.11.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.0...v3.11.1) (2026-07-17)
+
+### Bug Fixes
+
+* **deps, deps-dev:** bump all NPM dependencies ([ae97554](https://github.com/HaloSPV3/HCE.Shared/commit/ae9755435273563a18160d564965e9b4588c5f53))
+* **utils.execAsync:** override types for incorrect `ExecException` in `@types/node` < v26 ([5fd4bcc](https://github.com/HaloSPV3/HCE.Shared/commit/5fd4bccaa058569e657f48980d8a51c4c0f92a0c))
+
+## [3.11.1-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.1-develop.1...v3.11.1-develop.2) (2026-07-17)
+
+### Bug Fixes
+
+* **utils.execAsync:** override types for incorrect `ExecException` in `@types/node` < v26 ([5fd4bcc](https://github.com/HaloSPV3/HCE.Shared/commit/5fd4bccaa058569e657f48980d8a51c4c0f92a0c))
+
 ## [3.11.1-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.0...v3.11.1-develop.1) (2026-07-17)
 
 ### Bug Fixes
