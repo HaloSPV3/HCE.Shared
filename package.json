@@ -48,7 +48,6 @@
     "lint": "eslint --cache --fix .",
     "lint:check": "eslint --cache .",
     "eslint-inspector": "eslint --inspect-config",
-    "//prepack": "Include this if publishing to npmjs.com",
     "prepack": "pinst --disable && npm run clean && npm run build",
     "postpack": "pinst --enable",
     "postinstall": "patch-package && husky",
