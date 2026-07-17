@@ -54,7 +54,6 @@ jobs:
           global-json-file: ./global.json
 
       - run: yarn
-      - run: yarn dlx commitlint -l
       # Waiting for https://github.com/yarnpkg/berry/issues/6487
       # - run: yarn npm audit signatures
       - run: yarn dlx commitlint -l
