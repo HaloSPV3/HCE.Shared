@@ -40,6 +40,16 @@ jobs:
           check-latest: true
       - run: unset NODE_AUTH_TOKEN
 
+      - id: isDepUpBranch
+        name: Is the current branch a dep-upgrade branch?
+        shell: bash
+        run: |
+          BRANCH_NAME="$(git branch --show-current)"
+          echo "BRANCH_NAME is '$BRANCH_NAME'"
+          [[ "$BRANCH_NAME" =~ ^(renovate|dependabot)/.+$ ]] &&
+            echo $'V=true\nIMMUTABLE_CACHE=--immutable-cache' > $GITHUB_OUTPUT ||
+            echo 'This branch is not a dep-upgrade branch.'
+
       # ensure GitLab is synced _before_ releasing
       - name: Sync to GitLab
         uses: kujov/gitlab-sync@2.2.1
@@ -49,7 +59,7 @@ jobs:
           gitlab_pat: ${{ secrets.GL_SEMANTICRELEASE }}
       - name: List commits since last tag
         run: git log $(git describe --tags --abbrev=0)..HEAD --no-merges --oneline
-      - run: yarn install --immutable
+      - run: yarn install --immutable ${{ steps.isDepUpBranch.outputs.IMMUTABLE_CACHE }}
       # Waiting for https://github.com/yarnpkg/berry/issues/6487
       #- run: npm audit signatures
 
