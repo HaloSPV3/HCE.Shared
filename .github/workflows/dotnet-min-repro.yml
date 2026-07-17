@@ -27,7 +27,7 @@ jobs:
         with:
           path: /usr/share/dotnet
           key: usr-share-dotnet
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@v6.0.0
         with:
           global-json-file: ./global.json
           # required by Kuinox.NupkgDeterministicator
