@@ -1,9 +1,7 @@
 import markdown from '@eslint/markdown';
 import jsdoc from 'eslint-plugin-jsdoc';
-// @ts-expect-error no types available; spray and pray
-import * as publint from "eslint-plugin-publint";
-// @ts-expect-error no types available; spray and pray
-import * as parser from "eslint-plugin-publint/jsonc-eslint-parser";
+import * as publint from 'eslint-plugin-publint';
+import * as parser from 'eslint-plugin-publint/jsonc-eslint-parser';
 import unicorn from 'eslint-plugin-unicorn';
 import { defineConfig, type Config } from 'eslint/config';
 import hceSharedConfig from './src/eslintConfig.ts';
