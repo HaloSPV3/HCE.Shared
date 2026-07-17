@@ -45,7 +45,7 @@ jobs:
 
       - run: corepack enable
 
-      - run: yarn install --immutable ${{ steps.isDepUpBranch.outputs }}
+      - run: yarn install --immutable ${{ steps.isDepUpBranch.outputs.IMMUTABLE_CACHE }}
 
       - uses: actions/setup-dotnet@v6.0.0
 
