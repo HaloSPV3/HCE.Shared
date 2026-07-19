@@ -820,7 +820,7 @@ __metadata:
     "@typescript-eslint/utils": "npm:^8.64.0"
     arktype: "npm:^2.2.3"
     chardet: "npm:^2.2.0"
-    conventional-changelog-conventionalcommits: "npm:^9.3.1"
+    conventional-changelog-conventionalcommits: "npm:^10.0.0"
     conventional-changelog-preset-loader: "npm:^6.0.1"
     debug: "npm:^4.4.3"
     error.iserror: "npm:^1.0.2"
@@ -3039,7 +3039,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-conventionalcommits@npm:^10.0.0, conventional-changelog-conventionalcommits@npm:^9.3.1":
+"conventional-changelog-conventionalcommits@npm:^10.0.0":
   version: 9.3.1
   resolution: "conventional-changelog-conventionalcommits@npm:9.3.1"
   dependencies:
