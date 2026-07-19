@@ -231,7 +231,7 @@ npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
 
   <!-- This property group allows for finding HCESharedDir if it's an unplugged (un-virtualized) Yarn Berry/PnP module-->
   <PropertyGroup Label="Yarn-unplugged HCE.Shared" Condition="!Exists($(HCESharedDir))">
-    <_yarnUnplugged>$([System.IO.Path]::Join("$(RepoRoot)", '.yarn/unplugged/'))</_yarnUnplugged>
+    <_yarnUnplugged>$(System.IO.Path]::Combine("$(RepoRoot)", '.yarn/unplugged/'))</_yarnUnplugged>
     <_yarnUnpluggedChildren>$([System.IO.Directory]::GetDirectories($(_yarnUnplugged)))</_yarnUnpluggedChildren>
     <_yarnUnpluggedHceSharedMatches>$([System.Text.RegularExpressions.Regex]::Matches(
         $(_yarnUnpluggedChildren),'@halospv3-hce.shared-config-[^;]+')
