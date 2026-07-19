@@ -146,14 +146,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bintoss/semantic-release-npm-multiple@npm:^3.17.1":
-  version: 3.17.1
-  resolution: "@bintoss/semantic-release-npm-multiple@npm:3.17.1"
+"@bintoss/semantic-release-npm-multiple@npm:^3.17.3":
+  version: 3.17.3
+  resolution: "@bintoss/semantic-release-npm-multiple@npm:3.17.3"
   dependencies:
-    "@semantic-release/npm": "npm:^13.0.0"
+    "@semantic-release/npm": "npm:^13.1.5"
   peerDependencies:
     semantic-release: ">=19.0.0"
-  checksum: 10c0/7f74e36d721e615de620efcf775076a9467d31f953f0ff1855914e141db97d0ec3d1ce991e1d8186f9ad0c3f59bd6f7ab40b5e60074a90a93846967525f71c49
+  checksum: 10c0/c766963d340f5938b5a775a22e9a9cc4ea4eb5c6d69cf8d64c1e38fd7bb5f79842236c2193d7480b8ce29a5bd55cd082bbc3f66b6d9120d39efc5d0fb7fb9610
   languageName: node
   linkType: hard
 
@@ -794,7 +794,7 @@ __metadata:
   dependencies:
     "@arethetypeswrong/cli": "npm:^0.18.5"
     "@arethetypeswrong/core": "npm:^0.18.5"
-    "@bintoss/semantic-release-npm-multiple": "npm:^3.17.1"
+    "@bintoss/semantic-release-npm-multiple": "npm:^3.17.3"
     "@commitlint/cli": "npm:^21.2.1"
     "@commitlint/config-conventional": "npm:^21.2.0"
     "@commitlint/load": "npm:^21.2.0"
@@ -826,7 +826,7 @@ __metadata:
     error.iserror: "npm:^1.0.2"
     es-main: "npm:^1.4.0"
     eslint: "npm:^10.7.0"
-    eslint-plugin-jsdoc: "npm:^63.0.13"
+    eslint-plugin-jsdoc: "npm:^63.1.0"
     eslint-plugin-publint: "npm:^0.5.2"
     eslint-plugin-unicorn: "npm:^72.0.0"
     globals: "npm:^17.7.0"
@@ -835,7 +835,7 @@ __metadata:
     pinst: "npm:^3.0.0"
     publint: "npm:^0.3.21"
     sanitize-filename: "npm:^1.6.4"
-    semantic-release: "npm:^25.0.7"
+    semantic-release: "npm:^25.0.8"
     semantic-release-export-data: "npm:^1.2.0"
     tmp: "npm:^0.2.7"
     ts-essentials: "npm:^10.2.1"
@@ -1657,7 +1657,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/npm@npm:^13.0.0, @semantic-release/npm@npm:^13.1.1, @semantic-release/npm@npm:^13.1.5":
+"@semantic-release/npm@npm:^13.1.1, @semantic-release/npm@npm:^13.1.5":
   version: 13.1.5
   resolution: "@semantic-release/npm@npm:13.1.5"
   dependencies:
@@ -3671,9 +3671,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:^63.0.13":
-  version: 63.0.13
-  resolution: "eslint-plugin-jsdoc@npm:63.0.13"
+"eslint-plugin-jsdoc@npm:^63.1.0":
+  version: 63.1.0
+  resolution: "eslint-plugin-jsdoc@npm:63.1.0"
   dependencies:
     "@es-joy/jsdoccomment": "npm:~0.88.0"
     "@es-joy/resolve.exports": "npm:1.2.0"
@@ -3691,7 +3691,7 @@ __metadata:
     to-valid-identifier: "npm:^1.0.0"
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
-  checksum: 10c0/5abeb767d9d26bde94eb93858b84b9f510bf79d3f5eec631552c0490c1fbab45f456be455ea9de4f3127cdc0ac14889294092080af83ae283ec0f1a6f4ae13c7
+  checksum: 10c0/02c4aa156f7ef7e7261a94cef9ec7174af9bbd2d1608ef49efb8aee2a7ab67a7ef34b7116edd532bd3d589abd4cad8937fc5aea31c895e3d2fd62d15273f29ae
   languageName: node
   linkType: hard
 
@@ -7578,9 +7578,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semantic-release@npm:^25.0.7":
-  version: 25.0.7
-  resolution: "semantic-release@npm:25.0.7"
+"semantic-release@npm:^25.0.8":
+  version: 25.0.8
+  resolution: "semantic-release@npm:25.0.8"
   dependencies:
     "@semantic-release/commit-analyzer": "npm:^13.0.1"
     "@semantic-release/error": "npm:^4.0.0"
@@ -7612,7 +7612,7 @@ __metadata:
     yargs: "npm:^18.0.0"
   bin:
     semantic-release: bin/semantic-release.js
-  checksum: 10c0/fb49fcb1fe6c589980f955f9dfd05d034be2e0b8d3fa921a73f1e098fa414b2b60f242eb727a66a2749fa7ab0772d1ab0025b95defd1645eb09e6c1a75228835
+  checksum: 10c0/837211f18fcef80f93fa60999f7f4da72c12604097518f1fe3fc7aad4efebbdd5930d02fed1865a1efe9124d588ea01e2e4f4fa09f471a13a05a7628efe0daf3
   languageName: node
   linkType: hard
 

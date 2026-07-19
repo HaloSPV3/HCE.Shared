@@ -93,7 +93,7 @@
     "globals": "^17.7.0",
     "husky": "^9.1.7",
     "sanitize-filename": "^1.6.4",
-    "semantic-release": "^25.0.7",
+    "semantic-release": "^25.0.8",
     "semantic-release-export-data": "^1.2.0",
     "ts-essentials": "^10.2.1",
     "typescript-eslint": "^8.64.0"
@@ -116,7 +116,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@arethetypeswrong/core": "^0.18.5",
-    "@bintoss/semantic-release-npm-multiple": "^3.17.1",
+    "@bintoss/semantic-release-npm-multiple": "^3.17.3",
     "@commitlint/load": "^21.2.0",
     "@commitlint/types": "^21.2.0",
     "@eslint/config-inspector": "^3.1.0",
@@ -128,7 +128,7 @@
     "@typescript-eslint/utils": "^8.64.0",
     "conventional-changelog-preset-loader": "^6.0.1",
     "eslint": "^10.7.0",
-    "eslint-plugin-jsdoc": "^63.0.13",
+    "eslint-plugin-jsdoc": "^63.1.0",
     "eslint-plugin-publint": "^0.5.2",
     "eslint-plugin-unicorn": "^72.0.0",
     "jiti": "^2.7.0",
