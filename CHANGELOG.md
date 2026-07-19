@@ -1,3 +1,10 @@
+## [3.11.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.1...v3.11.2) (2026-07-19)
+
+### Bug Fixes
+
+* **README, dotnet.ZPD:** replace `Path.Join` with legacy-compatible `Path.Combine` ([838a47d](https://github.com/HaloSPV3/HCE.Shared/commit/838a47dcdbfa7c0f09f668e00240b3858a4e35eb)), closes [#837](https://github.com/HaloSPV3/HCE.Shared/issues/837)
+* **README, dotnet.ZPD:** replace `Path.Join` with legacy-compatible `Path.Combine` ([9802eb8](https://github.com/HaloSPV3/HCE.Shared/commit/9802eb83d3462981655efe37784714b45c370b33)), closes [#837](https://github.com/HaloSPV3/HCE.Shared/issues/837)
+
 ## [3.11.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.0...v3.11.1) (2026-07-17)
 
 ### Bug Fixes
