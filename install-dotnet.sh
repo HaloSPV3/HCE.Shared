@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 set -e
-dir=$(greadlink -f ${BASH_SOURCE[0]} || readlink -f ${BASH_SOURCE[0]})
 
+dir=""
+if [ -n "$(which greadlink &>/dev/null)" ]; then
+	dir=$(greadlink -f "${BASH_SOURCE[0]}")
+else
+	dir=$(readlink -f "${BASH_SOURCE[0]}")
+fi
+
+dir=$(dirname "$dir")
 # -------- Configuration --------
 VERSION=$(
 	[ -f "$dir/global.json" ] &&
