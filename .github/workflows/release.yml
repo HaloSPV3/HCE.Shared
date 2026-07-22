@@ -68,7 +68,7 @@ jobs:
         with:
           user: nToss
 
-      - run: yarn semantic-release -- --debug # make git tag, commit updated files, release to GitHub/GitLab.
+      - run: yarn semantic-release --debug # make git tag, commit updated files, release to GitHub/GitLab.
         id: semantic-release
         # outputs:
         #  - new-release-published
