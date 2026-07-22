@@ -62,7 +62,7 @@ jobs:
       - run: yarn install --immutable
       # Waiting for https://github.com/yarnpkg/berry/issues/6487
       # - run: yarn npm audit signatures
-      - run: yarn dlx commitlint -l
+      - run: yarn exec commitlint -l
       - run: yarn pack
       - run: yarn type
       - run: yarn lint
