@@ -62,15 +62,15 @@ export class SemanticReleaseConfigDotnet {
    * recommended, the projects' publish outputs will be zipped to '$PWD/publish'
    * for use in the `publish` semantic-release step (typically, GitHub release).
    * @param projectsToPackAndPush An array of dotnet projects' relative paths.
-   * If empty or unspecified, tries getting projects' semi-colon-separated
+   * If `null`, `undefined`, or `[]`; tries getting projects' semi-colon-separated
    * relative paths from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
-   * Otherwise, no packages will be packed and pushed.
+   * If neither is defined, no packages will be packed and pushed.
    * If configured as recommended, `dotnet pack` will output the nupkg/snupkg
    * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
    */
   constructor(
     projectsToPublish: string[] | MSBuildProject[],
-    projectsToPackAndPush: string[] | NugetRegistryInfo[],
+    projectsToPackAndPush?: string[] | NugetRegistryInfo[] | null,
   ) {
     this.options = baseConfig;
     /* normalize PluginSpecs to tuples */
@@ -90,14 +90,14 @@ export class SemanticReleaseConfigDotnet {
       }
     }
 
-    this._projectsToPackAndPush = projectsToPackAndPush;
+    this._projectsToPackAndPush = projectsToPackAndPush ?? [];
     if (this._projectsToPackAndPush.length === 0) {
       const p = getEnvironmentVariableValue('PROJECTS_TO_PACK_AND_PUSH')?.split(';');
       if (p && p.length > 0) {
         this._projectsToPackAndPush = p;
       }
       else if (debug.enabled) {
-        debug(new Error('projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.'));
+        debug('projectsToPackAndPush is undefined. dotnet-pack and dotnet-nuget-push setup will be skipped.');
       }
     }
 
@@ -425,11 +425,7 @@ export async function getConfig(
     debug('projectsToPackAndPush is empty. Checking PROJECTS_TO_PACK_AND_PUSH...');
     const _ = getEnvironmentVariableValue('PROJECTS_TO_PACK_AND_PUSH');
     if (_ === undefined)
-      errors.push(
-        new Error(
-          'projectsToPackAndPush.length must be > 0 or PROJECTS_TO_PACK_AND_PUSH must be defined and contain at least one path.',
-        ),
-      );
+      debug('projectsToPackAndPush and PROJECTS_TO_PACK_AND_PUSH are empty and/or undefined.');
     else projectsToPackAndPush = _.split(';');
   }
   debug(`${(projectsToPackAndPush?.length ?? 0).toString()} projects found to dotnet-pack and dotnet-nuget-push.`);
@@ -444,7 +440,7 @@ export async function getConfig(
   debug(`Instantiating ${SemanticReleaseConfigDotnet.name}...`);
   const config = new SemanticReleaseConfigDotnet(
     projectsToPublish,
-    projectsToPackAndPush ?? [],
+    projectsToPackAndPush,
   );
   debug('Setting up Dotnet commands...');
   await config.setupDotnetCommands();
