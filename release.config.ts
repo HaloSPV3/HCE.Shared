@@ -183,7 +183,10 @@ try {
             // todo: disable provenance for this registry; It's broken
             npmPublish: false,
           },
-          gitlab: {},
+          gitlab: {
+            // todo: disable provenance for this registry; It's broken
+            npmPublish: false,
+          },
           /** npmjs.org */
           public: {},
         },
