@@ -1,3 +1,10 @@
+## [3.12.0-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.12.0-develop.1...v3.12.0-develop.2) (2026-07-22)
+
+### Bug Fixes
+
+* **deps, deps-dev:** bump `typescript-eslint`, `@typescript-eslint/utils`, `eslint-plugin-jsdoc`, `tsdown` ([073552c](https://github.com/HaloSPV3/HCE.Shared/commit/073552c2a5a59f8fcf9da735c7250d99994d1bd4))
+* **deps:** allow node >=26.1.0 ([7dc8157](https://github.com/HaloSPV3/HCE.Shared/commit/7dc81579a16d032a6fb48aa21732e6181844b03e))
+
 ## [3.12.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.2...v3.12.0-develop.1) (2026-07-22)
 
 ### Features
