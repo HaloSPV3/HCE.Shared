@@ -338,7 +338,7 @@ npx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,sema
 # or pnpm
 pnpx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"
 # or yarn
-yarn dlx semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"
+yarn exec semantic-release --dry-run --plugins "@semantic-release/commit-analyzer,semantic-release-export-data"
 ```
 
 If the first plugin doesn't run into any issues and infers a version bump from unreleased commits,
