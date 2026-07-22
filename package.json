@@ -63,7 +63,7 @@
     "semantic-release": "yarn pack && semantic-release",
     "test:only": "node --trace-deprecation --trace-warnings --test --experimental-test-coverage --enable-source-maps --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.txt --test-reporter=junit --test-reporter-destination=junit.xml",
     "test": "yarn build && yarn test:cacheSampleProjects && yarn test:only",
-    "test:cacheSampleProjects": "echo \"START: Cache Sample Projects\" && node ./tests/dotnet/MSBuildProject.projects.ts && echo \"DONE: Cache Sample Projects\"",
+    "test:cacheSampleProjects": "echo \"START: Cache Sample Projects\" && yarn node ./tests/dotnet/MSBuildProject.projects.ts && echo \"DONE: Cache Sample Projects\"",
     "test:watch": "yarn test -- --watch",
     "type": "tsc --build",
     "validate": "tsdown --no-write",
