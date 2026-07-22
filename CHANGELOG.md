@@ -1,3 +1,17 @@
+## [3.12.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.2...v3.12.0-develop.1) (2026-07-22)
+
+### Features
+
+* **dotnet.SemanticRelease:** allow `null|[secure]|[]` to skip dotnet-pack setup; do not throw ([5dbe144](https://github.com/HaloSPV3/HCE.Shared/commit/5dbe144a60357017b0c59295ba379984dc8a550b))
+
+### Bug Fixes
+
+* **deps, deps-dev:** upgrade yarn dependencies ([3bed0bc](https://github.com/HaloSPV3/HCE.Shared/commit/3bed0bcdb87ccc00091f0238ef7fa79820923801))
+
+### Reverts
+
+* **utils.execAsync:** strip out `T_ErrnoException` from `T_ExecException`, `ChildProcessSpawnException` ([5839676](https://github.com/HaloSPV3/HCE.Shared/commit/58396765e69bee4ed414d971178ce8b136a20efb))
+
 ## [3.11.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.11.1...v3.11.2) (2026-07-19)
 
 ### Bug Fixes
