@@ -1,3 +1,9 @@
+## [3.12.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.12.1...v3.12.2) (2026-07-22)
+
+### Bug Fixes
+
+* disable publishing to GitLab NPM registry until provenance works, again ([91e82e1](https://github.com/HaloSPV3/HCE.Shared/commit/91e82e1c4a3c92bc48eff1cd87408a5e43000af7))
+
 ## [3.12.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.12.0...v3.12.1) (2026-07-22)
 
 ### Bug Fixes
