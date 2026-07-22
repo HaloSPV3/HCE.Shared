@@ -24,6 +24,12 @@ jobs:
       issues: write # to be able to comment on released issues
       packages: write
       pull-requests: write # to be able to comment on released pull requests
+    env:
+      DOTNET_NOLOGO: true
+      # https://stackoverflow.com/questions/75180149/how-to-cache-dotnet-installation-in-github-actions
+      # access to "usr/lib/dotnet" is denied
+      DOTNET_INSTALL_DIR: /usr/share/dotnet
+      DOTNET_ROOT: /usr/share/dotnet
 
     steps:
       - uses: actions/checkout@v7
@@ -43,6 +49,12 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
       - run: corepack enable # Assure it's enabled
+
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          # required by Kuinox.NupkgDeterministicator
+          dotnet-version: 6.x
+          global-json-file: ./global.json
 
       # ensure GitLab is synced _before_ releasing
       - name: Sync to GitLab
