@@ -179,7 +179,10 @@ try {
       '@bintoss/semantic-release-npm-multiple',
       {
         registries: {
-          github: {},
+          github: {
+            // todo: disable provenance for this registry; It's broken
+            npmPublish: false,
+          },
           gitlab: {},
           /** npmjs.org */
           public: {},
