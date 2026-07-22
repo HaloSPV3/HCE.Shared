@@ -30,14 +30,19 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
+
       - run: corepack enable # enable corepack before setup-node
-      - uses: actions/setup-node@v7
+      - name: Setup Node
+        uses: actions/setup-node@v7
         with:
+          node-version-file: .nvmrc
+      - run: corepack enable # enable corepack AFTER setup-node
+      - name: Setup Node Cache
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
           cache: yarn
-          node-version: lts/*
-          # see https://github.com/actions/setup-node/blob/53b8394/src/main.ts#L103
-          node-version-file: package.json
-          check-latest: true
+      - run: corepack enable # Assure it's enabled
       - run: unset NODE_AUTH_TOKEN
 
       # ensure GitLab is synced _before_ releasing

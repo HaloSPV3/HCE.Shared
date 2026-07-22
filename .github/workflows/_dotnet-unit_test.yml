@@ -20,11 +20,17 @@ jobs:
           fetch-depth: 0
 
       - run: corepack enable # enable corepack before setup-node
-      - uses: actions/setup-node@v7
+      - name: Setup Node
+        uses: actions/setup-node@v7
         with:
+          node-version-file: .nvmrc
+      - run: corepack enable # enable corepack AFTER setup-node
+      - name: Setup Node Cache
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
           cache: yarn
-          check-latest: true
-          node-version-file: package.json
+      - run: corepack enable # Assure it's enabled
 
       - run: yarn
 

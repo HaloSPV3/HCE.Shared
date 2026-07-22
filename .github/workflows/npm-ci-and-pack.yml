@@ -41,12 +41,18 @@ jobs:
       - uses: actions/checkout@v7
 
       - run: corepack enable # enable corepack before setup-node
-      - name: Use Node.js
+      - name: Setup Node
         uses: actions/setup-node@v7
         with:
+          node-version-file: .nvmrc
+      - run: corepack enable # enable corepack AFTER setup-node
+      - name: Setup Node Cache
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
           cache: yarn
-          node-version-file: package.json
-          check-latest: true
+      - run: corepack enable # Assure it's enabled
+
       - uses: actions/setup-dotnet@v6.0.0
         with:
           # required by Kuinox.NupkgDeterministicator
