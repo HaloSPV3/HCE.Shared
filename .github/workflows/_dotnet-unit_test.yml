@@ -36,6 +36,6 @@ jobs:
 
       - uses: actions/setup-dotnet@v6.0.0
         with:
-          cache: dotnet
+          cache: true
 
       - run: dotnet test
