@@ -1,3 +1,9 @@
+## [3.13.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.12.2...v3.13.0) (2026-07-23)
+
+### Features
+
+* **dotnet.PublishAll:** allow disabling `BuildInParallel` MSBuild Task param via Property and/or environment variable ([e92f415](https://github.com/HaloSPV3/HCE.Shared/commit/e92f415e6caf872c2516dd8b3b550d8e2b821add))
+
 ## [3.12.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.12.1...v3.12.2) (2026-07-22)
 
 ### Bug Fixes
