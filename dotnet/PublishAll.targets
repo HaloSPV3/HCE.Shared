@@ -19,6 +19,7 @@
 <Project>
   <PropertyGroup>
     <Configuration Condition="'$(PublishRelease)' == 'true'">Release</Configuration>
+    <BuildInParallel>$(BuildInParallel)</BuildInParallel>
   </PropertyGroup>
 
   <!-- If !TargetFramework, iterate through TargetFrameworks -->
@@ -40,7 +41,7 @@
 
     <Error Condition=" '$(TargetFrameworks)' == '' " Text="Both TargetFramework and TargetFrameworks are undefined!" />
 
-    <MSBuild BuildInParallel="true"
+    <MSBuild BuildInParallel="$(BuildInParallel)"
       Projects="@(_PublishProjects_AllFrameworks)"
       Targets="_PublishAll_OneFramework" />
   </Target>
@@ -69,7 +70,7 @@
     RuntimeIdentifiers: $(RuntimeIdentifiers)
     _PublishRuntime: @(_PublishRuntime)" />
 
-    <MSBuild BuildInParallel="true"
+    <MSBuild BuildInParallel="$(BuildInParallel)"
       Projects="@(_PublishProjects_OneFramework)"
       Targets="Publish" />
   </Target>
