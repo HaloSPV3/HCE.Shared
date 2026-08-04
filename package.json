@@ -130,7 +130,7 @@
     "eslint": "^10.7.0",
     "eslint-plugin-jsdoc": "^63.2.0",
     "eslint-plugin-publint": "^0.5.2",
-    "eslint-plugin-unicorn": "^72.0.0",
+    "eslint-plugin-unicorn": "^73.0.0",
     "jiti": "^2.7.0",
     "pinst": "^3.0.0",
     "publint": "^0.3.21",
