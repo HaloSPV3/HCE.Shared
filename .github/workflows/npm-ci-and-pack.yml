@@ -56,7 +56,7 @@ jobs:
       - uses: actions/setup-dotnet@v6.0.0
         with:
           # required by Kuinox.NupkgDeterministicator
-          dotnet-version: 6.x
+          dotnet-version: 10.0.401
           global-json-file: ./global.json
 
       - run: yarn install --immutable
