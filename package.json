@@ -128,7 +128,7 @@
     "@typescript-eslint/utils": "^8.65.0",
     "conventional-changelog-preset-loader": "^6.0.1",
     "eslint": "^10.7.0",
-    "eslint-plugin-jsdoc": "^63.2.0",
+    "eslint-plugin-jsdoc": "^64.0.0",
     "eslint-plugin-publint": "^0.5.2",
     "eslint-plugin-unicorn": "^72.0.0",
     "jiti": "^2.7.0",
