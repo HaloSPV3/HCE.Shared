@@ -1,3 +1,9 @@
+## [3.13.1-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.13.0...v3.13.1-develop.1) (2026-09-17)
+
+### Reverts
+
+* Revert "ci(deps): update dependency dotnet-sdk to v10 ([#894](https://github.com/HaloSPV3/HCE.Shared/issues/894))" ([7b325a5](https://github.com/HaloSPV3/HCE.Shared/commit/7b325a517ac0d3a619d16a86170ad31771d81bbc))
+
 ## [3.13.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.12.2...v3.13.0) (2026-07-23)
 
 ### Features
