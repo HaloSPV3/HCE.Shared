@@ -14,7 +14,7 @@ import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.t
 If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
 @returns the value of env.GITHUB_REPOSITORY_OWNER
 */
-function getGHRepoOwner(): string {
+function getGHRepositoryOwner(): string {
   getEnvironmentVariableValue('GITHUB_REPOSITORY_OWNER');
   return process.env['GITHUB_REPOSITORY_OWNER'] ??= 'HaloSPV3';
 }
@@ -43,7 +43,7 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: true }
         return;
       }
 
-      getGHRepoOwner();
+      getGHRepositoryOwner();
       ok(
         await new GHNRI({ project, tokenEnvVars: ['GH_TOKEN'] })
         // eslint-disable-next-line @typescript-eslint/no-deprecated
@@ -125,7 +125,7 @@ await describe('canPushPackagesToSource throws when...', { concurrency: true }, 
     ok(isError(canPush));
   });
   await it('GHNRI token is invalid', { timeout: 20_000 }, async () => {
-    getGHRepoOwner();
+    getGHRepositoryOwner();
     // eslint-disable-next-line unicorn/consistent-boolean-name
     let canPush: true | Error;
     try {
