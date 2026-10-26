@@ -4,10 +4,8 @@ import esMain from 'es-main';
 
 /**
 @returns if successful
+@throws {TypeError} when `packageId` or `source` are not derived as string from `process.argv`. Or when the awaited return value of {@link NugetRegistryInfo.IsNextVersionAlreadyPublished} is not a boolean.
 @throws {Error} if...
-- {@link process.argv} does not include...
-  - `--packageId [string]`
-  - `--source [string]`
 - Value of `await getGithubOutput())['new-release-version']`...
   - is not a valid Version
   - already exists at `source`
@@ -28,9 +26,9 @@ async function main(): Promise<0> {
   }
 
   if (typeof options.packageId !== 'string')
-    throw new Error('packageId must be a string');
+    throw new TypeError('packageId must be a string');
   if (typeof options.source !== 'string')
-    throw new Error('source must be a string');
+    throw new TypeError('source must be a string');
 
   const packageId = options.packageId,
     source = options.source,
@@ -50,7 +48,7 @@ async function main(): Promise<0> {
   );
 
   if (typeof isPublished !== 'boolean')
-    throw new Error('isPublished is not a boolean');
+    throw new TypeError('isPublished is not a boolean');
   if (isPublished)
     throw new Error(`${packageId}@${nextVersion} already exists at ${source}.`);
   console.log(`OK: ${packageId}@${nextVersion} does NOT yet exist at ${source}. Yay.`);
