@@ -14,9 +14,7 @@ import type {
 } from './inheritance.ts';
 import type { InstanceTypeOrSelfPropertyDescriptorMap } from './InstanceTypeOrSelfPropertyDescriptorMap.d.ts';
 import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
-/**
- * JSDoc type imports
- */
+// JSDoc type imports
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { getPrototypeOf as _getPrototypeOf } from './getPrototypeOf.ts';
 import type { listOwnGetters as _listOwnGetters } from './listOwnGetters.ts';
@@ -24,18 +22,18 @@ import type { InstancePropertyDescriptorMap as _InstancePropertyDescriptorMap } 
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
- * A conditional wrapper for {@link InstanceTypeOrSelfPropertyDescriptorMap} and
- * {@link OwnPropertyDescriptorMap}.
- *
- * If {@link _InstanceOrStatic} is 'Instance', {@link InstanceTypeOrSelfPropertyDescriptorMap}.\
- * Else if {@link _InstanceOrStatic} is 'Static',
- * {@link OwnPropertyDescriptorMap }.\
- * Else, `never`.
- * @template {ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>} Class
- * A class definition cast to {@link ClassLike}.
- * @template {InstanceOrStatic} _InstanceOrStatic
- * 'Instance' or 'Static'. Determines the return type.
- * @since 3.0.0
+A conditional wrapper for {@link InstanceTypeOrSelfPropertyDescriptorMap} and
+{@link OwnPropertyDescriptorMap}.
+
+If {@link _InstanceOrStatic} is 'Instance', {@link InstanceTypeOrSelfPropertyDescriptorMap}.\
+Else if {@link _InstanceOrStatic} is 'Static',
+{@link OwnPropertyDescriptorMap }.\
+Else, `never`.
+@template {ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>} Class
+A class definition cast to {@link ClassLike}.
+@template {InstanceOrStatic} _InstanceOrStatic
+'Instance' or 'Static'. Determines the return type.
+@since 3.0.0
  */
 export type RecursedPropertyDescriptorMap<
   Class extends ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>,
@@ -45,14 +43,13 @@ export type RecursedPropertyDescriptorMap<
       : never;
 
 /**
- * An
- * ordered array of {@link OwnPropertyDescriptorMap} or
- * {@link InstancePropertyDescriptorMap} starting with {@link classDefinition}
- * and ending with a {@link BaseClass}.
- * @template {ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>} Class
- * @template {'Instance' | 'Static'} InstanceOrStatic
- * @template {Integer<number>} [Limit=16]
- * @template {Integer<number>} [CurrentLevel=0]
+An ordered array of {@link OwnPropertyDescriptorMap} or
+{@link InstancePropertyDescriptorMap} starting with {@link classDefinition}
+and ending with a {@link BaseClass}.
+@template {ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>} Class
+@template {'Instance' | 'Static'} InstanceOrStatic
+@template {Integer<number>} [Limit=16]
+@template {Integer<number>} [CurrentLevel=0]
  */
 export type RecursedPropertyDescriptorMapArray<
   Class extends ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>,
@@ -73,18 +70,18 @@ export type RecursedPropertyDescriptorMapArray<
         ]
       : never;
 /**
- * Walks the class inheritance chain to get a PropertyDescriptorMap of each class.
- *
- * While you _can_ use this to get an array of getter names/keys, you should use {@link getPrototypeOf} and {@link listOwnGetters}, instead!
- * @template Class Any class definition type-cast to {@link ClassLike}
- * @template _InstanceOrStatic
- * @param classDefinition Any class definition type-cast to {@link ClassLike}
- * @param instanceOrStatic 'Instance' or 'Static'. Determines the return type.
- * @returns An
- * ordered array of {@link OwnPropertyDescriptorMap} or
- * {@link InstancePropertyDescriptorMap} starting with {@link classDefinition}
- * and ending with a {@link BaseClass}.
- * @since 3.0.0
+Walks the class inheritance chain to get a PropertyDescriptorMap of each class.
+
+While you _can_ use this to get an array of getter names/keys, you should use {@link getPrototypeOf} and {@link listOwnGetters}, instead!
+@template Class Any class definition type-cast to {@link ClassLike}
+@template _InstanceOrStatic
+@param classDefinition Any class definition type-cast to {@link ClassLike}
+@param instanceOrStatic 'Instance' or 'Static'. Determines the return type.
+@returns An
+ordered array of {@link OwnPropertyDescriptorMap} or
+{@link InstancePropertyDescriptorMap} starting with {@link classDefinition}
+and ending with a {@link BaseClass}.
+@since 3.0.0
  */
 export function getOwnPropertyDescriptorsRecursively<
   // Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
@@ -117,10 +114,10 @@ export function getOwnPropertyDescriptorsRecursively<
 }
 
 /**
- * Simple utility for single-tuple type assertion
- * @template {T} T T in T[]
- * @param array an array
- * @returns array is [T]
+Simple utility for single-tuple type assertion
+@template {T} T T in T[]
+@param array an array
+@returns array is [T]
  */
 function isSingleTuple<T>(array: T[]): array is [T] {
   return Array.isArray(array) && array.length === 1;

@@ -1,18 +1,18 @@
 /**
- * A very jank function to determine if an object can be the target of Reflect.construct.
- * Unfortunately, many functions have a constructor in their prototype. These
- * functions are treated like classes due to JavaScript's poor distinction between
- * classes and functions.\
- * Typescript can enforce "new" keyword usage, but overriding the type
- * allows you to `new isConstructor()` despite this function not intended to be
- * used with the `new` keyword.
- * #### NOTE: Only works when targeting ES6/ES2015 or later.
- * > If your project or a dependent project is compiled to < ES6, this function will always return `false`; classes and constructors were introduced in ES6/ES2015.
- * @param object Anything.
- * @returns `true` if the {@link object} is a constructor. Else, `false`.
- * @since 3.0.0
- * @see https://stackoverflow.com/a/49510834
- */
+A very jank function to determine if an object can be the target of Reflect.construct.
+Unfortunately, many functions have a constructor in their prototype. These
+functions are treated like classes due to JavaScript's poor distinction between
+classes and functions.\
+Typescript can enforce "new" keyword usage, but overriding the type
+allows you to `new isConstructor()` despite this function not intended to be
+used with the `new` keyword.
+#### NOTE: Only works when targeting ES6/ES2015 or later.
+> If your project or a dependent project is compiled to < ES6, this function will always return `false`; classes and constructors were introduced in ES6/ES2015.
+@param object Anything.
+@returns `true` if the {@link object} is a constructor. Else, `false`.
+@since 3.0.0
+@see https://stackoverflow.com/a/49510834
+*/
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isConstructor(object: unknown): object is abstract new (...arguments_: any[]) => any {
   // Method 0 - filter

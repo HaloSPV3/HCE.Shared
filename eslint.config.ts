@@ -63,17 +63,11 @@ const config: Config[] = defineConfig(
     },
     plugins: { publint },
     rules: {
-      /**
-       * The 'suggestion' type messages created by publint will cause eslint warns
-       */
+      // The 'suggestion' type messages created by publint will cause eslint warns
       'publint/suggestion': 'warn',
-      /**
-       * The 'warning' type messages created by publint will cause eslint warns
-       */
+      // The 'warning' type messages created by publint will cause eslint warns
       'publint/warning': 'warn',
-      /**
-       * The 'error' type messages created by publint will cause eslint errors
-       */
+      // The 'error' type messages created by publint will cause eslint errors
       'publint/error': 'error',
     },
   },

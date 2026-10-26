@@ -3,13 +3,13 @@ import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptor
 import type { PropertyDescriptorMap } from './PropertyDescriptorMap.d.ts';
 
 /**
- * Variant of {@link InstancePropertyDescriptorMap} with a lesser constraint on {@link T}.
- * If {@link T} and/or {@link __proto__} are instantiable, the resulting
- * property descriptor maps will be of the instances' types.
- * @template T `null` or an `object`-like type.
- * @template __proto__ The `[[Prototype]]` of {@link T}.
- * @since 3.0.0
- */
+Variant of {@link InstancePropertyDescriptorMap} with a lesser constraint on {@link T}.
+If {@link T} and/or {@link __proto__} are instantiable, the resulting
+property descriptor maps will be of the instances' types.
+@template T `null` or an `object`-like type.
+@template __proto__ The `[[Prototype]]` of {@link T}.
+@since 3.0.0
+*/
 export type InstanceTypeOrSelfPropertyDescriptorMap<
   T extends object | null,
   __prototype__ extends PrototypeOrSuperClass,

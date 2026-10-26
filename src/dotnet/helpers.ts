@@ -10,21 +10,21 @@ import type { Default } from 'arktype/internal/attributes.ts';
 const ourDefaultPubDirectory = path.join('.', 'publish') as `.${'/' | '\\'}publish`;
 
 /**
- * Build a prepareCmd string from .NET projects.\
- * This will include a `dotnet publish` for each project's RID and TFM permutation,\
- * `dotnet pack` for each project with output paths separated by NuGet Source and PackageId,\
- * and `dotnet nuget sign` for each nupkg output directory.
- * @todo parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild).
- * @param projectsToPublish An array of relative or full file paths of `.csproj`
- * projects  -OR- an array of {@link MSBuildProject} objects.
- * The project paths will be passed to `dotnet publish` commands.
- * @param projectsToPackAndPush
- *  Relative and/or full file paths of projects to pass to `dotnet pack`. If
- *  string[], only the default NuGet Source will be used. If GitHub, GitLab,
- *  etc. are also desired, pass {@link NugetRegistryInfo}[]
- * @param dotnetNugetSignOpts A {@link DotnetNugetSignOptions} object. The value
- * of the `--output` argument will be set to {@link ourDefaultPubDir} if `undefined`.
- * @returns A single string of CLI commands joined by ' && '
+Build a prepareCmd string from .NET projects.\
+This will include a `dotnet publish` for each project's RID and TFM permutation,\
+`dotnet pack` for each project with output paths separated by NuGet Source and PackageId,\
+and `dotnet nuget sign` for each nupkg output directory.
+@todo parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild).
+@param projectsToPublish An array of relative or full file paths of `.csproj`
+projects  -OR- an array of {@link MSBuildProject} objects.
+The project paths will be passed to `dotnet publish` commands.
+@param projectsToPackAndPush
+ Relative and/or full file paths of projects to pass to `dotnet pack`. If
+ string[], only the default NuGet Source will be used. If GitHub, GitLab,
+ etc. are also desired, pass {@link NugetRegistryInfo}[]
+@param dotnetNugetSignOpts A {@link DotnetNugetSignOptions} object. The value
+of the `--output` argument will be set to {@link ourDefaultPubDir} if `undefined`.
+@returns A single string of CLI commands joined by ' && '
  */
 // eslint-disable-next-line unicorn/name-replacements
 export async function configurePrepareCmd(
@@ -56,17 +56,17 @@ export async function configurePrepareCmd(
     .join(' && ');
 
   /**
-   * Create a string of CLI commands to run `dotnet publish` or the Publish
-   * MSBuild target for one or more projects.
-   * @async
-   * @param projectsToPublish An array of one or more projects, either
-   * pre-evaluated (see {@link MSBuildProject.Evaluate}) or as full file paths.\
-   * NOTE: Although `dotnet publish` allows directory or Solution file (.sln,
-   * .slnx) paths, this function expects projects' full or relative file
-   * paths.
-   * @returns A Promise of a string. This string contains one or more `dotnet publish`
-   * commands conjoined by " && ". It may also include one or more
-   * `dotnet msbuild ${...} -restore -t:PublishAll -p:Configuration=Release` commands.
+  Create a string of CLI commands to run `dotnet publish` or the Publish
+  MSBuild target for one or more projects.
+  @async
+  @param projectsToPublish An array of one or more projects, either
+  pre-evaluated (see {@link MSBuildProject.Evaluate}) or as full file paths.\
+  NOTE: Although `dotnet publish` allows directory or Solution file (.sln,
+  .slnx) paths, this function expects projects' full or relative file
+  paths.
+  @returns A Promise of a string. This string contains one or more `dotnet publish`
+  commands conjoined by " && ". It may also include one or more
+  `dotnet msbuild ${...} -restore -t:PublishAll -p:Configuration=Release` commands.
    */
   async function formatDotnetPublish(
     projectsToPublish: string[] | MSBuildProject[],
@@ -111,8 +111,8 @@ export async function configurePrepareCmd(
         }
 
         /**
-         * Finds and returns the subjectively "best" project in {@link filteredProjects}
-         * @returns the subjective "best" project in {@link filteredProjects}
+        Finds and returns the subjectively "best" project in {@link filteredProjects}
+        @returns the subjective "best" project in {@link filteredProjects}
          */
         function getBest() {
           let best: MSBuildProject | undefined;
@@ -132,34 +132,34 @@ export async function configurePrepareCmd(
     );
 
     /**
-     * Returns an array of one or more `dotnet` arguments.
-     * @param proj An {@link MSBuildProject} to be published for one or more
-     * runtime-framework combinations.
-     * @returns If {@link proj} imports {@link ../../dotnet/PublishAll.targets}...
-     * ```
-     * [`${proj.Properties.MSBuildProjectFullPath} -restore -t:PublishAll -p:Configuration=Release`]
-     * ```
-     * Else, an array of `dotnet publish` arguments permutations e.g.
-     * ```
-     * [
-     *   'myProj.csproj --runtime win7-x86 --framework net6.0',
-     *   'myProj.csproj --runtime win7-x64 --framework net6.0'
-     * ]
-     * ```
-     * @example
-     * const publishCmdArray = [];
-     * const permutations = getPublishArgsPermutations(msbuildProject);
-     * for (const permutation of permutations) {
-     *   if (permutation[0] === 'PublishAll') {
-     *     // 'dotnet msbuild full/path/to/myProj.csproj t:PublishAll'
-     *     publishCmdArray.push(`dotnet msbuild ${permutation[1]}`)
-     *   }
-     *   else {
-     *     publishCmdArray.push(`dotnet publish ${permutation}`)
-     *   }
-     * }
-     * // return array as success-chained CLI commands.
-     * return publishCmdArray.join(' && ');
+    Returns an array of one or more `dotnet` arguments.
+    @param proj An {@link MSBuildProject} to be published for one or more
+    runtime-framework combinations.
+    @returns If {@link proj} imports {@link ../../dotnet/PublishAll.targets}...
+    ```
+    [`${proj.Properties.MSBuildProjectFullPath} -restore -t:PublishAll -p:Configuration=Release`]
+    ```
+    Else, an array of `dotnet publish` arguments permutations e.g.
+    ```
+    [
+      'myProj.csproj --runtime win7-x86 --framework net6.0',
+      'myProj.csproj --runtime win7-x64 --framework net6.0'
+    ]
+    ```
+    @example
+    const publishCmdArray = [];
+    const permutations = getPublishArgsPermutations(msbuildProject);
+    for (const permutation of permutations) {
+      if (permutation[0] === 'PublishAll') {
+        // 'dotnet msbuild full/path/to/myProj.csproj t:PublishAll'
+        publishCmdArray.push(`dotnet msbuild ${permutation[1]}`)
+      }
+      else {
+        publishCmdArray.push(`dotnet publish ${permutation}`)
+      }
+    }
+    // return array as success-chained CLI commands.
+    return publishCmdArray.join(' && ');
      */
     function getPublishArgumentsPermutations(proj: MSBuildProject):
       ([`"${typeof proj.Properties.MSBuildProjectFullPath}" -restore -t:PublishAll -p:Configuration=Release`])
@@ -168,8 +168,8 @@ export async function configurePrepareCmd(
       | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`)[]
       | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --framework ${string}`)[] {
       /**
-       * If the project imports PublishAll to publish for each TFM-RID
-       * permutation, return the appropriate command line.
+      If the project imports PublishAll to publish for each TFM-RID
+      permutation, return the appropriate command line.
        */
       if (proj.Targets.includes('PublishAll'))
         return [`"${proj.Properties.MSBuildProjectFullPath}" -restore -t:PublishAll -p:Configuration=Release`];
@@ -243,14 +243,14 @@ export async function configurePrepareCmd(
   }
 
   /**
-   * @param projectsToPackAndPush a string[] or {@link NugetRegistryInfo}[].
-   * If a string[], the string must be the platform-dependent (not file://),
-   * full path(s) to one or more projects with the .NET "Pack" MSBuild target.
-   * See {@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack}
-   * for command line usage.
-   * @returns one or more command line strings joined with ' && '.
-   * Each command line comprises the `dotnet pack` command, a project file path,
-   * and a hardcoded output path (`--output ${cwd()}/publish`)
+  @param projectsToPackAndPush a string[] or {@link NugetRegistryInfo}[].
+  If a string[], the string must be the platform-dependent (not file://),
+  full path(s) to one or more projects with the .NET "Pack" MSBuild target.
+  See {@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack}
+  for command line usage.
+  @returns one or more command line strings joined with ' && '.
+  Each command line comprises the `dotnet pack` command, a project file path,
+  and a hardcoded output path (`--output ${cwd()}/publish`)
    */
   async function formatDotnetPack(
     projectsToPackAndPush: string[] | NugetRegistryInfo[],
@@ -282,15 +282,15 @@ export async function configurePrepareCmd(
 }
 
 /**
- * Prepare the CLI command to push NuGet packages. This should added to the `publishCmd` option of `@semantic-release/exec`
- *
- * Ensure your verifyConditionsCmd is set to prevent releases failing due to bad tokens or packages!
- * See {@link NugetRegistryInfo#PackDummyPackage}, {@link NugetRegistryInfo#GetPushDummyCommand}
- * @param registryInfos an array of {@link NugetRegistryInfo} (or derived classes) instances.
- * @param packageOutputPath Default: `${cwd()}/publish`.\
- * The directory at which dotnet outputs the given projects' packages. Passed to
- * `dotnet pack` via the `--output` argument.
- * @returns a string of `dotnet pack` and `dotnet push` commands, joined by ' && '.
+Prepare the CLI command to push NuGet packages. This should added to the `publishCmd` option of `@semantic-release/exec`
+
+Ensure your verifyConditionsCmd is set to prevent releases failing due to bad tokens or packages!
+See {@link NugetRegistryInfo#PackDummyPackage}, {@link NugetRegistryInfo#GetPushDummyCommand}
+@param registryInfos an array of {@link NugetRegistryInfo} (or derived classes) instances.
+@param packageOutputPath Default: `${cwd()}/publish`.\
+The directory at which dotnet outputs the given projects' packages. Passed to
+`dotnet pack` via the `--output` argument.
+@returns a string of `dotnet pack` and `dotnet push` commands, joined by ' && '.
  */
 export function configureDotnetNugetPush(
   registryInfos: NugetRegistryInfo[],
@@ -316,10 +316,10 @@ export function configureDotnetNugetPush(
 }
 
 /**
- * You should try {@link ../../dotnet/SignAfterPack.targets}!.
- * @param opts A {@link DotnetNugetSignOptions} object to be deconstructed and
- * passed to `dotnet nuget sign` as args.
- * @returns `dotnet nuget sign {...}`
+You should try {@link ../../dotnet/SignAfterPack.targets}!.
+@param opts A {@link DotnetNugetSignOptions} object to be deconstructed and
+passed to `dotnet nuget sign` as args.
+@returns `dotnet nuget sign {...}`
  */
 function formatDotnetNugetSign(
   // eslint-disable-next-line unicorn/name-replacements
@@ -398,83 +398,83 @@ const DotnetNugetSignOptions: Type<
     certificateFingerprint: string;
   })> = type({
   /**
-   * Password for the certificate, if needed. This option can be used to specify
-   * the password for the certificate. The command will throw an error message
-   * if certificate is password protected but password is not provided as input.
+  Password for the certificate, if needed. This option can be used to specify
+  the password for the certificate. The command will throw an error message
+  if certificate is password protected but password is not provided as input.
    */
   'certificatePassword?': 'string',
   /**
-   * Hash algorithm to be used to sign the package. Defaults to SHA256.
+  Hash algorithm to be used to sign the package. Defaults to SHA256.
    */
   'hashAlgorithm?': 'string | "SHA256"',
   /**
-   * Directory where the signed package(s) should be saved. By default the
-   * original package is overwritten by the signed package.
+  Directory where the signed package(s) should be saved. By default the
+  original package is overwritten by the signed package.
    */
   'output?': 'string',
   /**
-   * Switch to indicate if the current signature should be overwritten. By
-   * default the command will fail if the package already has a signature.
+  Switch to indicate if the current signature should be overwritten. By
+  default the command will fail if the package already has a signature.
    */
   'overwrite?': 'true',
   /**
-   * URL to an RFC 3161 timestamping server.
+  URL to an RFC 3161 timestamping server.
    */
   timestamper: 'string = "https://rfc3161.ai.moda/"',
   /**
-   * Hash algorithm to be used to sign the package. Defaults to SHA256.
+  Hash algorithm to be used to sign the package. Defaults to SHA256.
    */
   'timestampHashAlgorithm?': 'string | "SHA256"',
   /**
-   * Set the verbosity level of the command. Allowed values are q[uiet],
-   * m[inimal], n[ormal], d[etailed], and diag[nostic].
+  Set the verbosity level of the command. Allowed values are q[uiet],
+  m[inimal], n[ormal], d[etailed], and diag[nostic].
    */
   'verbosity?': '"q"|"quiet"|"m"|"minimal"|"n"|"normal"|"d"|"detailed"|"diag"|"diagnostic"',
 }).and(
   type({
     /**
-     * File path to the certificate to be used while signing the package.
+    File path to the certificate to be used while signing the package.
      */
     certificatePath: 'string',
   }).or(
     type({
       /**
-       * Name of the X.509 certificate store to use to search for the
-       * certificate. Defaults to "My", the X.509 certificate store for personal
-       * certificates.
-       *
-       * This option should be used when specifying the certificate via
-       * --certificate-subject-name or --certificate-fingerprint options.
+      Name of the X.509 certificate store to use to search for the
+      certificate. Defaults to "My", the X.509 certificate store for personal
+      certificates.
+
+      This option should be used when specifying the certificate via
+      --certificate-subject-name or --certificate-fingerprint options.
        */
       certificateStoreName: 'string',
     }).or({
       /**
-       * Name of the X.509 certificate store use to search for the
-       * certificate. Defaults to "CurrentUser", the X.509 certificate store
-       * used by the current user.
-       *
-       * This option should be used when specifying the certificate via
-       * --certificate-subject-name or --certificate-fingerprint options.
+      Name of the X.509 certificate store use to search for the
+      certificate. Defaults to "CurrentUser", the X.509 certificate store
+      used by the current user.
+
+      This option should be used when specifying the certificate via
+      --certificate-subject-name or --certificate-fingerprint options.
        */
       certificateStoreLocation: 'string',
     }),
   ).and(
     type({
       /**
-       * Subject name of the certificate used to search a local certificate
-       * store for the certificate. The search is a case-insensitive string
-       * comparison using the supplied value, which will find all certificates
-       * with the subject name containing that string, regardless of other
-       * subject values. The certificate store can be specified by
-       * --certificate-store-name and --certificate-store-location options.
+      Subject name of the certificate used to search a local certificate
+      store for the certificate. The search is a case-insensitive string
+      comparison using the supplied value, which will find all certificates
+      with the subject name containing that string, regardless of other
+      subject values. The certificate store can be specified by
+      --certificate-store-name and --certificate-store-location options.
        */
       certificateSubjectName: 'string',
     }).or({
       /**
-       * SHA-256, SHA-384 or SHA-512 fingerprint of the certificate used to
-       * search a local certificate store for the certificate. The certificate
-       * store can be specified by --certificate-store-name and
-       * --certificate-store-location options.
+      SHA-256, SHA-384 or SHA-512 fingerprint of the certificate used to
+      search a local certificate store for the certificate. The certificate
+      store can be specified by --certificate-store-name and
+      --certificate-store-location options.
        */
       certificateFingerprint: 'string',
     }),

@@ -9,9 +9,9 @@ import {
 import { getEnvVarValue as getEnvironmentVariableValue } from '../../src/utils/env.ts';
 
 /**
- * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
- * @returns the value of env.GITHUB_REPOSITORY_OWNER
- */
+If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
+@returns the value of env.GITHUB_REPOSITORY_OWNER
+*/
 function getOwner(): string {
   const key = 'GITHUB_REPOSITORY_OWNER';
   const owner = getEnvironmentVariableValue(key);

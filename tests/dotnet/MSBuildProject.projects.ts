@@ -1,15 +1,15 @@
 /**
- * @file MSBuildProject.projects.ts
- *
- * This module checks for JSON-serialized {@link MSBP MSBuildProject} instances
- * at './.projCache/*.json'.
- *
- * If not found, the sample projects (i.e. '../../dotnet/samples/*\/*.csproj')
- * are evaluated with `dotnet msbuild` and the results are serialized to the
- * aforementioned JSON files.
- *
- * Then, the JSON cache files are {@link MSBP.fromJSON deserialized} to
- * {@link MSBP MSBuildProject} instances and exported by this module.
+@file MSBuildProject.projects.ts
+
+This module checks for JSON-serialized {@link MSBP MSBuildProject} instances
+at './.projCache/*.json'.
+
+If not found, the sample projects (i.e. '../../dotnet/samples/*\/*.csproj')
+are evaluated with `dotnet msbuild` and the results are serialized to the
+aforementioned JSON files.
+
+Then, the JSON cache files are {@link MSBP.fromJSON deserialized} to
+{@link MSBP MSBuildProject} instances and exported by this module.
  */
 
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -40,9 +40,9 @@ const paths: Record<'DN' | 'SAP', { proj: string; json: string }> = {
   },
 };
 /**
- * Write/overwrite a project's JSON-ified MSBuildProject if the JSON file does not exist.
- * @returns `true` when the function completes.
- * @param keyofPaths keyof {@link paths}
+Write/overwrite a project's JSON-ified MSBuildProject if the JSON file does not exist.
+@returns `true` when the function completes.
+@param keyofPaths keyof {@link paths}
  */
 async function writeCacheFile(keyofPaths: keyof typeof paths) {
   const projPaths = paths[keyofPaths];
@@ -58,16 +58,13 @@ async function writeCacheFile(keyofPaths: keyof typeof paths) {
 
   writeFileSync(projPaths.json, firstJson, { encoding: 'utf8' });
 
-  /**
-   * Build Cache File "dn.json": 2.555s
-   * Build Cache File "sap.json": 5.564s
-   */
+  // Build Cache File "dn.json": 2.555s
+  // Build Cache File "sap.json": 5.564s
   console.timeEnd(`Build Cache File "${path.basename(projPaths.json)}"`);
   return true;
 }
 
-/** for each project, rewrite its JSON-ified MSBuildProject if the JSON file does not exist. */
-// eslint-disable-next-line unicorn/no-top-level-side-effects
+// for each project, rewrite its JSON-ified MSBuildProject if the JSON file does not exist.
 await Promise.all(
   (Object.keys(paths) as (keyof typeof paths)[])
     .map(projName =>
@@ -78,7 +75,7 @@ await Promise.all(
 );
 
 /**
- * @returns A promise of a dictionary of MSBP projects as dictated by {@link paths}
+@returns A promise of a dictionary of MSBP projects as dictated by {@link paths}
  */
 async function getProjects() {
   const projects: {

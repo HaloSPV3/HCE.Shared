@@ -3,15 +3,15 @@ import { NugetRegistryInfo, getGithubOutput } from './NugetRegistryInfo.ts';
 import esMain from 'es-main';
 
 /**
- * @returns if successful
- * @throws {Error} if...
- * - {@link process.argv} does not include...
- *   - `--packageId [string]`
- *   - `--source [string]`
- * - Value of `await getGithubOutput())['new-release-version']`...
- *   - is not a valid Version
- *   - already exists at `source`
- */
+@returns if successful
+@throws {Error} if...
+- {@link process.argv} does not include...
+  - `--packageId [string]`
+  - `--source [string]`
+- Value of `await getGithubOutput())['new-release-version']`...
+  - is not a valid Version
+  - already exists at `source`
+*/
 async function main(): Promise<0> {
   const arguments_ = process.argv.slice(2);
   // Parse command-line arguments - https://stackoverflow.com/a/76298476/14894786

@@ -4,8 +4,8 @@ import type {
 } from 'semantic-release';
 
 /**
- * @since 3.0.0
- * @deprecated EXPERIMENTAL
+@since 3.0.0
+@deprecated EXPERIMENTAL
  */
 interface PluginInsertRuleSet {
   Id: string;
@@ -14,27 +14,27 @@ interface PluginInsertRuleSet {
 }
 
 /**
- * [W.I.P. STUB]
- *
- * Given an array of {@link PluginInsertRuleSet}s, insert plugins into a
- * {@link https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone structured clone}
- * (i.e. deep-copy) of the {@link plugins} array, sort the plugin entries, and
- * return the modified array copy.
- * @todo implement
- * @param plugins Your {@link SemanticReleaseOptions.plugins} array.
- * @param inserts An array of {@link PluginInsertRuleSet}s.
- *
- * If a plugin is already in the plugins array, inserting is skipped. The
- * existing entry is sorted according to its ruleset.
- *
- * If any rulesets conflict, an error will be thrown.
- * - error: A must precede B; B must precede A.
- * - pass: C must precede D and E; D must precede E and follow B. Add ruleset
- *   interface: {Id:string, BeforeIds:string[], AfterIds:string[] }
- * @returns A deep-cloned, modified copy of {@link plugins} with plugins
- * inserted and sorted where needed.
- * @since 3.0.0
- * @deprecated EXPERIMENTAL
+[W.I.P. STUB]
+
+Given an array of {@link PluginInsertRuleSet}s, insert plugins into a
+{@link https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone structured clone}
+(i.e. deep-copy) of the {@link plugins} array, sort the plugin entries, and
+return the modified array copy.
+@todo implement
+@param plugins Your {@link SemanticReleaseOptions.plugins} array.
+@param inserts An array of {@link PluginInsertRuleSet}s.
+
+If a plugin is already in the plugins array, inserting is skipped. The
+existing entry is sorted according to its ruleset.
+
+If any rulesets conflict, an error will be thrown.
+- error: A must precede B; B must precede A.
+- pass: C must precede D and E; D must precede E and follow B. Add ruleset
+  interface: {Id:string, BeforeIds:string[], AfterIds:string[] }
+@returns A deep-cloned, modified copy of {@link plugins} with plugins
+inserted and sorted where needed.
+@since 3.0.0
+@deprecated EXPERIMENTAL
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare function insertAndSortPlugins(
@@ -44,19 +44,19 @@ declare function insertAndSortPlugins(
 ): PluginSpec[];
 
 /**
- * @param plugins {@link SemanticReleaseOptions.plugins}
- * @param afterPluginsIDs The `string` IDs of plugins that the {@link insertPluginIDs} must follow.
- * @param insertPluginIDs The `string` IDs of plugins to insert into a copy of the {@link plugins} array.
- * @param beforePluginsIDs The `string` IDs of plugins that the {@link insertPluginIDs} must precede.
- * @returns
- * A modified copy of {@link plugins} with the given plugins inserted
- * before {@link beforePluginsIDs} and after {@link afterPluginsIDs}.
- *
- * Inserted plugins will be a `[string, {}]` tuple.
- * @throws {ReferenceError} This should never occur. One or more of the
- * {@link afterPluginsIDs} had been found in {@link plugins}, but a `.find` call
- * to get the highest index of the found plugins had returned `undefined`
- * @throws {AggregateError} One or more error occurred when inserting plugins: `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => '"' + v + '"').join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${JSON.stringify(pluginIDs[indexOfLastAfter])} comes after ${JSON.stringify(pluginIDs[index])}!`
+@param plugins {@link SemanticReleaseOptions.plugins}
+@param afterPluginsIDs The `string` IDs of plugins that the {@link insertPluginIDs} must follow.
+@param insertPluginIDs The `string` IDs of plugins to insert into a copy of the {@link plugins} array.
+@param beforePluginsIDs The `string` IDs of plugins that the {@link insertPluginIDs} must precede.
+@returns
+A modified copy of {@link plugins} with the given plugins inserted
+before {@link beforePluginsIDs} and after {@link afterPluginsIDs}.
+
+Inserted plugins will be a `[string, {}]` tuple.
+@throws {ReferenceError} This should never occur. One or more of the
+{@link afterPluginsIDs} had been found in {@link plugins}, but a `.find` call
+to get the highest index of the found plugins had returned `undefined`
+@throws {AggregateError} One or more error occurred when inserting plugins: `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => '"' + v + '"').join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${JSON.stringify(pluginIDs[indexOfLastAfter])} comes after ${JSON.stringify(pluginIDs[index])}!`
  */
 export function insertPlugin(
   plugins: Exclude<PluginSpec, string>[],

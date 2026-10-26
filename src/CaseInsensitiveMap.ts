@@ -1,8 +1,8 @@
 /**
- * https://stackoverflow.com/a/50022230/14894786
- * licensed under CC BY-SA 4.0
- * changes: add overrides, remove "as any", remove empty lines
- */
+https://stackoverflow.com/a/50022230/14894786
+licensed under CC BY-SA 4.0
+changes: add overrides, remove "as any", remove empty lines
+*/
 export class CaseInsensitiveMap<T, U> extends Map<T, U> {
   override delete(key: T): boolean {
     if (typeof key === 'string') {

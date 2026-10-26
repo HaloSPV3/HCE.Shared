@@ -11,9 +11,9 @@ import { isError } from '../../src/utils/isError.ts';
 import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.ts';
 
 /**
- * If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
- * @returns the value of env.GITHUB_REPOSITORY_OWNER
- */
+If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".
+@returns the value of env.GITHUB_REPOSITORY_OWNER
+*/
 function getGHRepoOwner(): string {
   getEnvironmentVariableValue('GITHUB_REPOSITORY_OWNER');
   return process.env['GITHUB_REPOSITORY_OWNER'] ??= 'HaloSPV3';

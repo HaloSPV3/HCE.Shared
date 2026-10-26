@@ -1,10 +1,10 @@
 import type { ProtoOrSuperClass as PrototypeOrSuperClass, WithProto as WithPrototype } from './inheritance.ts';
 
 /**
- * A nearly useless wrapper for {@link Reflect.getPrototypeOf}
- * @param object An object with the internal `__proto__` property present in its type.
- * @returns The `__proto__` of the `object` param.
- */
+A nearly useless wrapper for {@link Reflect.getPrototypeOf}
+@param object An object with the internal `__proto__` property present in its type.
+@returns The `__proto__` of the `object` param.
+*/
 export function getPrototypeOf<
   T extends WithPrototype<PrototypeOrSuperClass>,
 >(object: T): T['__proto__'] {

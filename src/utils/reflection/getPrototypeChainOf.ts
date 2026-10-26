@@ -21,16 +21,16 @@ type PrototypeChain<
       : never;
 
 /**
- * Iterate through the class and its base/super classes until an anonymous function is reached. This is the default superclass all classes extend.
- * @template Class Any {@link ClassLike} type.
- * @template ClassesOrInstances 'classes' or 'classInstances'
- * @param classDefinition Any class type satisfying {@link Class}. This class (or its instance type) is included in the return value.
- * @param [returnType='classes'] Determines return type. If 'classInstances', the return type is an array of the classes' `.prototype`. Else, the classes themselves are returned.
- * @since 3.0.0
- * @returns
- * `returnType extends 'classInstances' ? ClassLike<T>[] : ClassLike<T>[].map(c => c.prototype)`
- * Excludes default superclasses e.g. anonymous functions, native code.
- */
+Iterate through the class and its base/super classes until an anonymous function is reached. This is the default superclass all classes extend.
+@template Class Any {@link ClassLike} type.
+@template ClassesOrInstances 'classes' or 'classInstances'
+@param classDefinition Any class type satisfying {@link Class}. This class (or its instance type) is included in the return value.
+@param [returnType='classes'] Determines return type. If 'classInstances', the return type is an array of the classes' `.prototype`. Else, the classes themselves are returned.
+@since 3.0.0
+@returns
+`returnType extends 'classInstances' ? ClassLike<T>[] : ClassLike<T>[].map(c => c.prototype)`
+Excludes default superclasses e.g. anonymous functions, native code.
+*/
 export function getPrototypesChainOf<
   Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   ClassesOrInstances extends 'classes' | 'classInstances',
@@ -59,11 +59,11 @@ export function getPrototypesChainOf<
       returnValue[index] = current as typeof returnValue[typeof index];
     }
 
-    /**
-     * Assign the super class to current.
-     * If the argument is a class, Reflect.getPrototypeOf method returns the
-     * superclass.
-     */
+    /*
+    Assign the super class to current.
+    If the argument is a class, Reflect.getPrototypeOf method returns the
+    superclass.
+    */
     if (
       isConstructor(parent)
       && 'name' in parent

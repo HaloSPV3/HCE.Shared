@@ -6,25 +6,25 @@ import { CaseInsensitiveMap } from '../CaseInsensitiveMap.ts';
 import type { BaseClass, ClassLike } from '../utils/reflection.ts';
 
 /**
- * Known properties. Additional properties may be added upon request.
- *
- * todo: add Reserved properties, Well-Known properties, Common properties, and more. Maybe as sub classes.
- * See:
- * - {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2022 MSBuild Reserved and Well-known Properties}
- * - {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2022 Common MSBuild project properties}
- * - {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props Microsoft.NET.Sdk}
- * - {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/web-sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json#properties Microsoft.NET.Sdk.Web}
- * - {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json Microsoft.NET.Sdk.Razor}
- * - {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop Microsoft.NET.Sdk.Desktop}
+Known properties. Additional properties may be added upon request.
+
+todo: add Reserved properties, Well-Known properties, Common properties, and more. Maybe as sub classes.
+See:
+- {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties?view=vs-2022 MSBuild Reserved and Well-known Properties}
+- {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/common-msbuild-project-properties?view=vs-2022 Common MSBuild project properties}
+- {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props Microsoft.NET.Sdk}
+- {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/web-sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json#properties Microsoft.NET.Sdk.Web}
+- {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json Microsoft.NET.Sdk.Razor}
+- {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop Microsoft.NET.Sdk.Desktop}
  */
 export class MSBuildProjectProperties {
   // #region static
 
   /**
-   * Resolve the given path if it is not absolute. If the path exists, it is returned. Else, an Error is thrown.
-   * @param path The full file path of an MSBuild project.
-   * @returns The absolute path to the MSBuild project file.
-   * @throws {Error} if the path cannot be resolved to an existing file.
+  Resolve the given path if it is not absolute. If the path exists, it is returned. Else, an Error is thrown.
+  @param path The full file path of an MSBuild project.
+  @returns The absolute path to the MSBuild project file.
+  @throws {Error} if the path cannot be resolved to an existing file.
    */
   static GetFullPath(path: string): string {
     if (!node_path.isAbsolute(path))
@@ -35,13 +35,13 @@ export class MSBuildProjectProperties {
   }
 
   /**
-   * Note: This method may remove elements from {@link properties}.\
-   * Try to get an element from {@link properties} by its {@link key}.
-   * If an element is found, it is removed and the value of the element is returned.
-   * Otherwise, `undefined` is returned.
-   * @param properties The CaseInsensitiveMap of properties passed to the constructor.
-   * @param key The key of the property to get from {@link properties}
-   * @returns If found, the value of the `[string, string]` tuple found in {@link properties}. Else, `undefined`.
+  Note: This method may remove elements from {@link properties}.\
+  Try to get an element from {@link properties} by its {@link key}.
+  If an element is found, it is removed and the value of the element is returned.
+  Otherwise, `undefined` is returned.
+  @param properties The CaseInsensitiveMap of properties passed to the constructor.
+  @param key The key of the property to get from {@link properties}
+  @returns If found, the value of the `[string, string]` tuple found in {@link properties}. Else, `undefined`.
    */
   protected static getAndForget(
     properties: CaseInsensitiveMap<string, string>,
@@ -134,187 +134,187 @@ export class MSBuildProjectProperties {
   }
 
   /**
-   * @returns If set, enables {@link UseArtifactsOutput} and overrides the
-   * default artifacts output path.
+  @returns If set, enables {@link UseArtifactsOutput} and overrides the
+  default artifacts output path.
    */
   get ArtifactsPath(): string {
     return this._artifactsPath ??= '';
   }
 
   /**
-   * @returns The name of the assembly.
-   *
-   * Default: {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties#:~:text=MSBuildProjectDirectory,-Reserved MSBuildProjectDirectory}
+  @returns The name of the assembly.
+
+  Default: {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties#:~:text=MSBuildProjectDirectory,-Reserved MSBuildProjectDirectory}
    */
   get AssemblyName(): string {
     return this._assemblyName ??= '';
   }
 
   /**
-   * @returns The top-level folder where all configuration-specific intermediate output
-   * folders are created. The default value is `obj\`.
-   * @example
-   * ```xml
-   * <BaseIntermediateOutputPath>c:\xyz\obj\</BaseIntermediateOutputPath>
-   * ```
+  @returns The top-level folder where all configuration-specific intermediate output
+  folders are created. The default value is `obj\`.
+  @example
+  ```xml
+  <BaseIntermediateOutputPath>c:\xyz\obj\</BaseIntermediateOutputPath>
+  ```
    */
   get BaseIntermediateOutputPath(): string {
     return this._baseIntermediateOutputPath ??= '';
   }
 
   /**
-   * @returns The base path for the output file.
-   * If it's set, MSBuild uses `OutputPath = $(BaseOutputPath)\$(Configuration)\`.
-   * @example ```xml
-   * <BaseOutputPath>c:\xyz\bin\</BaseOutputPath>
-   * ```
+  @returns The base path for the output file.
+  If it's set, MSBuild uses `OutputPath = $(BaseOutputPath)\$(Configuration)\`.
+  @example ```xml
+  <BaseOutputPath>c:\xyz\bin\</BaseOutputPath>
+  ```
    */
   get BaseOutputPath(): string {
     return this._baseOutputPath ??= '';
   }
 
   /**
-   * A long description for the assembly.
-   * If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
-   * @returns The value of the `Description` property.
+  A long description for the assembly.
+  If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
+  @returns The value of the `Description` property.
    */
   get Description(): string {
     return this._description ??= '';
   }
 
   /**
-   * @returns The full intermediate output path as derived from
-   * {@link BaseIntermediateOutputPath}, if no path is specified.
-   * @example "obj\\debug\\"
-   * @deprecated Typo; Use {@link IntermediateOutputPath}
+  @returns The full intermediate output path as derived from
+  {@link BaseIntermediateOutputPath}, if no path is specified.
+  @example "obj\\debug\\"
+  @deprecated Typo; Use {@link IntermediateOutputPath}
    */
   get IntermediateOutput(): string {
     return this._intermediateOutputPath ??= '';
   }
 
   /**
-   * @returns The full intermediate output path as derived from
-   * {@link BaseIntermediateOutputPath}, if no path is specified.
-   * @example "obj\\debug\\"
+  @returns The full intermediate output path as derived from
+  {@link BaseIntermediateOutputPath}, if no path is specified.
+  @example "obj\\debug\\"
    */
   get IntermediateOutputPath(): string {
     return this._intermediateOutputPath ??= '';
   }
 
   /**
-   * @returns The final output location for the project or solution.
-   * When you build a solution, OutDir can be used to gather multiple project outputs in one location.
-   * In addition, OutDir is included in AssemblySearchPaths used for resolving references.
-   * @example
-   * `bin/Debug`
+  @returns The final output location for the project or solution.
+  When you build a solution, OutDir can be used to gather multiple project outputs in one location.
+  In addition, OutDir is included in AssemblySearchPaths used for resolving references.
+  @example
+  `bin/Debug`
    */
   get OutDir(): string {
     return this._outDir ??= '';
   }
 
   /**
-   * @returns The path to the output directory, relative to the project
-   * directory.
-   * @example
-   * `bin/Debug`
-   * /// non-AnyCPU builds
-   * `bin/Debug/${Platform}`
+  @returns The path to the output directory, relative to the project
+  directory.
+  @example
+  `bin/Debug`
+  /// non-AnyCPU builds
+  `bin/Debug/${Platform}`
    */
   get OutputPath(): string {
     return this._outputPath ??= '';
   }
 
   /**
-   * Set Version -OR- VersionPrefix.
-   * @returns The value of the `Version` property.
-   *
-   * Default: `"1.0.0"`
+  Set Version -OR- VersionPrefix.
+  @returns The value of the `Version` property.
+
+  Default: `"1.0.0"`
    */
   get Version(): string {
     return this._version ??= '1.0.0';
   }
 
   /**
-   * Set Version -OR- VersionPrefix.\
-   * Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
-   * @returns The MAJOR.MINOR.PATCH string of the version.
-   * @see {@link VersionSuffix}
+  Set Version -OR- VersionPrefix.\
+  Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
+  @returns The MAJOR.MINOR.PATCH string of the version.
+  @see {@link VersionSuffix}
    */
   get VersionPrefix(): string {
     return this._versionPrefix ??= '';
   }
 
   /**
-   * The effect of this property on the package version depends on the values of the Version and VersionPrefix properties, as shown in the following table:
-   * | Properties with values | Package version |
-   * | ---------------------- | --------------- |
-   * | None                   | 1.0.0           |
-   * | Version                | $(Version)      |
-   * | VersionPrefix only     | $(VersionPrefix) |
-   * | VersionSuffix only     | 1.0.0-$(VersionSuffix) |
-   * | VersionPrefix and VersionSuffix | $(VersionPrefix)-$(VersionSuffix) |
-   * \
-   * Setting {@link PackageVersion} overwrites {@link VersionSuffix}
-   * @returns The string appended to the end of the MAJOR.MINOR.PATCH semver string (i.e. {@link VersionPrefix})
+  The effect of this property on the package version depends on the values of the Version and VersionPrefix properties, as shown in the following table:
+  | Properties with values | Package version |
+  | ---------------------- | --------------- |
+  | None                   | 1.0.0           |
+  | Version                | $(Version)      |
+  | VersionPrefix only     | $(VersionPrefix) |
+  | VersionSuffix only     | 1.0.0-$(VersionSuffix) |
+  | VersionPrefix and VersionSuffix | $(VersionPrefix)-$(VersionSuffix) |
+  \
+  Setting {@link PackageVersion} overwrites {@link VersionSuffix}
+  @returns The string appended to the end of the MAJOR.MINOR.PATCH semver string (i.e. {@link VersionPrefix})
    */
   get VersionSuffix(): string {
     return this._versionSuffix ??= '';
   }
 
   /**
-   * @returns The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframework Target Framework}
-   * @see
-   * https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
-   * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
+  @returns The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframework Target Framework}
+  @see
+  https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
+  https://learn.microsoft.com/en-us/dotnet/standard/frameworks
    */
   get TargetFramework(): string {
     return this._targetFramework ??= '';
   }
 
   /**
-   * @returns The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframeworks Target Frameworks} (plural)
-   * @see
-   * https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
-   * https://learn.microsoft.com/en-us/dotnet/standard/frameworks
+  @returns The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#targetframeworks Target Frameworks} (plural)
+  @see
+  https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
+  https://learn.microsoft.com/en-us/dotnet/standard/frameworks
    */
   get TargetFrameworks(): string {
     return this._targetFrameworks ??= '';
   }
 
   /**
-   * @returns When `"true"`; obj, bin, publish, and package output paths are
-   * nested under a single directory.
-   *
-   * You can use {@link ArtifactsPath} to set the artifacts path and implicitly
-   * enable this property.
-   *
-   * Default: "$(MSBuildThisFileDirectory)artifacts"
+  @returns When `"true"`; obj, bin, publish, and package output paths are
+  nested under a single directory.
+
+  You can use {@link ArtifactsPath} to set the artifacts path and implicitly
+  enable this property.
+
+  Default: "$(MSBuildThisFileDirectory)artifacts"
    */
   get UseArtifactsOutput(): string {
     return this._useArtifactsOutput ??= '';
   }
 
   /**
-   * @returns
-   * > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier `Runtime Identifier`} property lets you specify a single runtime
-   * > identifier (RID) for the project. The RID enables publishing a
-   * > self-contained deployment.
-   * @see
-   * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
+  @returns
+  > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier `Runtime Identifier`} property lets you specify a single runtime
+  > identifier (RID) for the project. The RID enables publishing a
+  > self-contained deployment.
+  @see
+  https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
    */
   get RuntimeIdentifier(): string {
     return this._runtimeIdentifier ??= '';
   }
 
   /**
-   * @returns
-   * > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifiers `RuntimeIdentifiers`} property lets you specify a
-   * > semicolon-delimited list of runtime identifiers (RIDs) for the project.
-   * > Use this property if you need to publish for multiple runtimes.
-   * > `RuntimeIdentifiers` is used at restore time to ensure the right assets
-   * > are in the graph.
-   * @see
-   * https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
+  @returns
+  > The {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifiers `RuntimeIdentifiers`} property lets you specify a
+  > semicolon-delimited list of runtime identifiers (RIDs) for the project.
+  > Use this property if you need to publish for multiple runtimes.
+  > `RuntimeIdentifiers` is used at restore time to ensure the right assets
+  > are in the graph.
+  @see
+  https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
    */
   get RuntimeIdentifiers(): string {
     return this._runtimeIdentifiers ??= '';
