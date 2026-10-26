@@ -142,9 +142,7 @@ function _GetTokenEnvironmentVariables(tokenEnvironmentVariables: readonly strin
       ),
   );
 
-  if (definedTokens.length > 0)
-    return definedTokens as [readonly [string, string], ...readonly [string, string][]];
-  return undefined;
+  return definedTokens.length > 0 ? (definedTokens as [readonly [string, string], ...readonly [string, string][]]) : undefined;
 }
 
 export class NugetRegistryInfo {
