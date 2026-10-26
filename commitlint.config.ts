@@ -4,7 +4,6 @@
 import type {
   UserConfig,
 } from '@commitlint/types';
-import 'tsx';
 
 const { default: commitlintConfig } = await import('./src/commitlintConfig.ts');
 
