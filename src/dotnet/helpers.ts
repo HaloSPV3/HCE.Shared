@@ -226,7 +226,7 @@ export async function configurePrepareCmd(
     );
     for (const arguments_ of argumentsSets) {
       if (typeof arguments_ === 'string')
-        throw new Error(`\`args\` should not be a string!`);
+        throw new TypeError(`\`args\` should not be a string!`);
       for (const permutation of arguments_) {
         if (typeof permutation === 'string' && permutation.length === 1)
           throw new Error('Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!');
