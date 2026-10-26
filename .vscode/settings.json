@@ -87,7 +87,9 @@
   "eslint.format.enable": true,
   "eslint.nodePath": ".yarn/sdks",
   "eslint.options": {
-    "flags": [ "unstable_native_nodejs_ts_config" ]
+    "flags": [
+      "unstable_native_nodejs_ts_config"
+    ]
   },
   "eslint.probe": [
     "javascript",
