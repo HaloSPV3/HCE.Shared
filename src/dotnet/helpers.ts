@@ -135,6 +135,8 @@ export async function configurePrepareCmd(
     Returns an array of one or more `dotnet` arguments.
     @param proj An {@link MSBuildProject} to be published for one or more
     runtime-framework combinations.
+    @throws {TypeError} `\`args\` should not be a string!`: One one of the string-type arguments in the return value of `getPublishArgumentsPermutations` is not a string
+    @throws {Error} 'Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!'
     @returns If {@link proj} imports {@link ../../dotnet/PublishAll.targets}...
     ```
     [`${proj.Properties.MSBuildProjectFullPath} -restore -t:PublishAll -p:Configuration=Release`]
