@@ -132,7 +132,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
     this._packageVersion = _getAndForget('PackageVersion');
     this._product = _getAndForget('Product');
     this._repositoryCommit = _getAndForget('RepositoryCommit');
-    if (Type_RepoType.allows(data = _getAndForget('RepositoryType')))
+    if (Type_RepositoryType.allows(data = _getAndForget('RepositoryType')))
       this._repositoryType = data;
     this._repositoryUrl = _getAndForget('RepositoryUrl');
     if (tBooleanString.allows(data = _getAndForget('SuppressDependenciesWhenPacking')))
@@ -410,7 +410,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `''`
   @example "git", "fts"
    */
-  get RepositoryType(): typeof Type_RepoType.inferOut {
+  get RepositoryType(): typeof Type_RepositoryType.inferOut {
     return this._repositoryType ??= '';
   }
 
@@ -609,7 +609,7 @@ export type Class_NPP = ClassLike<
   typeof NugetProjectProperties
   & WithPrototype<Class_MSBPP>
 >;
-const Type_RepoType: type<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
+const Type_RepositoryType: type<'' | 'git' | 'tfs'> = type('""|"git"|"tfs"');
 const Type_SymbolPackageFormat: type<'symbols.nupkg' | 'snupkg'> = type('"symbols.nupkg" | "snupkg"');
 
 /** @module NugetProjectProperties */
