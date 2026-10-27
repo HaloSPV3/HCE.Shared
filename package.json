@@ -87,7 +87,7 @@
     "es-main": "^1.4.0",
     "globals": "^17.13.0",
     "sanitize-filename": "^1.6.4",
-    "semantic-release": "^25.0.9",
+    "semantic-release": "^26.0.0-beta.5",
     "semantic-release-export-data": "^1.2.0",
     "typescript-eslint": "^8.72.1"
   },
