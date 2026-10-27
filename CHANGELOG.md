@@ -4,7 +4,7 @@
 
 * **deps, deps-dev:** upgrade all Node.js dependencies ([48ffe53](https://github.com/HaloSPV3/HCE.Shared/commit/48ffe539e2ca8cb4de92ab1c35f5e5ad08a3b037))
 * **deps, deps-dev:** upgrade typescript-eslint dependencies to 8.72.1 ([760af9d](https://github.com/HaloSPV3/HCE.Shared/commit/760af9d7fb6e9364cdc72646c85911d5e5901bc9))
-* **deps:** remove unused dependencies; change some to optional-peer-deps or dev-deps [maybe-breaking change!] ([a40ea88](https://github.com/HaloSPV3/HCE.Shared/commit/a40ea88cd6502ee15113833e42af3197b26534a9))
+* **deps:** remove unused dependencies; change some to optional-peer-deps or dev-deps {maybe-breaking change!} ([a40ea88](https://github.com/HaloSPV3/HCE.Shared/commit/a40ea88cd6502ee15113833e42af3197b26534a9))
 * **dotnet.INVAP:** change some `Error`s to `TypeError`s ([21f8e58](https://github.com/HaloSPV3/HCE.Shared/commit/21f8e58f3e23009f8a94492a47c55083b1150e3a))
 * **dotnet:** change some `Error`s to `TypeError` where variables' types are checked ([18406f2](https://github.com/HaloSPV3/HCE.Shared/commit/18406f2b577a48ea2bfed1b437d8f6aa4018b1aa))
 
