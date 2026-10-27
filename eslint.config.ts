@@ -36,6 +36,7 @@ const config: Config[] = defineConfig(
       'unicorn/prefer-node-protocol': 'warn',
       // more often than not, in-place sorting is preferable over `toSorted` cloned sort.
       'unicorn/no-array-sort': 'off',
+      'unicorn/single-line-block-comment-style': ['warn', 'single-line'],
     },
     files: [
       '**/*.cjs',
