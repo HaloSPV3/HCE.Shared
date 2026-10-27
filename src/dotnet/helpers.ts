@@ -25,7 +25,7 @@ The project paths will be passed to `dotnet publish` commands.
 @param dotnetNugetSignOpts A {@link DotnetNugetSignOptions} object. The value
 of the `--output` argument will be set to {@link ourDefaultPubDir} if `undefined`.
 @returns A single string of CLI commands joined by ' && '
- */
+*/
 // eslint-disable-next-line unicorn/name-replacements
 export async function configurePrepareCmd(
   projectsToPublish: string[] | MSBuildProject[],
@@ -67,7 +67,7 @@ export async function configurePrepareCmd(
   @returns A Promise of a string. This string contains one or more `dotnet publish`
   commands conjoined by " && ". It may also include one or more
   `dotnet msbuild ${...} -restore -t:PublishAll -p:Configuration=Release` commands.
-   */
+  */
   async function formatDotnetPublish(
     projectsToPublish: string[] | MSBuildProject[],
   ): Promise<string> {
@@ -113,7 +113,7 @@ export async function configurePrepareCmd(
         /**
         Finds and returns the subjectively "best" project in {@link filteredProjects}
         @returns the subjective "best" project in {@link filteredProjects}
-         */
+        */
         function getBest() {
           let best: MSBuildProject | undefined;
           if (filteredProjects.length > 0 && (best = filteredProjects[0]) instanceof MSBuildProject)
@@ -162,7 +162,7 @@ export async function configurePrepareCmd(
     }
     // return array as success-chained CLI commands.
     return publishCmdArray.join(' && ');
-     */
+    */
     function getPublishArgumentsPermutations(proj: MSBuildProject):
       ([`"${typeof proj.Properties.MSBuildProjectFullPath}" -restore -t:PublishAll -p:Configuration=Release`])
       | ([`"${typeof proj.Properties.MSBuildProjectFullPath}"`])
@@ -172,7 +172,7 @@ export async function configurePrepareCmd(
       /**
       If the project imports PublishAll to publish for each TFM-RID
       permutation, return the appropriate command line.
-       */
+      */
       if (proj.Targets.includes('PublishAll'))
         return [`"${proj.Properties.MSBuildProjectFullPath}" -restore -t:PublishAll -p:Configuration=Release`];
 
@@ -206,7 +206,7 @@ export async function configurePrepareCmd(
           }
         }
       }
-      else if (TFMs.length > 0) {
+      else {
         for (const TFM of TFMs) {
           (tfmRidPermutations as `--framework ${string}`[]).push(`--framework ${TFM}`);
         }
@@ -232,10 +232,9 @@ export async function configurePrepareCmd(
       for (const permutation of arguments_) {
         if (typeof permutation === 'string' && permutation.length === 1)
           throw new Error('Something has gone terribly wrong. A `dotnet publish` argument set was split to single characters!');
-        if (/".+" -restore -t:PublishAll -p:Configuration=Release/.test(permutation))
-          publishCmds.push(`dotnet msbuild ${permutation as `"${string}" -restore -t:PublishAll -p:Configuration=Release`}`);
-        else
-          publishCmds.push(`dotnet publish ${permutation}`);
+        publishCmds.push(/".+" -restore -t:PublishAll -p:Configuration=Release/.test(permutation)
+          ? `dotnet msbuild ${permutation as `"${string}" -restore -t:PublishAll -p:Configuration=Release`}`
+          : `dotnet publish ${permutation}`);
       }
     }
 
@@ -253,7 +252,7 @@ export async function configurePrepareCmd(
   @returns one or more command line strings joined with ' && '.
   Each command line comprises the `dotnet pack` command, a project file path,
   and a hardcoded output path (`--output ${cwd()}/publish`)
-   */
+  */
   async function formatDotnetPack(
     projectsToPackAndPush: string[] | NugetRegistryInfo[],
   ): Promise<string | undefined> {
@@ -293,7 +292,7 @@ See {@link NugetRegistryInfo#PackDummyPackage}, {@link NugetRegistryInfo#GetPush
 The directory at which dotnet outputs the given projects' packages. Passed to
 `dotnet pack` via the `--output` argument.
 @returns a string of `dotnet pack` and `dotnet push` commands, joined by ' && '.
- */
+*/
 export function configureDotnetNugetPush(
   registryInfos: NugetRegistryInfo[],
   // Explicit type required by JSR
@@ -322,7 +321,7 @@ You should try {@link ../../dotnet/SignAfterPack.targets}!.
 @param opts A {@link DotnetNugetSignOptions} object to be deconstructed and
 passed to `dotnet nuget sign` as args.
 @returns `dotnet nuget sign {...}`
- */
+*/
 function formatDotnetNugetSign(
   // eslint-disable-next-line unicorn/name-replacements
   opts: typeof DotnetNugetSignOptions.inferIn | undefined,
@@ -403,40 +402,32 @@ const DotnetNugetSignOptions: Type<
   Password for the certificate, if needed. This option can be used to specify
   the password for the certificate. The command will throw an error message
   if certificate is password protected but password is not provided as input.
-   */
+  */
   'certificatePassword?': 'string',
-  /**
-  Hash algorithm to be used to sign the package. Defaults to SHA256.
-   */
+  /** Hash algorithm to be used to sign the package. Defaults to SHA256. */
   'hashAlgorithm?': 'string | "SHA256"',
   /**
   Directory where the signed package(s) should be saved. By default the
   original package is overwritten by the signed package.
-   */
+  */
   'output?': 'string',
   /**
   Switch to indicate if the current signature should be overwritten. By
   default the command will fail if the package already has a signature.
-   */
+  */
   'overwrite?': 'true',
-  /**
-  URL to an RFC 3161 timestamping server.
-   */
+  /** URL to an RFC 3161 timestamping server. */
   timestamper: 'string = "https://rfc3161.ai.moda/"',
-  /**
-  Hash algorithm to be used to sign the package. Defaults to SHA256.
-   */
+  /** Hash algorithm to be used to sign the package. Defaults to SHA256. */
   'timestampHashAlgorithm?': 'string | "SHA256"',
   /**
   Set the verbosity level of the command. Allowed values are q[uiet],
   m[inimal], n[ormal], d[etailed], and diag[nostic].
-   */
+  */
   'verbosity?': '"q"|"quiet"|"m"|"minimal"|"n"|"normal"|"d"|"detailed"|"diag"|"diagnostic"',
 }).and(
   type({
-    /**
-    File path to the certificate to be used while signing the package.
-     */
+    /** File path to the certificate to be used while signing the package. */
     certificatePath: 'string',
   }).or(
     type({
@@ -447,7 +438,7 @@ const DotnetNugetSignOptions: Type<
 
       This option should be used when specifying the certificate via
       --certificate-subject-name or --certificate-fingerprint options.
-       */
+      */
       certificateStoreName: 'string',
     }).or({
       /**
@@ -457,7 +448,7 @@ const DotnetNugetSignOptions: Type<
 
       This option should be used when specifying the certificate via
       --certificate-subject-name or --certificate-fingerprint options.
-       */
+      */
       certificateStoreLocation: 'string',
     }),
   ).and(
@@ -469,7 +460,7 @@ const DotnetNugetSignOptions: Type<
       with the subject name containing that string, regardless of other
       subject values. The certificate store can be specified by
       --certificate-store-name and --certificate-store-location options.
-       */
+      */
       certificateSubjectName: 'string',
     }).or({
       /**
@@ -477,7 +468,7 @@ const DotnetNugetSignOptions: Type<
       search a local certificate store for the certificate. The certificate
       store can be specified by --certificate-store-name and
       --certificate-store-location options.
-       */
+      */
       certificateFingerprint: 'string',
     }),
   ),

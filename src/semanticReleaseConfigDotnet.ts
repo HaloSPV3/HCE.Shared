@@ -14,7 +14,7 @@ Use a copy of {@link getConfig} as the starting point of a new function and make
   - {@link SemanticReleaseConfigDotnet#splicePlugin splicePlugin (insert/edit plugins)}
   - {@link SemanticReleaseConfigDotnet#setupDotnetCommands setupDotnetCommands}
   - {@link SemanticReleaseConfigDotnet#getTokenTestingCommands getTokenTestingCommands}
- */
+*/
 
 import { inspect } from 'node:util';
 import type { Options } from 'semantic-release';
@@ -67,7 +67,7 @@ export class SemanticReleaseConfigDotnet {
   If neither is defined, no packages will be packed and pushed.
   If configured as recommended, `dotnet pack` will output the nupkg/snupkg
   files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
-   */
+  */
   constructor(
     projectsToPublish: string[] | MSBuildProject[],
     projectsToPackAndPush?: string[] | NugetRegistryInfo[] | null,
@@ -140,7 +140,7 @@ export class SemanticReleaseConfigDotnet {
   @todo change to builder method? e.g. static async SetupDotnetCommands(this: SemanticReleaseConfigDotnet): Promise<SemanticReleaseConfigDotnet>
   @todo Add options param to allow users to enable pushing to GitLab, GitHub, NuGet.org with default settings -OR- with entirely custom settings.
   @see https://github.com/semantic-release/exec#usage
-   */
+  */
   async setupDotnetCommands(): Promise<void> {
     let srExecIndex = this.options.plugins.findIndex(
       v => v[0] === '@semantic-release/exec',
@@ -262,7 +262,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
   @param insertPluginIDs The plugin(s) to insert into the plugins array.
   @param insertBeforePluginsIDs plugins which should appear AFTER the
   inserted plugin(s).
-   */
+  */
   splicePlugin(
     insertAfterPluginIDs: string[],
     insertPluginIDs: string[],
@@ -395,7 +395,7 @@ files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
 `@halospv3/hce.shared-config` (our base config), with the
 `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and
 `push` the specified projects.
- */
+*/
 export async function getConfig(
   projectsToPublish: string[] | MSBuildProject[],
   projectsToPackAndPush?: string[] | NugetRegistryInfo[],

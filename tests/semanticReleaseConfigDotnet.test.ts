@@ -52,13 +52,11 @@ await describe('getConfig', async () => {
 
     const searchString = 'projectsToPublish.length must be > 0 or PROJECTS_TO_PUBLISH must be defined and contain at least one path.';
 
-    if ('errors' in actual && Array.isArray(actual.errors)) {
-      ok(actual.errors.some(error =>
-        Error.isError(error) && error.message.includes(searchString),
-      ));
-    }
-    else {
-      ok(actual.message.includes(searchString));
-    }
+    ok('errors' in actual && Array.isArray(actual.errors)
+      ? actual.errors.some(error =>
+          Error.isError(error) && error.message.includes(searchString),
+        )
+      : actual.message.includes(searchString),
+    );
   });
 });

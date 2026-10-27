@@ -17,7 +17,7 @@ Description placeholder
 @template {ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>} Class
 @template {InstanceOrStatic} _InstanceOrStatic
 @since 3.0.0
- */
+*/
 type OwnGetters<
   Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,
@@ -52,7 +52,7 @@ given prototype or prototype of the given object.
 @since 3.0.0
 @returns
 An array of names of getters that were not inherited from a parent class. If {@link classDefinition} is a class instance, the names of instanced getters are returned. Otherwise, the names of static getters are returned;
- */
+*/
 export function listOwnGetters<
   Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,

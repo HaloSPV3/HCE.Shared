@@ -13,63 +13,63 @@ export interface SRReleaseNotesGeneratorOptions {
   /**
   conventional-changelog preset.
   @default 'angular'
-   */
+  */
   preset?: 'angular' | 'atom' | 'codemirror' | 'ember' | 'eslint' | 'express' | 'jquery' | 'jscs' | 'jshint' | 'conventionalcommits' | (string & Record<never, never>) | undefined;
   /**
   Require-able npm package with a custom conventional-changelog preset.'
   If {@link preset} is specified, then this is ignored.
-   */
+  */
   config?: string | undefined;
   /**
   Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
   `null | undefined` has no effect.
-   */
+  */
   parserOpts?: object | null | undefined;
   /**
   Additional `conventional-changelog-writer` options that will overwrite ones loaded by `preset` or `config`.
   This is convenient to use a conventional-changelog preset with some
   customizations without having to create a new module.
   `null | undefined` has no effect.
-   */
+  */
   writerOpts?: object | null | undefined;
   /**
   The host used to generate links to issues and commits. See
   {@link https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer#host conventional-changelog-writer#host}.
   @default {string} The host from the repositoryurl option.
-   */
+  */
   host?: unknown;
   /**
   Whether to include a link to compare changes since previous release in the
   release note.
   @default true
-   */
+  */
   linkCompare?: boolean;
   /**
   Whether to include a link to issues and commits in the release note. See
   {@link https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer#linkreferences conventional-changelog-writer#linkreferences}.
   @default true
-   */
+  */
   linkReferences?: unknown;
   /**
   Keyword used to generate commit links (formatted as
   <host>/<owner>/<repository>/<commit>/<commit_sha>). See
   {@link https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer#commit conventional-changelog-writer#commit}.
   @default `commits` for Bitbucket repositories, `commit` otherwise
-   */
+  */
   commit?: unknown;
   /**
   Keyword used to generate issue links (formatted as
   <host>/<owner>/<repository>/<issue>/<issue_number>). See
   {@link https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-writer#issue conventional-changelog-writer#issue}.
   @default `issue` for Bitbucket repositories, `issues` otherwise
-   */
+  */
   issue?: unknown;
   /**
   Additional configuration passed to the
   {@link https://github.com/conventional-changelog/conventional-changelog conventional-changelog}
   preset. Used for example with
   {@link https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits#specific-options conventional-changelog-conventionalcommits}.
-   */
+  */
   presetConfig?: unknown;
 }
 
@@ -77,7 +77,7 @@ export interface SRReleaseNotesGeneratorOptions {
 A two-type PluginSpec to tie a plugin's name to its Options type. This is
 intended for use by plugins to associate their Options type with their plugin
 name.
- */
+*/
 export type PluginSpecTuple<P extends string = string, T = unknown> = [P, T];
 export type PluginSpecSRCommitAnalyzer<V extends SRCommitAnalyzerOptions = SRCommitAnalyzerOptions> = PluginSpecTuple<'@semantic-release/commit-analyzer', V>;
 export type PluginSpecSRChangelog<V extends Record<'changelogFile' | 'changelogTitle', string>> = PluginSpecTuple<'@semantic-release/changelog', V>;
@@ -156,5 +156,5 @@ The base configuration for various Semantic Release scenarios.
 - https://github.com/jpoehnelt/semantic-release-replace-plugin
 - https://github.com/droidsolutions/semantic-release-update-file
 @satisfies {Options}
- */
+*/
 export const baseConfig: typeof _baseConfig = _baseConfig satisfies Options;

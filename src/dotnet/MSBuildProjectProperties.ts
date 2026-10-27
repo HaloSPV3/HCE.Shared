@@ -16,7 +16,7 @@ See:
 - {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/web-sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json#properties Microsoft.NET.Sdk.Web}
 - {@link https://learn.microsoft.com/en-us/aspnet/core/razor-pages/sdk?view=aspnetcore-8.0&toc=%2Fdotnet%2Fnavigate%2Ftools-diagnostics%2Ftoc.json&bc=%2Fdotnet%2Fbreadcrumb%2Ftoc.json Microsoft.NET.Sdk.Razor}
 - {@link https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props-desktop Microsoft.NET.Sdk.Desktop}
- */
+*/
 export class MSBuildProjectProperties {
   // #region static
 
@@ -25,7 +25,7 @@ export class MSBuildProjectProperties {
   @param path The full file path of an MSBuild project.
   @returns The absolute path to the MSBuild project file.
   @throws {Error} if the path cannot be resolved to an existing file.
-   */
+  */
   static GetFullPath(path: string): string {
     if (!node_path.isAbsolute(path))
       path = node_path.resolve(path);
@@ -42,7 +42,7 @@ export class MSBuildProjectProperties {
   @param properties The CaseInsensitiveMap of properties passed to the constructor.
   @param key The key of the property to get from {@link properties}
   @returns If found, the value of the `[string, string]` tuple found in {@link properties}. Else, `undefined`.
-   */
+  */
   protected static getAndForget(
     properties: CaseInsensitiveMap<string, string>,
     key: string,
@@ -136,7 +136,7 @@ export class MSBuildProjectProperties {
   /**
   @returns If set, enables {@link UseArtifactsOutput} and overrides the
   default artifacts output path.
-   */
+  */
   get ArtifactsPath(): string {
     return this._artifactsPath ??= '';
   }
@@ -145,7 +145,7 @@ export class MSBuildProjectProperties {
   @returns The name of the assembly.
 
   Default: {@link https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-reserved-and-well-known-properties#:~:text=MSBuildProjectDirectory,-Reserved MSBuildProjectDirectory}
-   */
+  */
   get AssemblyName(): string {
     return this._assemblyName ??= '';
   }
@@ -157,7 +157,7 @@ export class MSBuildProjectProperties {
   ```xml
   <BaseIntermediateOutputPath>c:\xyz\obj\</BaseIntermediateOutputPath>
   ```
-   */
+  */
   get BaseIntermediateOutputPath(): string {
     return this._baseIntermediateOutputPath ??= '';
   }
@@ -168,7 +168,7 @@ export class MSBuildProjectProperties {
   @example ```xml
   <BaseOutputPath>c:\xyz\bin\</BaseOutputPath>
   ```
-   */
+  */
   get BaseOutputPath(): string {
     return this._baseOutputPath ??= '';
   }
@@ -177,7 +177,7 @@ export class MSBuildProjectProperties {
   A long description for the assembly.
   If {@link NugetProperties.PackageDescription} is not specified, then this property is also used as the description of the package.
   @returns The value of the `Description` property.
-   */
+  */
   get Description(): string {
     return this._description ??= '';
   }
@@ -187,7 +187,7 @@ export class MSBuildProjectProperties {
   {@link BaseIntermediateOutputPath}, if no path is specified.
   @example "obj\\debug\\"
   @deprecated Typo; Use {@link IntermediateOutputPath}
-   */
+  */
   get IntermediateOutput(): string {
     return this._intermediateOutputPath ??= '';
   }
@@ -196,7 +196,7 @@ export class MSBuildProjectProperties {
   @returns The full intermediate output path as derived from
   {@link BaseIntermediateOutputPath}, if no path is specified.
   @example "obj\\debug\\"
-   */
+  */
   get IntermediateOutputPath(): string {
     return this._intermediateOutputPath ??= '';
   }
@@ -207,7 +207,7 @@ export class MSBuildProjectProperties {
   In addition, OutDir is included in AssemblySearchPaths used for resolving references.
   @example
   `bin/Debug`
-   */
+  */
   get OutDir(): string {
     return this._outDir ??= '';
   }
@@ -219,7 +219,7 @@ export class MSBuildProjectProperties {
   `bin/Debug`
   /// non-AnyCPU builds
   `bin/Debug/${Platform}`
-   */
+  */
   get OutputPath(): string {
     return this._outputPath ??= '';
   }
@@ -229,7 +229,7 @@ export class MSBuildProjectProperties {
   @returns The value of the `Version` property.
 
   Default: `"1.0.0"`
-   */
+  */
   get Version(): string {
     return this._version ??= '1.0.0';
   }
@@ -239,7 +239,7 @@ export class MSBuildProjectProperties {
   Setting {@link NugetProperties.PackageVersion} overwrites {@link VersionPrefix}
   @returns The MAJOR.MINOR.PATCH string of the version.
   @see {@link VersionSuffix}
-   */
+  */
   get VersionPrefix(): string {
     return this._versionPrefix ??= '';
   }
@@ -256,7 +256,7 @@ export class MSBuildProjectProperties {
   \
   Setting {@link PackageVersion} overwrites {@link VersionSuffix}
   @returns The string appended to the end of the MAJOR.MINOR.PATCH semver string (i.e. {@link VersionPrefix})
-   */
+  */
   get VersionSuffix(): string {
     return this._versionSuffix ??= '';
   }
@@ -266,7 +266,7 @@ export class MSBuildProjectProperties {
   @see
   https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
   https://learn.microsoft.com/en-us/dotnet/standard/frameworks
-   */
+  */
   get TargetFramework(): string {
     return this._targetFramework ??= '';
   }
@@ -276,7 +276,7 @@ export class MSBuildProjectProperties {
   @see
   https://learn.microsoft.com/en-us/nuget/reference/target-frameworks#supported-frameworks
   https://learn.microsoft.com/en-us/dotnet/standard/frameworks
-   */
+  */
   get TargetFrameworks(): string {
     return this._targetFrameworks ??= '';
   }
@@ -289,7 +289,7 @@ export class MSBuildProjectProperties {
   enable this property.
 
   Default: "$(MSBuildThisFileDirectory)artifacts"
-   */
+  */
   get UseArtifactsOutput(): string {
     return this._useArtifactsOutput ??= '';
   }
@@ -301,7 +301,7 @@ export class MSBuildProjectProperties {
   > self-contained deployment.
   @see
   https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
-   */
+  */
   get RuntimeIdentifier(): string {
     return this._runtimeIdentifier ??= '';
   }
@@ -315,7 +315,7 @@ export class MSBuildProjectProperties {
   > are in the graph.
   @see
   https://learn.microsoft.com/en-us/dotnet/core/rid-catalog
-   */
+  */
   get RuntimeIdentifiers(): string {
     return this._runtimeIdentifiers ??= '';
   }

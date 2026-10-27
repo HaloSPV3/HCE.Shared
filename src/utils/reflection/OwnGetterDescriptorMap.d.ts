@@ -10,7 +10,7 @@ Note: If `T` is `InstanceOf<class>`, then `__proto__` must be `InstanceTypeOrSel
 @template T The type the descriptor map describes.
 @template __proto__ The `[[Prototype]]` of {@link T}. Keys of {@link __proto__} are omitted from the descriptor map type.
 @since 3.0.0
- */
+*/
 export type OwnGetterDescriptorMap<
   T,
   __prototype__ extends object | null,

@@ -33,7 +33,7 @@ declare module '@semantic-release/git' {
     [['dist', '!**\/*.css'], 'package.json']
     // include all js and css files in the dist directory and its sub-directories excluding the minified version.
     [['dist/**\/*.{js,css}', '!**\/*.min.*']]
-     */
+    */
     assets?: AssetEntry | AssetEntry[] | false;
     /**
     The message for the release commit.
@@ -63,7 +63,7 @@ declare module '@semantic-release/git' {
     > * Generate 1.21 gigawatts of electricity
     >
     > ...
-     */
+    */
     message?: string;
   }
 

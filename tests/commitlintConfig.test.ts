@@ -45,11 +45,11 @@ await describe('Loaded config tests', async () => {
       config.parserPreset.name,
       commitLintConventional.parserPreset,
     );
-    if ('parser' in preset)
-      deepStrictEqual(config.parserPreset.parserOpts, preset['parser']);
-    else {
-      deepStrictEqual(config.parserPreset.parserOpts, preset['parserOpts']);
-    }
+    deepStrictEqual(config.parserPreset.parserOpts,
+      'parser' in preset
+        ? preset['parser']
+        : preset['parserOpts'],
+    );
   });
   await it('has rules', () => {
     deepStrictEqual(

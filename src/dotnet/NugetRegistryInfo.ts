@@ -42,7 +42,7 @@ debug_NRI_PackDummyPackage.enabled = debug.enabled;
 Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
 If the file doesn't exist, it is created.
 @returns If successful, a promised object with a parsed key.
- */
+*/
 export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>['parsed']> {
   if (env['GITHUB_OUTPUT'] === undefined || !existsSync(env['GITHUB_OUTPUT'])) {
     const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
@@ -68,7 +68,7 @@ export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>
 Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
 If the file doesn't exist, it is created.
 @returns An object with a parsed key if successful.
- */
+*/
 export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDotenv>['parsed']> {
   if (env['GITHUB_OUTPUT'] === undefined || !existsSync(env['GITHUB_OUTPUT'])) {
     const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
@@ -106,7 +106,7 @@ directory for its dummy packages.
 @returns a platform-specific path like
 `${tmpdir()}/HCE.Shared/.NET/Dummies/${project.Properties.PackageId}` if
 {@link project} is defined. Else `${tmpdir()}/HCE.Shared/.NET/Dummies`
- */
+*/
 function getDummiesDirectory<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDirectory<typeof project> {
   switch (true) {
     case project === undefined: {
@@ -132,7 +132,7 @@ NuGet API keys.
 @returns an array of key-value pairs of the given environment variables and
 their values, filtered to only those whose values are not undefined.
 @throws {Error} when none of the provided environment variables are defined.
- */
+*/
 function _GetTokenEnvironmentVariables(tokenEnvironmentVariables: readonly string[]): undefined | [readonly [string, string], ...readonly [string, string][]] {
   const definedTokens = Object.freeze(
     tokenEnvironmentVariables
@@ -156,7 +156,7 @@ export class NugetRegistryInfo {
   {@link NugetRegistryInfo#resolvedEnvVariable}.
   @returns The value of the first defined environment variable.
   @throws {Error} when none of the provided environment variables are defined.
-   */
+  */
   private static _GetTokenValue(resolvedEnvironmentVariable: string): string {
     type.string.assert(resolvedEnvironmentVariable);
 
@@ -183,7 +183,7 @@ but the environment variable is empty or undefined.`);
   @param source The URL of the NuGet Source
   @returns A string suitable for a local filesystem folder name, formatted as
   `${hostname}_${pathname.replace('/', '_')}`.
-   */
+  */
   static GetDirNameForSource(source: string): string {
     return sanitizeFileName(
       source.replaceAll(/\/index.json$/g, ''),
@@ -224,7 +224,7 @@ but the environment variable is empty or undefined.`);
   If none of the environment variables are defined, this constructor will
   throw an {@link Error}.
   @param [options.source] A NuGet package registry's API endpoint URL or name. Default: 'https://api.nuget.org/v3/index.json'
-   */
+  */
   constructor(options: typeof NRIOpts['inferIn']) {
     // note: you can reassign `options` only when typeof `inferOut` is assignable
     // to typeof `inferIn`.
@@ -233,7 +233,7 @@ but the environment variable is empty or undefined.`);
     /**
     May throw! Assign key of the first key-value pair to
     {@link resolvedEnvVariable}
-     */
+    */
     const tokenVariables = _GetTokenEnvironmentVariables(validOptions.tokenEnvVars);
     if (tokenVariables)
       this._resolvedEnvVariable = tokenVariables[0][0];
@@ -256,7 +256,7 @@ but the environment variable is empty or undefined.`);
     - The URL does not exist or a connection could not be established
     - The command line string is malformed.
   @deprecated Call during the `verifyConditions` step of Semantic Release! Additionally, {@link GetIsNextVersionAlreadyPublishedCommand}'s return value should be assigned to `prepareCmd` to prevent package version collision errors.
-   */
+  */
   public get canPushPackagesToSource(): Promise<true> {
     if (this._canPushPackagesToSource !== undefined)
       return this._canPushPackagesToSource;
@@ -287,7 +287,7 @@ but the environment variable is empty or undefined.`);
   The first environment variable found to have a defined value. Set by
   {@link _GetTokenEnvVariables} in the constructor.
   @returns The first environment variable found to have a defined value.
-   */
+  */
   get resolvedEnvVariable(): string | undefined {
     return this._resolvedEnvVariable;
   }
@@ -303,7 +303,7 @@ but the environment variable is empty or undefined.`);
 
   {@link NRI.PackPackagesOptionsType.t.propertyOverrides `propertyOverrides`}
   is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
-   */
+  */
   // eslint-disable-next-line unicorn/consistent-class-member-order
   static readonly PackPackagesOptionsType: Type<{
     propertyOverrides?: Record<string, string> & Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }> | undefined;
@@ -350,7 +350,7 @@ but the environment variable is empty or undefined.`);
       /**
       MSBuild evaluation option. Added to get the output Nupkgs' file paths.
       @todo consider adding -GetProperty, -GetTarget
-       */
+      */
       '-GetItem?': type.string.array().readonly().or('string[]'),
     }),
   );
@@ -379,7 +379,7 @@ but the environment variable is empty or undefined.`);
   will include a subfolder named after the NuGet package's ID.
   @returns `dotnet pack "${this.project.Properties.MSBuildProjectFullPath}"
   -o "${outDir}"` where outDir may be `${cwd()}/publish/${NugetRegistryInfo.GetNameForURL(this.source)}/${this._project.Properties.PackageId}`
-   */
+  */
   GetPackCommand(
     options: typeof NRI.PackPackagesOptionsType.inferIn,
     shouldUsePerSourceSubfolder = false,
@@ -463,7 +463,7 @@ but the environment variable is empty or undefined.`);
   to include a subfolder named after the the PackageId.
   @returns a string[] containing the full file paths of all new packages i.e.
   .nupkg, .symbols.nupkg, .snupkg
-   */
+  */
   // @ts-expect-error Todo: publicize to dismiss this "unused" error.
   private async _PackPackages(
     options: typeof NRI.PackPackagesOptionsType.inferIn,
@@ -511,7 +511,7 @@ but the environment variable is empty or undefined.`);
   @returns the full paths of all nupkg, symbols.nupkg, and snupkg files
   created by the Pack target, as extracted from the dotnet process's STDOUT.
   If mixed with other nupkgs, filter for the {@link NugetProjectProperties#PackageId}
-   */
+  */
   public async PackDummyPackage(
     options: typeof NRI.PackDummyPackagesOptionsType.inferIn,
   ): Promise<string[]> {
@@ -561,7 +561,7 @@ but the environment variable is empty or undefined.`);
 
   Specific to this API:
   If you want to use this API's default root value (\`${cwd()}/publish`), assign an empty string.
-   */
+  */
   static readonly PushPackagesOptionsType: Type<{
     root: string;
     apiKey?: string | undefined;
@@ -600,7 +600,7 @@ but the environment variable is empty or undefined.`);
 
       ### Important
       > Starting with NuGet 3.4.2, this is a mandatory parameter unless the NuGet config file specifies a `DefaultPushSource` value. For more information, see {@link https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior Configuring NuGet behavior}.
-       */
+      */
       'source?': 'string',
       /** The API key for the symbol server. NOTE: if `undefined`, the `dotnet nuget` client will lookup credentials set via `dotnet nuget {add|update} source`.` */
       'symbolApiKey?': 'string',
@@ -614,7 +614,7 @@ but the environment variable is empty or undefined.`);
   /**
   {@link NRI.PushPackagesOptionsType} sans {@link NRI.PushPackagesOptionsType.t.root}.
   The result of {@link getDummiesDir} is used, instead.
-   */
+  */
   public static readonly PushDummyPackagesOptionsType: Type<{
     apiKey?: string | undefined;
     configFile?: string | undefined;
@@ -646,7 +646,7 @@ but the environment variable is empty or undefined.`);
   ROOT with this set to `true`!
   @returns A `dotnet nuget push` command line formatted with the
   appropriate arguments.
-   */
+  */
   GetPushCommand(
     options: typeof NRI.PushPackagesOptionsType.inferIn,
     shouldUsePerSourceSubfolder = false,
@@ -675,7 +675,7 @@ but the environment variable is empty or undefined.`);
     If apiKey is an empty string, defer to the dotnet CLI's NuGet client
     ability to lookup API keys saved via `dotnet nuget add source` or NuGet config
     files.
-     */
+    */
     if (validOptions.apiKey && validOptions.apiKey !== '')
       packCommandArray.push('--api-key', validOptions.apiKey);
     if (validOptions.configFile)
@@ -717,7 +717,7 @@ but the environment variable is empty or undefined.`);
   @param shouldUsePerPackageIdSubfolder If `true`, the current {@link project}'s
   PackageId is appended to the ROOT as a subfolder. Do not use wildcards in
   ROOT with this set to `true`!
-   */
+  */
   // @ts-expect-error Todo: publicize to dismiss this "unused" error.
   private async _PushPackages(
     options: typeof NRI.PushPackagesOptionsType.inferIn,
@@ -776,7 +776,7 @@ but the environment variable is empty or undefined.`);
   - skipDuplicates: true
   @returns a `dotnet nuget push` command to push a dummy package
   (created by executing {@link PackDummyPackage}) to {@link source}
-   */
+  */
   GetPushDummyCommand(
     options: typeof NRI.PushDummyPackagesOptionsType.inferIn,
   ): string {
@@ -799,7 +799,7 @@ but the environment variable is empty or undefined.`);
   - root: getDummiesDir(this.project)
   - skipDuplicates: true
   @returns The return type of {@link execAsync} i.e. a {@link Promise} resolving to `{ stdout: string; stderr: string }`.
-   */
+  */
   private async _PushDummyPackages(
     options: typeof NRI.PushDummyPackagesOptionsType.inferIn,
   ): ReturnType<typeof execAsync> {
@@ -863,7 +863,7 @@ but the environment variable is empty or undefined.`);
   cancelled immediately.
   Otherwise, the release should proceed.
   @todo utilize in custom plugin inserted at the beginning of `prepare`
-   */
+  */
   static async IsNextVersionAlreadyPublished(
     source: string,
     packageId: string,
@@ -900,7 +900,7 @@ but the environment variable is empty or undefined.`);
   - {@link https://docs.gitlab.com/ee/user/packages/nuget_repository/#add-a-source-with-the-net-cli Add a source with the .NET CLI}
   @returns a string containing a Node.JS command line invoking {@link ./IsNextVersionAlreadyPublished.cli.ts}
   @see {@link ./IsNextVersionAlreadyPublished.cli.ts}, {@link ./IsNextVersionAlreadyPublished.cli.js}
-   */
+  */
   GetIsNextVersionAlreadyPublishedCommand(): string {
     // if GITHUB_OUTPUT unset or its file does not exist, create it. ''
     getGithubOutputSync();
@@ -927,7 +927,7 @@ const NRI: typeof NugetRegistryInfo = NugetRegistryInfo;
 /**
 The base type for {@link NRIOpts} and related types. Extend this type while
 overriding member types via {@link NRIOptsBase.merge}
- */
+*/
 // eslint-disable-next-line unicorn/name-replacements
 export const NRIOptsBase: Type<{
   project: MSBuildProject | {
@@ -944,14 +944,14 @@ export const NRIOptsBase: Type<{
   package to the NuGet package registry. The array is iterated through until
   one token is found. If none of the environment variables are defined,
   {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
-   */
+  */
   project: type
     .instanceOf(MSBuildProject)
     .or(type.instanceOf(MSBuildProject).readonly()),
   /**
   A NuGet package registry's API endpoint URL -OR- the name assigned via the
   client e.g. `dotnet nuget add source --name ${source} ${source's URL}`
-   */
+  */
   source: type.string,
   /**
   WARNING: If possible, set credentials via `dotnet nuget {add|update}
@@ -976,7 +976,7 @@ export const NRIOptsBase: Type<{
   {@link https://learn.microsoft.com/en-us/nuget/reference/cli-reference/cli-ref-sources `nuget sources` (NuGet CLI)}.
 
   The credentials will be validated during the `verifyConditions` step of Semantic Release.
-   */
+  */
   tokenEnvVars: type.string.array().readonly(),
 });
 
@@ -995,7 +995,7 @@ export const NRIOpts: Type<{
   /**
   Defaults to {@link NugetRegistryInfo.DefaultTokenEnvVars}
   @see {@link NRIOptsBase.t.tokenEnvVars}
-   */
+  */
   tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(
     () => NugetRegistryInfo.DefaultTokenEnvVars,
   ),
@@ -1004,7 +1004,7 @@ export const NRIOpts: Type<{
   via your NuGet client.
   @default 'https://api.nuget.org/v3/index.json' (name: 'nuget.org')
   @see {@link NRIOptsBase.t.source}
-   */
+  */
   source: NRIOptsBase.get('source').default(() => defaultNugetSource),
 });
 
@@ -1016,7 +1016,7 @@ Replace all occurrences of {@link token} in the {@link string} with '***'.
 @param token The NuGet API token you definitely don't want to leak!
 @returns A modified copy of the {@link string} with all occurrences of the
 {@link token} replaced with '***'.
- */
+*/
 function _censorToken(string: string, token: string): string {
   return string.replaceAll(token, '***');
 }
@@ -1027,7 +1027,7 @@ Censor all occurrences of an API {@link token} in an {@link error}.
 @param token The value of the NuGet API token
 @returns A modified copy of the provided exception sans any occurrence of the
 NuGet API token.
- */
+*/
 function _censorTokenInError(error: ExecException, token: string): ExecException {
   const text = JSON.stringify({
     ...error,

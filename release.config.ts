@@ -17,7 +17,7 @@ Plugins are configured via tuple-like arrays e.g. ['plugin name', {config object
 
 ! WARNING! Arrays and child objects are overwritten entirely.
 When 'plugins' is set, only commit-analyzer is added if missing.
- */
+*/
 
 import { type } from 'arktype';
 import { ok } from 'node:assert/strict';
@@ -314,9 +314,9 @@ try {
   function setupGitlab() {
     const GLAssetObject = type({
       /**
-      **Required**, unless {@link GLAssetObject.t.url `url`} is set. A glob to
+      __Required__, unless {@link GLAssetObject.t.url `url`} is set. A glob to
       identify the files to upload. Supports Lodash templating.
-       */
+      */
       path: type.string,
       /**
       Alternative to setting {@link GLAssetObject.t.path `path`} this provides
@@ -367,7 +367,7 @@ try {
     /**
     ### GitLab authentication
 
-    NOTE: If running in GitHub Actions, the git URL
+    __NOTE__: If running in GitHub Actions, the git URL
     (`URL('https://github.com/HaloSPV3/HCE.Shared.git')`) is parsed for its
     `pathname` (e.g. '/HaloSPV3/HCE.Shared.git/'). The pathname is stripped down
     to 'HaloSPV3/HCE.Shared' and URI encoded ('halospv3%2FHCE.Shared'). It is
@@ -375,12 +375,12 @@ try {
     This me took over 12 hours to decipher from undocumented,
     barely legible code.
 
-    The GitLab authentication configuration is **required** and can be set via
+    The GitLab authentication configuration is __required__ and can be set via
     [environment variables](#environment-variables).
 
     Create a [project access token](https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html), [group access token](https://docs.gitlab.com/ee/user/group/settings/group_access_tokens.html), or [personal access token](https://docs.gitlab.com/ce/user/profile/personal_access_tokens.html) with role _Developer_ (or higher) and the `api` scope and make it available in your CI environment via the `GL_TOKEN` environment variable. If you are using `GL_TOKEN` as the [remote Git repository authentication](https://github.com/semantic-release/semantic-release/blob/master/docs/usage/ci-configuration.md#authentication) it must also have the `write_repository` scope.
 
-     **Note**: When running with [`dryRun`](https://semantic-release.gitbook.io/semantic-release/usage/configuration#dryrun) only `read_repository` scope is required.
+     __Note__: When running with [`dryRun`](https://semantic-release.gitbook.io/semantic-release/usage/configuration#dryrun) only `read_repository` scope is required.
     ### Environment variables
     | Variable                   | Description
     | -------------------------- | -----------
@@ -390,7 +390,7 @@ try {
     | HTTP_PROXY or HTTPS_PROXY  | HTTP or HTTPS proxy to use.
     | NO_PROXY                   | Patterns for which the proxy should be ignored.
     @see https://github.com/semantic-release/gitlab#configuration
-     */
+    */
     const SRGLOptions = type({
       /**
       The GitLab endpoint.
@@ -416,7 +416,7 @@ try {
 
       If a directory is configured, all the files under this directory and its children will be included.
 
-      **Note**: If a file has a match in `assets` it will be included even if it also has a match in `.gitignore`.
+      __Note__: If a file has a match in `assets` it will be included even if it also has a match in `.gitignore`.
       @example
       'dist/*.js' // include all the `js` files in the `dist` directory, but not in its sub-directories.
 
@@ -448,7 +448,7 @@ try {
            label: 'MyLibrary'
         }
       ]
-       */
+      */
       assets: type.string
         .or(type.string.or(GLAssetObject).array()),
       /**
@@ -526,7 +526,7 @@ try {
       >
       > - Error message 1
       > - Error message 2
-      @default string // (Friendly message with links to **semantic-release**
+      @default string // (Friendly message with links to __semantic-release__
       documentation and support, with the list of errors that caused the
       release to fail.)
       */

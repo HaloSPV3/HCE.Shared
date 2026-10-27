@@ -1,8 +1,9 @@
 /* eslint quote-props: ["warn", "as-needed"] */
 /* eslint @stylistic/quote-props: ["warn", "as-needed"] */
 /* eslint @stylistic/semi: ["warn", "always"] */
-import type {
-  UserConfig,
+import {
+  type UserConfig,
+  RuleConfigSeverity,
 } from '@commitlint/types';
 
 const { default: commitlintConfig } = await import('./src/commitlintConfig.ts');
@@ -89,7 +90,7 @@ const config: UserConfig = {
   rules: {
     ...commitlintConfig.rules,
     'scope-enum': [
-      2,
+      RuleConfigSeverity.Error,
       'always',
       Object.keys(scopes),
     ],

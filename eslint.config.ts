@@ -1,5 +1,5 @@
 import markdown from '@eslint/markdown';
-import jsdoc from 'eslint-plugin-jsdoc';
+import { jsdoc, configs as jsdocConfigs } from 'eslint-plugin-jsdoc';
 import * as publint from 'eslint-plugin-publint';
 import * as parser from 'eslint-plugin-publint/jsonc-eslint-parser';
 import unicorn from 'eslint-plugin-unicorn';
@@ -16,7 +16,8 @@ const config: Config[] = defineConfig(
       },
     },
   },
-  ...jsdoc.configs['flat/recommended-mixed'],
+  ...jsdocConfigs['flat/recommended-mixed'],
+  jsdoc({ rules: { 'jsdoc/check-alignment': 'off' } }),
   {
     ...markdown.configs.recommended[0],
     name: 'Markdown GFM',
@@ -36,7 +37,7 @@ const config: Config[] = defineConfig(
       'unicorn/prefer-node-protocol': 'warn',
       // more often than not, in-place sorting is preferable over `toSorted` cloned sort.
       'unicorn/no-array-sort': 'off',
-      'unicorn/single-line-block-comment-style': ['warn', 'single-line'],
+      'unicorn/single-line-block-comment-style': ['error', 'single-line'],
     },
     files: [
       '**/*.cjs',

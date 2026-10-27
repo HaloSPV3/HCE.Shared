@@ -34,7 +34,7 @@ A class definition cast to {@link ClassLike}.
 @template {InstanceOrStatic} _InstanceOrStatic
 'Instance' or 'Static'. Determines the return type.
 @since 3.0.0
- */
+*/
 export type RecursedPropertyDescriptorMap<
   Class extends ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>,
   _InstanceOrStatic extends InstanceOrStatic,
@@ -50,7 +50,7 @@ and ending with a {@link BaseClass}.
 @template {'Instance' | 'Static'} InstanceOrStatic
 @template {Integer<number>} [Limit=16]
 @template {Integer<number>} [CurrentLevel=0]
- */
+*/
 export type RecursedPropertyDescriptorMapArray<
   Class extends ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>,
   InstanceOrStatic extends 'Instance' | 'Static',
@@ -82,7 +82,7 @@ ordered array of {@link OwnPropertyDescriptorMap} or
 {@link InstancePropertyDescriptorMap} starting with {@link classDefinition}
 and ending with a {@link BaseClass}.
 @since 3.0.0
- */
+*/
 export function getOwnPropertyDescriptorsRecursively<
   // Class extends ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>,
   Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
@@ -118,7 +118,7 @@ Simple utility for single-tuple type assertion
 @template {T} T T in T[]
 @param array an array
 @returns array is [T]
- */
+*/
 function isSingleTuple<T>(array: T[]): array is [T] {
   return Array.isArray(array) && array.length === 1;
 }

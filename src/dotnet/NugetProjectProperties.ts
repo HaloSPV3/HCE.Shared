@@ -147,7 +147,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Target (if available) will no-op.
 
   Default: `"true"`
-   */
+  */
   get IsPackable(): BooleanString {
     return this._isPackable ??= 'true';
   }
@@ -157,7 +157,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   excluded from the generated NuGet package.
 
   Default: `"false"`
-   */
+  */
   get SuppressDependenciesWhenPacking(): BooleanString {
     return this._suppressDependenciesWhenPacking ??= 'false';
   }
@@ -169,7 +169,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   WARNING: Pack may fail if there are no Build artifacts!
 
   Default: "false"
-   */
+  */
   get GeneratePackageOnBuild(): BooleanString {
     return this._generatePackageOnBuild ??= 'false';
   }
@@ -180,7 +180,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
   Default: {@link Version}
   @example "1.0.0", "1.0.0-beta", "1.0.0-beta-00345"
-   */
+  */
   get PackageVersion(): string {
     return this._packageVersion ??= this.Version;
   }
@@ -189,7 +189,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @returns The ID of the resulting NuGet package.
 
   Default: {@link AssemblyName}
-   */
+  */
   get PackageId(): string {
     return this._packageId ??= this.AssemblyName;
   }
@@ -198,7 +198,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @returns A long description of the package for UI display.
 
   Default: {@link Description}
-   */
+  */
   get PackageDescription(): string {
     return this._packageDescription ??= this.Description;
   }
@@ -209,7 +209,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   nuget.org and are used to cross-reference packages by the same authors.
 
   Default: {@link AssemblyName `AssemblyName`}
-   */
+  */
   get Authors(): string {
     return this._authors ??= this.AssemblyName;
   }
@@ -218,7 +218,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @returns Copyright details for the package.
 
   Default: `''`
-   */
+  */
   get Copyright(): string {
     return this._copyright ??= '';
   }
@@ -228,7 +228,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   consumer to accept the package license before installing the package.
 
   Default: `"false"`
-   */
+  */
   get PackageRequireLicenseAcceptance(): BooleanString {
     return this._packageRequireLicenseAcceptance ??= 'false';
   }
@@ -243,7 +243,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   also means that compile-time assets are excluded from compilation.
 
   Default: `''` (`false`-y)
-   */
+  */
   get DevelopmentDependency(): EmptyOrBooleanString {
     return this._developmentDependency ??= '';
   }
@@ -256,7 +256,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-a-license-expression-or-a-license-file Packing a license expression or a license file}
   @example "Apache-2.0"
-   */
+  */
   get PackageLicenseExpression(): string {
     return this._packageLicenseExpression ??= '';
   }
@@ -266,7 +266,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   custom license or a license that hasn't been assigned an SPDX identifier.
 
   Default: `''`
-   */
+  */
   get PackageLicenseFile(): string {
     return this._packageLicenseFile ??= '';
   }
@@ -275,7 +275,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @returns The package's project URL.
 
   Default: `''`
-   */
+  */
   get PackageProjectUrl(): string {
     return this._packageProjectUrl ??= '';
   }
@@ -289,7 +289,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-an-icon-image-file Packing an icon image file},
   {@link https://learn.microsoft.com/en-us/nuget/reference/nuspec#icon icon metadata}
-   */
+  */
   get PackageIcon(): string {
     return this._packageIcon ??= '';
   }
@@ -298,7 +298,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @returns Release notes for the package.
 
   Default: `''`
-   */
+  */
   get PackageReleaseNotes(): string {
     return this._packageReleaseNotes ??= '';
   }
@@ -310,7 +310,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `''`
   @description You must pack the referenced readme file. By default, it is
   not packed.
-   */
+  */
   get PackageReadmeFile(): string {
     return this._packageReadmeFile ??= '';
   }
@@ -319,7 +319,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @returns A semicolon-delimited list of tags that designates the package.
 
   Default : `''`
-   */
+  */
   get PackageTags(): string {
     return this._packageTags ??= '';
   }
@@ -329,7 +329,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   package will be dropped.
 
   Default: {@link OutputPath}
-   */
+  */
   get PackageOutputPath(): string {
     return this._packageOutputPath ??= this.OutputPath;
   }
@@ -348,7 +348,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   package.
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesymbols IncludeSymbols}
-   */
+  */
   get IncludeSymbols(): EmptyOrBooleanString {
     return this._includeSymbols ??= '';
   }
@@ -362,7 +362,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `''` (false-y)
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#includesource IncludeSource}
-   */
+  */
   get IncludeSource(): EmptyOrBooleanString {
     return this._includeSource ??= '';
   }
@@ -377,7 +377,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `''`
   @example "Dependency ", "DotnetTool", "MSBuildSdk", "Template"
   @see {@link https://learn.microsoft.com/en-us/nuget/create-packages/set-package-type?tabs=dotnet Set a NuGet package type}
-   */
+  */
   get PackageType(): string {
     return this._packageType ??= '';
   }
@@ -389,7 +389,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `''` (false-y)
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#istool IsTool}
-   */
+  */
   get IsTool(): EmptyOrBooleanString {
     return this._isTool ??= '';
   }
@@ -399,7 +399,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
   Default: `''`
   @example "https://github.com/NuGet/NuGet.Client.git".
-   */
+  */
   get RepositoryUrl(): string {
     return this._repositoryUrl ??= '';
   }
@@ -409,7 +409,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
   Default: `''`
   @example "git", "fts"
-   */
+  */
   get RepositoryType(): typeof Type_RepositoryType.inferOut {
     return this._repositoryType ??= '';
   }
@@ -424,7 +424,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Targets. If using nuget.exe or Visual Studio, NuGet 4.7.0 or later is
   required.
   @example "0e4d1b598f350b3dc675018d539114d1328189ef"
-   */
+  */
   get RepositoryCommit(): string {
     return this._repositoryCommit ??= '';
   }
@@ -438,7 +438,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
 
   Default: "symbols.nupkg"
   @example "symbols.nupkg", "snupkg"
-   */
+  */
   get SymbolPackageFormat(): typeof Type_SymbolPackageFormat.inferOut {
     return this._symbolPackageFormat ??= 'symbols.nupkg';
   }
@@ -448,7 +448,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   package analysis after building the package.
 
   Default: `''` (false-y)
-   */
+  */
   get NoPackageAnalysis(): EmptyOrBooleanString {
     return this._noPackageAnalysis ??= '';
   }
@@ -459,7 +459,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Package Manager.
 
   Default: `''`
-   */
+  */
   get MinClientVersion(): string {
     return this._minClientVersion ??= '';
   }
@@ -469,7 +469,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   output assemblies should be packed into the .nupkg file or not.
 
   Default: `"true"`
-   */
+  */
   get IncludeBuildOutput(): BooleanString {
     return this._includeBuiltOutput ??= 'true';
   }
@@ -479,7 +479,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   a type of Content are included in the resulting package automatically.
 
   Default: `"true"`
-   */
+  */
   get IncludeContentInPack(): BooleanString {
     return this._includeContentInPack ??= 'true';
   }
@@ -492,7 +492,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `''`
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#output-assemblies Output assemblies}
-   */
+  */
   get BuildOutputTargetFolder(): string {
     return this._buildOutputTargetFolder ??= '';
   }
@@ -504,20 +504,20 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `"content;contentFiles"`
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#including-content-in-a-package Including content in a package}
-   */
+  */
   get ContentTargetFolders(): string {
     return this._contentTargetFolders ??= 'content;contentFiles';
   }
 
   /**
   @returns The relative or absolute path to the `*.nuspec` file being used
-  for packing. If specified, it's used **exclusively** for packaging
+  for packing. If specified, it's used __exclusively__ for packaging
   information, and any information in the projects is not used.
 
   Default: `''`
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file Packing using a .nuspec}
-   */
+  */
   get NuspecFile(): string {
     return this._nuspecFile ??= '';
   }
@@ -528,7 +528,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `''`
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file Packing using a .nuspec}
-   */
+  */
   get NuspecBasePath(): string {
     return this._nuspecBasePath ??= '';
   }
@@ -539,7 +539,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   Default: `''`
   @see
   {@link https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#packing-using-a-nuspec-file Packing using a .nuspec}
-   */
+  */
   get NuspecProperties(): string {
     return this._nuspecProperties ??= '';
   }
@@ -548,7 +548,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @returns A human-friendly title of the package, typically used in UI displays as
   on nuget.org and the Package Manager in Visual Studio.
   Default: {@link PackageId}
-   */
+  */
   get Title(): string {
     return this._title ??= this.PackageId;
   }
@@ -557,7 +557,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   @returns Company name or information.
 
   Default: {@link Authors}
-   */
+  */
   get Company(): string {
     return this._company ??= this.Authors;
   }
@@ -565,7 +565,7 @@ export class NugetProjectProperties extends MSBuildProjectProperties {
   /**
   @returns Product name or information.
   Default: {@link AssemblyName}
-   */
+  */
   get Product(): string {
     return this._product ??= this.AssemblyName;
   }

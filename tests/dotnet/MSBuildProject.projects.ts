@@ -10,7 +10,7 @@ aforementioned JSON files.
 
 Then, the JSON cache files are {@link MSBP.fromJSON deserialized} to
 {@link MSBP MSBuildProject} instances and exported by this module.
- */
+*/
 
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { readFile, realpath, unlink } from 'node:fs/promises';
@@ -43,7 +43,8 @@ const paths: Record<'DN' | 'SAP', { proj: string; json: string }> = {
 Write/overwrite a project's JSON-ified MSBuildProject if the JSON file does not exist.
 @returns `true` when the function completes.
 @param keyofPaths keyof {@link paths}
- */
+*/
+// eslint-disable-next-line unicorn/consistent-boolean-name
 async function writeCacheFile(keyofPaths: keyof typeof paths) {
   const projPaths = paths[keyofPaths];
 
@@ -74,9 +75,7 @@ await Promise.all(
     ),
 );
 
-/**
-@returns A promise of a dictionary of MSBP projects as dictated by {@link paths}
- */
+/** @returns A promise of a dictionary of MSBP projects as dictated by {@link paths} */
 async function getProjects() {
   const projects: {
     DN?: MSBP;

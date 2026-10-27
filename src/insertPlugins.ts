@@ -6,7 +6,7 @@ import type {
 /**
 @since 3.0.0
 @deprecated EXPERIMENTAL
- */
+*/
 interface PluginInsertRuleSet {
   Id: string;
   BeforeIds: string[];
@@ -35,7 +35,7 @@ If any rulesets conflict, an error will be thrown.
 inserted and sorted where needed.
 @since 3.0.0
 @deprecated EXPERIMENTAL
- */
+*/
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare function insertAndSortPlugins(
   plugins: Exclude<SemanticReleaseOptions['plugins'], undefined>,
@@ -57,7 +57,7 @@ Inserted plugins will be a `[string, {}]` tuple.
 {@link afterPluginsIDs} had been found in {@link plugins}, but a `.find` call
 to get the highest index of the found plugins had returned `undefined`
 @throws {AggregateError} One or more error occurred when inserting plugins: `insertPlugin was instructed to insert one or more plugins after [${afterPluginsIDs.map(v => '"' + v + '"').join(', ')}] and before [${beforePluginsIDs.map(v => `"${v}"`).join(', ')}], but ${JSON.stringify(pluginIDs[indexOfLastAfter])} comes after ${JSON.stringify(pluginIDs[index])}!`
- */
+*/
 export function insertPlugin(
   plugins: Exclude<PluginSpec, string>[],
   afterPluginsIDs: string[],

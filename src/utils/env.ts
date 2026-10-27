@@ -12,6 +12,7 @@ const {
 } = dotenvx;
 
 /** `get` can return `undefined`. It can also return a `Record`, but that's internal. */
+// eslint-disable-next-line unicorn/prefer-smaller-scope
 type Get = (key: string, options?: GetOptions) => string | undefined;
 
 /**

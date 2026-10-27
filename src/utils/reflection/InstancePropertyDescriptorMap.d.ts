@@ -10,9 +10,9 @@ import type {
 /**
 Generically-typed return type of `Object.GetOwnPropertyDescriptors` for class
 instances.
- 
+
 Allows for statically-inferred property keys and values.
- 
+
 Classes' `public` members are returned, including instance Getters and
 Setters.
 @template Class
@@ -24,7 +24,7 @@ const { NugetProjectProperties: NPP } = await import('../dotnet/NugetProjectProp
 const _instanceMembers: InstancePropertyDescriptorMap<typeof NPP>  = Object.getOwnPropertyDescriptors(new NugetProjectProperties('',new CaseInsensitiveMap([['','']])));
 ```
 @since 3.0.0
- */
+*/
 export type InstancePropertyDescriptorMap<
   Class extends ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>,
 > = Class['__proto__'] extends BaseClassPrototype

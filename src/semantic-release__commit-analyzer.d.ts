@@ -238,6 +238,7 @@ declare module '@semantic-release/commit-analyzer' {
       | PresetConfigs.ConventionalCommits;
   // #endregion PresetConfig
 
+  // eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type
   type AnyRecord = Record<keyof unknown, unknown>;
 
   export interface CommitAnalyzerConfig {

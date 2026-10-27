@@ -101,6 +101,7 @@ type LastOf<T>
 type Push<T extends any[], V> = [...T, V];
 
 // TS4.1+
+// eslint-disable-next-line unicorn/prefer-smaller-scope
 type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : false>
   = true extends N ? [] : Push<TuplifyUnion<Exclude<T, L>>, L>;
 
@@ -260,9 +261,8 @@ await describe('getOwnPropertyDescriptorsRecursively', async () => {
       if (map === getterMaps[1]) {
         /**
         TypeScript does not differentiate getters and readonly fields.
-
-        {@link TestClass0#InheritedProperty} must be excluded manually.
-         */
+        @description {@link TestClass0#InheritedProperty} must be excluded manually.
+        */
         const keys: [] = Reflect.ownKeys(getterMaps[1]) as NoRepetition<Exclude<keyof typeof getterMaps[1], 'InheritedProperty'>>;
         return keys;
       }
@@ -313,7 +313,7 @@ await describe('isConstructor', async () => {
   Typescript can enforce "new" keyword usage, but overriding the type
   allows you to `new isConstructor()` despite this function not intended to be
   used with the `new` keyword.
-   */
+  */
   await skip('returns false for functions that cannot be constructed with Reflect.construct', () => {
     deepStrictEqual(isConstructor(isConstructor), false);
   });
@@ -394,7 +394,7 @@ type _POG_MSBPP = {
     prototype: TypedPropertyDescriptor<MSBPP>;
     GetFullPath: TypedPropertyDescriptor<(path: string) => string>;
 }
- */
+*/
 type _PickOwnGetters_MSBPP = _PickOwnGetters<typeof MSBPP, null>;
 const __POG_MSBPP: _PickOwnGetters_MSBPP extends {
   prototype: TypedPropertyDescriptor<MSBPP>;
@@ -407,7 +407,8 @@ ok(__POG_MSBPP);
 /**
 @example
 type _OwnGetterDescriptorMap_NPP_MSBPP = {}
- */
+*/
+// eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type
 type _OwnGetterDescriptorMap_NPP_MSBPP_Static = OwnGetterDescriptorMap<Class_NPP, Class_MSBPP>;
 const __OwnGetterDescriptorMap_NPP_MSBPP_Static: _OwnGetterDescriptorMap_NPP_MSBPP_Static extends { [P in OwnKeyOf<Class_NPP, Class_MSBPP>]: GetterDescriptor<Class_NPP[P]> }
   ? true : false = true;
@@ -416,7 +417,7 @@ ok(__OwnGetterDescriptorMap_NPP_MSBPP_Static);
 /**
 @example
 type _keyof_OwnGetterDescriptorMap_NPP_MSBPP = "IsPackable" | "SuppressDependenciesWhenPacking" | "PackageVersion" | "PackageId" | "PackageDescription" | "Authors" | "Copyright" | "PackageRequireLicenseAcceptance" | "DevelopmentDependency" | "PackageLicenseExpression" | "PackageLicenseFile" | "PackageProjectUrl" | "PackageIcon" | "PackageReleaseNotes" | "PackageReadmeFile" | "PackageTags" | "PackageOutputPath" | "IncludeSymbols" | "IncludeSource" | "PackageType" | "IsTool" | "RepositoryUrl" | "RepositoryType" | "RepositoryCommit" | "SymbolPackageFormat" | "NoPackageAnalysis" | "MinClientVersion" | "IncludeBuildOutput" | "IncludeContentInPack" | "BuildOutputTargetFolder" | "ContentTargetFolders" | "NuspecFile" | "NuspecBasePath" | "NuspecProperties" | "Title" | "Company" | "Product"
- */
+*/
 type _keyof_OwnGetterDescriptorMap_NPP_MSBPP_Static = keyof OwnGetterDescriptorMap<InstanceType<Class_NPP>, InstanceType<Class_MSBPP>>;
 const __keyof_OwnGetterDescriptorMap_NPP_MSBPP_Static: _keyof_OwnGetterDescriptorMap_NPP_MSBPP_Static extends ('IsPackable' | 'SuppressDependenciesWhenPacking' | 'GeneratePackageOnBuild' | 'PackageVersion' | 'PackageId' | 'PackageDescription' | 'Authors' | 'Copyright' | 'PackageRequireLicenseAcceptance' | 'DevelopmentDependency' | 'PackageLicenseExpression' | 'PackageLicenseFile' | 'PackageProjectUrl' | 'PackageIcon' | 'PackageReleaseNotes' | 'PackageReadmeFile' | 'PackageTags' | 'PackageOutputPath' | 'IncludeSymbols' | 'IncludeSource' | 'PackageType' | 'IsTool' | 'RepositoryUrl' | 'RepositoryType' | 'RepositoryCommit' | 'SymbolPackageFormat' | 'NoPackageAnalysis' | 'MinClientVersion' | 'IncludeBuildOutput' | 'IncludeContentInPack' | 'BuildOutputTargetFolder' | 'ContentTargetFolders' | 'NuspecFile' | 'NuspecBasePath' | 'NuspecProperties' | 'Title' | 'Company' | 'Product')
   ? true : false = true;
@@ -426,7 +427,7 @@ ok(__keyof_OwnGetterDescriptorMap_NPP_MSBPP_Static);
 InstanceType<typeof import('../dotnet/NugetProjectProperties.js').NugetProjectProperties>;
 const __static: ("prototype" | "GetFullPath")[]
 (K extends keyof (typeof NugetProjectProperties)) where typeof NugetProjectProperties[K] extends (() => unknown)
- */
+*/
 const __listOwnInstanceGetters_NPP = listOwnGetters(NugetProjectProperties as Class_NPP, 'Instance');
 ok(__listOwnInstanceGetters_NPP);
 const __listOwnStaticGetters_NPP: never[] = listOwnGetters(NugetProjectProperties as Class_NPP, 'Static');
