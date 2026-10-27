@@ -101,6 +101,7 @@ type LastOf<T>
 type Push<T extends any[], V> = [...T, V];
 
 // TS4.1+
+// eslint-disable-next-line unicorn/prefer-smaller-scope
 type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : false>
   = true extends N ? [] : Push<TuplifyUnion<Exclude<T, L>>, L>;
 
@@ -259,10 +260,9 @@ await describe('getOwnPropertyDescriptorsRecursively', async () => {
       }
       if (map === getterMaps[1]) {
         /**
-         * TypeScript does not differentiate getters and readonly fields.
-         *
-         * {@link TestClass0#InheritedProperty} must be excluded manually.
-         */
+        TypeScript does not differentiate getters and readonly fields.
+        @description {@link TestClass0#InheritedProperty} must be excluded manually.
+        */
         const keys: [] = Reflect.ownKeys(getterMaps[1]) as NoRepetition<Exclude<keyof typeof getterMaps[1], 'InheritedProperty'>>;
         return keys;
       }
@@ -307,13 +307,13 @@ await describe('isConstructor', async () => {
     deepStrictEqual(isConstructor(Function), true);
   });
   /**
-   * Unfortunately, many functions have a constructor in their prototype. These
-   * functions are treated like classes due to JavaScript's poor distinction between
-   * classes and functions.\
-   * Typescript can enforce "new" keyword usage, but overriding the type
-   * allows you to `new isConstructor()` despite this function not intended to be
-   * used with the `new` keyword.
-   */
+  Unfortunately, many functions have a constructor in their prototype. These
+  functions are treated like classes due to JavaScript's poor distinction between
+  classes and functions.\
+  Typescript can enforce "new" keyword usage, but overriding the type
+  allows you to `new isConstructor()` despite this function not intended to be
+  used with the `new` keyword.
+  */
   await skip('returns false for functions that cannot be constructed with Reflect.construct', () => {
     deepStrictEqual(isConstructor(isConstructor), false);
   });
@@ -389,12 +389,12 @@ const __PickOwnGetters_NPP_Instance: _PickOwnGetters<NugetProjectProperties, MSB
 ok(__PickOwnGetters_NPP_Instance);
 
 /**
- * @example
- * type _POG_MSBPP = {
- *     prototype: TypedPropertyDescriptor<MSBPP>;
- *     GetFullPath: TypedPropertyDescriptor<(path: string) => string>;
- * }
- */
+@example
+type _POG_MSBPP = {
+    prototype: TypedPropertyDescriptor<MSBPP>;
+    GetFullPath: TypedPropertyDescriptor<(path: string) => string>;
+}
+*/
 type _PickOwnGetters_MSBPP = _PickOwnGetters<typeof MSBPP, null>;
 const __POG_MSBPP: _PickOwnGetters_MSBPP extends {
   prototype: TypedPropertyDescriptor<MSBPP>;
@@ -405,28 +405,29 @@ const __POG_MSBPP: _PickOwnGetters_MSBPP extends {
 ok(__POG_MSBPP);
 
 /**
- * @example
- * type _OwnGetterDescriptorMap_NPP_MSBPP = {}
- */
+@example
+type _OwnGetterDescriptorMap_NPP_MSBPP = {}
+*/
+// eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type
 type _OwnGetterDescriptorMap_NPP_MSBPP_Static = OwnGetterDescriptorMap<Class_NPP, Class_MSBPP>;
 const __OwnGetterDescriptorMap_NPP_MSBPP_Static: _OwnGetterDescriptorMap_NPP_MSBPP_Static extends { [P in OwnKeyOf<Class_NPP, Class_MSBPP>]: GetterDescriptor<Class_NPP[P]> }
   ? true : false = true;
 ok(__OwnGetterDescriptorMap_NPP_MSBPP_Static);
 
 /**
- * @example
- * type _keyof_OwnGetterDescriptorMap_NPP_MSBPP = "IsPackable" | "SuppressDependenciesWhenPacking" | "PackageVersion" | "PackageId" | "PackageDescription" | "Authors" | "Copyright" | "PackageRequireLicenseAcceptance" | "DevelopmentDependency" | "PackageLicenseExpression" | "PackageLicenseFile" | "PackageProjectUrl" | "PackageIcon" | "PackageReleaseNotes" | "PackageReadmeFile" | "PackageTags" | "PackageOutputPath" | "IncludeSymbols" | "IncludeSource" | "PackageType" | "IsTool" | "RepositoryUrl" | "RepositoryType" | "RepositoryCommit" | "SymbolPackageFormat" | "NoPackageAnalysis" | "MinClientVersion" | "IncludeBuildOutput" | "IncludeContentInPack" | "BuildOutputTargetFolder" | "ContentTargetFolders" | "NuspecFile" | "NuspecBasePath" | "NuspecProperties" | "Title" | "Company" | "Product"
- */
+@example
+type _keyof_OwnGetterDescriptorMap_NPP_MSBPP = "IsPackable" | "SuppressDependenciesWhenPacking" | "PackageVersion" | "PackageId" | "PackageDescription" | "Authors" | "Copyright" | "PackageRequireLicenseAcceptance" | "DevelopmentDependency" | "PackageLicenseExpression" | "PackageLicenseFile" | "PackageProjectUrl" | "PackageIcon" | "PackageReleaseNotes" | "PackageReadmeFile" | "PackageTags" | "PackageOutputPath" | "IncludeSymbols" | "IncludeSource" | "PackageType" | "IsTool" | "RepositoryUrl" | "RepositoryType" | "RepositoryCommit" | "SymbolPackageFormat" | "NoPackageAnalysis" | "MinClientVersion" | "IncludeBuildOutput" | "IncludeContentInPack" | "BuildOutputTargetFolder" | "ContentTargetFolders" | "NuspecFile" | "NuspecBasePath" | "NuspecProperties" | "Title" | "Company" | "Product"
+*/
 type _keyof_OwnGetterDescriptorMap_NPP_MSBPP_Static = keyof OwnGetterDescriptorMap<InstanceType<Class_NPP>, InstanceType<Class_MSBPP>>;
 const __keyof_OwnGetterDescriptorMap_NPP_MSBPP_Static: _keyof_OwnGetterDescriptorMap_NPP_MSBPP_Static extends ('IsPackable' | 'SuppressDependenciesWhenPacking' | 'GeneratePackageOnBuild' | 'PackageVersion' | 'PackageId' | 'PackageDescription' | 'Authors' | 'Copyright' | 'PackageRequireLicenseAcceptance' | 'DevelopmentDependency' | 'PackageLicenseExpression' | 'PackageLicenseFile' | 'PackageProjectUrl' | 'PackageIcon' | 'PackageReleaseNotes' | 'PackageReadmeFile' | 'PackageTags' | 'PackageOutputPath' | 'IncludeSymbols' | 'IncludeSource' | 'PackageType' | 'IsTool' | 'RepositoryUrl' | 'RepositoryType' | 'RepositoryCommit' | 'SymbolPackageFormat' | 'NoPackageAnalysis' | 'MinClientVersion' | 'IncludeBuildOutput' | 'IncludeContentInPack' | 'BuildOutputTargetFolder' | 'ContentTargetFolders' | 'NuspecFile' | 'NuspecBasePath' | 'NuspecProperties' | 'Title' | 'Company' | 'Product')
   ? true : false = true;
 ok(__keyof_OwnGetterDescriptorMap_NPP_MSBPP_Static);
 /**
- * @example
- * InstanceType<typeof import('../dotnet/NugetProjectProperties.js').NugetProjectProperties>;
- * const __static: ("prototype" | "GetFullPath")[]
- * (K extends keyof (typeof NugetProjectProperties)) where typeof NugetProjectProperties[K] extends (() => unknown)
- */
+@example
+InstanceType<typeof import('../dotnet/NugetProjectProperties.js').NugetProjectProperties>;
+const __static: ("prototype" | "GetFullPath")[]
+(K extends keyof (typeof NugetProjectProperties)) where typeof NugetProjectProperties[K] extends (() => unknown)
+*/
 const __listOwnInstanceGetters_NPP = listOwnGetters(NugetProjectProperties as Class_NPP, 'Instance');
 ok(__listOwnInstanceGetters_NPP);
 const __listOwnStaticGetters_NPP: never[] = listOwnGetters(NugetProjectProperties as Class_NPP, 'Static');
@@ -456,61 +457,59 @@ type _OwnKeysOf_NPP_Instance = OwnKeyOf<
 // @ts-expect-error unused variable
 const __OwnKeysOf_NPP_Instance: _OwnKeysOf_NPP_Instance = 0 as unknown as _OwnKeysOf_NPP_Instance;
 
-/**
- * Welcome to Node.js v23.10.0.
- * Type ".help" for more information.
- *
- * > class Class0 { }
- * undefined
- *
- * > class Class1 extends Class0 { constructor(){ super() } }
- * undefined
- *
- * > var class1 = new Class1()
- * undefined
- *
- * > class1['prototype']
- * undefined
- *
- * > Class1.constructor
- * [Function: Function]
- *
- * > Class1.constructor.toString()
- * 'function Function() { [native code] }'
- *
- * > class1.constructor
- * [class Class1 extends Class0]
- *
- * > class1.constructor.prototype.
- * class1.constructor.prototype.__proto__             class1.constructor.prototype.hasOwnProperty        class1.constructor.prototype.isPrototypeOf         class1.constructor.prototype.propertyIsEnumerable
- * class1.constructor.prototype.toLocaleString        class1.constructor.prototype.toString              class1.constructor.prototype.valueOf
- *
- * class1.constructor.prototype.constructor
- *
- * > class1.constructor.
- * class1.constructor.__proto__             class1.constructor.hasOwnProperty        class1.constructor.isPrototypeOf         class1.constructor.propertyIsEnumerable  class1.constructor.toLocaleString
- * class1.constructor.valueOf
- *
- * class1.constructor.apply                 class1.constructor.arguments             class1.constructor.bind                  class1.constructor.call                  class1.constructor.caller
- * class1.constructor.constructor           class1.constructor.toString
- *
- * class1.constructor.length                class1.constructor.name                  class1.constructor.prototype
- *
- * > class1.constructor.__proto__
- * [class Class0]
- *
- * > Class1.__proto__
- * [class Class0]
- *
- * > Class0.__proto__.toString()
- * 'function () { [native code] }'
+/*
+  Welcome to Node.js v23.10.0.
+  Type ".help" for more information.
+
+  > class Class0 { }
+  undefined
+
+  > class Class1 extends Class0 { constructor(){ super() } }
+  undefined
+
+  > var class1 = new Class1()
+  undefined
+
+  > class1['prototype']
+  undefined
+
+  > Class1.constructor
+  [Function: Function]
+
+  > Class1.constructor.toString()
+  'function Function() { [native code] }'
+
+  > class1.constructor
+  [class Class1 extends Class0]
+
+  > class1.constructor.prototype.
+  class1.constructor.prototype.__proto__             class1.constructor.prototype.hasOwnProperty        class1.constructor.prototype.isPrototypeOf         class1.constructor.prototype.propertyIsEnumerable
+  class1.constructor.prototype.toLocaleString        class1.constructor.prototype.toString              class1.constructor.prototype.valueOf
+
+  class1.constructor.prototype.constructor
+
+  > class1.constructor.
+  class1.constructor.__proto__             class1.constructor.hasOwnProperty        class1.constructor.isPrototypeOf         class1.constructor.propertyIsEnumerable  class1.constructor.toLocaleString
+  class1.constructor.valueOf
+
+  class1.constructor.apply                 class1.constructor.arguments             class1.constructor.bind                  class1.constructor.call                  class1.constructor.caller
+  class1.constructor.constructor           class1.constructor.toString
+
+  class1.constructor.length                class1.constructor.name                  class1.constructor.prototype
+
+  > class1.constructor.__proto__
+  [class Class0]
+
+  > Class1.__proto__
+  [class Class0]
+
+  > Class0.__proto__.toString()
+  'function () { [native code] }'
  */
 
 // #region getOwnPropertyDescriptorRecursively
 
-/**
- * PITFALL: TypeScript's language server diagnostics for mouse-over will shorten {@link TypedPropertyDescriptor<string>} to {@link string} and will error if you attempt to assign a {@link string}.
- */
+// PITFALL: TypeScript's language server diagnostics for mouse-over will shorten {@link TypedPropertyDescriptor<string>} to {@link string} and will error if you attempt to assign a {@link string}.
 const _getOwnPropertyDescriptorsRecursively_MSBPP_Instance: [{
   readonly MSBuildProjectFullPath: TypedPropertyDescriptor<string>;
   readonly AssemblyName: TypedPropertyDescriptor<string>;

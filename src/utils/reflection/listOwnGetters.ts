@@ -13,11 +13,11 @@ import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptor
 import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
 
 /**
- * Description placeholder
- * @template {ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>} Class
- * @template {InstanceOrStatic} _InstanceOrStatic
- * @since 3.0.0
- */
+Description placeholder
+@template {ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>} Class
+@template {InstanceOrStatic} _InstanceOrStatic
+@since 3.0.0
+*/
 type OwnGetters<
   Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,
@@ -40,19 +40,19 @@ type OwnGetters<
         : never;
 
 /**
- * # !WARNING!
- * > If you don't specify the Class's SuperClass (or `BaseClassProto`) via WithProto, the return type will wrongly include inherited property names! This is a design limitation of TypeScript.
- *
- * Returns the names of the instantiated (or static), noninherited getters derived from the
- * given prototype or prototype of the given object.
- * @template {ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>} Class
- * @template {InstanceOrStatic} _InstanceOrStatic 'Instance' or 'Static'. Determines the return type.
- * @param classDefinition Any class cast to ClassLike
- * @param instanceOrStatic 'Instance' or 'Static'. Determines the return type.
- * @since 3.0.0
- * @returns
- * An array of names of getters that were not inherited from a parent class. If {@link classDefinition} is a class instance, the names of instanced getters are returned. Otherwise, the names of static getters are returned;
- */
+# !WARNING!
+> If you don't specify the Class's SuperClass (or `BaseClassProto`) via WithProto, the return type will wrongly include inherited property names! This is a design limitation of TypeScript.
+
+Returns the names of the instantiated (or static), noninherited getters derived from the
+given prototype or prototype of the given object.
+@template {ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>} Class
+@template {InstanceOrStatic} _InstanceOrStatic 'Instance' or 'Static'. Determines the return type.
+@param classDefinition Any class cast to ClassLike
+@param instanceOrStatic 'Instance' or 'Static'. Determines the return type.
+@since 3.0.0
+@returns
+An array of names of getters that were not inherited from a parent class. If {@link classDefinition} is a class instance, the names of instanced getters are returned. Otherwise, the names of static getters are returned;
+*/
 export function listOwnGetters<
   Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,

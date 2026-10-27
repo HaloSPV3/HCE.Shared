@@ -26,14 +26,11 @@ debug_MSBP_Evaluate.enabled = debug.enabled;
 export type TemporaryDirectoryNamespace_Unix = `${ReturnType<typeof tmpdir>}/HCE.Shared/.NET/`;
 export type TemporaryDirectoryNamespace_Win = `${ReturnType<typeof tmpdir>}\\HCE.Shared\\.NET\\`;
 const temporaryDirectoryNamespace = path.join(tmpdir(), 'HCE.Shared', '.NET') as TemporaryDirectoryNamespace_Unix | TemporaryDirectoryNamespace_Win;
-type typeof_ArtifactsPath
-  = | (`${TemporaryDirectoryNamespace_Unix}${string}/${string}/`)
-    | (`${TemporaryDirectoryNamespace_Win}${string}\\${string}/`);
 
 /**
- * See [MSBuild well-known item metadata](https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-well-known-item-metadata).
- * Additional string-type properties may be present (e.g. `{ SubType: "designer" }`).
- */
+See [MSBuild well-known item metadata](https://learn.microsoft.com/visualstudio/msbuild/msbuild-well-known-item-metadata).
+Additional string-type properties may be present (e.g. `{ SubType: "designer" }`).
+*/
 const interface_ItemMetadataBuiltIn = type({
   '[string]': 'string',
   /** @example "c:\\source\\repos\\ConsoleApp1\\ConsoleApp1\\bin\\Debug\\net6.0\\ConsoleApp1.dll" */
@@ -155,27 +152,27 @@ const msbuildEvaluationOutput: Type<{
 
 export class MSBuildEvaluationOutput {
   /**
-   * The specified properties and their values as evaluated by MSBuild Core.
-   * `-getProperty:{propertyName,...}`
-   */
+  The specified properties and their values as evaluated by MSBuild Core.
+  `-getProperty:{propertyName,...}`
+  */
   Properties?: typeof msbuildEvaluationOutput.infer.Properties;
   /**
-   * The specified items and their values and associated metadata as evaluated
-   * by MSBuild Core.
-   * `-getItem:{itemName,...}`
-   */
+  The specified items and their values and associated metadata as evaluated
+  by MSBuild Core.
+  `-getItem:{itemName,...}`
+  */
   Items?: typeof msbuildEvaluationOutput.infer.Items;
   /**
-   * The specified Targets and their output values as evaluated by MSBuild
-   * Core.
-   * `-getTargetResult:{targetName,...}`
-   */
+  The specified Targets and their output values as evaluated by MSBuild
+  Core.
+  `-getTargetResult:{targetName,...}`
+  */
   TargetResults?: typeof msbuildEvaluationOutput.infer.TargetResults;
 
   /**
-   * @param rawMSBuildEvaluation The output of a CLI MSBuild project evaluation.
-   * May be the UTF-8 string-encoded JSON or the object decoded from that JSON.
-   */
+  @param rawMSBuildEvaluation The output of a CLI MSBuild project evaluation.
+  May be the UTF-8 string-encoded JSON or the object decoded from that JSON.
+  */
   constructor(rawMSBuildEvaluation: Parameters<typeof JSON.parse>[0] | Parameters<typeof msbuildEvaluationOutput.from>[0]) {
     /** `.assert` instead of `.from` to allow `unknown` JSON.parse return type */
     const knownObject = msbuildEvaluationOutput.assert(typeof rawMSBuildEvaluation === 'string' ? JSON.parse(rawMSBuildEvaluation) : rawMSBuildEvaluation);
@@ -189,21 +186,21 @@ export class MSBuildEvaluationOutput {
 export const EvaluationOptions: Type<{
   FullName: string;
   /**
-   * @see {@link NugetProjectProperties}
-   * @description
-   * User-defined Properties and their values.
-   * `{ Configuration: "Release" }` will cause the MSBuild to first set the
-   * Configuration property  to Release before evaluating the project
-   * or the project's Target(s).
-   * ```txt
-   *   -property:<n>=<v>  Set or override these project-level properties. <n> is
-   *                      the property name, and <v> is the property value. Use a
-   *                      semicolon or a comma to separate multiple properties, or
-   *                      specify each property separately. (Short form: -p)
-   *                      Example:
-   *                        -property:WarningLevel=2;OutDir=bin\Debug\
-   * ```
-   */
+  @see {@link NugetProjectProperties}
+  @description
+  User-defined Properties and their values.
+  `{ Configuration: "Release" }` will cause the MSBuild to first set the
+  Configuration property  to Release before evaluating the project
+  or the project's Target(s).
+  ```txt
+    -property:<n>=<v>  Set or override these project-level properties. <n> is
+                       the property name, and <v> is the property value. Use a
+                       semicolon or a comma to separate multiple properties, or
+                       specify each property separately. (Short form: -p)
+                       Example:
+                         -property:WarningLevel=2;OutDir=bin\Debug\
+  ```
+  */
   Property: Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }>;
   Targets: readonly string[] | string[];
   GetItem: readonly string[] | string[];
@@ -211,57 +208,54 @@ export const EvaluationOptions: Type<{
   GetTargetResult: readonly string[] | string[];
 }> = Object.freeze(
   type({
-    /**
-     * The project file's full path.
-     */
+    /** The project file's full path. */
     FullName: 'string',
     /**
-     * User-defined Properties and their values.
-     * { Configuration: "Release" } will cause the MSBuild to first set the
-     * Configuration property  to Release before evaluating the project
-     * or the project's Target(s).
-     * ```txt
-     *   -property:<n>=<v>  Set or override these project-level properties. <n> is
-     *                      the property name, and <v> is the property value. Use a
-     *                      semicolon or a comma to separate multiple properties, or
-     *                      specify each property separately. (Short form: -p)
-     *                      Example:
-     *                        -property:WarningLevel=2;OutDir=bin\Debug\
-     * ```
-     */
+    User-defined Properties and their values.
+    { Configuration: "Release" } will cause the MSBuild to first set the
+    Configuration property  to Release before evaluating the project
+    or the project's Target(s).
+    ```txt
+      -property:<n>=<v>  Set or override these project-level properties. <n> is
+                         the property name, and <v> is the property value. Use a
+                         semicolon or a comma to separate multiple properties, or
+                         specify each property separately. (Short form: -p)
+                         Example:
+                           -property:WarningLevel=2;OutDir=bin\Debug\
+    ```
+    */
     Property: type({ '[string]': 'string' })
       .as<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }>()
       .partial(),
     /**
-     * The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
-     * Property values may be changed by Targets such as those provided by
-     * dependencies.
-     *
-     * ```txt
-     *   -target:<targets>  Build these targets in this project. Use a semicolon or a
-     *                      comma to separate multiple targets, or specify each
-     *                      target separately. (Short form: -t)
-     *                      Example:
-     *                        -target:Resources;Compile
-     * ```
-     * @default []
-     */
+    The MSBuild Targets to run for evaluation. ["Pack"] is recommended.
+    Property values may be changed by Targets such as those provided by
+    dependencies.
+
+    ```txt
+      -target:<targets>  Build these targets in this project. Use a semicolon or a
+                         comma to separate multiple targets, or specify each
+                         target separately. (Short form: -t)
+                         Example:
+                           -target:Resources;Compile
+    ```
+    @default []
+    */
     Targets: type.string.array().readonly().or('string[]'),
     /**
-     * MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
-     * including {@link MSBuild}
-     */
+    MSBuild Items to evaluate. `["Compile"]` will result in the MSBuild output
+    including {@link MSBuild}
+    */
     GetItem: type.string.array().readonly().or('string[]'),
     GetProperty: type.string.array().readonly().or('string[]'),
     GetTargetResult: type.string.array().readonly().or('string[]'),
   }),
 );
-
 export class MSBuildProject {
   /**
-   * Properties for multi-targeting `dotnet publish` outputs.
-   * These are included in {@link NPPGetterNames.InstanceGettersRecursive}.
-   */
+  Properties for multi-targeting `dotnet publish` outputs.
+  These are included in {@link NPPGetterNames.InstanceGettersRecursive}.
+  */
   public static readonly MatrixProperties: readonly string[] = Object.freeze([
     'TargetFramework',
     'TargetFrameworks',
@@ -270,21 +264,21 @@ export class MSBuildProject {
   ]);
 
   /**
-   * @param projectPath The full path of the project file or its directory. A
-   * relative path may be passed, but will resolve relative to the current
-   * working directory.
-   * @param includeNonPublic Include conventionally internal/private MSBuild
-   * targets in the result.
-   * @returns A string array of the project's MSBuild targets.
-   * @todo consider 'file' of -targets[:file]
-   *  Prints a list of available targets without executing the
-   *  actual build process. By default the output is written to
-   *  the console window. If the path to an output file
-   *  is provided that will be used instead.
-   *  (Short form: -ts)
-   *  Example:
-   *    -ts:out.txt
-   */
+  @param projectPath The full path of the project file or its directory. A
+  relative path may be passed, but will resolve relative to the current
+  working directory.
+  @param includeNonPublic Include conventionally internal/private MSBuild
+  targets in the result.
+  @returns A string array of the project's MSBuild targets.
+  @todo consider 'file' of -targets[:file]
+   Prints a list of available targets without executing the
+   actual build process. By default the output is written to
+   the console window. If the path to an output file
+   is provided that will be used instead.
+   (Short form: -ts)
+   Example:
+     -ts:out.txt
+  */
   static async GetTargets(
     projectPath: string,
     // eslint-disable-next-line unicorn/consistent-boolean-name
@@ -303,19 +297,23 @@ export class MSBuildProject {
   }
 
   /**
-   * Evaluate {@link Items}, {@link Properties}, and {@link TargetResults},
-   * returning them as an instance of {@link MSBuildProject}.\
-   * Note: MSBuild will probably fail if Restore is skipped and another
-   * target is specified. If you choose Pack, you must do ['Restore', 'Pack'].
-   * @param options The result of {@link EvaluationOptions.from}.
-   * @returns A promised {@link MSBuildProject} instance.
-   * @throws {Error} if the exec command fails -OR- the JSON parse fails -OR-
-   * MSBuildProject's constructor fails.
-   * @see {@link PackableProjectsToMSBuildProjects} for most use-cases.
-   */
+  Evaluate {@link Items}, {@link Properties}, and {@link TargetResults},
+  returning them as an instance of {@link MSBuildProject}.\
+  Note: MSBuild will probably fail if Restore is skipped and another
+  target is specified. If you choose Pack, you must do ['Restore', 'Pack'].
+  @param options The result of {@link EvaluationOptions.from}.
+  @returns A promised {@link MSBuildProject} instance.
+  @throws {Error} if the exec command fails -OR- the JSON parse fails -OR-
+  MSBuildProject's constructor fails.
+  @see {@link PackableProjectsToMSBuildProjects} for most use-cases.
+  */
   public static async Evaluate(
     options: typeof EvaluationOptions.inferOut,
   ): Promise<MSBuildProject> {
+    // apparently, you can declare types in a function's/method's scope. That's news to me.
+    type typeof_ArtifactsPath
+      = | (`${TemporaryDirectoryNamespace_Unix}${string}/${string}/`)
+        | (`${TemporaryDirectoryNamespace_Win}${string}\\${string}/`);
     if (
       options.GetProperty.length === 0
       && options.GetItem.length === 0
@@ -400,11 +398,11 @@ export class MSBuildProject {
     //  This writes the value of property Bar into Biz.txt.
 
     /**
-     * The following issues have triggered this code path:
-     * - BaseIntermediateOutputPath must use Unix path separators ('/') on all
-     *   platforms. Even Windows. Otherwise, MSBuild/dotnet will error-exit with
-     *   "The BaseIntermediateOutputPath must end with a trailing slash".
-     */
+    The following issues have triggered this code path:
+    - BaseIntermediateOutputPath must use Unix path separators ('/') on all
+      platforms. Even Windows. Otherwise, MSBuild/dotnet will error-exit with
+      "The BaseIntermediateOutputPath must end with a trailing slash".
+    */
     if (output.stdout.startsWith('MSBuild version')) {
       warn(output.stdout);
       throw new Error(
@@ -414,7 +412,7 @@ export class MSBuildProject {
 
     let rawOutput: ConstructorParameters<typeof MSBuildEvaluationOutput>[0];
     if (output.stdout.startsWith('{')) {
-      /** stdout is JSON string */
+      // stdout is JSON string
       rawOutput = output.stdout;
     }
     else if (options.GetProperty.length > 0 && options.GetProperty[0] !== undefined) {
@@ -442,16 +440,16 @@ export class MSBuildProject {
   }
 
   /**
-   * Evaluate multiple project paths with some default Evaluate options.
-   * @async
-   * @param projectsToPackAndPush An array of MSBuild projects' full file
-   * paths. If a path is a directory, files in that directory are filtered for
-   * `.csproj`, `.fsproj`, and `.vbproj` project files.
-   * See https://github.com/dotnet/sdk/blob/497f334b2862bdf98b30c00ede2fd259ea5f624d/src/Cli/dotnet/Commands/New/MSBuildEvaluation/MSBuildEvaluationResult.cs#L19-L32.\
-   * @returns A promised array of {@link MSBuildProject} instances.
-   * All known MSBuild and NuGet properties are evaluated.
-   * If applicable, a project's "Pack" target is evaluated.
-   */
+  Evaluate multiple project paths with some default Evaluate options.
+  @async
+  @param projectsToPackAndPush An array of MSBuild projects' full file
+  paths. If a path is a directory, files in that directory are filtered for
+  `.csproj`, `.fsproj`, and `.vbproj` project files.
+  See https://github.com/dotnet/sdk/blob/497f334b2862bdf98b30c00ede2fd259ea5f624d/src/Cli/dotnet/Commands/New/MSBuildEvaluation/MSBuildEvaluationResult.cs#L19-L32.\
+  @returns A promised array of {@link MSBuildProject} instances.
+  All known MSBuild and NuGet properties are evaluated.
+  If applicable, a project's "Pack" target is evaluated.
+  */
   public static async PackableProjectsToMSBuildProjects(
     projectsToPackAndPush: string[],
   ): Promise<Promise<MSBuildProject>[]> {
@@ -462,13 +460,13 @@ export class MSBuildProject {
     return projectPromises;
 
     /**
-     * Map an array of filesystem paths to {@link Dirent} instances representing project files.
-     * @param projectsToPackAndPush An array of MSBuild projects' full file
-     * paths. If a path is a directory, files in that directory are filtered for
-     * `.csproj`, `.fsproj`, and `.vbproj` project files. See
-     * https://github.com/dotnet/sdk/blob/497f334b2862bdf98b30c00ede2fd259ea5f624d/src/Cli/dotnet/Commands/New/MSBuildEvaluation/MSBuildEvaluationResult.cs#L19-L32.\
-     * @returns An promised array of Dirent instances for discovered project files.
-     */
+    Map an array of filesystem paths to {@link Dirent} instances representing project files.
+    @param projectsToPackAndPush An array of MSBuild projects' full file
+    paths. If a path is a directory, files in that directory are filtered for
+    `.csproj`, `.fsproj`, and `.vbproj` project files. See
+    https://github.com/dotnet/sdk/blob/497f334b2862bdf98b30c00ede2fd259ea5f624d/src/Cli/dotnet/Commands/New/MSBuildEvaluation/MSBuildEvaluationResult.cs#L19-L32.\
+    @returns An promised array of Dirent instances for discovered project files.
+    */
     async function toDirectoryEntries(
       projectsToPackAndPush: string[],
     ): Promise<Dirent[]> {
@@ -513,10 +511,10 @@ export class MSBuildProject {
     }
 
     /**
-     * Map a {@link Dirent} instance to an {@link MSBuildProject} instance.
-     * @param dirent A {@link Dirent} instance. This instance should be an MSBuild project file.
-     * @returns An instance of {@link MSBuildProject} evaluated with the `Pack` target result, if applicable. Evaluated properties will be those whose names are returned by {@link NPPGetterNames.InstanceGettersRecursive}.
-     */
+    Map a {@link Dirent} instance to an {@link MSBuildProject} instance.
+    @param dirent A {@link Dirent} instance. This instance should be an MSBuild project file.
+    @returns An instance of {@link MSBuildProject} evaluated with the `Pack` target result, if applicable. Evaluated properties will be those whose names are returned by {@link NPPGetterNames.InstanceGettersRecursive}.
+    */
     async function convertDirentToMSBuildProject(dirent: Dirent): Promise<MSBuildProject> {
       const fullPath = path.join(
         // condition required for compatibility. `.path` was deprecated, but `.parentPath` is not available in our node minversion
@@ -564,22 +562,20 @@ export class MSBuildProject {
   readonly Items: Readonly<Required<MSBuildEvaluationOutput>['Items']>;
   readonly Properties: Readonly<NugetProjectProperties>;
   readonly Targets: readonly string[];
-  /**
-   * Allows appending subsequent target results.
-   */
+  /** Allows appending subsequent target results. */
   readonly TargetResults: Required<MSBuildEvaluationOutput>['TargetResults'][];
 
   /**
-   * Creates an instance of MSBuildProject.
-   * @param opts The order-independent arguments for this constructor.
-   * Properties may be added or moved around in this definition without
-   * breaking compatibility.
-   * @param opts.fullPath The full path of the MSBuild project's file. This
-   * should have a '.csproj', '.fsproj', or '.vbproj' file extension.
-   * @param opts.projTargets A list of MSBuild Targets supported by the project.
-   * @param opts.evaluation The output of an MSBuild project evaluation. This
-   * comprises MSBuild Properties, Items, and Target results.
-   */
+  Creates an instance of MSBuildProject.
+  @param opts The order-independent arguments for this constructor.
+  Properties may be added or moved around in this definition without
+  breaking compatibility.
+  @param opts.fullPath The full path of the MSBuild project's file. This
+  should have a '.csproj', '.fsproj', or '.vbproj' file extension.
+  @param opts.projTargets A list of MSBuild Targets supported by the project.
+  @param opts.evaluation The output of an MSBuild project evaluation. This
+  comprises MSBuild Properties, Items, and Target results.
+  */
   // eslint-disable-next-line unicorn/name-replacements
   public constructor(opts: {
     fullPath: string;
@@ -638,9 +634,9 @@ const T_PseudoMSBPInstance = type({
 });
 
 /**
- * ArkType type definitions for internal usage, but may be re-used elsewhere
- * @internal
- */
+ArkType type definitions for internal usage, but may be re-used elsewhere
+@internal
+*/
 export const _InternalMSBuildEvaluationTypes: Scope<{
   msbuildEvaluationOutput: {
     Properties?: Record<string, string> | undefined;
@@ -706,20 +702,20 @@ export const _InternalMSBuildEvaluationTypes: Scope<{
 });
 
 /**
- * Resolve a path if it is not already absolute.
- * @param _path A filesystem path.
- * @returns A full path to a filesystem entry. The path is unchecked for whether or not the path (or its parts) exist.
- */
+Resolve a path if it is not already absolute.
+@param _path A filesystem path.
+@returns A full path to a filesystem entry. The path is unchecked for whether or not the path (or its parts) exist.
+*/
 function makeAbsolute(_path: string) {
   return path.isAbsolute(_path) ? _path : path.resolve(_path);
 }
 
 /**
- * Use this in your catch statement or .catch call to return `undefined` when
- * a "file in use by another process" (i.e. EBUSY/ERROR_SHARING_VIOLATION) error is reported.
- * @param error Probably an Error object
- * @returns `undefined` if file in use by another process
- */
+Use this in your catch statement or .catch call to return `undefined` when
+a "file in use by another process" (i.e. EBUSY/ERROR_SHARING_VIOLATION) error is reported.
+@param error Probably an Error object
+@returns `undefined` if file in use by another process
+*/
 // TODO: BREAKING CHANGE: change return type to `true` to lint implicit `undefined`/`void` returns.
 export function catchEBUSY(error: unknown): undefined {
   if (isError(error)) {
@@ -738,36 +734,35 @@ export function catchEBUSY(error: unknown): undefined {
       throw error;
     }
     /**
-     * some known warnings/errors:
-     * - warning MSB3073:
-     *   The command "dotnet tool list kuinox.nupkgdeterministicator"
-     *   exited with code 145.
-     *    > $ dotnet tool list kuinox.nupkgdeterministicator
-     *    > The command could not be loaded, possibly because:
-     *    >   * You intended to execute a .NET application:
-     *    >       The application 'tool' does not exist.
-     *    >   * You intended to execute a .NET SDK command:
-     *    >       No .NET SDKs were found.
-     *    >
-     *    > Download a .NET SDK:
-     *    > https://aka.ms/dotnet/download
-     *    >
-     *    > Learn about SDK resolution:
-     *    > https://aka.ms/dotnet/sdk-not-found
-     */
+    some known warnings/errors:
+    - warning MSB3073:
+      The command "dotnet tool list kuinox.nupkgdeterministicator"
+      exited with code 145.
+       > $ dotnet tool list kuinox.nupkgdeterministicator
+       > The command could not be loaded, possibly because:
+       >   * You intended to execute a .NET application:
+       >       The application 'tool' does not exist.
+       >   * You intended to execute a .NET SDK command:
+       >       No .NET SDKs were found.
+       >
+       > Download a .NET SDK:
+       > https://aka.ms/dotnet/download
+       >
+       > Learn about SDK resolution:
+       > https://aka.ms/dotnet/sdk-not-found
+    */
     throw error;
   }
   throw new Error('unknown error', { cause: error });
 }
 
 /**
- *
- * Use this in your catch statement or .catch call to return `undefined` when
- * MSBuild error CSC2012 (e.g. "file in use by another process") is reported.
- * @param error Probably an Error object
- * @returns `undefined` if CSC2012 (file in use by another process) occurs
- * @deprecated Use {@link catchEBUSY}.
- */
+Use this in your catch statement or .catch call to return `undefined` when
+MSBuild error CSC2012 (e.g. "file in use by another process") is reported.
+@param error Probably an Error object
+@returns `undefined` if CSC2012 (file in use by another process) occurs
+@deprecated Use {@link catchEBUSY}.
+*/
 export function catchCsc2012(error: unknown): undefined {
   if (isError(error)) {
     // check for error reported when "file in use by another process" i.e. EBUSY
@@ -782,52 +777,51 @@ export function catchCsc2012(error: unknown): undefined {
       return undefined; /* retry */
     }
     /**
-     * some known warnings/errors:
-     * - warning MSB3073:
-     *   The command "dotnet tool list kuinox.nupkgdeterministicator"
-     *   exited with code 145.
-     *    > $ dotnet tool list kuinox.nupkgdeterministicator
-     *    > The command could not be loaded, possibly because:
-     *    >   * You intended to execute a .NET application:
-     *    >       The application 'tool' does not exist.
-     *    >   * You intended to execute a .NET SDK command:
-     *    >       No .NET SDKs were found.
-     *    >
-     *    > Download a .NET SDK:
-     *    > https://aka.ms/dotnet/download
-     *    >
-     *    > Learn about SDK resolution:
-     *    > https://aka.ms/dotnet/sdk-not-found
-     */
+    some known warnings/errors:
+    - warning MSB3073:
+      The command "dotnet tool list kuinox.nupkgdeterministicator"
+      exited with code 145.
+       > $ dotnet tool list kuinox.nupkgdeterministicator
+       > The command could not be loaded, possibly because:
+       >   * You intended to execute a .NET application:
+       >       The application 'tool' does not exist.
+       >   * You intended to execute a .NET SDK command:
+       >       No .NET SDKs were found.
+       >
+       > Download a .NET SDK:
+       > https://aka.ms/dotnet/download
+       >
+       > Learn about SDK resolution:
+       > https://aka.ms/dotnet/sdk-not-found
+    */
     throw error;
   }
   throw new Error('unknown error', { cause: error });
 }
 
 /**
- *
- * @returns A Promise of execAsync's output object.
- * @param root0 structured parameters object
- * @param root0.commandLine The command line to try and retry
- * @param root0.taskVerb Used in debug messages e.g. ```
- * const debug_MSBP = debug.extend('MSBuildProject');
- * debug_MSBP.enabled = debug.enabled;
- * const output = await loopTryDotnetCommand({ customDebugger: debug_MSBP, ... });
- * ```
- * @param root0.customDebugger e.g. `debug.extend('Evaluate)`
- * @param root0.projectName The filename (sans extension) or AssemblyName of the project e.g. `path.basename(fullPath, path.extname(fullPath))`
- * @param root0.timeoutMilliseconds The maximum time spent (re)trying the command.
- * Warning! {@link totalMilliseconds} may be significantly greater than {@link timeoutMilliseconds}!
- * e.g.
- * `325_000 <=300_000` (5m25s vs 5m)
- * `378_000 <=360_000` (6m18s vs 6m),
- * `630_000 <=600_000` (10m30s vs 10m)
- * `1225_000 <=1200_000` (20m25s vs 20m)
- * `2415_000 <=2400_000` (40m15s vs 40m)
- * `2556_000 <=2485_000` (42m36s vs 41m25s; 71 seconds over)
- * @throws {Error} when retry limit is reached or an unhandled exception occurs.
- * File-in-use errors are _supposed_ to be ignored and retried.
- */
+@returns A Promise of execAsync's output object.
+@param root0 structured parameters object
+@param root0.commandLine The command line to try and retry
+@param root0.taskVerb Used in debug messages e.g. ```
+const debug_MSBP = debug.extend('MSBuildProject');
+debug_MSBP.enabled = debug.enabled;
+const output = await loopTryDotnetCommand({ customDebugger: debug_MSBP, ... });
+```
+@param root0.customDebugger e.g. `debug.extend('Evaluate)`
+@param root0.projectName The filename (sans extension) or AssemblyName of the project e.g. `path.basename(fullPath, path.extname(fullPath))`
+@param root0.timeoutMilliseconds The maximum time spent (re)trying the command.
+Warning! {@link totalMilliseconds} may be significantly greater than {@link timeoutMilliseconds}!
+e.g.
+`325_000 <=300_000` (5m25s vs 5m)
+`378_000 <=360_000` (6m18s vs 6m),
+`630_000 <=600_000` (10m30s vs 10m)
+`1225_000 <=1200_000` (20m25s vs 20m)
+`2415_000 <=2400_000` (40m15s vs 40m)
+`2556_000 <=2485_000` (42m36s vs 41m25s; 71 seconds over)
+@throws {Error} when retry limit is reached or an unhandled exception occurs.
+File-in-use errors are _supposed_ to be ignored and retried.
+*/
 export async function loopTryDotnetCommand({ commandLine, customDebugger, projectName, taskVerb, timeoutMilliseconds: maximumTime }: {
   commandLine: string;
   customDebugger: typeof debug;

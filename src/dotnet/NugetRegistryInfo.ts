@@ -39,10 +39,10 @@ const debug_NRI_PackDummyPackage = debug_NRI.extend('PackDummyPackage');
 debug_NRI_PackDummyPackage.enabled = debug.enabled;
 
 /**
- * Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
- * If the file doesn't exist, it is created.
- * @returns If successful, a promised object with a parsed key.
- */
+Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
+If the file doesn't exist, it is created.
+@returns If successful, a promised object with a parsed key.
+*/
 export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>['parsed']> {
   if (env['GITHUB_OUTPUT'] === undefined || !existsSync(env['GITHUB_OUTPUT'])) {
     const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
@@ -65,10 +65,10 @@ export async function getGithubOutput(): Promise<ReturnType<typeof configDotenv>
 }
 
 /**
- * Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
- * If the file doesn't exist, it is created.
- * @returns An object with a parsed key if successful.
- */
+Read the contents of $GITHUB_OUTPUT (if its value is a file path) or $TEMP/GITHUB_OUTPUT.
+If the file doesn't exist, it is created.
+@returns An object with a parsed key if successful.
+*/
 export function getGithubOutputSync(): NonNullable<ReturnType<typeof configDotenv>['parsed']> {
   if (env['GITHUB_OUTPUT'] === undefined || !existsSync(env['GITHUB_OUTPUT'])) {
     const githubOutputPath: string = node_path.join(tmpdir(), 'GITHUB_OUTPUT');
@@ -100,13 +100,13 @@ type DummiesDirectory<T> = T extends undefined
 function getDummiesDirectory<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDirectory<T>;
 function getDummiesDirectory<T extends MSBuildProject>(project: T): DummiesDirectory<T>;
 /**
- * Get HCE.Shared's temporary directory for .NET projects' dummy packages.
- * @param project The MSBuild project whose PackageId will be used to create a
- * directory for its dummy packages.
- * @returns a platform-specific path like
- * `${tmpdir()}/HCE.Shared/.NET/Dummies/${project.Properties.PackageId}` if
- * {@link project} is defined. Else `${tmpdir()}/HCE.Shared/.NET/Dummies`
- */
+Get HCE.Shared's temporary directory for .NET projects' dummy packages.
+@param project The MSBuild project whose PackageId will be used to create a
+directory for its dummy packages.
+@returns a platform-specific path like
+`${tmpdir()}/HCE.Shared/.NET/Dummies/${project.Properties.PackageId}` if
+{@link project} is defined. Else `${tmpdir()}/HCE.Shared/.NET/Dummies`
+*/
 function getDummiesDirectory<T extends MSBuildProject | undefined = undefined>(project?: T): DummiesDirectory<typeof project> {
   switch (true) {
     case project === undefined: {
@@ -126,13 +126,13 @@ function getDummiesDirectory<T extends MSBuildProject | undefined = undefined>(p
 }
 
 /**
- * Get the environment variables as key-value pairs.
- * @param tokenEnvironmentVariables The name of the environment variables whose values are
- * NuGet API keys.
- * @returns an array of key-value pairs of the given environment variables and
- * their values, filtered to only those whose values are not undefined.
- * @throws {Error} when none of the provided environment variables are defined.
- */
+Get the environment variables as key-value pairs.
+@param tokenEnvironmentVariables The name of the environment variables whose values are
+NuGet API keys.
+@returns an array of key-value pairs of the given environment variables and
+their values, filtered to only those whose values are not undefined.
+@throws {Error} when none of the provided environment variables are defined.
+*/
 function _GetTokenEnvironmentVariables(tokenEnvironmentVariables: readonly string[]): undefined | [readonly [string, string], ...readonly [string, string][]] {
   const definedTokens = Object.freeze(
     tokenEnvironmentVariables
@@ -142,9 +142,7 @@ function _GetTokenEnvironmentVariables(tokenEnvironmentVariables: readonly strin
       ),
   );
 
-  if (definedTokens.length > 0)
-    return definedTokens as [readonly [string, string], ...readonly [string, string][]];
-  return undefined;
+  return definedTokens.length > 0 ? (definedTokens as [readonly [string, string], ...readonly [string, string][]]) : undefined;
 }
 
 export class NugetRegistryInfo {
@@ -152,13 +150,13 @@ export class NugetRegistryInfo {
     = Object.freeze(['NUGET_TOKEN'] as const);
 
   /**
-   * Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
-   * @param resolvedEnvironmentVariable The name of the environment variable(s) whose
-   * value is a NuGet API key. Typically, the value of
-   * {@link NugetRegistryInfo#resolvedEnvVariable}.
-   * @returns The value of the first defined environment variable.
-   * @throws {Error} when none of the provided environment variables are defined.
-   */
+  Get the API token from {@link NugetRegistryInfo#resolvedEnvVariable}
+  @param resolvedEnvironmentVariable The name of the environment variable(s) whose
+  value is a NuGet API key. Typically, the value of
+  {@link NugetRegistryInfo#resolvedEnvVariable}.
+  @returns The value of the first defined environment variable.
+  @throws {Error} when none of the provided environment variables are defined.
+  */
   private static _GetTokenValue(resolvedEnvironmentVariable: string): string {
     type.string.assert(resolvedEnvironmentVariable);
 
@@ -173,19 +171,19 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   * Convert a URL string to a filesystem folder name.
-   *
-   * Intended usage: modify the output path of `dotnet pack` based on the NuGet
-   * Source the package should be pushed to. This is extra work is usually
-   * unnecessary and you'd typically push the same file to multiple sources.
-   * This is for the edge-case scenario of creating multiple nupkgs and signing
-   * each one with a different certificate corresponding to a given NuGet
-   * Source. This is only useful if the Sources have different certificates
-   * registered for a given package/user/organization.
-   * @param source The URL of the NuGet Source
-   * @returns A string suitable for a local filesystem folder name, formatted as
-   * `${hostname}_${pathname.replace('/', '_')}`.
-   */
+  Convert a URL string to a filesystem folder name.
+
+  Intended usage: modify the output path of `dotnet pack` based on the NuGet
+  Source the package should be pushed to. This is extra work is usually
+  unnecessary and you'd typically push the same file to multiple sources.
+  This is for the edge-case scenario of creating multiple nupkgs and signing
+  each one with a different certificate corresponding to a given NuGet
+  Source. This is only useful if the Sources have different certificates
+  registered for a given package/user/organization.
+  @param source The URL of the NuGet Source
+  @returns A string suitable for a local filesystem folder name, formatted as
+  `${hostname}_${pathname.replace('/', '_')}`.
+  */
   static GetDirNameForSource(source: string): string {
     return sanitizeFileName(
       source.replaceAll(/\/index.json$/g, ''),
@@ -199,43 +197,43 @@ but the environment variable is empty or undefined.`);
   private readonly _source: string;
 
   /**
-   * Creates an instance of NugetRegistryInfo.\
-   * This class enables the ability to push a given {@link project}'s
-   * package(s) to the {@link source} of a given NuGet Source's API endpoint with
-   * a user-defined API key. This API key, herein referred to as a "token", is
-   * derived from the {@link tokenEnvVars} array. This array is iterated through
-   * until one of the items is discovered to be an existing environment variable
-   * (or is defined in a file named '.env' in the current working directory for
-   * LOCAL TESTING ONLY! Do NOT `git add` your private keys!).
-   * \
-   * WARNING:
-   * - The token value is stored privately within this class, but it is plain text.
-   * - This private key may be copied to command line strings stored in Semantic
-   *   Release's config object for later use by `@semantic-release/exec`.
-   * - Other EcmaScript modules can access the environment variable(s) and steal
-   *   your key. Be aware of malicious dependencies!
-   * @param options The input type of {@link NRIOpts.from}
-   * @param options.project The project whose package(s) will be
-   * pushed.\
-   * - Its {@link NugetProjectProperties#PackageId} will be read.\
-   * - Its {@link NugetProjectProperties#PackageVersion} will be overridden via CLI args when creating a dummy package. The real package's
-   * `PackageVersion` will *not* be overridden.
-   * @param [options.tokenEnvVars] The environment variables
-   * whose values are tokens with permission to push a package to the NuGet
-   * package registry. The array is iterated through until one token is found.
-   * If none of the environment variables are defined, this constructor will
-   * throw an {@link Error}.
-   * @param [options.source] A NuGet package registry's API endpoint URL or name. Default: 'https://api.nuget.org/v3/index.json'
-   */
+  Creates an instance of NugetRegistryInfo.\
+  This class enables the ability to push a given {@link project}'s
+  package(s) to the {@link source} of a given NuGet Source's API endpoint with
+  a user-defined API key. This API key, herein referred to as a "token", is
+  derived from the {@link tokenEnvVars} array. This array is iterated through
+  until one of the items is discovered to be an existing environment variable
+  (or is defined in a file named '.env' in the current working directory for
+  LOCAL TESTING ONLY! Do NOT `git add` your private keys!).
+  \
+  WARNING:
+  - The token value is stored privately within this class, but it is plain text.
+  - This private key may be copied to command line strings stored in Semantic
+    Release's config object for later use by `@semantic-release/exec`.
+  - Other EcmaScript modules can access the environment variable(s) and steal
+    your key. Be aware of malicious dependencies!
+  @param options The input type of {@link NRIOpts.from}
+  @param options.project The project whose package(s) will be
+  pushed.\
+  - Its {@link NugetProjectProperties#PackageId} will be read.\
+  - Its {@link NugetProjectProperties#PackageVersion} will be overridden via CLI args when creating a dummy package. The real package's
+  `PackageVersion` will *not* be overridden.
+  @param [options.tokenEnvVars] The environment variables
+  whose values are tokens with permission to push a package to the NuGet
+  package registry. The array is iterated through until one token is found.
+  If none of the environment variables are defined, this constructor will
+  throw an {@link Error}.
+  @param [options.source] A NuGet package registry's API endpoint URL or name. Default: 'https://api.nuget.org/v3/index.json'
+  */
   constructor(options: typeof NRIOpts['inferIn']) {
     // note: you can reassign `options` only when typeof `inferOut` is assignable
     // to typeof `inferIn`.
     const validOptions = NRIOpts.from(options);
     this._project = validOptions.project;
     /**
-     * May throw! Assign key of the first key-value pair to
-     * {@link resolvedEnvVariable}
-     */
+    May throw! Assign key of the first key-value pair to
+    {@link resolvedEnvVariable}
+    */
     const tokenVariables = _GetTokenEnvironmentVariables(validOptions.tokenEnvVars);
     if (tokenVariables)
       this._resolvedEnvVariable = tokenVariables[0][0];
@@ -247,18 +245,18 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   * This is not useful without it being executed as part of a Semantic Release
-   * plugin. Deferring this to `@semantic-release/exec`'s prepareCmd is possible,
-   * but impractical. You'd need to configure prepareCmd to invoke something
-   * like `node customScriptFile.mjs`. It's not worth the hassle.
-   * @returns `true` if the token can be used to push nupkg to the given Nuget registry
-   * @throws {TypeError | Error | import('../utils/execAsync.js').ChildProcessSpawnException }
-   * - {@link Error} | {@link module:utils/execAsync:ChildProcessSpawnException ChildProcessSpawnException}
-   *   - The token is invalid, of the wrong token type, or lacks permission to push packages
-   *   - The URL does not exist or a connection could not be established
-   *   - The command line string is malformed.
-   * @deprecated Call during the `verifyConditions` step of Semantic Release! Additionally, {@link GetIsNextVersionAlreadyPublishedCommand}'s return value should be assigned to `prepareCmd` to prevent package version collision errors.
-   */
+  This is not useful without it being executed as part of a Semantic Release
+  plugin. Deferring this to `@semantic-release/exec`'s prepareCmd is possible,
+  but impractical. You'd need to configure prepareCmd to invoke something
+  like `node customScriptFile.mjs`. It's not worth the hassle.
+  @returns `true` if the token can be used to push nupkg to the given Nuget registry
+  @throws {TypeError | Error | import('../utils/execAsync.js').ChildProcessSpawnException }
+  - {@link Error} | {@link module:utils/execAsync:ChildProcessSpawnException ChildProcessSpawnException}
+    - The token is invalid, of the wrong token type, or lacks permission to push packages
+    - The URL does not exist or a connection could not be established
+    - The command line string is malformed.
+  @deprecated Call during the `verifyConditions` step of Semantic Release! Additionally, {@link GetIsNextVersionAlreadyPublishedCommand}'s return value should be assigned to `prepareCmd` to prevent package version collision errors.
+  */
   public get canPushPackagesToSource(): Promise<true> {
     if (this._canPushPackagesToSource !== undefined)
       return this._canPushPackagesToSource;
@@ -286,10 +284,10 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   * The first environment variable found to have a defined value. Set by
-   * {@link _GetTokenEnvVariables} in the constructor.
-   * @returns The first environment variable found to have a defined value.
-   */
+  The first environment variable found to have a defined value. Set by
+  {@link _GetTokenEnvVariables} in the constructor.
+  @returns The first environment variable found to have a defined value.
+  */
   get resolvedEnvVariable(): string | undefined {
     return this._resolvedEnvVariable;
   }
@@ -301,11 +299,11 @@ but the environment variable is empty or undefined.`);
   // #region Pack
 
   /**
-   * The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
-   *
-   * {@link NRI.PackPackagesOptionsType.t.propertyOverrides `propertyOverrides`}
-   * is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
-   */
+  The type for options and arguments of `dotnet pack`. See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack.
+
+  {@link NRI.PackPackagesOptionsType.t.propertyOverrides `propertyOverrides`}
+  is a wrapper for MSBuild's `-property:<n>=<v>` properties override arg.
+  */
   // eslint-disable-next-line unicorn/consistent-class-member-order
   static readonly PackPackagesOptionsType: Type<{
     propertyOverrides?: Record<string, string> & Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }> | undefined;
@@ -329,9 +327,7 @@ but the environment variable is empty or undefined.`);
     '-GetItem'?: readonly string[] | string[] | undefined;
   }> = Object.freeze(
     type({
-    /**
-     * a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties.
-     */
+    /** a custom arg for handling MSBuild's `-property:<n>=<v>` argument for overriding MSBuild properties. */
       'propertyOverrides?': type.Record('string', 'string')
         .as<Partial<{ -readonly [P in keyof NugetProjectProperties]: NugetProjectProperties[P] }>>(),
       'artifactsPath?': 'string',
@@ -352,9 +348,9 @@ but the environment variable is empty or undefined.`);
       'verbosity?': '"quiet" | "minimal" | "normal" | "detailed" | "diagnostic"',
       'versionSuffix?': 'string',
       /**
-       * MSBuild evaluation option. Added to get the output Nupkgs' file paths.
-       * @todo consider adding -GetProperty, -GetTarget
-       */
+      MSBuild evaluation option. Added to get the output Nupkgs' file paths.
+      @todo consider adding -GetProperty, -GetTarget
+      */
       '-GetItem?': type.string.array().readonly().or('string[]'),
     }),
   );
@@ -367,23 +363,23 @@ but the environment variable is empty or undefined.`);
   > = this.PackPackagesOptionsType.omit('output');
 
   /**
-   * Get a `dotnet pack` command line string, outputting the package(s) to a
-   * path determined by this method's parameters.
-   * When pushing the package(s), you only need to supply the main .nupkg's path
-   * or its directory to the dotnet CLI—by default, it will also push the
-   * symbols package, if present.
-   * @param options Options passed to
-   * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. The
-   * {@link PackPackagesOptionsType.t.output} path is modified according to the
-   * {@link shouldUsePerSourceSubfolder} and {@link shouldUsePerPackageIdSubfolder}
-   * arguments.
-   * @param shouldUsePerSourceSubfolder If true, the path of the package output will
-   * include a subfolder named after the NuGet Source.
-   * @param shouldUsePerPackageIdSubfolder If true, the path of the package output
-   * will include a subfolder named after the NuGet package's ID.
-   * @returns `dotnet pack "${this.project.Properties.MSBuildProjectFullPath}"
-   * -o "${outDir}"` where outDir may be `${cwd()}/publish/${NugetRegistryInfo.GetNameForURL(this.source)}/${this._project.Properties.PackageId}`
-   */
+  Get a `dotnet pack` command line string, outputting the package(s) to a
+  path determined by this method's parameters.
+  When pushing the package(s), you only need to supply the main .nupkg's path
+  or its directory to the dotnet CLI—by default, it will also push the
+  symbols package, if present.
+  @param options Options passed to
+  `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument. The
+  {@link PackPackagesOptionsType.t.output} path is modified according to the
+  {@link shouldUsePerSourceSubfolder} and {@link shouldUsePerPackageIdSubfolder}
+  arguments.
+  @param shouldUsePerSourceSubfolder If true, the path of the package output will
+  include a subfolder named after the NuGet Source.
+  @param shouldUsePerPackageIdSubfolder If true, the path of the package output
+  will include a subfolder named after the NuGet package's ID.
+  @returns `dotnet pack "${this.project.Properties.MSBuildProjectFullPath}"
+  -o "${outDir}"` where outDir may be `${cwd()}/publish/${NugetRegistryInfo.GetNameForURL(this.source)}/${this._project.Properties.PackageId}`
+  */
   GetPackCommand(
     options: typeof NRI.PackPackagesOptionsType.inferIn,
     shouldUsePerSourceSubfolder = false,
@@ -447,27 +443,27 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   * !Not ready for use! Remove private modifier and commit as `feat(dotnet)` when ready for release!
-   * Blocking Issue: convert all dotnet-related functionality to a Semantic Release plugin!
-   * The current {@link _srcd SemanticReleaseConfigDotnet} leverages
-   * `@semantic-release/exec` to invoke dotnet commands. This is fine for
-   * relatively short command lines, but chaining commands with ' && ' results
-   * in quickly-growing complexity.
-   * NuGet packages should be created during the `prepare` step, but complex
-   * configuration of `dotnet pack` via command lines intended to be invoked by
-   * `@semantic-release/exec` is impractical.
-   * @param options `dotnet pack` options. See `dotnet pack -h`,
-   * https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack, and
-   * {@link PackPackagesOptionsType}.
-   * {@link options['-GetItem']} will _always_ have '_OutputPackItems'.
-   * @param [shouldUsePerSourceSubfolder] If `true`, modify the output path to
-   * include a subfolder bearing a path-safe encoding of the NuGet Source that
-   * will receive the nupkg.
-   * @param [shouldUsePerPackageIdSubfolder] If `true`, modify the output path
-   * to include a subfolder named after the the PackageId.
-   * @returns a string[] containing the full file paths of all new packages i.e.
-   * .nupkg, .symbols.nupkg, .snupkg
-   */
+  !Not ready for use! Remove private modifier and commit as `feat(dotnet)` when ready for release!
+  Blocking Issue: convert all dotnet-related functionality to a Semantic Release plugin!
+  The current {@link _srcd SemanticReleaseConfigDotnet} leverages
+  `@semantic-release/exec` to invoke dotnet commands. This is fine for
+  relatively short command lines, but chaining commands with ' && ' results
+  in quickly-growing complexity.
+  NuGet packages should be created during the `prepare` step, but complex
+  configuration of `dotnet pack` via command lines intended to be invoked by
+  `@semantic-release/exec` is impractical.
+  @param options `dotnet pack` options. See `dotnet pack -h`,
+  https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-pack, and
+  {@link PackPackagesOptionsType}.
+  {@link options['-GetItem']} will _always_ have '_OutputPackItems'.
+  @param [shouldUsePerSourceSubfolder] If `true`, modify the output path to
+  include a subfolder bearing a path-safe encoding of the NuGet Source that
+  will receive the nupkg.
+  @param [shouldUsePerPackageIdSubfolder] If `true`, modify the output path
+  to include a subfolder named after the the PackageId.
+  @returns a string[] containing the full file paths of all new packages i.e.
+  .nupkg, .symbols.nupkg, .snupkg
+  */
   // @ts-expect-error Todo: publicize to dismiss this "unused" error.
   private async _PackPackages(
     options: typeof NRI.PackPackagesOptionsType.inferIn,
@@ -503,19 +499,19 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   * Create a dummy package for the current {@link project} by executing a
-   * command line like \``dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this._project)}/${GetNameForURL(this.source)}`\`
-   * @param options Options passed to
-   * `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument.
-   * - The `output` field is ignored and overwritten. It is replaced with
-   *   ${{@link getDummiesDir}({@link project})}/${{@link GetDirNameForSource}({@link source})}
-   * - The `output` path will be affixed with a folder named after this
-   * {@link NugetRegistryInfo#source}, but will not include a subfolder for the
-   * {@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}.
-   * @returns the full paths of all nupkg, symbols.nupkg, and snupkg files
-   * created by the Pack target, as extracted from the dotnet process's STDOUT.
-   * If mixed with other nupkgs, filter for the {@link NugetProjectProperties#PackageId}
-   */
+  Create a dummy package for the current {@link project} by executing a
+  command line like \``dotnet pack ${this.project.Properties.MSBuildProjectFullPath} -p:Version=0.0.1-DUMMY -output ${getDummiesDir(this._project)}/${GetNameForURL(this.source)}`\`
+  @param options Options passed to
+  `dotnet pack`, excluding the required `<PROJECT | SOLUTION>` argument.
+  - The `output` field is ignored and overwritten. It is replaced with
+    ${{@link getDummiesDir}({@link project})}/${{@link GetDirNameForSource}({@link source})}
+  - The `output` path will be affixed with a folder named after this
+  {@link NugetRegistryInfo#source}, but will not include a subfolder for the
+  {@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}.
+  @returns the full paths of all nupkg, symbols.nupkg, and snupkg files
+  created by the Pack target, as extracted from the dotnet process's STDOUT.
+  If mixed with other nupkgs, filter for the {@link NugetProjectProperties#PackageId}
+  */
   public async PackDummyPackage(
     options: typeof NRI.PackDummyPackagesOptionsType.inferIn,
   ): Promise<string[]> {
@@ -558,14 +554,14 @@ but the environment variable is empty or undefined.`);
   // #region Push
 
   /**
-   * Also includes required argument 'ROOT': the directory in which packages
-   * should be present and ready to be pushed the default or specified Source.
-   * The ROOT may also include wildcards e.g. `*.nupkg`, `**\\*.nupkg`
-   * See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-push
-   *
-   * Specific to this API:
-   * If you want to use this API's default root value (\`${cwd()}/publish`), assign an empty string.
-   */
+  Also includes required argument 'ROOT': the directory in which packages
+  should be present and ready to be pushed the default or specified Source.
+  The ROOT may also include wildcards e.g. `*.nupkg`, `**\\*.nupkg`
+  See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-push
+
+  Specific to this API:
+  If you want to use this API's default root value (\`${cwd()}/publish`), assign an empty string.
+  */
   static readonly PushPackagesOptionsType: Type<{
     root: string;
     apiKey?: string | undefined;
@@ -600,11 +596,11 @@ but the environment variable is empty or undefined.`);
       /** When pushing multiple packages to an HTTP(S) server, treats any 409 Conflict response as a warning so that other pushes can continue. */
       'skipDuplicate?': 'boolean',
       /**
-       * Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP.
-       *
-       * ### Important
-       * > Starting with NuGet 3.4.2, this is a mandatory parameter unless the NuGet config file specifies a `DefaultPushSource` value. For more information, see {@link https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior Configuring NuGet behavior}.
-       */
+      Specifies the server URL. NuGet identifies a UNC or local folder source and simply copies the file there instead of pushing it using HTTP.
+
+      ### Important
+      > Starting with NuGet 3.4.2, this is a mandatory parameter unless the NuGet config file specifies a `DefaultPushSource` value. For more information, see {@link https://learn.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior Configuring NuGet behavior}.
+      */
       'source?': 'string',
       /** The API key for the symbol server. NOTE: if `undefined`, the `dotnet nuget` client will lookup credentials set via `dotnet nuget {add|update} source`.` */
       'symbolApiKey?': 'string',
@@ -616,9 +612,9 @@ but the environment variable is empty or undefined.`);
   );
 
   /**
-   * {@link NRI.PushPackagesOptionsType} sans {@link NRI.PushPackagesOptionsType.t.root}.
-   * The result of {@link getDummiesDir} is used, instead.
-   */
+  {@link NRI.PushPackagesOptionsType} sans {@link NRI.PushPackagesOptionsType.t.root}.
+  The result of {@link getDummiesDir} is used, instead.
+  */
   public static readonly PushDummyPackagesOptionsType: Type<{
     apiKey?: string | undefined;
     configFile?: string | undefined;
@@ -638,19 +634,19 @@ but the environment variable is empty or undefined.`);
     }).omit('root');
 
   /**
-   * Create a `dotnet nuget push` command line from the given options and
-   * optional boolean parameters.
-   * @param options See {@link PushPackagesOptionsType}
-   * @param shouldUsePerSourceSubfolder If `true`, the NuGet Source name or URL is formatted
-   * to a folder name and appended to the ROOT as a subfolder. Do not use
-   * wildcards in ROOT with this set to `true`!
-   * @param shouldUsePerPackageIdSubfolder  If `true`, the
-   * {@link project}'s {@link NugetProjectProperties#PackageId}
-   * is appended to the ROOT as a subfolder. Do not use wildcards in
-   * ROOT with this set to `true`!
-   * @returns A `dotnet nuget push` command line formatted with the
-   * appropriate arguments.
-   */
+  Create a `dotnet nuget push` command line from the given options and
+  optional boolean parameters.
+  @param options See {@link PushPackagesOptionsType}
+  @param shouldUsePerSourceSubfolder If `true`, the NuGet Source name or URL is formatted
+  to a folder name and appended to the ROOT as a subfolder. Do not use
+  wildcards in ROOT with this set to `true`!
+  @param shouldUsePerPackageIdSubfolder  If `true`, the
+  {@link project}'s {@link NugetProjectProperties#PackageId}
+  is appended to the ROOT as a subfolder. Do not use wildcards in
+  ROOT with this set to `true`!
+  @returns A `dotnet nuget push` command line formatted with the
+  appropriate arguments.
+  */
   GetPushCommand(
     options: typeof NRI.PushPackagesOptionsType.inferIn,
     shouldUsePerSourceSubfolder = false,
@@ -676,10 +672,10 @@ but the environment variable is empty or undefined.`);
     if (this.resolvedEnvVariable)
       validOptions.apiKey ??= NRI._GetTokenValue(this.resolvedEnvVariable);
     /**
-     * If apiKey is an empty string, defer to the dotnet CLI's NuGet client
-     * ability to lookup API keys saved via `dotnet nuget add source` or NuGet config
-     * files.
-     */
+    If apiKey is an empty string, defer to the dotnet CLI's NuGet client
+    ability to lookup API keys saved via `dotnet nuget add source` or NuGet config
+    files.
+    */
     if (validOptions.apiKey && validOptions.apiKey !== '')
       packCommandArray.push('--api-key', validOptions.apiKey);
     if (validOptions.configFile)
@@ -709,19 +705,19 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   * Immediately push packages. The input path may be modified according to the
-   * {@link shouldUsePerSourceSubfolder} and {@link shouldUsePerPackageIdSubfolder}
-   * arguments.
-   * @param options The `dotnet nuget push` command line options, including the
-   * ROOT argument, the directory containing local nuget packages ready to be
-   * pushed.
-   * @param shouldUsePerSourceSubfolder If `true`, the NuGet Source name or URL is formatted
-   * to a folder name and appended to the ROOT as a subfolder. Do not use
-   * wildcards in ROOT with this set to `true`!
-   * @param shouldUsePerPackageIdSubfolder If `true`, the current {@link project}'s
-   * PackageId is appended to the ROOT as a subfolder. Do not use wildcards in
-   * ROOT with this set to `true`!
-   */
+  Immediately push packages. The input path may be modified according to the
+  {@link shouldUsePerSourceSubfolder} and {@link shouldUsePerPackageIdSubfolder}
+  arguments.
+  @param options The `dotnet nuget push` command line options, including the
+  ROOT argument, the directory containing local nuget packages ready to be
+  pushed.
+  @param shouldUsePerSourceSubfolder If `true`, the NuGet Source name or URL is formatted
+  to a folder name and appended to the ROOT as a subfolder. Do not use
+  wildcards in ROOT with this set to `true`!
+  @param shouldUsePerPackageIdSubfolder If `true`, the current {@link project}'s
+  PackageId is appended to the ROOT as a subfolder. Do not use wildcards in
+  ROOT with this set to `true`!
+  */
   // @ts-expect-error Todo: publicize to dismiss this "unused" error.
   private async _PushPackages(
     options: typeof NRI.PushPackagesOptionsType.inferIn,
@@ -756,31 +752,31 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   *
-   * Get a `dotnet nuget push` command for pushing one or more nupkg/snupkg
-   * files created by {@link GetPackCommand} or {@link _PackPackages}.\
-   * Like {@link PackDummyPackage}, the output/ROOT path will include a
-   * folder named after this NRI instance's {@link NugetRegistryInfo#source},
-   * but will not include a subfolder for the
-   * {@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}
-   * @example
-   * ```ts
-   * const packAndPushDummyCmd = [
-   *   nri.GetPackCommand(
-   *     NugetRegistryInfo.PackPackagesOptionsType.from({ root: '' }),
-   *     false,
-   *     false,
-   *   ),
-   *   nri.GetPushDummyPackageCommand(pushOpts, false, false),
-   * ].join(' && ')
-   * ```
-   * @param options options for `dotnet nuget push`. The following
-   * fields are overwritten:
-   * - root: getDummiesDir(this.project)
-   * - skipDuplicates: true
-   * @returns a `dotnet nuget push` command to push a dummy package
-   * (created by executing {@link PackDummyPackage}) to {@link source}
-   */
+
+  Get a `dotnet nuget push` command for pushing one or more nupkg/snupkg
+  files created by {@link GetPackCommand} or {@link _PackPackages}.\
+  Like {@link PackDummyPackage}, the output/ROOT path will include a
+  folder named after this NRI instance's {@link NugetRegistryInfo#source},
+  but will not include a subfolder for the
+  {@link NugetRegistryInfo#project NugetRegistryInfo.project}.{@link MSBuildProject#Properties Properties}.{@link MSBuildProject#Properties#PackageId PackageId}
+  @example
+  ```ts
+  const packAndPushDummyCmd = [
+    nri.GetPackCommand(
+      NugetRegistryInfo.PackPackagesOptionsType.from({ root: '' }),
+      false,
+      false,
+    ),
+    nri.GetPushDummyPackageCommand(pushOpts, false, false),
+  ].join(' && ')
+  ```
+  @param options options for `dotnet nuget push`. The following
+  fields are overwritten:
+  - root: getDummiesDir(this.project)
+  - skipDuplicates: true
+  @returns a `dotnet nuget push` command to push a dummy package
+  (created by executing {@link PackDummyPackage}) to {@link source}
+  */
   GetPushDummyCommand(
     options: typeof NRI.PushDummyPackagesOptionsType.inferIn,
   ): string {
@@ -794,16 +790,16 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   * Call {@link GetPushDummyCommand} and immediately execute it.
-   * @throws {Error} when the process exits with an error code indicating
-   * failure i.e. the command line is invalid, the process fails to start,
-   * the push fails, et cetera.
-   * @param options the ROOT arg and options for `dotnet nuget push`. The following
-   * fields are overwritten:
-   * - root: getDummiesDir(this.project)
-   * - skipDuplicates: true
-   * @returns The return type of {@link execAsync} i.e. a {@link Promise} resolving to `{ stdout: string; stderr: string }`.
-   */
+  Call {@link GetPushDummyCommand} and immediately execute it.
+  @throws {Error} when the process exits with an error code indicating
+  failure i.e. the command line is invalid, the process fails to start,
+  the push fails, et cetera.
+  @param options the ROOT arg and options for `dotnet nuget push`. The following
+  fields are overwritten:
+  - root: getDummiesDir(this.project)
+  - skipDuplicates: true
+  @returns The return type of {@link execAsync} i.e. a {@link Promise} resolving to `{ stdout: string; stderr: string }`.
+  */
   private async _PushDummyPackages(
     options: typeof NRI.PushDummyPackagesOptionsType.inferIn,
   ): ReturnType<typeof execAsync> {
@@ -851,23 +847,23 @@ but the environment variable is empty or undefined.`);
   ).to(this._NugetSearchReturnTypes.ExactMatch.v2);
 
   /**
-   * !WARNING: this method requires the Nuget Source to be configured via `dotnet nuget add source` or `dotnet nuget update source`. `NUGET_TOKEN` works, but it may be vulnerable to supply chain attacks.\
-   * Call during the `prepare` step of a Semantic Release run.\
-   * Determine if the `nextVersion` generated during the `analyze` Semantic
-   * Release step was already published to the NuGet {@link source}.
-   * @param source The name or URI of the NuGet Source to search. If this API
-   * endpoint does not support searches, the operation will fail. If this API
-   * endpoint requires authentication (e.g. GitHub), it must be configured via
-   * `dotnet nuget add source` or `dotnet nuget update source` before calling
-   * this method.
-   * @param packageId The ID of the NuGet package to search for.
-   * @param nextVersion The nextVersion value generated by semantic-release's hidden ["Create Git tag" step](https://semantic-release.gitbook.io/semantic-release#:~:text=the%20last%20release.-,Create%20Git%20tag,-Create%20a%20Git).
-   * @returns A promised boolean.
-   * If the promise resolves to `true`, the semantic release run should be
-   * cancelled immediately.
-   * Otherwise, the release should proceed.
-   * @todo utilize in custom plugin inserted at the beginning of `prepare`
-   */
+  !WARNING: this method requires the Nuget Source to be configured via `dotnet nuget add source` or `dotnet nuget update source`. `NUGET_TOKEN` works, but it may be vulnerable to supply chain attacks.\
+  Call during the `prepare` step of a Semantic Release run.\
+  Determine if the `nextVersion` generated during the `analyze` Semantic
+  Release step was already published to the NuGet {@link source}.
+  @param source The name or URI of the NuGet Source to search. If this API
+  endpoint does not support searches, the operation will fail. If this API
+  endpoint requires authentication (e.g. GitHub), it must be configured via
+  `dotnet nuget add source` or `dotnet nuget update source` before calling
+  this method.
+  @param packageId The ID of the NuGet package to search for.
+  @param nextVersion The nextVersion value generated by semantic-release's hidden ["Create Git tag" step](https://semantic-release.gitbook.io/semantic-release#:~:text=the%20last%20release.-,Create%20Git%20tag,-Create%20a%20Git).
+  @returns A promised boolean.
+  If the promise resolves to `true`, the semantic release run should be
+  cancelled immediately.
+  Otherwise, the release should proceed.
+  @todo utilize in custom plugin inserted at the beginning of `prepare`
+  */
   static async IsNextVersionAlreadyPublished(
     source: string,
     packageId: string,
@@ -889,22 +885,22 @@ but the environment variable is empty or undefined.`);
   }
 
   /**
-   * !WARNING: GITHUB_OUTPUT must be the full path to an environment file.
-   * The plugin "semantic-release-output-variables" next-release-version
-   *
-   * !WARNING: NuGet Source API Key mus tbe configured via `dotnet nuget add source` or `dotnet nuget update source`.
-   * Some Sources (e.g. GitHub) require authentication for package searches.
-   *
-   * # Authenticating NuGet Package Searches
-   *
-   * ## GitHub NuGet Registry authentication
-   * - {@link https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-in-a-github-actions-workflow Authenticating in a GitHub Actions workflow}
-   * - {@link https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-with-a-personal-access-token Authenticating with a personal access token}.
-   * ## For GitLab NuGet Registry authentication, see
-   * - {@link https://docs.gitlab.com/ee/user/packages/nuget_repository/#add-a-source-with-the-net-cli Add a source with the .NET CLI}
-   * @returns a string containing a Node.JS command line invoking {@link ./IsNextVersionAlreadyPublished.cli.ts}
-   * @see {@link ./IsNextVersionAlreadyPublished.cli.ts}, {@link ./IsNextVersionAlreadyPublished.cli.js}
-   */
+  !WARNING: GITHUB_OUTPUT must be the full path to an environment file.
+  The plugin "semantic-release-output-variables" next-release-version
+
+  !WARNING: NuGet Source API Key mus tbe configured via `dotnet nuget add source` or `dotnet nuget update source`.
+  Some Sources (e.g. GitHub) require authentication for package searches.
+
+  # Authenticating NuGet Package Searches
+
+  ## GitHub NuGet Registry authentication
+  - {@link https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-in-a-github-actions-workflow Authenticating in a GitHub Actions workflow}
+  - {@link https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry#authenticating-with-a-personal-access-token Authenticating with a personal access token}.
+  ## For GitLab NuGet Registry authentication, see
+  - {@link https://docs.gitlab.com/ee/user/packages/nuget_repository/#add-a-source-with-the-net-cli Add a source with the .NET CLI}
+  @returns a string containing a Node.JS command line invoking {@link ./IsNextVersionAlreadyPublished.cli.ts}
+  @see {@link ./IsNextVersionAlreadyPublished.cli.ts}, {@link ./IsNextVersionAlreadyPublished.cli.js}
+  */
   GetIsNextVersionAlreadyPublishedCommand(): string {
     // if GITHUB_OUTPUT unset or its file does not exist, create it. ''
     getGithubOutputSync();
@@ -929,9 +925,9 @@ but the environment variable is empty or undefined.`);
 const NRI: typeof NugetRegistryInfo = NugetRegistryInfo;
 
 /**
- * The base type for {@link NRIOpts} and related types. Extend this type while
- * overriding member types via {@link NRIOptsBase.merge}
- */
+The base type for {@link NRIOpts} and related types. Extend this type while
+overriding member types via {@link NRIOptsBase.merge}
+*/
 // eslint-disable-next-line unicorn/name-replacements
 export const NRIOptsBase: Type<{
   project: MSBuildProject | {
@@ -944,49 +940,47 @@ export const NRIOptsBase: Type<{
   tokenEnvVars: readonly string[];
 }> = type({
   /**
-   * The environment variables whose values are tokens with permission to push a
-   * package to the NuGet package registry. The array is iterated through until
-   * one token is found. If none of the environment variables are defined,
-   * {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
-   */
+  The environment variables whose values are tokens with permission to push a
+  package to the NuGet package registry. The array is iterated through until
+  one token is found. If none of the environment variables are defined,
+  {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
+  */
   project: type
     .instanceOf(MSBuildProject)
     .or(type.instanceOf(MSBuildProject).readonly()),
   /**
-   * A NuGet package registry's API endpoint URL -OR- the name assigned via the
-   * client e.g. `dotnet nuget add source --name ${source} ${source's URL}`
-   */
+  A NuGet package registry's API endpoint URL -OR- the name assigned via the
+  client e.g. `dotnet nuget add source --name ${source} ${source's URL}`
+  */
   source: type.string,
   /**
-   * WARNING: If possible, set credentials via `dotnet nuget {add|update}
-   * source` as recommended by Microsoft! This is more secure than exposing
-   * credentials to the Node.JS runtime and all its loaded modules.
-   *
-   * The environment variables whose values are tokens with permission to push a
-   * package to the NuGet package registry.The array is iterated through until
-   * one token is found.If none of the environment variables are defined,
-   * {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
-   *
-   * If none of these are defined in the `.env` or process environment variables (.vault.env is impractical in CI), the `--api-key/-k` argument is excluded from `dotnet nuget push` commands.
-   * Instead, the NuGet client relies on credentials configured for the
-   * given NuGet source. If the NuGet client does not find credentials saved for the
-   * NuGet {@link NRIOptsBase.t.source source} and they are required, the command will fail.
-   *
-   * Use the `dotnet` CLI to configure credentials for existing NuGet sources
-   * ({@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-update-source `dotnet nuget update source`})
-   * -OR- configure credentials for non-default NuGet sources
-   * ({@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-add-source `dotnet nuget add source`}).\
-   * Alternatively, use the `nuget.exe` CLI to add/update sources. See
-   * {@link https://learn.microsoft.com/en-us/nuget/reference/cli-reference/cli-ref-sources `nuget sources` (NuGet CLI)}.
-   *
-   * The credentials will be validated during the `verifyConditions` step of Semantic Release.
-   */
+  WARNING: If possible, set credentials via `dotnet nuget {add|update}
+  source` as recommended by Microsoft! This is more secure than exposing
+  credentials to the Node.JS runtime and all its loaded modules.
+
+  The environment variables whose values are tokens with permission to push a
+  package to the NuGet package registry.The array is iterated through until
+  one token is found.If none of the environment variables are defined,
+  {@link NugetRegistryInfo}'s constructor will throw an {@link Error}.
+
+  If none of these are defined in the `.env` or process environment variables (.vault.env is impractical in CI), the `--api-key/-k` argument is excluded from `dotnet nuget push` commands.
+  Instead, the NuGet client relies on credentials configured for the
+  given NuGet source. If the NuGet client does not find credentials saved for the
+  NuGet {@link NRIOptsBase.t.source source} and they are required, the command will fail.
+
+  Use the `dotnet` CLI to configure credentials for existing NuGet sources
+  ({@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-update-source `dotnet nuget update source`})
+  -OR- configure credentials for non-default NuGet sources
+  ({@link https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-nuget-add-source `dotnet nuget add source`}).\
+  Alternatively, use the `nuget.exe` CLI to add/update sources. See
+  {@link https://learn.microsoft.com/en-us/nuget/reference/cli-reference/cli-ref-sources `nuget sources` (NuGet CLI)}.
+
+  The credentials will be validated during the `verifyConditions` step of Semantic Release.
+  */
   tokenEnvVars: type.string.array().readonly(),
 });
 
-/**
- * The type of the parameter for {@link NugetRegistryInfo}'s constructor.
- */
+/** The type of the parameter for {@link NugetRegistryInfo}'s constructor. */
 // eslint-disable-next-line unicorn/name-replacements
 export const NRIOpts: Type<{
   project: MSBuildProject | {
@@ -999,41 +993,41 @@ export const NRIOpts: Type<{
   source: Default<string, string>;
 }> = NRIOptsBase.merge({
   /**
-   * Defaults to {@link NugetRegistryInfo.DefaultTokenEnvVars}
-   * @see {@link NRIOptsBase.t.tokenEnvVars}
-   */
+  Defaults to {@link NugetRegistryInfo.DefaultTokenEnvVars}
+  @see {@link NRIOptsBase.t.tokenEnvVars}
+  */
   tokenEnvVars: NRIOptsBase.get('tokenEnvVars').default(
     () => NugetRegistryInfo.DefaultTokenEnvVars,
   ),
   /**
-   * A NuGet package registry's API endpoint URL -OR- the name assigned to it
-   * via your NuGet client.
-   * @default 'https://api.nuget.org/v3/index.json' (name: 'nuget.org')
-   * @see {@link NRIOptsBase.t.source}
-   */
+  A NuGet package registry's API endpoint URL -OR- the name assigned to it
+  via your NuGet client.
+  @default 'https://api.nuget.org/v3/index.json' (name: 'nuget.org')
+  @see {@link NRIOptsBase.t.source}
+  */
   source: NRIOptsBase.get('source').default(() => defaultNugetSource),
 });
 
 // #region token censorship
 
 /**
- * Replace all occurrences of {@link token} in the {@link string} with '***'.
- * @param string The string in which a {@link token} may be found.
- * @param token The NuGet API token you definitely don't want to leak!
- * @returns A modified copy of the {@link string} with all occurrences of the
- * {@link token} replaced with '***'.
- */
+Replace all occurrences of {@link token} in the {@link string} with '***'.
+@param string The string in which a {@link token} may be found.
+@param token The NuGet API token you definitely don't want to leak!
+@returns A modified copy of the {@link string} with all occurrences of the
+{@link token} replaced with '***'.
+*/
 function _censorToken(string: string, token: string): string {
   return string.replaceAll(token, '***');
 }
 
 /**
- * Censor all occurrences of an API {@link token} in an {@link error}.
- * @param error A {@link ExecException} in which the NuGet API {@link token} may be found.
- * @param token The value of the NuGet API token
- * @returns A modified copy of the provided exception sans any occurrence of the
- * NuGet API token.
- */
+Censor all occurrences of an API {@link token} in an {@link error}.
+@param error A {@link ExecException} in which the NuGet API {@link token} may be found.
+@param token The value of the NuGet API token
+@returns A modified copy of the provided exception sans any occurrence of the
+NuGet API token.
+*/
 function _censorTokenInError(error: ExecException, token: string): ExecException {
   const text = JSON.stringify({
     ...error,

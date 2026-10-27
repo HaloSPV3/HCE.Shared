@@ -4,21 +4,21 @@ import type { InstancePropertyDescriptorMap } from './InstancePropertyDescriptor
 import type { OwnPropertyDescriptorMap } from './OwnPropertyDescriptorMap.d.ts';
 
 /**
- * Get the property descriptors of the class or constructor similar to {@link Object.getOwnPropertyDescriptors}, but with more options--including recursion.
- * @template {InstanceOrStatic} _InstanceOrStatic 'Instance' or 'Static'. Determines the return type.
- * @param classDefinition A class or constructor, cast to {@link ClassLike}.
- * @param instanceOrStatic 'Instance' or 'Static'. Determines the return type.
- * @template {ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>} Class
- * The typeof {@link classDefinition}.
- * {@link WithProto}<{@link SuperClassLike}> is necessary for walking the
- * prototype chain for both Instance  and Static properties.
- * If unspecified, the return type may be incorrect.
- * @returns ({@link instanceOrStatic} === 'Instance') ? {@link InstancePropertyDescriptorMap<Class>}\
- * : ({@link instanceOrStatic} === 'Static') ? {@link OwnPropertyDescriptorMap<Class>}\
- * : never
- * @throws {TypeError}
- * @since 3.0.0
- */
+Get the property descriptors of the class or constructor similar to {@link Object.getOwnPropertyDescriptors}, but with more options--including recursion.
+@template {InstanceOrStatic} _InstanceOrStatic 'Instance' or 'Static'. Determines the return type.
+@param classDefinition A class or constructor, cast to {@link ClassLike}.
+@param instanceOrStatic 'Instance' or 'Static'. Determines the return type.
+@template {ClassLike<ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>>} Class
+The typeof {@link classDefinition}.
+{@link WithProto}<{@link SuperClassLike}> is necessary for walking the
+prototype chain for both Instance  and Static properties.
+If unspecified, the return type may be incorrect.
+@returns ({@link instanceOrStatic} === 'Instance') ? {@link InstancePropertyDescriptorMap<Class>}\
+: ({@link instanceOrStatic} === 'Static') ? {@link OwnPropertyDescriptorMap<Class>}\
+: never
+@throws {TypeError}
+@since 3.0.0
+*/
 export function getOwnPropertyDescriptors<
   Class extends ClassLike<ConstructorConstraint<Class> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
   _InstanceOrStatic extends InstanceOrStatic,

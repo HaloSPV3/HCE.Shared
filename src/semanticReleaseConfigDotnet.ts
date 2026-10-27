@@ -1,20 +1,20 @@
 /**
- * # Semantic-Release Config Factory (dotnet)
- * A functional Semantic-Release configuration for dotnet projects
- *
- * extends {@link baseConfig }
- *
- * <-- TABLE OF CONTENTS -->
- *
- * EASY: {@link getConfig}
- * Just provide the paths of the project file(s) and keep your API tokens ready.
- * ADVANCED: {@link SemanticReleaseConfigDotnet}
- * Allows for a hands-on customization if {@link getConfig} doesn't meet your needs.
- * Use a copy of {@link getConfig} as the starting point of a new function and make changes from there.
- *   - {@link SemanticReleaseConfigDotnet#splicePlugin splicePlugin (insert/edit plugins)}
- *   - {@link SemanticReleaseConfigDotnet#setupDotnetCommands setupDotnetCommands}
- *   - {@link SemanticReleaseConfigDotnet#getTokenTestingCommands getTokenTestingCommands}
- */
+# Semantic-Release Config Factory (dotnet)
+A functional Semantic-Release configuration for dotnet projects
+
+extends {@link baseConfig }
+
+<-- TABLE OF CONTENTS -->
+
+EASY: {@link getConfig}
+Just provide the paths of the project file(s) and keep your API tokens ready.
+ADVANCED: {@link SemanticReleaseConfigDotnet}
+Allows for a hands-on customization if {@link getConfig} doesn't meet your needs.
+Use a copy of {@link getConfig} as the starting point of a new function and make changes from there.
+  - {@link SemanticReleaseConfigDotnet#splicePlugin splicePlugin (insert/edit plugins)}
+  - {@link SemanticReleaseConfigDotnet#setupDotnetCommands setupDotnetCommands}
+  - {@link SemanticReleaseConfigDotnet#getTokenTestingCommands getTokenTestingCommands}
+*/
 
 import { inspect } from 'node:util';
 import type { Options } from 'semantic-release';
@@ -42,32 +42,32 @@ export class SemanticReleaseConfigDotnet {
   private readonly _evaluatedProjects: MSBuildProject[];
 
   /**
-   * Creates an instance of SemanticReleaseConfigDotnet.
-   * Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet` publish, pack, and push.
-   *
-   * Note: To sign packages, create a Target in the corresponding project(s) e.g.
-   * ```xml
-   * <Target Name="SignNupkgs" AfterTargets="Pack">
-   *   <Exec Command="dotnet nuget sign $(PackageOutputPath) [remaining args]" ConsoleToMsBuild="true" />
-   * </Target>
-   * ```
-   * Alternatively, splice your signing commands into the publishCmd string,
-   * inserting them before `dotnet nuget push`.
-   * If you sign different signatures depending on the NuGet registry,
-   * splice your signing command (with "overwrite signature" enabled, if
-   * desired) before the corresponding registry's `dotnet nuget push` command.
-   * @param projectsToPublish An array of dotnet projects' relative paths. If
-   * empty or unspecified, tries getting projects' semi-colon-separated relative
-   * paths from the `PROJECTS_TO_PUBLISH` environment variable. If configured as
-   * recommended, the projects' publish outputs will be zipped to '$PWD/publish'
-   * for use in the `publish` semantic-release step (typically, GitHub release).
-   * @param projectsToPackAndPush An array of dotnet projects' relative paths.
-   * If `null`, `undefined`, or `[]`; tries getting projects' semi-colon-separated
-   * relative paths from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
-   * If neither is defined, no packages will be packed and pushed.
-   * If configured as recommended, `dotnet pack` will output the nupkg/snupkg
-   * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
-   */
+  Creates an instance of SemanticReleaseConfigDotnet.
+  Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet` publish, pack, and push.
+
+  Note: To sign packages, create a Target in the corresponding project(s) e.g.
+  ```xml
+  <Target Name="SignNupkgs" AfterTargets="Pack">
+    <Exec Command="dotnet nuget sign $(PackageOutputPath) [remaining args]" ConsoleToMsBuild="true" />
+  </Target>
+  ```
+  Alternatively, splice your signing commands into the publishCmd string,
+  inserting them before `dotnet nuget push`.
+  If you sign different signatures depending on the NuGet registry,
+  splice your signing command (with "overwrite signature" enabled, if
+  desired) before the corresponding registry's `dotnet nuget push` command.
+  @param projectsToPublish An array of dotnet projects' relative paths. If
+  empty or unspecified, tries getting projects' semi-colon-separated relative
+  paths from the `PROJECTS_TO_PUBLISH` environment variable. If configured as
+  recommended, the projects' publish outputs will be zipped to '$PWD/publish'
+  for use in the `publish` semantic-release step (typically, GitHub release).
+  @param projectsToPackAndPush An array of dotnet projects' relative paths.
+  If `null`, `undefined`, or `[]`; tries getting projects' semi-colon-separated
+  relative paths from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
+  If neither is defined, no packages will be packed and pushed.
+  If configured as recommended, `dotnet pack` will output the nupkg/snupkg
+  files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
+  */
   constructor(
     projectsToPublish: string[] | MSBuildProject[],
     projectsToPackAndPush?: string[] | NugetRegistryInfo[] | null,
@@ -133,14 +133,14 @@ export class SemanticReleaseConfigDotnet {
   }
 
   /**
-   * generate dotnet commands for \@semantic-release/exec, appending commands with ' && ' when necessary.
-   *
-   * Note: All strings in {@link this.ProjectsToPackAndPush} will be converted to basic {@link NugetRegistryInfo} instances with default values.
-   * If you need specific NRI settings or you need to push to GitLab-like or GitHub-like registries, instantiate them instead of passing their paths.
-   * @todo change to builder method? e.g. static async SetupDotnetCommands(this: SemanticReleaseConfigDotnet): Promise<SemanticReleaseConfigDotnet>
-   * @todo Add options param to allow users to enable pushing to GitLab, GitHub, NuGet.org with default settings -OR- with entirely custom settings.
-   * @see https://github.com/semantic-release/exec#usage
-   */
+  generate dotnet commands for \@semantic-release/exec, appending commands with ' && ' when necessary.
+
+  Note: All strings in {@link this.ProjectsToPackAndPush} will be converted to basic {@link NugetRegistryInfo} instances with default values.
+  If you need specific NRI settings or you need to push to GitLab-like or GitHub-like registries, instantiate them instead of passing their paths.
+  @todo change to builder method? e.g. static async SetupDotnetCommands(this: SemanticReleaseConfigDotnet): Promise<SemanticReleaseConfigDotnet>
+  @todo Add options param to allow users to enable pushing to GitLab, GitHub, NuGet.org with default settings -OR- with entirely custom settings.
+  @see https://github.com/semantic-release/exec#usage
+  */
   async setupDotnetCommands(): Promise<void> {
     let srExecIndex = this.options.plugins.findIndex(
       v => v[0] === '@semantic-release/exec',
@@ -256,13 +256,13 @@ Appending it to the end of the array...This may cause an unexpected order of ope
   }
 
   /**
-   * Insert a plugin into the plugins array.
-   * @param insertAfterPluginIDs Plugins which should appear BEFORE
-   * {@link insertPluginIDs}.
-   * @param insertPluginIDs The plugin(s) to insert into the plugins array.
-   * @param insertBeforePluginsIDs plugins which should appear AFTER the
-   * inserted plugin(s).
-   */
+  Insert a plugin into the plugins array.
+  @param insertAfterPluginIDs Plugins which should appear BEFORE
+  {@link insertPluginIDs}.
+  @param insertPluginIDs The plugin(s) to insert into the plugins array.
+  @param insertBeforePluginsIDs plugins which should appear AFTER the
+  inserted plugin(s).
+  */
   splicePlugin(
     insertAfterPluginIDs: string[],
     insertPluginIDs: string[],
@@ -370,32 +370,32 @@ Appending it to the end of the array...This may cause an unexpected order of ope
 }
 
 /**
- * Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet`
- * publish, pack, and nuget-push.
- * @param projectsToPublish
- * An array of dotnet projects' relative paths -OR- an array of
- * {@link MSBuildProject} instances.
- * - If `MSBuildProject[]`, the instances will be used as-is.
- * - If `[]`, tries getting projects' semi-colon-separated relative paths from
- *   the `PROJECTS_TO_PUBLISH` environment variable.
- * - If configured as recommended, the projects' publish outputs will be zipped
- *   to '$PWD/publish' for use in the `publish` semantic-release step e.g. for a
- *   GitHub release.
- * @param projectsToPackAndPush An array of dotnet projects' relative paths -OR-
- * an array of instances of {@link NugetRegistryInfo} and/or derived classes.
- * - If `NugetRegistryInfo[]`, no conversions or modifications will occur.
- * - If `string[]`, the project paths will be converted to
- * {@link NugetRegistryInfo} instances with default values. This may be undesired.
- * - If `[]`, `dotnet pack` and `dotnet nuget push` commands will not be configured.
- * - If `undefined`, tries getting projects' semi-colon-separated relative paths
- * from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
- * With the recommended configuration, `dotnet pack` will write the nupkg/snupkg
- * files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
- * @returns a semantic-release Options object, based on
- * `@halospv3/hce.shared-config` (our base config), with the
- * `@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and
- * `push` the specified projects.
- */
+Configures {@link baseConfig} with `@semantic-release/exec` to `dotnet`
+publish, pack, and nuget-push.
+@param projectsToPublish
+An array of dotnet projects' relative paths -OR- an array of
+{@link MSBuildProject} instances.
+- If `MSBuildProject[]`, the instances will be used as-is.
+- If `[]`, tries getting projects' semi-colon-separated relative paths from
+  the `PROJECTS_TO_PUBLISH` environment variable.
+- If configured as recommended, the projects' publish outputs will be zipped
+  to '$PWD/publish' for use in the `publish` semantic-release step e.g. for a
+  GitHub release.
+@param projectsToPackAndPush An array of dotnet projects' relative paths -OR-
+an array of instances of {@link NugetRegistryInfo} and/or derived classes.
+- If `NugetRegistryInfo[]`, no conversions or modifications will occur.
+- If `string[]`, the project paths will be converted to
+{@link NugetRegistryInfo} instances with default values. This may be undesired.
+- If `[]`, `dotnet pack` and `dotnet nuget push` commands will not be configured.
+- If `undefined`, tries getting projects' semi-colon-separated relative paths
+from the `PROJECTS_TO_PACK_AND_PUSH` environment variable.
+With the recommended configuration, `dotnet pack` will write the nupkg/snupkg
+files to `$PWD/publish` where they will be globbed by `dotnet nuget push`.
+@returns a semantic-release Options object, based on
+`@halospv3/hce.shared-config` (our base config), with the
+`@semantic-release/exec` plugin configured to `dotnet publish`, `pack`, and
+`push` the specified projects.
+*/
 export async function getConfig(
   projectsToPublish: string[] | MSBuildProject[],
   projectsToPackAndPush?: string[] | NugetRegistryInfo[],
@@ -454,6 +454,4 @@ export async function getConfig(
   return options;
 }
 
-/**
- * @module semanticReleaseConfigDotnet
- */
+/** @module semanticReleaseConfigDotnet */

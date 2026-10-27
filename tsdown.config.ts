@@ -3,7 +3,7 @@ import { defineConfig, type UserConfig } from 'tsdown';
 
 const _config: UserConfig = defineConfig({
   dts: {
-    build: true,
+    tsc: { build: true, incremental: true },
     sourcemap: true,
   },
   entry: {
@@ -18,7 +18,7 @@ const _config: UserConfig = defineConfig({
   // Leaks memory in Yarn Berry/PnP!
   // attw: { profile: 'esm-only' },
   checks: { circularDependency: true },
-  deps: { skipNodeModulesBundle: true },
+  deps: { neverBundle: true },
   exports: {
     all: true,
     // .d.ts files are not auto-exported. `ls src/**.d.ts` */

@@ -26,18 +26,18 @@ export function filterForGetters<
   descriptorMap: OwnPropertyDescriptorMap<Class>,
 ): Partial<OwnGetterDescriptorMap<Class, Class['__proto__']>>;
 /**
- * Iterates through the descriptors object, checking for property descriptors whose `get` is a function.
- * Returns an {@link OwnGetterDescriptorMap} of the getters.
- * If you want only own, non-inherited getters, you must filter sanitize the
- * type the `descriptors` parameter yourself e.g. `Omit<Class, keyof
- * SuperClass>`.
- * @param descriptorMap An object like the return value of Object.getOwnPropertyDescriptors
- * @template Class Any ClassLike type
- * @template T Any `object`-like type.
- * @template [__proto__=null] If {@link Class} is not {@link ClassLike}, the `__proto__` of {@link T}.
- * @returns An {@link OwnGetterDescriptorMap}.
- * @since 3.0.0
- */
+Iterates through the descriptors object, checking for property descriptors whose `get` is a function.
+Returns an {@link OwnGetterDescriptorMap} of the getters.
+If you want only own, non-inherited getters, you must filter sanitize the
+type the `descriptors` parameter yourself e.g. `Omit<Class, keyof
+SuperClass>`.
+@param descriptorMap An object like the return value of Object.getOwnPropertyDescriptors
+@template Class Any ClassLike type
+@template T Any `object`-like type.
+@template [__proto__=null] If {@link Class} is not {@link ClassLike}, the `__proto__` of {@link T}.
+@returns An {@link OwnGetterDescriptorMap}.
+@since 3.0.0
+*/
 export function filterForGetters<
   T extends object,
   __prototype__ extends object | null = null,

@@ -31,7 +31,7 @@ await describe('InstanceOf NugetRegistryInfo', async () => {
 
   await it('canPushPackagesToSource', { skip: 'See ./DotnetNugetPush.test.ts' });
 
-  /** NuGet Client credential failover */
+  // NuGet Client credential failover
   await it('Continues when API key unavailable', () => {
     const nri = new NRI({
       project: DeterministicNupkgCsproj,

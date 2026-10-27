@@ -206,8 +206,8 @@ export default commitlintConfig;
 Then...
 
 ```sh
-npx husky
-npx husky add .husky/commit-msg  'npx --no -- commitlint --edit ${1}'
+yarn dlx husky
+yarn dlx husky add .husky/commit-msg  'yarn dlx -- commitlint --edit ${1}'
 ```
 
 ### 4. (dotnet) Add/Edit Directory.Build.props

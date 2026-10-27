@@ -29,10 +29,10 @@ await describe('env', { concurrency: true }, async () => {
 });
 
 /**
- * Determines if the {@link object} satisfies the {@link NodeJS.ProcessEnv} type.
- * @param object any object
- * @returns `true` if the {@link object} satisfies the {@link NodeJS.ProcessEnv} type. Else, `false`.
- */
+Determines if the {@link object} satisfies the {@link NodeJS.ProcessEnv} type.
+@param object any object
+@returns `true` if the {@link object} satisfies the {@link NodeJS.ProcessEnv} type. Else, `false`.
+*/
 function isProcessEnvironment(object: object): object is NodeJS.ProcessEnv {
   return (
     Object.keys(object).every(v => typeof v === 'string')

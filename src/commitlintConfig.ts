@@ -2,6 +2,7 @@ import type { RuleConfigSeverity, UserConfig } from '@commitlint/types';
 
 // explicit type annotations for isolatedDeclarations. Allows for faster processing.
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-assignment
 const disabled = 0 as RuleConfigSeverity.Disabled;
 const commitlintConfig: UserConfig & {
   extends: UserConfig['extends'] | ['@commitlint/config-conventional'];

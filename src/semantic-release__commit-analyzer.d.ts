@@ -7,15 +7,13 @@ declare module '@semantic-release/commit-analyzer' {
       breaking?: boolean;
       revert?: boolean;
       /**
-       * @default 'patch' if {@link revert} is `true`
-       * @see {@link https://github.com/semantic-release/commit-analyzer/blob/master/lib/load-release-rules.js load-release-rules.js}, {@link https://github.com/semantic-release/commit-analyzer/blob/a3c26636fb78dc2e441606c1e746bc07751a2c87/lib/default-release-types.js#L4 }
-       */
+      @default 'patch' if {@link revert} is `true`
+      @see {@link https://github.com/semantic-release/commit-analyzer/blob/master/lib/load-release-rules.js load-release-rules.js}, {@link https://github.com/semantic-release/commit-analyzer/blob/a3c26636fb78dc2e441606c1e746bc07751a2c87/lib/default-release-types.js#L4 }
+      */
       release: 'major' | 'premajor' | 'minor' | 'preminor' | 'patch' | 'prepatch' | 'prerelease' | false | null;
     }
 
-    /**
-     * @see {@linkplain https://github.com/conventional-changelog/conventional-changelog/blob/61573ecba6aea718b96365c96993d4fa7d53c6fd/packages/conventional-changelog-angular/src/parser.js#L3-L11 ParserOpts_Angular},
-     */
+    /** @see {@linkplain https://github.com/conventional-changelog/conventional-changelog/blob/61573ecba6aea718b96365c96993d4fa7d53c6fd/packages/conventional-changelog-angular/src/parser.js#L3-L11 ParserOpts_Angular} */
     interface Angular extends _Base {
       type?: 'build' | 'ci' | 'docs' | 'feat' | 'fix' | 'perf' | 'refactor' | 'style' | 'test';
       scope?: string;
@@ -23,53 +21,49 @@ declare module '@semantic-release/commit-analyzer' {
     }
 
     /**
-     * @see {@linkplain https://github.com/conventional-changelog/conventional-changelog/blob/61573ecba6aea718b96365c96993d4fa7d53c6fd/packages/conventional-changelog-atom/src/parser.js#L3-L4 ParserOpts_Atom}
-     * @example The defaults config includes...
-     *  [
-     *    ...
-     *    { emoji: ":racehorse:", release: "patch" },
-     *    { emoji: ":bug:", release: "patch" },
-     *    { emoji: ":penguin:", release: "patch" },
-     *    { emoji: ":apple:", release: "patch" },
-     *    { emoji: ":checkered_flag:", release: "patch" }
-     *    ...
-     *  ]
-     */
+    @see {@linkplain https://github.com/conventional-changelog/conventional-changelog/blob/61573ecba6aea718b96365c96993d4fa7d53c6fd/packages/conventional-changelog-atom/src/parser.js#L3-L4 ParserOpts_Atom}
+    @example The defaults config includes...
+     [
+       ...
+       { emoji: ":racehorse:", release: "patch" },
+       { emoji: ":bug:", release: "patch" },
+       { emoji: ":penguin:", release: "patch" },
+       { emoji: ":apple:", release: "patch" },
+       { emoji: ":checkered_flag:", release: "patch" }
+       ...
+     ]
+    */
     interface Atom extends _Base {
     /**
-     * Consider starting the commit message with an applicable emoji:
-     *  - 🎨 :art: when improving the format/structure of the code
-     *  - 🐎 :racehorse: when improving performance
-     *  - 🚱 :non-potable_water: when plugging memory leaks
-     *  - 📝 :memo: when writing docs
-     *  - 🐧 :penguin: when fixing something on Linux
-     *  - 🍎 :apple: when fixing something on Mac OS
-     *  - 🏁 :checkered_flag: when fixing something on Windows
-     *  - 🐛 :bug: when fixing a bug
-     *  - 🔥 :fire: when removing code or files
-     *  - 💚 :green_heart: when fixing the CI build
-     *  - ✅ :white_check_mark: when adding tests
-     *  - 🔒 :lock: when dealing with security
-     *  - ⬆️ :arrow_up: when upgrading dependencies
-     *  - ⬇️ :arrow_down: when downgrading dependencies
-     *  - 👕 :shirt: when removing linter warnings
-     */
+    Consider starting the commit message with an applicable emoji:
+     - 🎨 :art: when improving the format/structure of the code
+     - 🐎 :racehorse: when improving performance
+     - 🚱 :non-potable_water: when plugging memory leaks
+     - 📝 :memo: when writing docs
+     - 🐧 :penguin: when fixing something on Linux
+     - 🍎 :apple: when fixing something on Mac OS
+     - 🏁 :checkered_flag: when fixing something on Windows
+     - 🐛 :bug: when fixing a bug
+     - 🔥 :fire: when removing code or files
+     - 💚 :green_heart: when fixing the CI build
+     - ✅ :white_check_mark: when adding tests
+     - 🔒 :lock: when dealing with security
+     - ⬆️ :arrow_up: when upgrading dependencies
+     - ⬇️ :arrow_down: when downgrading dependencies
+     - 👕 :shirt: when removing linter warnings
+    */
       emoji: `:${string}:`;
       shortDesc?: string;
     }
 
-    /**
-     * @see {@link https://github.com/conventional-changelog/conventional-changelog/blob/61573ecba6aea718b96365c96993d4fa7d53c6fd/packages/conventional-changelog-codemirror/src/parser.js#L3-L7 ParserOpts_CodeMirror}
-     */
+    /** @see {@link https://github.com/conventional-changelog/conventional-changelog/blob/61573ecba6aea718b96365c96993d4fa7d53c6fd/packages/conventional-changelog-codemirror/src/parser.js#L3-L7 ParserOpts_CodeMirror} */
     interface CodeMirror extends _Base {
       language?: string;
       type?: string;
       message: string;
     }
 
-    /**
-     * @see {@link https://github.com/conventional-changelog/conventional-changelog/blob/61573ecba6aea718b96365c96993d4fa7d53c6fd/packages/conventional-changelog-conventionalcommits/src/parser.js#L3-L13 ParserOpts_ConventionalCommits}
-     */
+    /** @see {@link https://github.com/conventional-changelog/conventional-changelog/blob/61573ecba6aea718b96365c96993d4fa7d53c6fd/packages/conventional-changelog-conventionalcommits/src/parser.js#L3-L13 ParserOpts_ConventionalCommits} */
     interface ConventionalCommits extends Angular {
       type?: 'build' | 'chore' | 'ci' | 'docs' | 'feat' | 'feature' | 'fix' | 'perf' | 'refactor' | 'revert' | 'style' | 'test';
     }
@@ -77,9 +71,9 @@ declare module '@semantic-release/commit-analyzer' {
     namespace Ember_Subtypes {
       interface Base extends _Base {
       /**
-       * In general, almost all commits should fall into one of these categories.
-       * In the cases where they don't, commit without a tag.
-       */
+      In general, almost all commits should fall into one of these categories.
+      In the cases where they don't, commit without a tag.
+      */
         tag?:
           | 'BUGFIX'
           | 'CLEANUP'
@@ -87,15 +81,15 @@ declare module '@semantic-release/commit-analyzer' {
           | 'FEATURE'
           | 'SECURITY';
         /**
-         * BUGFIX: 'beta' | 'release'
-         * CLEANUP: 'beta'
-         * DOCS: 'canary' | 'beta' | 'release'
-         *  Default: 'canary'
-         *  The most stable release the change applies to.
-         * FEATURE: the flag of the feature
-         * SECURITY: 'cve'
-         * @example [BUGFIX beta], [BUGFIX release], [CLEANUP beta], [DOC canary], [DOC beta], [DOC release], [FEATURE <name>], [SECURITY cve]
-         */
+        BUGFIX: 'beta' | 'release'
+        CLEANUP: 'beta'
+        DOCS: 'canary' | 'beta' | 'release'
+         Default: 'canary'
+         The most stable release the change applies to.
+        FEATURE: the flag of the feature
+        SECURITY: 'cve'
+        @example [BUGFIX beta], [BUGFIX release], [CLEANUP beta], [DOC canary], [DOC beta], [DOC release], [FEATURE <name>], [SECURITY cve]
+        */
         taggedAs?: string;
         /** All text after '[$tag $taggedAs]' in the commit message */
         message?: string;
@@ -140,15 +134,15 @@ declare module '@semantic-release/commit-analyzer' {
     /** Legacy; ESLint uses Conventional Commits. Source: https://eslint.org/docs/latest/contribute/pull-requests#step2 */
     interface ESLint extends _Base {
     /**
-     * - Breaking - for a backwards-incompatible enhancement or feature.
-     * - Build - changes to build process only.
-     * - Chore - for refactoring, adding tests, etc. (anything that isn't user-facing).
-     * - Docs - changes to documentation only.
-     * - Fix - for a bug fix.
-     * - New - implemented a new feature.
-     * - Update - either for a backwards-compatible enhancement or for a rule change that adds reported problems.
-     * - Upgrade - for a dependency upgrade.
-     */
+    - Breaking - for a backwards-incompatible enhancement or feature.
+    - Build - changes to build process only.
+    - Chore - for refactoring, adding tests, etc. (anything that isn't user-facing).
+    - Docs - changes to documentation only.
+    - Fix - for a bug fix.
+    - New - implemented a new feature.
+    - Update - either for a backwards-compatible enhancement or for a rule change that adds reported problems.
+    - Upgrade - for a dependency upgrade.
+    */
       tag: 'Breaking' | 'Build' | 'Chore' | 'Docs' | 'Fix' | 'New' | 'Update' | 'Upgrade';
       message?: string;
     }
@@ -186,14 +180,14 @@ declare module '@semantic-release/commit-analyzer' {
 
   // #region PresetConfig
   /**
-   * Substitutions:
-   * - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#host host}
-   * - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#owner owner}
-   * - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#repository repository}
-   * - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#hash hash}
-   * - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#previoustype previousTag}
-   * - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#currenttag currentTag}
-   */
+  Substitutions:
+  - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#host host}
+  - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#owner owner}
+  - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#repository repository}
+  - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#hash hash}
+  - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#previoustype previousTag}
+  - {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#currenttag currentTag}
+  */
   namespace PresetConfigs {
     interface _Base {
       /** @see https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#commiturlformat-string */
@@ -203,14 +197,14 @@ declare module '@semantic-release/commit-analyzer' {
       /** @see https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#header-string */
       header?: string;
       /**
-       * @see https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#issueprefixes-array-of-string
-       * @example ['TEST-']
-       */
+      @see https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#issueprefixes-array-of-string
+      @example ['TEST-']
+      */
       issuePrefixes?: string[];
       /**
-       * @see https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#issueurlformat-string
-       * @example 'https://myBugTracker.com/{{prefix}}{{id}}'
-       */
+      @see https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#issueurlformat-string
+      @example 'https://myBugTracker.com/{{prefix}}{{id}}'
+      */
       issueUrlFormat?: string;
       /** @see https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md#premajor-boolean */
       preMajor?: boolean;
@@ -223,9 +217,7 @@ declare module '@semantic-release/commit-analyzer' {
     }
 
     interface ConventionalCommits extends _Base {
-      /**
-       * Regular expression to match and exclude commits from the changelog. Commits matching this pattern will be ignored.
-       */
+      /** Regular expression to match and exclude commits from the changelog. Commits matching this pattern will be ignored. */
       ignoreCommits?: string | RegExp;
       /** Array of commit type objects defining which types to include in the changelog. Hidden types are excluded from the changelog but may still trigger version bumps. Default value accessible via `DEFAULT_COMMIT_TYPES` export. */
       types?: RuleObjects.ConventionalCommits;
@@ -234,9 +226,9 @@ declare module '@semantic-release/commit-analyzer' {
       /** String or array of scope names to filter commits. Only commits with matching scopes will be included. When `scopeOnly` is `false` (default), commits without any scope are also included. */
       scope?: string | string[];
       /**
-       * When `true` and `scope` is specified, excludes commits that have no scope. When `false` (default), includes both scoped and unscoped commits when filtering by scope.
-       * @default false
-       */
+      When `true` and `scope` is specified, excludes commits that have no scope. When `false` (default), includes both scoped and unscoped commits when filtering by scope.
+      @default false
+      */
       scopeOnly?: boolean;
     }
   }
@@ -246,6 +238,7 @@ declare module '@semantic-release/commit-analyzer' {
       | PresetConfigs.ConventionalCommits;
   // #endregion PresetConfig
 
+  // eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type
   type AnyRecord = Record<keyof unknown, unknown>;
 
   export interface CommitAnalyzerConfig {
@@ -253,32 +246,32 @@ declare module '@semantic-release/commit-analyzer' {
     config?: string;
     parserOpts?: AnyRecord;
     /**
-     * Can be a string only if the string is a path to a modules whose default export provides {@link RuleObject}[].
-     * See https://github.com/semantic-release/commit-analyzer?tab=readme-ov-file#external-package--file
-     */
+    Can be a string only if the string is a path to a modules whose default export provides {@link RuleObject}[].
+    See https://github.com/semantic-release/commit-analyzer?tab=readme-ov-file#external-package--file
+    */
     releaseRules?: string | RuleObject[];
     /**
-     * Additional configuration passed to the {@linkplain https://github.com/conventional-changelog/conventional-changelog conventional-changelog} preset.
-     * Used for example with {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md conventional-changelog-conventionalcommits}.
-     */
+    Additional configuration passed to the {@linkplain https://github.com/conventional-changelog/conventional-changelog conventional-changelog} preset.
+    Used for example with {@linkplain https://github.com/conventional-changelog/conventional-changelog-config-spec/blob/master/versions/2.2.0/README.md conventional-changelog-conventionalcommits}.
+    */
     presetConfig?: AnyRecord;
   }
 
   export type Options = CommitAnalyzerConfig;
 
   /**
-   * Determine the type of release to create based on a list of commits.
-   * @param pluginConfig The plugin configuration.
-   * @param pluginConfig.preset conventional-changelog preset ('angular', 'atom', 'codemirror', 'ember', 'eslint', 'express', 'jquery', 'jscs', 'jshint')
-   * @param pluginConfig.config Require-able npm package with a custom conventional-changelog preset
-   * @param pluginConfig.releaseRules A `String` to load an external module or an `Array` of rules.
-   * @param pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
-   * @param context The semantic-release context.
-   * @param context.commits The commits to analyze.
-   * @param context.cwd The current working directory.
-   * @returns the type of release to create based on the list of commits or `null` if no release has to be done.
-   * @see 'file://./../node_modules/@semantic-release/commit-analyzer/index.js'
-   */
+  Determine the type of release to create based on a list of commits.
+  @param pluginConfig The plugin configuration.
+  @param pluginConfig.preset conventional-changelog preset ('angular', 'atom', 'codemirror', 'ember', 'eslint', 'express', 'jquery', 'jscs', 'jshint')
+  @param pluginConfig.config Require-able npm package with a custom conventional-changelog preset
+  @param pluginConfig.releaseRules A `String` to load an external module or an `Array` of rules.
+  @param pluginConfig.parserOpts Additional `conventional-changelog-parser` options that will overwrite ones loaded by `preset` or `config`.
+  @param context The semantic-release context.
+  @param context.commits The commits to analyze.
+  @param context.cwd The current working directory.
+  @returns the type of release to create based on the list of commits or `null` if no release has to be done.
+  @see 'file://./../node_modules/@semantic-release/commit-analyzer/index.js'
+  */
   export function analyzeCommits(
     pluginConfig: {
       preset: string;
