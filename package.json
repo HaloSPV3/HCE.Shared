@@ -59,7 +59,6 @@
     "prepack": "pinst --disable && yarn clean && yarn build",
     "postinstall": "husky",
     "postpack": "attw --profile 'esm-only' -P ./package.tgz && pinst --enable",
-    "sdks": "yarn dlx @yarnpkg/sdks@2",
     "semantic-release": "yarn pack && semantic-release",
     "test:only": "node --trace-deprecation --trace-warnings --test --experimental-test-coverage --enable-source-maps --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.txt --test-reporter=junit --test-reporter-destination=junit.xml",
     "test": "yarn build && yarn test:cacheSampleProjects && yarn test:only",
@@ -111,6 +110,7 @@
     "@types/node": "^24.19.2",
     "@types/tmp": "^0.2.6",
     "@typescript-eslint/utils": "^8.72.1",
+    "@yarnpkg/sdks": "^3.3.1",
     "conventional-changelog-conventionalcommits": "^10.4.1",
     "conventional-changelog-preset-loader": "^6.0.1",
     "eslint": "^10.13.0",
@@ -187,7 +187,8 @@
   "types": "./mjs/index.d.mts",
   "packageManager": "yarn@4.18.1+sha512.b2e1e7524f654f2749d32b4ebcb4622473cb5bcbc485df2007e12a154e50162a4d795526768bc5f5b8f81717bfd79deb2472813d86fb5ae2eb551fa9c872b08f",
   "resolutions": {
-    "import-from-esm@npm:^2.0.0": "patch:import-from-esm@npm%3A2.0.0#~/.yarn/patches/import-from-esm-npm-2.0.0-8866147795.patch"
+    "import-from-esm@npm:^2.0.0": "patch:import-from-esm@npm%3A2.0.0#~/.yarn/patches/import-from-esm-npm-2.0.0-8866147795.patch",
+    "@yarnpkg/core@npm:^4.9.1": "npm:4.9.1"
   },
   "allowScripts": {
     "@bintoss/semantic-release-npm-multiple": false,
