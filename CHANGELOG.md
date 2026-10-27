@@ -366,12 +366,6 @@
 
 * export .d.ts files, again ([37b11cb](https://github.com/HaloSPV3/HCE.Shared/commit/37b11cb3cf25a50dc4aae487c9a2a9f2c8f22b78))
 
-# Changelog
-
-All notable changes to this project will be documented in this file. See
-[commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version)
-for commit guidelines.
-
 ## [3.4.7](https://github.com/HaloSPV3/HCE.Shared/compare/v3.4.6...v3.4.7) (2026-03-26)
 
 ### Bug Fixes
