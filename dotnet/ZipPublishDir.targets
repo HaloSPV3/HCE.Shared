@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <Target Name="ZipPublishDir" AfterTargets="Publish"
-          Outputs="$(DestinationFile)">
+    Outputs="$(DestinationFile)">
     <PropertyGroup>
       <!-- inputs
           - RepoRoot
@@ -49,13 +49,13 @@
       <!-- todo: look into .NET 8 SDK's Artifacts feature -->
     </PropertyGroup>
 
-    <MakeDir Condition="!Exists('$(RepoRootPublishDir)')" Directories="$(RepoRootPublishDir)"/>
+    <MakeDir Condition="!Exists('$(RepoRootPublishDir)')" Directories="$(RepoRootPublishDir)" />
     <ZipDirectory
       SourceDirectory="$(PublishDir)"
       DestinationFile="$(DestinationFile)"
       Overwrite="true" />
 
-    <Message Text="Publish assets zipped to '$(DestinationFile)'." Importance="high"/>
+    <Message Text="Publish assets zipped to '$(DestinationFile)'." Importance="high" />
   </Target>
 
   <!-- placeholder values for HCE.Shared ONLY -->
