@@ -1,3 +1,9 @@
+## [3.14.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.13.1...v3.14.0-develop.1) (2026-10-28)
+
+### Features
+
+* **dotnet.ZPD:** add `ZPDJoinArgsSeparator` for customizing the filename's arg separator ([dee5073](https://github.com/HaloSPV3/HCE.Shared/commit/dee5073acd74c210a7d2a082738952d4471f778b))
+
 ## [3.13.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.13.0...v3.13.1) (2026-10-27)
 
 ### Bug Fixes

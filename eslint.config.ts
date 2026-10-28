@@ -57,7 +57,7 @@ const config: Config[] = defineConfig(
       '@stylistic/indent': 'off',
     },
   },
-  { ignores: ['.yarn/sdks/**', '.pnp.cjs', '.pnp.loader.mjs'] },
+  { ignores: ['.yarn/sdks/**', '.yarn/plugins/**', '.pnp.cjs', '.pnp.loader.mjs'] },
   {
     files: ['**/package.json'],
     languageOptions: {

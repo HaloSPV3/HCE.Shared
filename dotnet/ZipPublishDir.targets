@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <Target Name="ZipPublishDir" AfterTargets="Publish"
-          Outputs="$(DestinationFile)">
+    Outputs="$(DestinationFile)">
     <PropertyGroup>
       <!-- inputs
           - RepoRoot
@@ -21,22 +21,26 @@
           - AssemblyName
           - Version
           - VariantArgs (default: Configuration;TargetFramework;RuntimeIdentifier)
+          - ZPDJoinArgsSeparator (default: " "; the string used to join args in the filename. Set to "_" so spaces are not removed from the filename on GitHub releases.)
           - Configuration
           - TargetFramework
           - RuntimeIdentifier
           -->
       <AppendVariantArgs Condition="'$(AppendVariantArgs)' == ''">true</AppendVariantArgs>
       <_appendVarArgs>$(AppendVariantArgs)</_appendVarArgs>
+      <ZPDJoinArgsSeparator>$(ZPDJoinArgsSeparator)</ZPDJoinArgsSeparator>
+      <ZPDJoinArgsSeparator Condition="'$(ZPDJoinArgsSeparator)' == ''"> </ZPDJoinArgsSeparator>
+      <_joinSep>$(ZPDJoinArgsSeparator)</_joinSep>
       <!-- Only add Configuration when Debug -->
       <_dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</_dbgCfg>
       <!-- "net6.0 win7-x86"
            "Debug net6.0 win7-x86" -->
-      <_spaceArgs Condition="'$(VariantArgs)' != ''">$(VariantArgs.Replace(";"," ").Trim())</_spaceArgs>
-      <_spaceArgs Condition="'$(_spaceArgs)' == ''">$([System.String]::Join(' ',$(_dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</_spaceArgs>
+      <_joinedArgs Condition="'$(VariantArgs)' != ''">$(VariantArgs.Replace(";","$(_joinSep)").Trim())</_joinedArgs>
+      <_joinedArgs Condition="'$(_joinedArgs)' == ''">$([System.String]::Join("$(_joinSep)",$(_dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</_joinedArgs>
       <!-- " (Debug net6.0 win7-x86)"
            " (net6.0 win7-x86)"
            "" -->
-      <_enclosedVArgs Condition="$(_appendVarArgs) And '$(_spaceArgs)' != ''"> ($(_spaceArgs))</_enclosedVArgs>
+      <_enclosedVArgs Condition="$(_appendVarArgs) And '$(_joinedArgs)' != ''">$(_joinSep)($(_joinedArgs))</_enclosedVArgs>
       <!-- " 1.2.3-preview.4"
            "" -->
       <_spaceVersion Condition="'$(Version)' != ''"> $(Version)</_spaceVersion>
@@ -45,13 +49,13 @@
       <!-- todo: look into .NET 8 SDK's Artifacts feature -->
     </PropertyGroup>
 
-    <MakeDir Condition="!Exists('$(RepoRootPublishDir)')" Directories="$(RepoRootPublishDir)"/>
+    <MakeDir Condition="!Exists('$(RepoRootPublishDir)')" Directories="$(RepoRootPublishDir)" />
     <ZipDirectory
       SourceDirectory="$(PublishDir)"
       DestinationFile="$(DestinationFile)"
       Overwrite="true" />
 
-    <Message Text="Publish assets zipped to '$(DestinationFile)'." Importance="high"/>
+    <Message Text="Publish assets zipped to '$(DestinationFile)'." Importance="high" />
   </Target>
 
   <!-- placeholder values for HCE.Shared ONLY -->
@@ -68,10 +72,10 @@
     <_appendVarArgs>$(ZipPublishDir_AppendVariantArgs)</_appendVarArgs>
     <_dbgCfg Condition="'$(Configuration)' == 'Debug'">$(Configuration)</_dbgCfg>
     <!-- "net6.0 win7-x86" -->
-    <_spaceArgs Condition="'$(VariantArgs)'!=''">$(VariantArgs.Replace(";"," ").Trim())</_spaceArgs>
-    <_spaceArgs Condition="'$(_spaceArgs)'==''">$([System.String]::Join(' ',$(_dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</_spaceArgs>
+    <_joinedArgs Condition="'$(VariantArgs)'!=''">$(VariantArgs.Replace(";"," ").Trim())</_joinedArgs>
+    <_joinedArgs Condition="'$(_joinedArgs)'==''">$([System.String]::Join(' ',$(_dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</_joinedArgs>
     <!-- " (net6.0 win7-x86)" -->
-    <_enclosedVArgs Condition="'$(_appendVarArgs)' == 'true' And '$(_spaceArgs)' != ''"> ($(_spaceArgs))</_enclosedVArgs>
+    <_enclosedVArgs Condition="'$(_appendVarArgs)' == 'true' And '$(_joinedArgs)' != ''"> ($(_joinedArgs))</_enclosedVArgs>
     <!-- "win7-x86 win7-x64" -->
     <_spaceSeparatedRIDs Condition="$(RuntimeIdentifiers) != ''">$(RuntimeIdentifiers.ToString().Replace(";"," ").Trim())</_spaceSeparatedRIDs>
     <!-- " (win7-x86 win7-x64)" -->

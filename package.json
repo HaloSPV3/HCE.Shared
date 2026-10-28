@@ -1,6 +1,6 @@
 {
   "name": "@halospv3/hce.shared-config",
-  "version": "3.13.1",
+  "version": "3.14.0-develop.1",
   "description": "Automate commit message quality, changelogs, and CI/CD releases. Its `main` entry point is a Semantic Release config. Functions and classes are exposed for customization. An ESLint config, a Commitlint config, and addl. resources for .NET projects are also provided.",
   "keywords": [
     "semantic-release",
@@ -56,9 +56,8 @@
     "lint": "eslint --cache --fix .",
     "lint:check": "eslint --cache .",
     "eslint-inspector": "eslint --inspect-config",
-    "prepack": "pinst --disable && yarn clean && yarn build",
-    "postinstall": "husky",
-    "postpack": "attw --profile 'esm-only' -P ./package.tgz && pinst --enable",
+    "prepack": "yarn clean && yarn build",
+    "postpack": "attw --profile 'esm-only' -P ./package.tgz",
     "semantic-release": "yarn pack && semantic-release",
     "test:only": "node --trace-deprecation --trace-warnings --test --experimental-test-coverage --enable-source-maps --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.txt --test-reporter=junit --test-reporter-destination=junit.xml",
     "test": "yarn build && yarn test:cacheSampleProjects && yarn test:only",
@@ -119,7 +118,6 @@
     "eslint-plugin-unicorn": "^79.0.0",
     "husky": "^9.1.7",
     "jiti": "^2.7.0",
-    "pinst": "^3.0.0",
     "publint": "^0.3.25",
     "tmp": "^0.2.7",
     "ts-essentials": "^10.2.1",
