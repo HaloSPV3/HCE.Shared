@@ -106,7 +106,7 @@
     "@sebbo2002/semantic-release-jsr": "^4.0.2",
     "@semantic-release/gitlab": "^13.3.3",
     "@types/debug": "^4.1.13",
-    "@types/node": "^24.19.2",
+    "@types/node": "^26.0.0",
     "@types/tmp": "^0.2.6",
     "@typescript-eslint/utils": "^8.72.1",
     "@yarnpkg/sdks": "^3.3.1",
