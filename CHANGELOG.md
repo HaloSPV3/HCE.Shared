@@ -1,3 +1,9 @@
+## [3.14.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.0...v3.14.1) (2026-10-29)
+
+### Bug Fixes
+
+* **dotnet.END:** ignore Exec error codes at line 134 ([ffe6f5d](https://github.com/HaloSPV3/HCE.Shared/commit/ffe6f5db905c7cc5a04f4f18d67e726e19a1ac05))
+
 ## [3.14.0](https://github.com/HaloSPV3/HCE.Shared/compare/v3.13.1...v3.14.0) (2026-10-29)
 
 ### Features
