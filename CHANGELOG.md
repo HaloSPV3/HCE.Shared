@@ -1,3 +1,9 @@
+## [3.14.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.1...v3.14.2) (2026-10-29)
+
+### Bug Fixes
+
+* **dotnet.ZPD:** replace more hardcoded spaces with `ZPDJoinArgsSeparator` ([6395a32](https://github.com/HaloSPV3/HCE.Shared/commit/6395a324c66e795d16440f301c998a4693bd09da))
+
 ## [3.14.2-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.1...v3.14.2-develop.1) (2026-10-29)
 
 ### Bug Fixes
