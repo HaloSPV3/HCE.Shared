@@ -43,7 +43,7 @@
       <_enclosedVArgs Condition="$(_appendVarArgs) And '$(_joinedArgs)' != ''">$(_joinSep)($(_joinedArgs))</_enclosedVArgs>
       <!-- " 1.2.3-preview.4"
            "" -->
-      <_spaceVersion Condition="'$(Version)' != ''"> $(Version)</_spaceVersion>
+      <_spaceVersion Condition="'$(Version)' != ''">$(_joinSep)$(Version)</_spaceVersion>
       <!-- "C:\Repos\HaloSPV3\HXE\publish\HXE 1.2.3-preview.4 (net6.0 win7-x86).zip" -->
       <DestinationFile>$([System.IO.Path]::Combine("$(RepoRootPublishDir)", "$(AssemblyName)$(_spaceVersion)$(_enclosedVArgs).zip"))</DestinationFile>
       <!-- todo: look into .NET 8 SDK's Artifacts feature -->
@@ -75,11 +75,11 @@
     <_joinedArgs Condition="'$(VariantArgs)'!=''">$(VariantArgs.Replace(";","$(_joinSep)").Trim())</_joinedArgs>
     <_joinedArgs Condition="'$(_joinedArgs)'==''">$([System.String]::Join("$(_joinSep)",$(_dbgCfg), $(TargetFramework), $(RuntimeIdentifier)).Trim())</_joinedArgs>
     <!-- " (net6.0 win7-x86)" -->
-    <_enclosedVArgs Condition="'$(_appendVarArgs)' == 'true' And '$(_joinedArgs)' != ''"> ($(_joinedArgs))</_enclosedVArgs>
+    <_enclosedVArgs Condition="'$(_appendVarArgs)' == 'true' And '$(_joinedArgs)' != ''">$(_joinSep)($(_joinedArgs))</_enclosedVArgs>
     <!-- "win7-x86 win7-x64" -->
     <_spaceSeparatedRIDs Condition="$(RuntimeIdentifiers) != ''">$(RuntimeIdentifiers.ToString().Replace(";","$(_joinSep)").Trim())</_spaceSeparatedRIDs>
     <!-- " (win7-x86 win7-x64)" -->
-    <enclosedRIDs Condition="'$(_appendVarArgs)' == 'true' And '$(_spaceSeparatedRIDs)' != ''"> ($(_spaceSeparatedRIDs))</enclosedRIDs>
+    <enclosedRIDs Condition="'$(_appendVarArgs)' == 'true' And '$(_spaceSeparatedRIDs)' != ''">$(_joinSep)($(_spaceSeparatedRIDs))</enclosedRIDs>
     <_spaceVersion Condition="'$(Version)' == ''">$(_joinSep)1.0.0</_spaceVersion>
   </PropertyGroup>
 </Project>
