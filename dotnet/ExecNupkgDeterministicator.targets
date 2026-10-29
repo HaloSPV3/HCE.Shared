@@ -134,6 +134,7 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       Command="$(_BaseCmd) $(_PackageSymbolsFullPath)"
       Condition=" '$(IncludeSymbols)' == 'true' "
       ConsoleToMsBuild="true"
+      ContinueOnError="true"
       IgnoreExitCode="true"
       StandardErrorImportance="Low"
       StandardOutputImportance="Low"
