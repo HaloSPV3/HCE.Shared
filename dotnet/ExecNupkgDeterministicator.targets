@@ -102,8 +102,8 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
     </Exec>
 
     <PropertyGroup>
-      <_ConsoleOutput>@(_ConsoleOutput, '&#xA;')</_ConsoleOutput>
-      <_IsAlreadyDeterministic>$(_ConsoleOutput.Contains('System.IO.Directory.Move'))</_IsAlreadyDeterministic>
+      <__ConsoleOutput>@(_ConsoleOutput, '&#xA;')</__ConsoleOutput>
+      <_IsAlreadyDeterministic>$(__ConsoleOutput.Contains('System.IO.Directory.Move'))</_IsAlreadyDeterministic>
     </PropertyGroup>
 
     <!-- Error 150 indicates that the .NET runtime required by this tool is unavailable (e.g. .NET runtime 6.0; Framework: 'Microsoft.NETCore.App', version '6.0.0' (x64)) -->
@@ -144,8 +144,8 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
     </Exec>
 
     <PropertyGroup>
-      <_ConsoleOutput>@(_ConsoleOutput, '&#xA;')</_ConsoleOutput>
-      <_IsAlreadyDeterministic>$(_ConsoleOutput.Contains('System.IO.Directory.Move'))</_IsAlreadyDeterministic>
+      <__ConsoleOutput>@(_ConsoleOutput, '&#xA;')</__ConsoleOutput>
+      <_IsAlreadyDeterministic>$(__ConsoleOutput.Contains('System.IO.Directory.Move'))</_IsAlreadyDeterministic>
     </PropertyGroup>
 
     <Error Condition=" '$(_ExitCode)' != '0' AND '$(_IsAlreadyDeterministic)' != 'true' "
