@@ -14,7 +14,6 @@ jobs:
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GL_TOKEN: ${{ secrets.GL_SEMANTICRELEASE }}
-      NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
   npm-release:
     runs-on: ubuntu-latest
     needs: npm-checks
@@ -50,11 +49,7 @@ jobs:
           cache: yarn
       - run: corepack enable # Assure it's enabled
 
-      - uses: actions/setup-dotnet@v6.0.0
-        with:
-          # required by Kuinox.NupkgDeterministicator
-          dotnet-version: 6.x
-          global-json-file: ./global.json
+      - uses: actions/setup-dotnet@v6.1.0
 
       # ensure GitLab is synced _before_ releasing
       - name: Sync to GitLab

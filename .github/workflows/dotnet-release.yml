@@ -6,12 +6,12 @@ name: .NET Release
 
 on:
   workflow_call:
-    # push:
-    #   branches: [ main, develop ]
-    #   paths-ignore:
-    #   - ".github/**/*.*"
-    #   - "**/*.md"
-    #   - "**/*.txt"
+  # push:
+  #   branches: [ main, develop ]
+  #   paths-ignore:
+  #   - ".github/**/*.*"
+  #   - "**/*.md"
+  #   - "**/*.txt"
 
 jobs:
   ci:
@@ -45,12 +45,18 @@ jobs:
           cache: yarn
       - run: corepack enable # Assure it's enabled
 
-      - uses: actions/setup-dotnet@v6.0.0
+      - uses: actions/setup-dotnet@v6.1.0
         with:
           cache: true
 
       - run: yarn install --immutable # Required for Semantic Release
       #- run: yarn audit signatures
+
+      # this workflow does not yet have trusted publishing authorized. This will fail.
+      - uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: nToss
 
       ################
       # RELEASE
@@ -60,5 +66,5 @@ jobs:
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+          NUGET_TOKEN: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
         run: yarn exec semantic-release

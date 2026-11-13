@@ -1,3 +1,13 @@
+## [3.14.4-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.3...v3.14.4-develop.1) (2026-11-13)
+
+### Bug Fixes
+
+* **deps:** upgrade `@semantic-release/github` to 12.0.11 ([7e994f8](https://github.com/HaloSPV3/HCE.Shared/commit/7e994f8adf0655031d979e6ab1ff91fbffe26432))
+* **deps:** upgrade `globals` to 17.14.0 ([5c8f2b6](https://github.com/HaloSPV3/HCE.Shared/commit/5c8f2b6e082a4bdbbd5b5ee68b5d818cd7ea3550))
+* **deps:** upgrade `sanitize-filename` to 1.6.5 ([86da021](https://github.com/HaloSPV3/HCE.Shared/commit/86da02162a1251209a80f1c646dc3087c9b9c768))
+* **deps:** upgrade `typescript-eslint` to 8.72.2 ([b7bc2d1](https://github.com/HaloSPV3/HCE.Shared/commit/b7bc2d1ff717fa43538d88d705273b9075c7321e))
+* **dotnet.END:** also recognize `System.IO.FileSystem.MoveDirectory` in stack trace as file-is-already-deterministic ([19dd73f](https://github.com/HaloSPV3/HCE.Shared/commit/19dd73f670acf9a9d2bd6556a9a913504f30d8c3))
+
 ## [3.14.3](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.2...v3.14.3) (2026-10-29)
 
 ### Bug Fixes

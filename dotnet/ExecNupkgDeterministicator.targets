@@ -101,19 +101,18 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       PropertyName="_ExitCode" />
     </Exec>
 
-    <CreateProperty Value="@(_ConsoleOutput, '
-')">
-      <Output TaskParameter="Value" PropertyName="_ConsoleOutput" />
-    </CreateProperty>
-    <CreateProperty Value="$(_ConsoleOutput.Contains('System.IO.Directory.Move'))">
-      <Output TaskParameter="Value" PropertyName="_IsAlreadyDeterministic" />
-    </CreateProperty>
+    <PropertyGroup>
+      <__ConsoleOutput>@(_ConsoleOutput, '&#xA;')</__ConsoleOutput>
+      <_IsAlreadyDeterministic>false</_IsAlreadyDeterministic>
+      <_IsAlreadyDeterministic Condition="'$(__ConsoleOutput.Contains(System.IO.Directory.Move))' == true
+        OR '$(__ConsoleOutput.Contains(System.IO.FileSystem.MoveDirectory))' == true">true</_IsAlreadyDeterministic>
+    </PropertyGroup>
 
     <!-- Error 150 indicates that the .NET runtime required by this tool is unavailable (e.g. .NET runtime 6.0; Framework: 'Microsoft.NETCore.App', version '6.0.0' (x64)) -->
     <!-- Error 135 indicates an unhandled exception. In the past, this was caused by an invalid path addressed by _PackageOutputPathIsFullyQualified. -->
     <Error Condition=" '$(_ExitCode)' != '0' AND '$(_IsAlreadyDeterministic)' != 'true' "
       Code="$(_ExitCode)"
-      Text="$(_ConsoleOutput)"
+      Text="$(__ConsoleOutput)"
     />
 
     <!-- if success and exit code 0... -->
@@ -146,17 +145,16 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
       ItemName="ExitCode" />
     </Exec>
 
-    <CreateProperty Value="@(_ConsoleOutput, '
-')">
-      <Output TaskParameter="Value" PropertyName="_ConsoleOutput" />
-    </CreateProperty>
-    <CreateProperty Value="$(_ConsoleOutput.Contains('System.IO.Directory.Move'))">
-      <Output TaskParameter="Value" PropertyName="_IsAlreadyDeterministic" />
-    </CreateProperty>
+    <PropertyGroup>
+      <__ConsoleOutput>@(_ConsoleOutput, '&#xA;')</__ConsoleOutput>
+      <_IsAlreadyDeterministic>false</_IsAlreadyDeterministic>
+      <_IsAlreadyDeterministic Condition="'$(__ConsoleOutput.Contains(System.IO.Directory.Move))' == true
+        OR '$(__ConsoleOutput.Contains(System.IO.FileSystem.MoveDirectory))' == true">true</_IsAlreadyDeterministic>
+    </PropertyGroup>
 
     <Error Condition=" '$(_ExitCode)' != '0' AND '$(_IsAlreadyDeterministic)' != 'true' "
       Code="$(_ExitCode)"
-      Text="$(_ConsoleOutput)"
+      Text="$(__ConsoleOutput)"
     />
 
     <!-- if success and exit code 0... -->
