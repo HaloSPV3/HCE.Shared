@@ -34,7 +34,7 @@ jobs:
       - run: yarn install --immutable
 
       - uses: actions/setup-dotnet@v6.1.0
-        with:
-          dotnet-version: '11.x'
+        #with: # not necessary wheen version set in global.json and dotnet tools manifest allows rollforward
+        #  dotnet-version: '11.x'
 
       - run: dotnet test

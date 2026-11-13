@@ -54,10 +54,6 @@ jobs:
       - run: corepack enable # Assure it's enabled
 
       - uses: actions/setup-dotnet@v6.1.0
-        with:
-          # required by Kuinox.NupkgDeterministicator
-          dotnet-version: 11.x
-          global-json-file: ./global.json
 
       - run: yarn install --immutable
       # Waiting for https://github.com/yarnpkg/berry/issues/6487

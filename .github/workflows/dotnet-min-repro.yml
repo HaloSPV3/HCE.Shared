@@ -28,10 +28,6 @@ jobs:
           path: /usr/share/dotnet
           key: usr-share-dotnet
       - uses: actions/setup-dotnet@v6.1.0
-        with:
-          global-json-file: ./global.json
-          # required by Kuinox.NupkgDeterministicator
-          dotnet-version: 11.0.x
       - uses: actions/cache/save@v6
         with:
           path: /usr/share/dotnet
