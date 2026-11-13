@@ -110,7 +110,7 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
     <!-- Error 135 indicates an unhandled exception. In the past, this was caused by an invalid path addressed by _PackageOutputPathIsFullyQualified. -->
     <Error Condition=" '$(_ExitCode)' != '0' AND '$(_IsAlreadyDeterministic)' != 'true' "
       Code="$(_ExitCode)"
-      Text="$(_ConsoleOutput)"
+      Text="$(__ConsoleOutput)"
     />
 
     <!-- if success and exit code 0... -->
@@ -150,7 +150,7 @@ dotnet tool install --create-manifest-if-needed Kuinox.NupkgDeterministicator
 
     <Error Condition=" '$(_ExitCode)' != '0' AND '$(_IsAlreadyDeterministic)' != 'true' "
       Code="$(_ExitCode)"
-      Text="$(_ConsoleOutput)"
+      Text="$(__ConsoleOutput)"
     />
 
     <!-- if success and exit code 0... -->
