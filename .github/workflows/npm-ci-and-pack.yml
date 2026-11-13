@@ -18,9 +18,9 @@ on:
         description: |
           A GitLab API token with permission to push packages to the
           repo IDed by CI_PROJECT_ID e.g. 70884695 for HaloSPV3/HCE.Shared.
-      NUGET_TOKEN:
-        description: A NugGet.org API token with permission to push to the unlisted
-          package https://www.nuget.org/packages/HCE.Shared.DeterministicNupkg.
+      # NUGET_TOKEN:
+      #   description: A NugGet.org API token with permission to push to the unlisted
+      #     package https://www.nuget.org/packages/HCE.Shared.DeterministicNupkg.
 
 jobs:
   check:
@@ -69,11 +69,16 @@ jobs:
           (echo "--- test:cacheSampleProjects (try 2/3) ---" && yarn test:cacheSampleProjects) || \
           (echo "--- test:cacheSampleProjects (try 3/3) ---" && yarn test:cacheSampleProjects)
 
+      - uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: nToss
+
       - run: yarn test:only
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GL_TOKEN: ${{ secrets.GL_TOKEN }}
-          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+          NUGET_TOKEN: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
       - name: Test Summary
         uses: test-summary/action@v2.6
         with:
