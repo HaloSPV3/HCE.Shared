@@ -112,7 +112,7 @@
     "@yarnpkg/sdks": "^3.3.1",
     "conventional-changelog-conventionalcommits": "^10.4.1",
     "conventional-changelog-preset-loader": "^6.0.1",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "eslint-plugin-jsdoc": "^65.4.5",
     "eslint-plugin-publint": "^0.5.2",
     "eslint-plugin-unicorn": "^79.0.0",
