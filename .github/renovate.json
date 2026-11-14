@@ -25,6 +25,11 @@
       "semanticCommitType": "build",
       "semanticCommitScope": "deps-dev",
       "automerge": true
+    },
+    {
+      "description": "Disallow @yarnpkg/core@4.9.2 because it's broken",
+      "matchPackageNames": [ "@yarnpkg/core" ],
+      "allowedVersions": ">4.9.2"
     }
   ]
 }
