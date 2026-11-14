@@ -1,3 +1,11 @@
+## [3.14.4-develop.2](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.4-develop.1...v3.14.4-develop.2) (2026-11-14)
+
+### Reverts
+
+* **deps:** downgrade node.js back to v24 for min-ver compatibility ([890e55d](https://github.com/HaloSPV3/HCE.Shared/commit/890e55dee68f946259187f7d572f793348ceb146))
+* **dotnet.NRI:** remove unnecessary `@typescript-eslint/only-throw-error` false-positives ([8314c64](https://github.com/HaloSPV3/HCE.Shared/commit/8314c6454e78a397830802095c1402caa9c0b059))
+* pin `@yarnpkg/core@npm:^4.9.1` to `npm:4.9.1`1; full revert ([d967170](https://github.com/HaloSPV3/HCE.Shared/commit/d967170ca0677b4a77d9954fff04bfdf22cf0861))
+
 ## [3.14.4-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.3...v3.14.4-develop.1) (2026-11-13)
 
 ### Bug Fixes
