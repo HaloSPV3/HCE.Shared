@@ -1,3 +1,9 @@
+## [3.14.5](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.4...v3.14.5) (2026-11-14)
+
+### Bug Fixes
+
+* change invalid TypeScript Reference "file" to Reference "path" ([0df7790](https://github.com/HaloSPV3/HCE.Shared/commit/0df7790a070b77efddb3f5eb83d772748105ef23))
+
 ## [3.14.4](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.3...v3.14.4) (2026-11-14)
 
 ### Bug Fixes
