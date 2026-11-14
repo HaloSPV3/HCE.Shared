@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="./semantic-release__git.d.ts">
 // @ts-types="./semantic-release__git.d.ts"
 import type { Options as GitOptions } from '@semantic-release/git';
