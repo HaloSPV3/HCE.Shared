@@ -6,7 +6,7 @@ import {
   GithubNugetRegistryInfo as GHNRI,
   GHNRIOpts as GHNRIOptions,
 } from '../../src/dotnet/GithubNugetRegistryInfo.ts';
-import { getEnvVarValue as getEnvironmentVariableValue } from '../../src/utils/env.ts';
+import { getEnvironmentVariableValue } from '../../src/utils/env.ts';
 
 /**
 If unset, sets env.GITHUB_REPOSITORY_OWNER to "HaloSPV3".

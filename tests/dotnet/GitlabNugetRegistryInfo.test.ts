@@ -2,7 +2,7 @@ import { deepStrictEqual, strictEqual } from 'node:assert/strict';
 import * as process from 'node:process';
 import { describe, it, test } from 'node:test';
 import { GitlabNugetRegistryInfo as GLNRI, GLNRIOpts as GLNRIOptions } from '../../src/dotnet/GitlabNugetRegistryInfo.ts';
-import { getEnvVarValue as getEnvironmentVariableValue } from '../../src/utils/env.ts';
+import { getEnvironmentVariableValue } from '../../src/utils/env.ts';
 
 await describe('GLNRI:undefinedEnv)', { concurrency: true }, async () => {
   await test('CI_API_V4_URL has the correct default value if the environment variable is undefined', () => {

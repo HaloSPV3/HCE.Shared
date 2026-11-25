@@ -46,7 +46,7 @@ If NOT found, return `undefined`
 empty, whitespace, or appears to have been converted from `null` or
 `undefined`.
 */
-export function getEnvVarValue(envVar: string, options?: GetOptions): string | undefined {
+export function getEnvironmentVariableValue(envVar: string, options?: GetOptions): string | undefined {
   options ??= { ignore: ['MISSING_KEY', 'MISSING_ENV_FILE'] };
   let value = env[envVar];
   const x = (get as Get)(envVar, options);

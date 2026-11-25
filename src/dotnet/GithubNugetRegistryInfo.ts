@@ -1,5 +1,5 @@
 import type { Type } from 'arktype';
-import { getEnvVarValue as getEnvironmentVariableValue } from '../utils/env.ts';
+import { getEnvironmentVariableValue } from '../utils/env.ts';
 import type { MSBuildProject, MSBuildEvaluationOutput } from './MSBuildProject.ts';
 import type { NugetProjectProperties } from './NugetProjectProperties.ts';
 import {

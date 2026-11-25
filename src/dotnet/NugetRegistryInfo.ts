@@ -18,7 +18,7 @@ import path, * as node_path from 'node:path';
 import { cwd, env } from 'node:process';
 import sanitizeFileName from 'sanitize-filename';
 import debug from '../debug.ts';
-import { getEnvVarValue as getEnvironmentVariableValue } from '../utils/env.ts';
+import { getEnvironmentVariableValue } from '../utils/env.ts';
 import { execAsync } from '../utils/execAsync.ts';
 import { isError } from '../utils/isError.ts';
 import { loopTryDotnetCommand, MSBuildEvaluationOutput, MSBuildProject } from './MSBuildProject.ts';

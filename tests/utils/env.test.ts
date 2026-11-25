@@ -1,11 +1,11 @@
 /* eslint-disable unicorn/name-replacements */
-import { getEnvironment, getEnvVarValue as getEnvironmentVariableValue } from '../../src/utils/env.ts';
+import { getEnvironment, getEnvironmentVariableValue } from '../../src/utils/env.ts';
 import { strictEqual } from 'node:assert/strict';
 import { env } from 'node:process';
 import { describe, it } from 'node:test';
 
 await describe('env', { concurrency: true }, async () => {
-  await describe('getEnvVarValue', async () => {
+  await describe('getEnvironmentVariableValue', async () => {
     await it('returns value of TEMP when told to do so', () => {
       strictEqual(getEnvironmentVariableValue('TEMP'), env['TEMP']);
     });

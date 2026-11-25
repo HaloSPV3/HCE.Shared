@@ -5,7 +5,7 @@ import { inspect } from 'node:util';
 import { GithubNugetRegistryInfo as GHNRI } from '../../src/dotnet/GithubNugetRegistryInfo.ts';
 import { GitlabNugetRegistryInfo as GLNRI } from '../../src/dotnet/GitlabNugetRegistryInfo.ts';
 import { NugetRegistryInfo as NRI } from '../../src/dotnet/NugetRegistryInfo.ts';
-import { getEnvVarValue as getEnvironmentVariableValue } from '../../src/utils/env.ts';
+import { getEnvironmentVariableValue } from '../../src/utils/env.ts';
 import { execAsync } from '../../src/utils/execAsync.ts';
 import { isError } from '../../src/utils/isError.ts';
 import { DeterministicNupkgCsproj as project } from './MSBuildProject.projects.ts';

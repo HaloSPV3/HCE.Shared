@@ -1,4 +1,4 @@
-import { getEnvVarValue as getEnvironmentVariableValue } from '../utils/env.ts';
+import { getEnvironmentVariableValue } from '../utils/env.ts';
 import { isError } from '../utils/isError.ts';
 import {
   NugetRegistryInfo,
