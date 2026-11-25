@@ -227,9 +227,9 @@ Appending it to the end of the array...This may cause an unexpected order of ope
       execOptions.verifyReleaseCmd = undefined;
     debug('[exec:verifyReleaseCmd] Done');
 
-    const prepareCommandAppendix = await configurePrepareCommand(
-      this._projectsToPublish,
-      this._projectsToPackAndPush,
+    const prepareCommandAppendix = await configurePrepareCommand({
+      projectsToPublish: this._projectsToPublish,
+      projectsToPackAndPush: this._projectsToPackAndPush },
     );
 
     // 'ZipPublishDir' zips each publish folder to ./publish/*.zip

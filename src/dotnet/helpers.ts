@@ -15,24 +15,25 @@ This will include a `dotnet publish` for each project's RID and TFM permutation,
 `dotnet pack` for each project with output paths separated by NuGet Source and PackageId,\
 and `dotnet nuget sign` for each nupkg output directory.
 @todo parse Solution files to publish all projects with default Publish parameters (as evaluated by MSBuild).
-@param projectsToPublish An array of relative or full file paths of `.csproj`
+@param options The unordered parameters of this function
+@param options.projectsToPublish An array of relative or full file paths of `.csproj`
 projects  -OR- an array of {@link MSBuildProject} objects.
 The project paths will be passed to `dotnet publish` commands.
-@param projectsToPackAndPush
+@param options.projectsToPackAndPush
  Relative and/or full file paths of projects to pass to `dotnet pack`. If
  string[], only the default NuGet Source will be used. If GitHub, GitLab,
  etc. are also desired, pass {@link NugetRegistryInfo}[]
-@param dotnetNugetSignOpts A {@link DotnetNugetSignOptions} object. The value
+@param options.dotnetNugetSignOpts A {@link DotnetNugetSignOptions} object. The value
 of the `--output` argument will be set to {@link ourDefaultPubDir} if `undefined`.
 @returns A single string of CLI commands joined by ' && '
 */
 // eslint-disable-next-line unicorn/name-replacements
-export async function configurePrepareCmd(
-  projectsToPublish: string[] | MSBuildProject[],
-  projectsToPackAndPush?: string[] | NugetRegistryInfo[],
-  // eslint-disable-next-line unicorn/name-replacements
-  dotnetNugetSignOpts?: typeof DotnetNugetSignOptions.inferIn,
-): Promise<string> {
+export async function configurePrepareCmd(options: {
+  projectsToPublish: string[] | MSBuildProject[];
+  projectsToPackAndPush?: string[] | NugetRegistryInfo[];
+  dotnetNugetSignOpts?: typeof DotnetNugetSignOptions.inferIn;
+}): Promise<string> {
+  const { projectsToPublish, projectsToPackAndPush, dotnetNugetSignOpts } = options;
   const evaluatedProjects: MSBuildProject[] = projectsToPublish.filter(p => p instanceof MSBuildProject);
 
   if (projectsToPackAndPush) {
