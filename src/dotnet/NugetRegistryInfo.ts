@@ -470,7 +470,8 @@ but the environment variable is empty or undefined.`);
     shouldUsePerSourceSubfolder = false,
     shouldUsePerPackageIdSubfolder = false,
   ): Promise<string[]> {
-    options['-GetItem'] = [...options['-GetItem'] ?? [], key_OutputPackItems];
+    // eslint-disable-next-line @stylistic/no-extra-parens
+    options['-GetItem'] = [...(options['-GetItem'] ?? []), key_OutputPackItems];
 
     const commandLine = this.GetPackCommand(
       options,
@@ -517,7 +518,8 @@ but the environment variable is empty or undefined.`);
   ): Promise<string[]> {
     options = Object.assign(options, { output: getDummiesDirectory(this._project) });
 
-    options['-GetItem'] = [...options['-GetItem'] ??= [], key_OutputPackItems];
+    // eslint-disable-next-line @stylistic/no-extra-parens
+    options['-GetItem'] = [...(options['-GetItem'] ??= []), key_OutputPackItems];
 
     options.propertyOverrides ??= {};
     options.propertyOverrides.Version = '0.0.1-DUMMY';
