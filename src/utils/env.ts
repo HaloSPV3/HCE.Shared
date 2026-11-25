@@ -17,13 +17,15 @@ type Get = (key: string, options?: GetOptions) => string | undefined;
 
 /**
 A thin wrapper for {@link loadDotenv}. Loads a .env file from {@link process.cwd()} with the given options (or defaults), returns the new value of {@link process.env} with optional overrides.
-@param [dotenvOptions] An optional {@link DotenvConfigOptions} object to pass to {@link loadDotenv}.
-@param [overrides] If provided, this {@link NodeJS.ProcessEnv} object is merged into the return value, overriding existing properties where overlap occurs.
+@param options The options object parameter
+@param options.dotenvOptions An optional {@link DotenvConfigOptions} object to pass to {@link loadDotenv}.
+@param options.overrides If provided, this {@link NodeJS.ProcessEnv} object is merged into the return value, overriding existing properties where overlap occurs.
 @returns A {@link NodeJS.ProcessEnv} object whose properties are variables loaded from the
 process environment, the nearest .env file, and {@link overrides} (if provided). Where
 overlap occurs, the later source takes priority.
 */
-export function getEnv(dotenvOptions?: DotenvConfigOptions, overrides?: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+export function getEnv(options?: { dotenvOptions?: DotenvConfigOptions; overrides?: NodeJS.ProcessEnv }): NodeJS.ProcessEnv {
+  const { dotenvOptions, overrides } = options ?? {};
   loadDotenv(dotenvOptions);
 
   if (overrides)
