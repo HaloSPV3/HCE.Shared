@@ -24,7 +24,7 @@ A thin wrapper for {@link loadDotenv}. Loads a .env file from {@link process.cwd
 process environment, the nearest .env file, and {@link overrides} (if provided). Where
 overlap occurs, the later source takes priority.
 */
-export function getEnv(options?: { dotenvOptions?: DotenvConfigOptions; overrides?: NodeJS.ProcessEnv }): NodeJS.ProcessEnv {
+export function getEnvironment(options?: { dotenvOptions?: DotenvConfigOptions; overrides?: NodeJS.ProcessEnv }): NodeJS.ProcessEnv {
   const { dotenvOptions, overrides } = options ?? {};
   loadDotenv(dotenvOptions);
 
