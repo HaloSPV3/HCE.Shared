@@ -198,8 +198,8 @@ await describe('getOwnPropertyDescriptors', async () => {
       | 'GetFullPath'
       | 'getAndForget'
     > = [
-      ...Reflect.ownKeys(arrayOfOwnPropertyDescriptorMaps[1]) as ('getAndForget' | OwnKeyOf<typeof arrayOfOwnPropertyDescriptorMaps[1], { __proto__: undefined }>)[],
-      ...Reflect.ownKeys(arrayOfOwnPropertyDescriptorMaps[0]) as OwnKeyOf<typeof arrayOfOwnPropertyDescriptorMaps[0], typeof arrayOfOwnPropertyDescriptorMaps[1]>[],
+      ...(Reflect.ownKeys(arrayOfOwnPropertyDescriptorMaps[1]) as ('getAndForget' | OwnKeyOf<typeof arrayOfOwnPropertyDescriptorMaps[1], { __proto__: undefined }>)[]),
+      ...(Reflect.ownKeys(arrayOfOwnPropertyDescriptorMaps[0]) as OwnKeyOf<typeof arrayOfOwnPropertyDescriptorMaps[0], typeof arrayOfOwnPropertyDescriptorMaps[1]>[]),
     ] as [
       ...TuplifyUnion<
         Exclude<
