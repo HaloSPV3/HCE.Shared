@@ -8,12 +8,9 @@ import { env } from 'node:process';
 // I hate importing CommonJS modules with their broken default exports
 const {
   get,
+  getSync,
   config: loadDotenv,
 } = dotenvx;
-
-/** `get` can return `undefined`. It can also return a `Record`, but that's internal. */
-// eslint-disable-next-line unicorn/prefer-smaller-scope
-type Get = (key: string, options?: GetOptions) => string | undefined;
 
 /**
 A thin wrapper for {@link loadDotenv}. Loads a .env file from {@link process.cwd()} with the given options (or defaults), returns the new value of {@link process.env} with optional overrides.
@@ -46,12 +43,31 @@ If NOT found, return `undefined`
 empty, whitespace, or appears to have been converted from `null` or
 `undefined`.
 */
+export async function getEnvironmentVariableValueAsync(envVar: string, options?: GetOptions): Promise<string | undefined> {
+  options ??= { ignore: ['MISSING_KEY', 'MISSING_ENV_FILE'] };
+  // `get` can return `undefined`, but its return type does not indicate this.
+  const value = await get(envVar, options) as Awaited<ReturnType<typeof get>> | undefined;
+  // I hate this. Why is undefined converted to a string?
+  return value === '' || value === 'undefined'
+    ? undefined
+    : value;
+}
+
+/**
+Get the value from the given env var in the current process or nearby .env file.
+If found in process environment, its value is returned.
+Else, try to get it from the nearest .env file.
+If NOT found, return `undefined`
+@param envVar The environment variable to lookup.
+@param [options] Options to pass to {@link get}
+@returns The string value of the environment variable or `undefined`.
+`undefined` may be returned when the variable is undefined or its string is
+empty, whitespace, or appears to have been converted from `null` or
+`undefined`.
+*/
 export function getEnvironmentVariableValue(envVar: string, options?: GetOptions): string | undefined {
   options ??= { ignore: ['MISSING_KEY', 'MISSING_ENV_FILE'] };
-  let value = env[envVar];
-  const x = (get as Get)(envVar, options);
-  if (typeof x === 'string')
-    value = x;
+  const value = getSync(envVar, options);
   // I hate this. Why is undefined converted to a string?
   return value === '' || value === 'undefined'
     ? undefined
