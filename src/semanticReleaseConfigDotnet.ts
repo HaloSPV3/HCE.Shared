@@ -22,7 +22,7 @@ import type { Options } from 'semantic-release';
 import type { Options as SRExecOptions } from '@semantic-release/exec';
 import * as console from 'node:console';
 import debug from './debug.ts';
-import { configureDotnetNugetPush, configurePrepareCmd as configurePrepareCommand } from './dotnet/helpers.ts';
+import { configureDotnetNugetPush, configurePrepareCommand } from './dotnet/helpers.ts';
 import { getEnvVarValue as getEnvironmentVariableValue } from './utils/env.ts';
 import { baseConfig } from './semanticReleaseConfig.ts';
 import { NugetRegistryInfo } from './dotnet/NugetRegistryInfo.ts';

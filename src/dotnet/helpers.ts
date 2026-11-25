@@ -27,8 +27,7 @@ The project paths will be passed to `dotnet publish` commands.
 of the `--output` argument will be set to {@link ourDefaultPubDir} if `undefined`.
 @returns A single string of CLI commands joined by ' && '
 */
-// eslint-disable-next-line unicorn/name-replacements
-export async function configurePrepareCmd(options: {
+export async function configurePrepareCommand(options: {
   projectsToPublish: string[] | MSBuildProject[];
   projectsToPackAndPush?: string[] | NugetRegistryInfo[];
   dotnetNugetSignOpts?: typeof DotnetNugetSignOptions.inferIn;
