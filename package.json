@@ -74,7 +74,6 @@
     "@eslint/json": "^2.1.1",
     "@semantic-release/exec": "^8.0.0-beta.1",
     "@semantic-release/git": "^11.0.1",
-    "@semantic-release/release-notes-generator": "^15.0.0-beta.4",
     "@stylistic/eslint-plugin": "^6.0.1",
     "arktype": "^2.2.10",
     "chardet": "^2.2.0",
@@ -92,6 +91,7 @@
     "@semantic-release/commit-analyzer": ">=13.0.0 || >=14.0.0-beta.5",
     "@semantic-release/github": ">=12.0.0 || >=13.0.0-beta.1",
     "@semantic-release/npm": ">=13.0.0 || >=14.0.0-beta.1",
+    "@semantic-release/release-notes-generator": ">=14.0.0 || >=15.0.0-beta.4",
     "eslint": "^10.0.0"
   },
   "devDependencies": {
@@ -109,6 +109,7 @@
     "@semantic-release/github": "^13.0.0-beta.1",
     "@semantic-release/gitlab": "^13.3.5",
     "@semantic-release/npm": "^14.0.0-beta.3",
+    "@semantic-release/release-notes-generator": "^15.0.0-beta.4",
     "@types/debug": "^4.1.13",
     "@types/node": "^26.6.11",
     "@types/tmp": "^0.2.6",
