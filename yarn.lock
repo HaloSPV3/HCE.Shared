@@ -741,6 +741,7 @@ __metadata:
     "@semantic-release/release-notes-generator": ">=14.0.0 || >=15.0.0-beta.4"
     eslint: ">=10.0.0"
     semantic-release: ">=26.0.1"
+    semantic-release-export-data: ">=1.2.0"
   languageName: unknown
   linkType: soft
 
