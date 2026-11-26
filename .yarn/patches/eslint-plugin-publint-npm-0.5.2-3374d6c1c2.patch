@@ -1,0 +1,39 @@
+diff --git a/dist/get-publint-info.js b/dist/get-publint-info.js
+index 44731cd1781eea925dd5f8215785d24a37f8791c..bb84008eaf3e629cdb3cb8849aa313aaa1e5c19b 100644
+--- a/dist/get-publint-info.js
++++ b/dist/get-publint-info.js
+@@ -1,5 +1,6 @@
+ import childProcess from "node:child_process";
+ import fs from "node:fs";
++import _module from 'node:module';
+ import path from "node:path";
+ import process from "node:process";
+ /**
+@@ -8,12 +9,24 @@ import process from "node:process";
+  */
+ function publint(pkgDir) {
+     const publintPath = path.join(import.meta.dirname, "publint.cli.js");
++    const isUsingPnp = 'findPnpApi' in _module && typeof _module.findPnpApi === 'function';
++    let commandBin;
++    let commandArgs;
++    // Use `yarn node` if we're under Yarn PnP so Node can locate virtual modules
++    if (isUsingPnp) {
++        commandBin = 'yarn';
++        commandArgs = ['node', publintPath, pkgDir];
++    }
++    else {
++        commandBin = process.execPath; // Node executable
++        commandArgs = [publintPath, pkgDir];
++    }
+     // Use spawnSync for cross-platform compatibility
+-    const result = childProcess.spawnSync(process.execPath, // Node executable
+-    [publintPath, pkgDir], // Arguments
++    const result = childProcess.spawnSync(commandBin,
++    commandArgs, // Arguments
+     { encoding: "utf8" });
+     if (result.error || result.status !== 0) {
+-        throw new Error("Run publint.cli.js failed.", {
++        throw new Error("Run publint.cli.js failed.\n" + result.error ?? result.stderr, {
+             cause: result.error ?? result.stderr,
+         });
+     }

@@ -114,7 +114,7 @@
     "conventional-changelog-preset-loader": "^6.0.1",
     "eslint": "^10.15.0",
     "eslint-plugin-jsdoc": "^65.4.5",
-    "eslint-plugin-publint": "^0.5.2",
+    "eslint-plugin-publint": "patch:eslint-plugin-publint@npm%3A0.5.2#~/.yarn/patches/eslint-plugin-publint-npm-0.5.2-3374d6c1c2.patch",
     "eslint-plugin-unicorn": "^80.0.0",
     "husky": "^9.1.7",
     "jiti": "^2.7.0",

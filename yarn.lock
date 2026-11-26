@@ -725,7 +725,7 @@ __metadata:
     es-main: "npm:^1.4.0"
     eslint: "npm:^10.15.0"
     eslint-plugin-jsdoc: "npm:^65.4.5"
-    eslint-plugin-publint: "npm:^0.5.2"
+    eslint-plugin-publint: "patch:eslint-plugin-publint@npm%3A0.5.2#~/.yarn/patches/eslint-plugin-publint-npm-0.5.2-3374d6c1c2.patch"
     eslint-plugin-unicorn: "npm:^80.0.0"
     globals: "npm:^17.14.0"
     husky: "npm:^9.1.7"
@@ -3862,13 +3862,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-publint@npm:^0.5.2":
+"eslint-plugin-publint@npm:0.5.2":
   version: 0.5.2
   resolution: "eslint-plugin-publint@npm:0.5.2"
   dependencies:
     jsonc-eslint-parser: "npm:3.1.0"
     publint: "npm:0.3.20"
   checksum: 10c0/57b56c5dce8b143809aa795d08bed879302c3cf923108ae314af418f0b1fd9e8852cbf04ee97e5505435d4378f558e6923664c20218270630088da1a9dc10e50
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-publint@patch:eslint-plugin-publint@npm%3A0.5.2#~/.yarn/patches/eslint-plugin-publint-npm-0.5.2-3374d6c1c2.patch":
+  version: 0.5.2
+  resolution: "eslint-plugin-publint@patch:eslint-plugin-publint@npm%3A0.5.2#~/.yarn/patches/eslint-plugin-publint-npm-0.5.2-3374d6c1c2.patch::version=0.5.2&hash=cfe66b"
+  dependencies:
+    jsonc-eslint-parser: "npm:3.1.0"
+    publint: "npm:0.3.20"
+  checksum: 10c0/6750fb0ad297ad3ae27f26fbb11563c08b4e025e940ea174efc2ce74b6851861791b44d60e7409b50197274370ce1b1d05605aa9076210e290cc6e099d6d0350
   languageName: node
   linkType: hard
 
