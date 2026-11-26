@@ -97,7 +97,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@arethetypeswrong/core": "^0.18.5",
-    "@bintoss/semantic-release-npm-multiple": "^3.17.3",
+    "@bintoss/semantic-release-npm-multiple": "^3.17.6",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/load": "^21.2.4",
     "@commitlint/types": "^21.2.3",

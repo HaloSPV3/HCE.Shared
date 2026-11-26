@@ -124,14 +124,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bintoss/semantic-release-npm-multiple@npm:^3.17.3":
-  version: 3.17.3
-  resolution: "@bintoss/semantic-release-npm-multiple@npm:3.17.3"
+"@bintoss/semantic-release-npm-multiple@npm:^3.17.6":
+  version: 3.17.6
+  resolution: "@bintoss/semantic-release-npm-multiple@npm:3.17.6"
   dependencies:
-    "@semantic-release/npm": "npm:^13.1.5"
+    "@semantic-release/npm": "patch:@semantic-release/npm@npm%3A14.0.0-beta.3#./.yarn/patches/@semantic-release-npm-npm-14.0.0-beta.3-3fe11bb2ee.patch"
   peerDependencies:
-    semantic-release: ">=19.0.0"
-  checksum: 10c0/c766963d340f5938b5a775a22e9a9cc4ea4eb5c6d69cf8d64c1e38fd7bb5f79842236c2193d7480b8ce29a5bd55cd082bbc3f66b6d9120d39efc5d0fb7fb9610
+    semantic-release: ">=19.0.3"
+  checksum: 10c0/d47e08a80fcca93944bbc87ba47dfacf14c98d8f1301e496a32d6536915cd287544ce98a9b47a673db31032c910e22ea441facea085c5433c11ace7e7f1ff5b8
   languageName: node
   linkType: hard
 
@@ -692,7 +692,7 @@ __metadata:
   dependencies:
     "@arethetypeswrong/cli": "npm:^0.18.5"
     "@arethetypeswrong/core": "npm:^0.18.5"
-    "@bintoss/semantic-release-npm-multiple": "npm:^3.17.3"
+    "@bintoss/semantic-release-npm-multiple": "npm:^3.17.6"
     "@commitlint/cli": "npm:^21.2.4"
     "@commitlint/config-conventional": "npm:^21.2.4"
     "@commitlint/load": "npm:^21.2.4"
@@ -1826,7 +1826,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/npm@npm:^13.1.5, @semantic-release/npm@npm:^13.2.0":
+"@semantic-release/npm@npm:14.0.0-beta.3":
+  version: 14.0.0-beta.3
+  resolution: "@semantic-release/npm@npm:14.0.0-beta.3"
+  dependencies:
+    "@actions/core": "npm:^3.0.0"
+    "@semantic-release/error": "npm:^4.0.0"
+    aggregate-error: "npm:^5.0.0"
+    env-ci: "npm:^11.2.0"
+    execa: "npm:^9.0.0"
+    fs-extra: "npm:^11.0.0"
+    lodash-es: "npm:^4.17.21"
+    nerf-dart: "npm:^1.0.0"
+    normalize-url: "npm:^9.0.0"
+    npm: "npm:^12.2.1"
+    rc: "npm:^1.2.8"
+    read-pkg: "npm:^10.0.0"
+    registry-auth-token: "npm:^5.0.0"
+    semver: "npm:^7.1.2"
+    tempy: "npm:^3.0.0"
+  peerDependencies:
+    semantic-release: ">=20.1.0"
+  checksum: 10c0/b75c844fe4b93ab519b6a97a2d60fbae2573aacc20ebb4489fb1f874763cd0a6f7266d99832397dfaca480cee02ef44d49103bae415f6f72171645ea8cd4756a
+  languageName: node
+  linkType: hard
+
+"@semantic-release/npm@npm:^13.2.0":
   version: 13.2.0
   resolution: "@semantic-release/npm@npm:13.2.0"
   dependencies:
@@ -1873,6 +1898,31 @@ __metadata:
   peerDependencies:
     semantic-release: ">=20.1.0"
   checksum: 10c0/569ce386cc636c7206048f152c6c684ce34339ed1e69aaa0b22b8365e98053583db4a95126160cce732f5bf049d75bd356b46aff05e192402e1b446c0af39dde
+  languageName: node
+  linkType: hard
+
+"@semantic-release/npm@patch:@semantic-release/npm@npm%3A14.0.0-beta.3#./.yarn/patches/@semantic-release-npm-npm-14.0.0-beta.3-3fe11bb2ee.patch::locator=%40bintoss%2Fsemantic-release-npm-multiple%40npm%3A3.17.6":
+  version: 14.0.0-beta.3
+  resolution: "@semantic-release/npm@patch:@semantic-release/npm@npm%3A14.0.0-beta.3#./.yarn/patches/@semantic-release-npm-npm-14.0.0-beta.3-3fe11bb2ee.patch::version=14.0.0-beta.3&hash=446bd7&locator=%40bintoss%2Fsemantic-release-npm-multiple%40npm%3A3.17.6"
+  dependencies:
+    "@actions/core": "npm:^3.0.0"
+    "@semantic-release/error": "npm:^4.0.0"
+    aggregate-error: "npm:^5.0.0"
+    env-ci: "npm:^11.2.0"
+    execa: "npm:^9.0.0"
+    fs-extra: "npm:^11.0.0"
+    lodash-es: "npm:^4.17.21"
+    nerf-dart: "npm:^1.0.0"
+    normalize-url: "npm:^9.0.0"
+    npm: "npm:^12.2.1"
+    rc: "npm:^1.2.8"
+    read-pkg: "npm:^10.0.0"
+    registry-auth-token: "npm:^5.0.0"
+    semver: "npm:^7.1.2"
+    tempy: "npm:^3.0.0"
+  peerDependencies:
+    semantic-release: ">=20.1.0"
+  checksum: 10c0/b86ba710162f38ff39a9a5f9a8b6eeed950debadf6ea162d7856db507823b9e74e3ee24f9bae7a311f37adf424628ca1b958e287cdcfbc4b6218a93634edc7b6
   languageName: node
   linkType: hard
 
