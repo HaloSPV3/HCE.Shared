@@ -92,8 +92,7 @@ export async function configurePrepareCommand(options: {
 
         // filter for projects whose full paths match the full path of the given string
         const filteredProjects = evaluatedProjects.filter(p =>
-          p.Properties.MSBuildProjectFullPath === MSBPP.GetFullPath(proj),
-        );
+          p.Properties.MSBuildProjectFullPath === MSBPP.GetFullPath(proj));
 
         // if no pre-existing MSBuildProject found,
         // evaluate a new one and push it
@@ -164,11 +163,11 @@ export async function configurePrepareCommand(options: {
     return publishCmdArray.join(' && ');
     */
     function getPublishArgumentsPermutations(proj: MSBuildProject):
-      ([`"${typeof proj.Properties.MSBuildProjectFullPath}" -restore -t:PublishAll -p:Configuration=Release`])
-      | ([`"${typeof proj.Properties.MSBuildProjectFullPath}"`])
-      | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`)[]
-      | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`)[]
-      | (`"${typeof proj.Properties.MSBuildProjectFullPath}" --framework ${string}`)[] {
+      [`"${typeof proj.Properties.MSBuildProjectFullPath}" -restore -t:PublishAll -p:Configuration=Release`]
+      | [`"${typeof proj.Properties.MSBuildProjectFullPath}"`]
+      | `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`[]
+      | `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`[]
+      | `"${typeof proj.Properties.MSBuildProjectFullPath}" --framework ${string}`[] {
       /**
       If the project imports PublishAll to publish for each TFM-RID
       permutation, return the appropriate command line.
@@ -214,10 +213,9 @@ export async function configurePrepareCommand(options: {
 
       /** prepend each set of args with the project's path */
       return tfmRidPermutations.map(permArguments =>
-        `"${proj.Properties.MSBuildProjectFullPath}" ${permArguments}`,
-      ) as `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`[]
-      | `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`[]
-      | `"${typeof proj.Properties.MSBuildProjectFullPath}" --framework ${string}`[];
+        `"${proj.Properties.MSBuildProjectFullPath}" ${permArguments}`) as `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string} --framework ${string}`[]
+        | `"${typeof proj.Properties.MSBuildProjectFullPath}" --runtime ${string}`[]
+        | `"${typeof proj.Properties.MSBuildProjectFullPath}" --framework ${string}`[];
       // #endregion formatFrameworksAndRuntimes
     }
 
@@ -277,8 +275,7 @@ export async function configurePrepareCommand(options: {
 
     return nriArray
       .map((nri: NugetRegistryInfo): string =>
-        nri.GetPackCommand(NugetRegistryInfo.PackPackagesOptionsType.from({})),
-      ).join(' && ');
+        nri.GetPackCommand(NugetRegistryInfo.PackPackagesOptionsType.from({}))).join(' && ');
   }
 }
 
@@ -331,8 +328,10 @@ function formatDotnetNugetSign(
 
   const validOptions = DotnetNugetSignOptions.from(opts);
   const arguments_: ['--timestamper', typeof validOptions.timestamper, '-o', string, ...string[]] = [
-    '--timestamper', validOptions.timestamper,
-    '-o', validOptions.output ?? ourDefaultPubDirectory,
+    '--timestamper',
+    validOptions.timestamper,
+    '-o',
+    validOptions.output ?? ourDefaultPubDirectory,
   ];
   if (validOptions.certificatePassword)
     arguments_.push('---certificate-password', validOptions.certificatePassword);
@@ -397,7 +396,8 @@ const DotnetNugetSignOptions: Type<
   } | {
     certificateStoreLocation: string;
     certificateFingerprint: string;
-  })> = type({
+  })
+> = type({
   /**
   Password for the certificate, if needed. This option can be used to specify
   the password for the certificate. The command will throw an error message

@@ -69,8 +69,7 @@ try {
     const commitAnalyzerIndex = config.plugins.findIndex(pluginSpec =>
       typeof pluginSpec === 'string'
         ? pluginSpec === COMMIT_ANALYZER_ID
-        : pluginSpec[0] === COMMIT_ANALYZER_ID,
-    );
+        : pluginSpec[0] === COMMIT_ANALYZER_ID);
     const T_AnyRecord = type.Record('string | symbol', 'unknown');
     const T_RuleObject = type({
       type: type.string.optional(),
@@ -186,8 +185,7 @@ try {
     ]);
 
     const npmIndex = config.plugins.findIndex(v =>
-      v[0] === '@semantic-release/npm',
-    );
+      v[0] === '@semantic-release/npm');
     if (npmIndex === -1) {
       let gh = -1;
       let git = -1;
@@ -239,7 +237,8 @@ try {
       throw new Error('GL_TOKEN, GITLAB_TOKEN, or CI_JOB_TOKEN must be set');
 
     config.plugins[execPluginIndex] = [
-      '@semantic-release/exec', {
+      '@semantic-release/exec',
+      {
         /**
         Semantic Release pushes the new tag to ORIGIN (github).
         It must also be pushed to GitLab before a GitLab Release can be made.
@@ -302,8 +301,7 @@ try {
     const GHTuple = type(['"@semantic-release/github"', SRGHOptions]);
 
     const githubIndex = config.plugins.findIndex(p =>
-      GHTuple.get('0').allows(p[0]),
-    );
+      GHTuple.get('0').allows(p[0]));
     const github = GHTuple.assert(config.plugins[githubIndex]);
     github[1].assets = 'package.tgz';
     config.plugins[githubIndex] = github;

@@ -18,7 +18,7 @@ type PrototypeChain<
   ClassesOrInstances extends 'classes' | 'classInstances',
 > = [ClassesOrInstances] extends ['classInstances'] ? PrototypeChainOfClassInstance<Class>
   : [ClassesOrInstances] extends ['classes'] ? PrototypeChainOfClass<Class>
-      : never;
+    : never;
 
 /**
 Iterate through the class and its base/super classes until an anonymous function is reached. This is the default superclass all classes extend.

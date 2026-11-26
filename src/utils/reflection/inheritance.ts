@@ -237,10 +237,10 @@ export type ClassLike<
   Class extends ConstructorConstraint<Class> & WithProto<SuperClassLike | BaseClassProto>,
 > = Class extends BaseClass<Class> ? Class
   : Class['__proto__'] extends BaseClassProto ? BaseClass<Class>
-    : Class['__proto__'] extends ConstructorLike<Class['__proto__']>
-      ? IClass<Class> & WithProto<ConstructorLike<Class['__proto__']>>
-      // Here, __proto__ is retained via Class
-      : IClass<Class>;
+  : Class['__proto__'] extends ConstructorLike<Class['__proto__']>
+    ? IClass<Class> & WithProto<ConstructorLike<Class['__proto__']>>
+    // Here, __proto__ is retained via Class
+    : IClass<Class>;
 
 /**
 If {@link T} is a class or constructor, {@link InstanceType}<{@link T}>. Else, {@link T}.

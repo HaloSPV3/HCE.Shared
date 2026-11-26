@@ -123,7 +123,8 @@ await describe('NRIOpts', { concurrency: true }, async () => {
 
   await it('defaults token variables', () => {
     const options = NRIOptionsOwn.from({});
-    deepStrictEqual(options.tokenEnvVars,
+    deepStrictEqual(
+      options.tokenEnvVars,
       Object.freeze(['NUGET_TOKEN'] as const),
     );
   });

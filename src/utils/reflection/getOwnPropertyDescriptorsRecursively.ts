@@ -40,7 +40,7 @@ export type RecursedPropertyDescriptorMap<
   _InstanceOrStatic extends InstanceOrStatic,
 > = [_InstanceOrStatic] extends ['Instance'] ? InstanceTypeOrSelfPropertyDescriptorMap<Class, Class['__proto__']>
   : [_InstanceOrStatic] extends ['Static'] ? OwnPropertyDescriptorMap<Class>
-      : never;
+    : never;
 
 /**
 An ordered array of {@link OwnPropertyDescriptorMap} or
@@ -58,17 +58,17 @@ export type RecursedPropertyDescriptorMapArray<
   CurrentLevel extends Integer<number> = 0,
 > = Class['__proto__'] extends BaseClassPrototype['__proto__'] | BaseClassPrototype['__proto__']['__proto__'] ? never
   : Class['__proto__'] extends BaseClassPrototype ? [RecursedPropertyDescriptorMap<BaseClass<Class>, InstanceOrStatic>]
-    : Class['__proto__'] extends ConstructorLike<Class['__proto__']>
-      ? [
-          RecursedPropertyDescriptorMap<Class, InstanceOrStatic>,
-          ...RecursedPropertyDescriptorMapArray<
-            ClassLike<Exclude<Class['__proto__'], BaseClassPrototype> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
-            InstanceOrStatic,
-            Limit,
-            Increment<CurrentLevel>
-          >,
-        ]
-      : never;
+  : Class['__proto__'] extends ConstructorLike<Class['__proto__']>
+    ? [
+        RecursedPropertyDescriptorMap<Class, InstanceOrStatic>,
+        ...RecursedPropertyDescriptorMapArray<
+          ClassLike<Exclude<Class['__proto__'], BaseClassPrototype> & WithPrototype<SuperClassLike | BaseClassPrototype>>,
+          InstanceOrStatic,
+          Limit,
+          Increment<CurrentLevel>
+        >,
+      ]
+    : never;
 /**
 Walks the class inheritance chain to get a PropertyDescriptorMap of each class.
 
@@ -107,8 +107,7 @@ export function getOwnPropertyDescriptorsRecursively<
     getOwnPropertyDescriptors(
       classDefinition,
       instanceOrStatic,
-    ),
-  );
+    ));
 
   return recursedPropertyDescriptorMapArray as RecursedPropertyDescriptorMapArray<Class, _InstanceOrStatic>;
 }

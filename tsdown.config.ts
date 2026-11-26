@@ -27,8 +27,7 @@ const _config: UserConfig = defineConfig({
         './src/',
         { encoding: 'utf8', recursive: true },
       ).filter(v =>
-        v.endsWith('.d.ts'),
-      );
+        v.endsWith('.d.ts'));
 
       if (declarations.length === 0)
         throw new Error('Where are my types???');

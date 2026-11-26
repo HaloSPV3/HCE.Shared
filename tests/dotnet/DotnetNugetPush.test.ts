@@ -49,7 +49,8 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: true }
         // eslint-disable-next-line @typescript-eslint/no-deprecated
           .canPushPackagesToSource,
       );
-    });
+    },
+  );
   await it(
     '...CI_PROJECT_ID is defined and CI_JOB_TOKEN, GITLAB_TOKEN, or GL_TOKEN is defined, valid, and can push packages to source',
     { timeout: 20_000 },
@@ -70,7 +71,8 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: true }
         // eslint-disable-next-line @typescript-eslint/no-deprecated
         await glnri.canPushPackagesToSource,
       );
-    });
+    },
+  );
   await it(
     '...NUGET_TOKEN is defined, valid, and can push packages to source',
     { timeout: 20_000 },
@@ -85,7 +87,8 @@ await describe('canPushPackagesToSource resolves when...', { concurrency: true }
         // eslint-disable-next-line @typescript-eslint/no-deprecated
           .canPushPackagesToSource,
       );
-    });
+    },
+  );
 });
 
 await describe('canPushPackagesToSource throws when...', { concurrency: true }, async () => {

@@ -45,7 +45,8 @@ await describe('Loaded config tests', async () => {
       config.parserPreset.name,
       commitLintConventional.parserPreset,
     );
-    deepStrictEqual(config.parserPreset.parserOpts,
+    deepStrictEqual(
+      config.parserPreset.parserOpts,
       'parser' in preset
         ? preset['parser']
         : preset['parserOpts'],

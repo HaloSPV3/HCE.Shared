@@ -311,9 +311,9 @@ export class MSBuildProject {
     options: typeof EvaluationOptions.inferOut,
   ): Promise<MSBuildProject> {
     // apparently, you can declare types in a function's/method's scope. That's news to me.
-    type typeof_ArtifactsPath
-      = | (`${TemporaryDirectoryNamespace_Unix}${string}/${string}/`)
-        | (`${TemporaryDirectoryNamespace_Win}${string}\\${string}/`);
+    type typeof_ArtifactsPath =
+      | `${TemporaryDirectoryNamespace_Unix}${string}/${string}/`
+      | `${TemporaryDirectoryNamespace_Win}${string}\\${string}/`;
     if (
       options.GetProperty.length === 0
       && options.GetItem.length === 0
@@ -487,8 +487,7 @@ export class MSBuildProject {
                 // condition required for compatibility. `.path` was deprecated, but `.parentPath` is not available in our node minversion
                 ('path' in v ? v.path as string | undefined : undefined) ?? (v as unknown as Omit<typeof v, 'path'> & { parentPath: string }).parentPath,
                 v.name,
-              ) === proj,
-            );
+              ) === proj);
             if (dirent)
               return dirent;
             throw new Error(
@@ -502,8 +501,7 @@ export class MSBuildProject {
           entries = await readdir(proj, { withFileTypes: true });
           return entries.filter(v =>
             v.isFile()
-            && (v.name.endsWith('.csproj') || v.name.endsWith('.fsproj') || v.name.endsWith('.vbproj')),
-          );
+            && (v.name.endsWith('.csproj') || v.name.endsWith('.fsproj') || v.name.endsWith('.vbproj')));
         }),
       );
 
@@ -771,8 +769,7 @@ export function catchCsc2012(error: unknown): undefined {
       && /^CSC ?:.+CS2012:/gm.test(
         // '\uFF1A'.normalize('NFKC') === ':' === true;
         error.stderr.normalize('NFKC'),
-      )
-    ) {
+      )) {
       // eslint-disable-next-line unicorn/no-useless-undefined
       return undefined; /* retry */
     }

@@ -138,8 +138,7 @@ function _GetTokenEnvironmentVariables(tokenEnvironmentVariables: readonly strin
     tokenEnvironmentVariables
       .map((key: string) => [key, getEnvironmentVariableValue(key)] as const)
       .filter((environmentVariableTuple: readonly [string, string | undefined]): environmentVariableTuple is [string, string] =>
-        environmentVariableTuple[1] !== undefined,
-      ),
+        environmentVariableTuple[1] !== undefined),
   );
 
   return definedTokens.length > 0 ? (definedTokens as [readonly [string, string], ...readonly [string, string][]]) : undefined;

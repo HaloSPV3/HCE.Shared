@@ -65,8 +65,7 @@ export function insertPlugin(
   beforePluginsIDs: string[],
 ): Exclude<PluginSpec, string>[] {
   const pluginIDs = plugins.map(v =>
-    typeof v === 'string' ? v : v[0],
-  );
+    typeof v === 'string' ? v : v[0]);
 
   // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
 
@@ -109,8 +108,7 @@ export function insertPlugin(
   return [
     ...beforeInsert,
     ...insertPluginIDs.map(id =>
-      [id, {}] as [string, unknown],
-    ),
+      [id, {}] as [string, unknown]),
     ...afterInsert,
   ];
 }

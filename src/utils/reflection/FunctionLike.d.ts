@@ -12,7 +12,7 @@ expressions of {@link Parameters} and {@link ReturnType}.
 @since 3.0.0
 */
 export type FunctionLike<
-  T extends ((...args: any[] | readonly any[]) => any) = ((...args: any[] | readonly any[]) => any),
+  T extends (...args: any[] | readonly any[]) => any = (...args: any[] | readonly any[]) => any,
   P extends Parameters<T> = Parameters<T>,
   R extends ReturnType<T> = ReturnType<T>,
 > = T & ((...args: P) => R);

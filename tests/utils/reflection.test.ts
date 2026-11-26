@@ -114,7 +114,7 @@ await describe('getOwnPropertyDescriptors', async () => {
     );
     const ownInstanceGetterNames: (keyof TestClass1)[] = [];
 
-    for (const key of Reflect.ownKeys(ownPropertyDescriptorMapOfTestClass1Instance) as (OwnKeyOf<TestClass1, TestClass0>)[]) {
+    for (const key of Reflect.ownKeys(ownPropertyDescriptorMapOfTestClass1Instance) as OwnKeyOf<TestClass1, TestClass0>[]) {
       const element = ownPropertyDescriptorMapOfTestClass1Instance[key];
       if (typeof element.get === 'function')
         ownInstanceGetterNames.push(key);
@@ -243,7 +243,8 @@ await describe('getOwnPropertyDescriptorsRecursively', async () => {
     const getterMaps = recursedInstancePropertyDescriptorMaps.map(
       (v) => {
         return filterForGetters(v);
-      }) as [
+      },
+    ) as [
       OwnGetterDescriptorMap<InstanceType<typeof TestClass1>, InstanceType<typeof TestClass0>>,
       OwnGetterDescriptorMap<InstanceType<typeof TestClass0>, null>,
     ];

@@ -123,13 +123,13 @@ declare module '@semantic-release/commit-analyzer' {
       }
     }
 
-    type Ember
-      = | Ember_Subtypes.None
-        | Ember_Subtypes.BUGFIX
-        | Ember_Subtypes.CLEANUP
-        | Ember_Subtypes.DOC
-        | Ember_Subtypes.FEATURE
-        | Ember_Subtypes.SECURITY;
+    type Ember =
+      | Ember_Subtypes.None
+      | Ember_Subtypes.BUGFIX
+      | Ember_Subtypes.CLEANUP
+      | Ember_Subtypes.DOC
+      | Ember_Subtypes.FEATURE
+      | Ember_Subtypes.SECURITY;
 
     /** Legacy; ESLint uses Conventional Commits. Source: https://eslint.org/docs/latest/contribute/pull-requests#step2 */
     interface ESLint extends _Base {
@@ -165,17 +165,17 @@ declare module '@semantic-release/commit-analyzer' {
     }
   }
 
-  type RuleObject
-    = | RuleObjects._Base
-      | RuleObjects.Angular
-      | RuleObjects.Atom
-      | RuleObjects.CodeMirror
-      | RuleObjects.ConventionalCommits
-      | RuleObjects.Ember
-      | RuleObjects.ESLint
-      | RuleObjects.Express
-      | RuleObjects.JQuery
-      | RuleObjects.JSHint;
+  type RuleObject =
+    | RuleObjects._Base
+    | RuleObjects.Angular
+    | RuleObjects.Atom
+    | RuleObjects.CodeMirror
+    | RuleObjects.ConventionalCommits
+    | RuleObjects.Ember
+    | RuleObjects.ESLint
+    | RuleObjects.Express
+    | RuleObjects.JQuery
+    | RuleObjects.JSHint;
   // #endregion RuleObject
 
   // #region PresetConfig
@@ -233,9 +233,9 @@ declare module '@semantic-release/commit-analyzer' {
     }
   }
 
-  type PresetConfig
-    = | PresetConfigs._Base
-      | PresetConfigs.ConventionalCommits;
+  type PresetConfig =
+    | PresetConfigs._Base
+    | PresetConfigs.ConventionalCommits;
   // #endregion PresetConfig
 
   // eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type

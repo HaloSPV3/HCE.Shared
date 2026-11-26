@@ -30,6 +30,7 @@ import { MSBuildProject } from './dotnet/MSBuildProject.ts';
 import { insertPlugin } from './insertPlugins.ts';
 import { CaseInsensitiveMap } from './CaseInsensitiveMap.ts';
 
+// eslint-disable-next-line @stylistic/no-extra-parens
 type UnArray<T> = T extends (infer U)[] ? U : T;
 interface SRConfigDotnetOptions extends Omit<typeof baseConfig, 'plugins'> {
   plugins: (UnArray<typeof baseConfig.plugins> | [string, unknown])[];
@@ -76,8 +77,7 @@ export class SemanticReleaseConfigDotnet {
     /* normalize PluginSpecs to tuples */
     this.options.plugins = this.options.plugins.map(pluginSpec => typeof pluginSpec === 'string'
       ? [pluginSpec, {}]
-      : pluginSpec,
-    );
+      : pluginSpec);
 
     this._projectsToPublish = projectsToPublish;
     if (this._projectsToPublish.length === 0) {
@@ -217,8 +217,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
     const verifyReleaseCommandAppendix
       = (this._projectsToPackAndPush satisfies NugetRegistryInfo[])
         .map(project =>
-          project.GetIsNextVersionAlreadyPublishedCommand(),
-        ).join(' && ');
+          project.GetIsNextVersionAlreadyPublishedCommand()).join(' && ');
     execOptions.verifyReleaseCmd
       = execOptions.verifyReleaseCmd && execOptions.verifyReleaseCmd.trim().length > 0
         ? `${execOptions.verifyReleaseCmd} && ${verifyReleaseCommandAppendix}`
@@ -229,8 +228,8 @@ Appending it to the end of the array...This may cause an unexpected order of ope
 
     const prepareCommandAppendix = await configurePrepareCommand({
       projectsToPublish: this._projectsToPublish,
-      projectsToPackAndPush: this._projectsToPackAndPush },
-    );
+      projectsToPackAndPush: this._projectsToPackAndPush,
+    });
 
     // 'ZipPublishDir' zips each publish folder to ./publish/*.zip
     execOptions.prepareCmd
@@ -270,9 +269,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
   ): void {
     const errors: Error[] = [];
     const pluginIDs = this.options.plugins.map(v =>
-      typeof v === 'string' ? v : v[0],
-    ) as (typeof this.options.plugins[number])[][0];
-
+      typeof v === 'string' ? v : v[0]) as typeof this.options.plugins[number][][0];
     // if any beforePluginIDs are ordered before the last afterPlugin, throw. Impossible to sort.
 
     const indexOfLastPreceding: number | undefined = insertAfterPluginIDs
@@ -346,8 +343,7 @@ Appending it to the end of the array...This may cause an unexpected order of ope
         nri.PackDummyPackage({}).then((nupkgs) => {
           // this is a full file path.
           const mainNupkg = nupkgs.find(nupkg =>
-            new RegExp(/(?<!symbols)\.nupkg$/).test(nupkg),
-          );
+            new RegExp(/(?<!symbols)\.nupkg$/).test(nupkg));
           if (mainNupkg !== undefined)
             return { nri: nri, nupkgPath: mainNupkg } as const;
           throw new Error(
@@ -355,12 +351,10 @@ Appending it to the end of the array...This may cause an unexpected order of ope
             + nupkgs.map(nupkg => `  - ${nupkg}`).join('\n')
             + '\nIf you intended to push only symbol packages, check if a feature request already exists (https://github.com/HaloSPV3/HCE.Shared/issues?q=push+snupkg) and, if one does not exist, create one containing the keywords "push snupkg".',
           );
-        }),
-      ),
+        })),
     );
     const pushCommands = nupkgPaths.map(pair =>
-      pair.nri.GetPushDummyCommand({}),
-    );
+      pair.nri.GetPushDummyCommand({}));
     return pushCommands.join(' && ');
   }
 

@@ -54,9 +54,7 @@ await describe('getConfig', async () => {
 
     ok('errors' in actual && Array.isArray(actual.errors)
       ? actual.errors.some(error =>
-          Error.isError(error) && error.message.includes(searchString),
-        )
-      : actual.message.includes(searchString),
-    );
+          Error.isError(error) && error.message.includes(searchString))
+      : actual.message.includes(searchString));
   });
 });

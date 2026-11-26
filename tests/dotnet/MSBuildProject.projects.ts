@@ -71,8 +71,7 @@ await Promise.all(
     .map(projName =>
       existsSync(paths[projName].json)
         ? Promise.resolve(true)
-        : writeCacheFile(projName),
-    ),
+        : writeCacheFile(projName)),
 );
 
 /** @returns A promise of a dictionary of MSBP projects as dictated by {@link paths} */
