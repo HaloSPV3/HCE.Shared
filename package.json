@@ -75,7 +75,6 @@
     "@semantic-release/changelog": "^7.0.0",
     "@semantic-release/exec": "^8.0.0-beta.1",
     "@semantic-release/git": "^11.0.1",
-    "@semantic-release/github": "^13.0.0-beta.1",
     "@semantic-release/npm": "^13.2.0",
     "@semantic-release/release-notes-generator": "^15.0.0-beta.4",
     "@stylistic/eslint-plugin": "^6.0.1",
@@ -92,6 +91,7 @@
   "peerDependencies": {
     "@commitlint/types": "^20.0.0 || >= 20.0.0",
     "@semantic-release/commit-analyzer": ">=13.0.0 || >=14.0.0-beta.5",
+    "@semantic-release/github": ">=12.0.0 || >=13.0.0-beta.1",
     "eslint": "^10.0.0"
   },
   "devDependencies": {
@@ -105,6 +105,7 @@
     "@eslint/markdown": "^9.0.0",
     "@sebbo2002/semantic-release-jsr": "^4.0.3",
     "@semantic-release/commit-analyzer": "^14.0.0-beta.5",
+    "@semantic-release/github": "^13.0.0-beta.1",
     "@semantic-release/gitlab": "^13.3.5",
     "@types/debug": "^4.1.13",
     "@types/node": "^26.6.11",
