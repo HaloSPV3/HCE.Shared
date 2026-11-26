@@ -16,6 +16,7 @@ const scopes = {
   deps: 'Affects dependencies required at runtime.',
   'deps-dev':
     'Affects dependencies required in the dev environment or during build time.',
+  'deps-peer': 'Dependencies that are dynamically imported during runtime.',
   dotnet:
     'Affects "src/dotnet.ts", files in "dotnet/" or "src/dotnet/" not included in other scopes, and/or our reusable GitHub workflows provided for assisting dotnet CI.',
   'dotnet.BuildEachRID': 'Affects "dotnet/BuildEachRID.targets"',
