@@ -703,7 +703,7 @@ __metadata:
     "@eslint/json": "npm:^2.1.1"
     "@eslint/markdown": "npm:^9.0.0"
     "@sebbo2002/semantic-release-jsr": "npm:^4.0.3"
-    "@semantic-release/changelog": "npm:^7.0.0"
+    "@semantic-release/changelog": "npm:^8.0.0-beta.1"
     "@semantic-release/commit-analyzer": "npm:^14.0.0-beta.5"
     "@semantic-release/exec": "npm:^8.0.0-beta.1"
     "@semantic-release/git": "npm:^11.0.1"
@@ -744,6 +744,7 @@ __metadata:
     unplugin-unused: "npm:^0.6.0"
   peerDependencies:
     "@commitlint/types": ^20.0.0 || >= 20.0.0
+    "@semantic-release/changelog": ">=7.0.0 || ^8.0.0-beta.1"
     "@semantic-release/commit-analyzer": ">=13.0.0 || >=14.0.0-beta.5"
     "@semantic-release/github": ">=12.0.0 || >=13.0.0-beta.1"
     eslint: ^10.0.0
@@ -1700,16 +1701,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/changelog@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@semantic-release/changelog@npm:7.0.0"
+"@semantic-release/changelog@npm:^8.0.0-beta.1":
+  version: 8.0.0-beta.1
+  resolution: "@semantic-release/changelog@npm:8.0.0-beta.1"
   dependencies:
     "@semantic-release/error": "npm:^4.0.0"
     aggregate-error: "npm:^5.0.0"
     lodash-es: "npm:^4.17.21"
   peerDependencies:
     semantic-release: ">=20.1.0"
-  checksum: 10c0/2806d3d75c241388ff7727115bb2db7793317404d3bcc54b5b86bb794a31e4ae8e078f34bed0dd3fa195abea77381d8bd0352f6b9804310aa69f201997d4b354
+  checksum: 10c0/19f331274fe54b43cc92d4c1307bd6bc7ed6b7dd1219af8f0439e4cbf2d5432fad4c88d178d9fc9ef272425b7153fc9a72e7944366f7a062738900b35cc478ed
   languageName: node
   linkType: hard
 
