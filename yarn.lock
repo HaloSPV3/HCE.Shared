@@ -509,20 +509,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@es-joy/jsdoccomment@npm:^1.1.0":
-  version: 1.2.0
-  resolution: "@es-joy/jsdoccomment@npm:1.2.0"
-  dependencies:
-    "@types/estree": "npm:^1.0.10"
-    "@typescript-eslint/types": "npm:^8.72.2"
-    comment-parser: "npm:1.4.9"
-    esquery: "npm:^1.7.0"
-    jsdoc-type-pratt-parser: "npm:~9.5.0"
-  checksum: 10c0/24863ed0de87943e25e573f893920e2c1de11a17da14aede1549215b6617887c5572efd5e8a33a325bffff84bc6b798f17ed2e5f2a3ce29e676d577850216da5
-  languageName: node
-  linkType: hard
-
-"@es-joy/jsdoccomment@npm:~1.2.1":
+"@es-joy/jsdoccomment@npm:^1.1.0, @es-joy/jsdoccomment@npm:~1.2.1":
   version: 1.2.1
   resolution: "@es-joy/jsdoccomment@npm:1.2.1"
   dependencies:
@@ -1523,25 +1510,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/commit-analyzer@npm:^14.0.0-beta.4":
-  version: 14.0.0-beta.4
-  resolution: "@semantic-release/commit-analyzer@npm:14.0.0-beta.4"
-  dependencies:
-    conventional-changelog-angular: "npm:^9.0.0"
-    conventional-changelog-conventionalcommits: "npm:^10.0.0"
-    conventional-commits-filter: "npm:^6.0.0"
-    conventional-commits-parser: "npm:^7.0.0"
-    debug: "npm:^4.0.0"
-    import-from-esm: "npm:^2.0.0"
-    lodash-es: "npm:^4.17.21"
-    micromatch: "npm:^4.0.2"
-  peerDependencies:
-    semantic-release: ">=20.1.0"
-  checksum: 10c0/5f79c60d3131c0f9103ac1c0268f47dc7a84263b058476ae4a8ccbf99b9bfd7c6734d46f66640db36ec27d6c4dfef9db9a101412700a4ee5c89422132c9e362e
-  languageName: node
-  linkType: hard
-
-"@semantic-release/commit-analyzer@npm:^14.0.0-beta.5":
+"@semantic-release/commit-analyzer@npm:^14.0.0-beta.4, @semantic-release/commit-analyzer@npm:^14.0.0-beta.5":
   version: 14.0.0-beta.5
   resolution: "@semantic-release/commit-analyzer@npm:14.0.0-beta.5"
   dependencies:
@@ -1706,7 +1675,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/npm@npm:14.0.0-beta.3, @semantic-release/npm@npm:^14.0.0-beta.3":
+"@semantic-release/npm@npm:14.0.0-beta.3, @semantic-release/npm@npm:^14.0.0-beta.2, @semantic-release/npm@npm:^14.0.0-beta.3":
   version: 14.0.0-beta.3
   resolution: "@semantic-release/npm@npm:14.0.0-beta.3"
   dependencies:
@@ -1728,31 +1697,6 @@ __metadata:
   peerDependencies:
     semantic-release: ">=20.1.0"
   checksum: 10c0/b75c844fe4b93ab519b6a97a2d60fbae2573aacc20ebb4489fb1f874763cd0a6f7266d99832397dfaca480cee02ef44d49103bae415f6f72171645ea8cd4756a
-  languageName: node
-  linkType: hard
-
-"@semantic-release/npm@npm:^14.0.0-beta.2":
-  version: 14.0.0-beta.2
-  resolution: "@semantic-release/npm@npm:14.0.0-beta.2"
-  dependencies:
-    "@actions/core": "npm:^3.0.0"
-    "@semantic-release/error": "npm:^4.0.0"
-    aggregate-error: "npm:^5.0.0"
-    env-ci: "npm:^11.2.0"
-    execa: "npm:^9.0.0"
-    fs-extra: "npm:^11.0.0"
-    lodash-es: "npm:^4.17.21"
-    nerf-dart: "npm:^1.0.0"
-    normalize-url: "npm:^9.0.0"
-    npm: "npm:^12.2.1"
-    rc: "npm:^1.2.8"
-    read-pkg: "npm:^10.0.0"
-    registry-auth-token: "npm:^5.0.0"
-    semver: "npm:^7.1.2"
-    tempy: "npm:^3.0.0"
-  peerDependencies:
-    semantic-release: ">=20.1.0"
-  checksum: 10c0/569ce386cc636c7206048f152c6c684ce34339ed1e69aaa0b22b8365e98053583db4a95126160cce732f5bf049d75bd356b46aff05e192402e1b446c0af39dde
   languageName: node
   linkType: hard
 
@@ -1781,26 +1725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/release-notes-generator@npm:^15.0.0-beta.3":
-  version: 15.0.0-beta.3
-  resolution: "@semantic-release/release-notes-generator@npm:15.0.0-beta.3"
-  dependencies:
-    conventional-changelog-angular: "npm:^9.0.0"
-    conventional-changelog-conventionalcommits: "npm:^10.0.0"
-    conventional-changelog-writer: "npm:^9.0.0"
-    conventional-commits-filter: "npm:^6.0.0"
-    conventional-commits-parser: "npm:^7.0.0"
-    debug: "npm:^4.0.0"
-    import-from-esm: "npm:^2.0.0"
-    lodash-es: "npm:^4.17.21"
-    read-package-up: "npm:^11.0.0"
-  peerDependencies:
-    semantic-release: ">=20.1.0"
-  checksum: 10c0/c94be599cc841c2056daff970aacb4388f7c70986157ddd4133fdba230311742cb7514915460f0296e8dad2301db87af9d42d87c77c6f2a29f8e38d21fda3a92
-  languageName: node
-  linkType: hard
-
-"@semantic-release/release-notes-generator@npm:^15.0.0-beta.4":
+"@semantic-release/release-notes-generator@npm:^15.0.0-beta.3, @semantic-release/release-notes-generator@npm:^15.0.0-beta.4":
   version: 15.0.0-beta.4
   resolution: "@semantic-release/release-notes-generator@npm:15.0.0-beta.4"
   dependencies:
@@ -2074,16 +1999,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
-  version: 26.6.6
-  resolution: "@types/node@npm:26.6.6"
-  dependencies:
-    undici-types: "npm:~8.9.0"
-  checksum: 10c0/5cb63f644f6e85a257a9cd2403cbcbe196760e2a35fd3ec9fb8b5cff663e14cc832b198cc17b53f870a2e30900ed45a1fb3f53e6589aba26b8e8c484aa672053
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^26.6.11":
+"@types/node@npm:*, @types/node@npm:^26.6.11":
   version: 26.6.11
   resolution: "@types/node@npm:26.6.11"
   dependencies:
@@ -2220,17 +2136,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:8.74.0, @typescript-eslint/types@npm:^8.74.0":
+"@typescript-eslint/types@npm:8.74.0, @typescript-eslint/types@npm:^8.72.2, @typescript-eslint/types@npm:^8.74.0":
   version: 8.74.0
   resolution: "@typescript-eslint/types@npm:8.74.0"
   checksum: 10c0/211e96af23e34e61a2d545e9438366ed6c63663fea52d1d6150f293668924df7b76d362e8dcadf47d706fbb4b16159d7f752d1220c8a4ae93706c59f3bc7a123
-  languageName: node
-  linkType: hard
-
-"@typescript-eslint/types@npm:^8.72.2":
-  version: 8.72.2
-  resolution: "@typescript-eslint/types@npm:8.72.2"
-  checksum: 10c0/283cbfd02033da3790dde8a613f23bbcb21706281393daf256ea798112124e355679d1f5bdd16ee0d3b9730f4d16acd619504b3bfb25c7979f363c0963b3e1b6
   languageName: node
   linkType: hard
 
@@ -2683,21 +2592,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"brace-expansion@npm:^5.0.12":
+"brace-expansion@npm:^5.0.12, brace-expansion@npm:^5.0.8":
   version: 5.0.13
   resolution: "brace-expansion@npm:5.0.13"
   dependencies:
     balanced-match: "npm:^4.0.2"
   checksum: 10c0/80420a1d567db7fa3214e2d49cd28ff8aa89dbb9a889bf3e449372dd72cdcec5267b451a5ff6fcaec1dd8819a88fb3d682e01c63812a8220881e305852b07f60
-  languageName: node
-  linkType: hard
-
-"brace-expansion@npm:^5.0.8":
-  version: 5.0.12
-  resolution: "brace-expansion@npm:5.0.12"
-  dependencies:
-    balanced-match: "npm:^4.0.2"
-  checksum: 10c0/a40ac64d3bdb5bb222456514d3633c1f627f03b844f509c69e70f98b78be0ce85e21b44bbfecdd0ddd4cc0855ca4242b41ea96ddccf88c7c3c7a84405474bb3a
   languageName: node
   linkType: hard
 
@@ -5929,23 +5829,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^11.0.1":
+"minimatch@npm:^11.0.1, minimatch@npm:^11.0.5":
   version: 11.0.9
   resolution: "minimatch@npm:11.0.9"
   dependencies:
     "@isaacs/nonrecursive-glob-match": "npm:^1.1.0"
     brace-expansion: "npm:^5.0.12"
   checksum: 10c0/17c8b5caebaa8c1ecc1c6d58028d192f0e94ebe03976bb9f348920c107cde3185614f74543fe40dfc79ecf0bd74158b816633fc9a8f66da32c0d5327ecbb91e9
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^11.0.5":
-  version: 11.0.8
-  resolution: "minimatch@npm:11.0.8"
-  dependencies:
-    "@isaacs/nonrecursive-glob-match": "npm:^1.1.0"
-    brace-expansion: "npm:^5.0.12"
-  checksum: 10c0/9f4cfaa792adbd78f3aed1fec74ff9af94bfed6832f31a4f5fa36cf9bb928b2f8fdacbeccc2ea6617e9ec09ce5f5d386eb3efb59b29915b43a1884fc689749c5
   languageName: node
   linkType: hard
 
