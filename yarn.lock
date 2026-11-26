@@ -730,7 +730,8 @@ __metadata:
     typescript-eslint: "npm:^8.74.0"
     unplugin-unused: "npm:^0.6.0"
   peerDependencies:
-    "@commitlint/types": ^20.0.0 || >= 20.0.0
+    "@commitlint/config-conventional": ">=21.0.0"
+    "@commitlint/types": ">=21.0.0"
     "@semantic-release/changelog": ">=7.0.0 || ^8.0.0-beta.1"
     "@semantic-release/commit-analyzer": ">=13.0.0 || >=14.0.0-beta.5"
     "@semantic-release/github": ">=12.0.0 || >=13.0.0-beta.1"
