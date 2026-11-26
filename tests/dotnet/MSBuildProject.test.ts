@@ -38,6 +38,7 @@ await describe('MSBuildProject', { concurrency: true }, async () => {
       const expected = new MSBP({
         fullPath: deterministicNupkgProj,
         projTargets: actual_targets,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-class-instance-assignment
         evaluation: {
           Items: {},
           Properties: {

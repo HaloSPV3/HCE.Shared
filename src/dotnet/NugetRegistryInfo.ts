@@ -744,6 +744,7 @@ but the environment variable is empty or undefined.`);
         { cmd: command },
       );
 
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw options.apiKey
         ? _censorTokenInError(_error, options.apiKey)
         : _error;
@@ -816,6 +817,7 @@ but the environment variable is empty or undefined.`);
         { cmd: pushCommand },
       );
 
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw options.apiKey
         ? _censorTokenInError(_error, options.apiKey)
         : _error;
