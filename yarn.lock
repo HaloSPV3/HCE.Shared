@@ -707,7 +707,7 @@ __metadata:
     "@semantic-release/commit-analyzer": "npm:^14.0.0-beta.5"
     "@semantic-release/exec": "npm:^8.0.0-beta.1"
     "@semantic-release/git": "npm:^11.0.1"
-    "@semantic-release/github": "npm:^12.0.11"
+    "@semantic-release/github": "npm:^13.0.0-beta.1"
     "@semantic-release/gitlab": "npm:^13.3.5"
     "@semantic-release/npm": "npm:^13.2.0"
     "@semantic-release/release-notes-generator": "npm:^15.0.0-beta.4"
@@ -1419,6 +1419,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/plugin-paginate-rest@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "@octokit/plugin-paginate-rest@npm:14.0.0"
+  dependencies:
+    "@octokit/types": "npm:^16.0.0"
+  peerDependencies:
+    "@octokit/core": ">=6"
+  checksum: 10c0/841d79d4ccfe18fc809a4a67529b75c1dcdda13399bf4bf5b48ce7559c8b4b2cd422e3204bad4cbdea31c0cf0943521067415268e5bcfc615a3b813e058cad6b
+  languageName: node
+  linkType: hard
+
 "@octokit/plugin-paginate-rest@npm:^15.0.0":
   version: 15.0.0
   resolution: "@octokit/plugin-paginate-rest@npm:15.0.0"
@@ -1807,7 +1818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/github@npm:^12.0.0, @semantic-release/github@npm:^12.0.11":
+"@semantic-release/github@npm:^12.0.0":
   version: 12.0.11
   resolution: "@semantic-release/github@npm:12.0.11"
   dependencies:
@@ -1831,6 +1842,33 @@ __metadata:
   peerDependencies:
     semantic-release: ">=24.1.0"
   checksum: 10c0/e94c045d7b56910782e727766f9f64d8d1cf984b35ddae92c4fd3d38f720427db91913b9e7580384011ea30b44b613f6cf7841abb42a95e9fabc3a23650371cd
+  languageName: node
+  linkType: hard
+
+"@semantic-release/github@npm:^13.0.0-beta.1":
+  version: 13.0.0-beta.1
+  resolution: "@semantic-release/github@npm:13.0.0-beta.1"
+  dependencies:
+    "@octokit/core": "npm:^7.0.0"
+    "@octokit/plugin-paginate-rest": "npm:^14.0.0"
+    "@octokit/plugin-retry": "npm:^8.0.0"
+    "@octokit/plugin-throttling": "npm:^11.0.0"
+    "@semantic-release/error": "npm:^4.0.0"
+    aggregate-error: "npm:^5.0.0"
+    debug: "npm:^4.3.4"
+    dir-glob: "npm:^3.0.1"
+    http-proxy-agent: "npm:^9.0.0"
+    https-proxy-agent: "npm:^9.0.0"
+    issue-parser: "npm:^7.0.0"
+    lodash-es: "npm:^4.17.21"
+    mime: "npm:^4.0.0"
+    p-filter: "npm:^4.0.0"
+    tinyglobby: "npm:^0.2.14"
+    undici: "npm:^7.0.0"
+    url-join: "npm:^5.0.0"
+  peerDependencies:
+    semantic-release: ">=24.1.0"
+  checksum: 10c0/764a6e3624227015064b095662b2017c0be90a323bd488a9c1746d38dc924a26276f3b9ad1a691974d3a84b8d67a9d8a117b9c8abef8191615230b591f483e74
   languageName: node
   linkType: hard
 
