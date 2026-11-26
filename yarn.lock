@@ -711,7 +711,7 @@ __metadata:
     "@semantic-release/gitlab": "npm:^13.3.5"
     "@semantic-release/npm": "npm:^13.2.0"
     "@semantic-release/release-notes-generator": "npm:^15.0.0-beta.4"
-    "@stylistic/eslint-plugin": "npm:^6.0.0"
+    "@stylistic/eslint-plugin": "npm:^6.0.1"
     "@types/debug": "npm:^4.1.13"
     "@types/node": "npm:^26.6.11"
     "@types/tmp": "npm:^0.2.6"
@@ -2074,7 +2074,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stylistic/eslint-plugin@npm:^6.0.0":
+"@stylistic/eslint-plugin@npm:^6.0.1":
   version: 6.0.1
   resolution: "@stylistic/eslint-plugin@npm:6.0.1"
   dependencies:
