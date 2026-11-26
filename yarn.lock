@@ -708,7 +708,7 @@ __metadata:
     "@semantic-release/exec": "npm:^7.1.0"
     "@semantic-release/git": "npm:^11.0.1"
     "@semantic-release/github": "npm:^12.0.11"
-    "@semantic-release/gitlab": "npm:^13.3.3"
+    "@semantic-release/gitlab": "npm:^13.3.5"
     "@semantic-release/npm": "npm:^13.2.0"
     "@semantic-release/release-notes-generator": "npm:^15.0.0-beta.4"
     "@stylistic/eslint-plugin": "npm:^6.0.0"
@@ -1803,9 +1803,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/gitlab@npm:^13.3.3":
-  version: 13.3.3
-  resolution: "@semantic-release/gitlab@npm:13.3.3"
+"@semantic-release/gitlab@npm:^13.3.5":
+  version: 13.3.5
+  resolution: "@semantic-release/gitlab@npm:13.3.5"
   dependencies:
     "@semantic-release/error": "npm:^4.0.0"
     aggregate-error: "npm:^5.0.0"
@@ -1822,7 +1822,7 @@ __metadata:
     url-join: "npm:^4.0.0"
   peerDependencies:
     semantic-release: ">=20.1.0"
-  checksum: 10c0/156a782305ef022e34018066d5502353ddc6dc56498b544bac5693dca5c98a74a9e1b3367a68e67deb4579068a9d540d3a3ebbaedc1efc0ed217ab69d926e4f6
+  checksum: 10c0/60f0df245b5a08a13598ea9007c01f2dba08be9095c63393f17da8b6015fa6659c478335654d77ce0b9b670d74f4c38b0fe6fde8cb7b49e80bfe3c4e97577e0e
   languageName: node
   linkType: hard
 
