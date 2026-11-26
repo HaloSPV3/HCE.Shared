@@ -109,7 +109,7 @@
     "@types/node": "^26.6.11",
     "@types/tmp": "^0.2.6",
     "@typescript-eslint/utils": "^8.72.2",
-    "@yarnpkg/sdks": "^3.3.1",
+    "@yarnpkg/sdks": "^3.3.2",
     "conventional-changelog-conventionalcommits": "^10.4.1",
     "conventional-changelog-preset-loader": "^6.0.1",
     "eslint": "^10.15.0",
@@ -186,7 +186,6 @@
   "packageManager": "yarn@4.19.0+sha512.2cb9e5a36f7f11f2bc6ff444830d87368d419e0d83b6a0fb6077d3e6fed0f476c9514dff4ba4d84b049bd34ef32954e550f264ad2fbbfebcba6c89e869530bba",
   "resolutions": {
     "@semantic-release/release-notes-generator@npm:^14.1.0": "npm:@semantic-release/release-notes-generator@15.0.0-beta.4",
-    "@yarnpkg/core@npm:^4.9.1": "npm:@yarnpkg/core@4.9.3",
     "import-from-esm@npm:^2.0.0": "patch:import-from-esm@npm%3A2.0.0#~/.yarn/patches/import-from-esm-npm-2.0.0-8866147795.patch"
   },
   "allowScripts": {

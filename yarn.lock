@@ -716,7 +716,7 @@ __metadata:
     "@types/node": "npm:^26.6.11"
     "@types/tmp": "npm:^0.2.6"
     "@typescript-eslint/utils": "npm:^8.72.2"
-    "@yarnpkg/sdks": "npm:^3.3.1"
+    "@yarnpkg/sdks": "npm:^3.3.2"
     arktype: "npm:^2.2.9"
     chardet: "npm:^2.2.0"
     conventional-changelog-conventionalcommits: "npm:^10.4.1"
@@ -2501,7 +2501,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:@yarnpkg/core@4.9.3":
+"@yarnpkg/core@npm:^4.9.3":
   version: 4.9.3
   resolution: "@yarnpkg/core@npm:4.9.3"
   dependencies:
@@ -2567,11 +2567,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/sdks@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "@yarnpkg/sdks@npm:3.3.1"
+"@yarnpkg/sdks@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@yarnpkg/sdks@npm:3.3.2"
   dependencies:
-    "@yarnpkg/core": "npm:^4.9.1"
+    "@yarnpkg/core": "npm:^4.9.3"
     "@yarnpkg/fslib": "npm:^3.1.5"
     "@yarnpkg/parsers": "npm:^3.1.0"
     chalk: "npm:^4.1.2"
@@ -2581,7 +2581,7 @@ __metadata:
     tslib: "npm:^2.4.0"
   bin:
     sdks: ./lib/cli.js
-  checksum: 10c0/22820878418eb962a35f75eca0cb6ed96957efceb28345fe4791767ee75093d16011c958126a123663f956eae192c7c1fba66d67c87bae04d46a4446aa838a8f
+  checksum: 10c0/f66c1804c25af756721fcdda2ade6946cc686aa2e1a9efae8b42da173babf67998c917c7409b0553b88ac7109ed27669bf7fed8a6952f6ca82e04c768832885d
   languageName: node
   linkType: hard
 
