@@ -103,7 +103,7 @@
     "@commitlint/types": "^21.2.3",
     "@eslint/config-inspector": "^3.5.0",
     "@eslint/markdown": "^9.0.0",
-    "@sebbo2002/semantic-release-jsr": "^4.0.2",
+    "@sebbo2002/semantic-release-jsr": "^4.0.3",
     "@semantic-release/gitlab": "^13.3.3",
     "@types/debug": "^4.1.13",
     "@types/node": "^26.6.11",

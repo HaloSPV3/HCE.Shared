@@ -702,7 +702,7 @@ __metadata:
     "@eslint/js": "npm:^10.0.1"
     "@eslint/json": "npm:^2.1.1"
     "@eslint/markdown": "npm:^9.0.0"
-    "@sebbo2002/semantic-release-jsr": "npm:^4.0.2"
+    "@sebbo2002/semantic-release-jsr": "npm:^4.0.3"
     "@semantic-release/changelog": "npm:^7.0.0"
     "@semantic-release/commit-analyzer": "npm:^13.0.1"
     "@semantic-release/exec": "npm:^7.1.0"
@@ -1669,13 +1669,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sebbo2002/semantic-release-jsr@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "@sebbo2002/semantic-release-jsr@npm:4.0.2"
+"@sebbo2002/semantic-release-jsr@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "@sebbo2002/semantic-release-jsr@npm:4.0.3"
   dependencies:
     "@semantic-release/error": "npm:^4.0.0"
     jsr: "npm:^0.14.3"
-  checksum: 10c0/36225c8a08c2427bc34560a0af0468bb19105acaa25c10216881b66668325c2ed282a1918f8a13e4475aaa75d162f0fc55a6726181941761a37816573baceb68
+  checksum: 10c0/a60f6aa7065e4b5c9316c32ac97e1490635a8a071e2e55f89fd86422e7ea6f1884a7548ee18de73ca93115b50fc2ec2a64866d33464f6573ae66ab817d664ffb
   languageName: node
   linkType: hard
 
