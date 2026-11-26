@@ -1,3 +1,63 @@
+## [4.0.0-develop.1](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.5...v4.0.0-develop.1) (2026-11-26)
+
+### ⚠ BREAKING CHANGES
+
+* **deps, deps-dev, deps-peer:** `@commitlint/config-conventional` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **deps, deps-dev, deps-peer:** `@semantic-release/changelog` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **deps, deps-dev, deps-peer:** `@semantic-release/exec` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **deps, deps-dev, deps-peer:** `@semantic-release/git` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **deps, deps-dev, deps-peer:** `@semantic-release/github` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **deps, deps-dev, deps-peer:** `@semantic-release/npm` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **deps, deps-dev, deps-peer:** `@semantic-release/release-notes-generator` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **dotnet.helpers:** `configurePrepareCmd` has been renamed to `configurePrepareCommand`
+* **utils.env:** `getEnv` has been renamed to `getEnvironment`
+* **utils.env:** `getEnv` now takes a single `options` object instead of multiple parameters
+* **utils.env:** `getEnvVarValue` has been renamed to `getEnvironmentalVariableValue`
+* **deps, deps-dev, deps-peer:** `semantic-release-export-data` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **deps, deps-dev, deps-peer:** `semantic-release` is no longer provided to downstream consumers. Consumer packages must add it as a production or development dependency.
+* **dotnet.helpers:** dotnet helper function `configurePrepareCmd` now takes an options object
+* **deps, deps-dev, deps-peer:** downstream packages that relied on this package's `@semantic-release/commit-analyzer` will need to add it as their own dependency
+* Minimum version of node is now 26.13.0 to satisfy dependencies' requirements.
+  Some of our dependencies are dropping support for the previous Node LTS major, v24. `semantic-release/release-notes-generator@15.0.0-beta.4` set its minimum node version to 26.13.0
+
+### Features
+
+* **deps:** upgrade `@dotenvx/dotenvx` to 2.38.2; add wrapper function `getEnvironmentVariableValueAsync` ([d4fc366](https://github.com/HaloSPV3/HCE.Shared/commit/d4fc366a53c684f4e4a6b1a80337d2fd73456467))
+* drop support for Node v24; set minimum node version to 26.13.0; set dev node version to 26.13.1 ([f69aba1](https://github.com/HaloSPV3/HCE.Shared/commit/f69aba113dfa2c948305caade5a25e73cc219b21))
+
+### Bug Fixes
+
+* **deps-peer:** widen eslint range to >=10.0.0 ([6593983](https://github.com/HaloSPV3/HCE.Shared/commit/6593983679851e684515e0e1c23d21adeac5daf4))
+* **deps, deps-dev:** upgrade `typescript-eslint` group to 8.74.0 ([a7c7f6b](https://github.com/HaloSPV3/HCE.Shared/commit/a7c7f6b4e7592a49e0074d943f5425be48d79a35))
+* **deps:** update dependency @stylistic/eslint-plugin to v6 ([df0166d](https://github.com/HaloSPV3/HCE.Shared/commit/df0166d20dba5a8f88b9a932583c154c4ca6f6ea))
+* **deps:** upgrade `@semantic-release/exec` to 8.0.0-beta.1 ([9617722](https://github.com/HaloSPV3/HCE.Shared/commit/96177223b4749cc8006ce9c7ec3c347fe8806bdc))
+* **deps:** upgrade `@semantic-release/github` to 13.0.0-beta.1 ([903728a](https://github.com/HaloSPV3/HCE.Shared/commit/903728a365679965154d6b711708e395dd9a92ca))
+* **deps:** upgrade `@semantic-release/release-notes-generator` to 15.0.0-beta.4 ([59c1a01](https://github.com/HaloSPV3/HCE.Shared/commit/59c1a01370524999a9c04480b10db32a0b64ef49))
+* **deps:** upgrade `@stylistic/eslint-plugin` to 6.0.1 ([a033005](https://github.com/HaloSPV3/HCE.Shared/commit/a033005f91a4508d6fc1765d8d6108292652c274))
+* **deps:** upgrade `arktype` to 2.2.10 ([cfb9cde](https://github.com/HaloSPV3/HCE.Shared/commit/cfb9cde77811c161fb9a4481276fd82fba8249a6))
+* **deps:** upgrade `semantic-release` to 26.0.1 ([ed9c638](https://github.com/HaloSPV3/HCE.Shared/commit/ed9c6380a6c07d6ea5723c748c8d9c33977f1511))
+
+### Code Refactoring
+
+* **dotnet.helpers:** prefer an options object over optional positional parameters (unicorn/prefer-options-parameter) ([9149b29](https://github.com/HaloSPV3/HCE.Shared/commit/9149b29843f9c7dc3a0af8936f44b72648f1b8bd))
+* **dotnet.helpers:** rename `configurePrepareCmd` to `configurePrepareCommand` ([ce8f9bf](https://github.com/HaloSPV3/HCE.Shared/commit/ce8f9bfa1a78496ac4a3584af12fd7b766392f5f))
+* **utils.env:** prefer an options object over optional positional parameters - eslint(unicorn/prefer-options-parameter) ([f0ec7e0](https://github.com/HaloSPV3/HCE.Shared/commit/f0ec7e04cde5f2c76a666a95c56c27f2590dc8c6))
+* **utils.env:** rename `getEnv` to `getEnvironment` ([0547376](https://github.com/HaloSPV3/HCE.Shared/commit/054737614ecf7d1eb72afaae2a68af3bc7738290))
+* **utils.env:** rename `getEnvVarValue` to `getEnvironmentalVariableValue` ([cf28a82](https://github.com/HaloSPV3/HCE.Shared/commit/cf28a8219187e8be24c0fdb8c032ff358e025dc3))
+
+### Build System
+
+* **deps, deps-dev, deps-peer:** move `@commitlint/config-conventional` from `dependencies` to `peerDependencies`, `devDependencies`; upgrade `@commitlint/types` peer-dep to >=21.0.0 ([6db5060](https://github.com/HaloSPV3/HCE.Shared/commit/6db50600bfb67a3148077dee9ba7a5f10052d526))
+* **deps, deps-dev, deps-peer:** move `@semantic-release/changelog` from `dependencies` to `peerDependencies`, `devDependencies`; upgrade to 8.0.0-beta.1 ([9370c83](https://github.com/HaloSPV3/HCE.Shared/commit/9370c8314554e4226b482a8f0ef321fe06cc5bd6))
+* **deps, deps-dev, deps-peer:** move `@semantic-release/commit-analyzer` to `peerDependencies`, `devDependencies`; upgrade to 14.0.0-beta.5 ([e667e29](https://github.com/HaloSPV3/HCE.Shared/commit/e667e2973606e45066d79bb6059eeb18b4f742e8))
+* **deps, deps-dev, deps-peer:** move `@semantic-release/exec` from `dependencies` to `peerDependencies`, `devDependencies` ([1400f14](https://github.com/HaloSPV3/HCE.Shared/commit/1400f14bcdcf21f204993274596122130ed5b559))
+* **deps, deps-dev, deps-peer:** move `@semantic-release/git` from `dependencies` to `peerDependencies`, `devDependencies` ([e7d35fb](https://github.com/HaloSPV3/HCE.Shared/commit/e7d35fb5c74945aa76cad14f09ba5699c12e9926))
+* **deps, deps-dev, deps-peer:** move `@semantic-release/github` from `dependencies` to `peerDependencies`, `devDependencies`; upgrade to 13.0.0-beta.1 ([87aa54a](https://github.com/HaloSPV3/HCE.Shared/commit/87aa54ad6640594cc4933af39cd3c1139bcf3529))
+* **deps, deps-dev, deps-peer:** move `@semantic-release/npm` from `dependencies` to `peerDependencies`, `devDependencies`; upgrade to 14.0.0-beta.3 ([91a15fb](https://github.com/HaloSPV3/HCE.Shared/commit/91a15fb664d29cf547fe6ac716ac44d39ba2be30))
+* **deps, deps-dev, deps-peer:** move `@semantic-release/release-notes-generator` from `dependencies` to `peerDependencies`, `devDependencies`; upgrade to 14.0.0-beta.3 ([002688e](https://github.com/HaloSPV3/HCE.Shared/commit/002688e848008c447e7b8e04c71485a3aceb674f))
+* **deps, deps-dev, deps-peer:** move `semantic-release-export-data` from `dependencies` to `peerDependencies`, `devDependencies` ([bae0dba](https://github.com/HaloSPV3/HCE.Shared/commit/bae0dba1c7900069bc341235b2ccd9c7eeb3f0b5))
+* **deps, deps-dev, deps-peer:** move `semantic-release` from `dependencies` to `peerDependencies`, `devDependencies` ([661bf78](https://github.com/HaloSPV3/HCE.Shared/commit/661bf78ca01c088055ac7762babc53a36a9e1620))
+
 ## [3.14.5](https://github.com/HaloSPV3/HCE.Shared/compare/v3.14.4...v3.14.5) (2026-11-14)
 
 ### Bug Fixes
